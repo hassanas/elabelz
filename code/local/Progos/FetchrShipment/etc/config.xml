@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_FetchrShipment>
+            <version>0.1.0</version>
+        </Progos_FetchrShipment>
+    </modules>
+    <global>
+        <blocks>
+            <progos_fetchrshipment>
+                <class>Progos_FetchrShipment_Block</class>
+            </progos_fetchrshipment>
+        </blocks>
+        <helpers>
+            <progos_fetchrshipment>
+                <class>Progos_FetchrShipment_Helper</class>
+            </progos_fetchrshipment>
+        </helpers>
+    </global>
+    <adminhtml>
+        <layout>
+            <updates>
+                <aramexshipment>
+                    <file>progos_fetchrshipment.xml</file>
+                </aramexshipment>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

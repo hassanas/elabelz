@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magebuddies_Oms>
+            <version>0.1.0</version>
+        </Magebuddies_Oms>
+    </modules>
+    <global>
+        <models>
+            <oos>
+                <class>Magebuddies_Oms_Model</class>
+            </oos>
+        </models>
+        <helpers>
+            <magebuddies_oms>
+                <class>Magebuddies_Oms_Helper</class>
+            </magebuddies_oms>
+        </helpers>
+        <blocks>
+            <magebuddies_oms>
+                <class>Magebuddies_Oms_Block</class>
+            </magebuddies_oms>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <oos>
+                <use>admin</use>
+                <args>
+                    <module>Magebuddies_Oms</module>
+                    <frontName>admin_oos</frontName>
+                </args>
+            </oos>
+        </routers>
+    </admin>
+</config>

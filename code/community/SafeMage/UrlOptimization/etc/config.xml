@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the SafeMageEULA that is bundled with this package in the file LICENSE.txt.
+
+It is also available at this URL: http://www.safemage.com/LICENSE_EULA.txt
+
+Copyright (c)  SafeMage (http://www.safemage.com/)
+-->
+<config>
+    <modules>
+        <SafeMage_UrlOptimization>
+            <version>1.4.0</version>
+        </SafeMage_UrlOptimization>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <safemage_urloptimization after="Mage_Adminhtml">SafeMage_UrlOptimization_Adminhtml</safemage_urloptimization>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <events>
+            <catalog_product_save_commit_after>
+                <observers>
+                    <safemage_urloptimization>
+                        <type>singleton</type>
+                        <class>SafeMage_UrlOptimization_Model_Observer</class>
+                        <method>productSaveCommitAfter</method>
+                    </safemage_urloptimization>
+                </observers>
+            </catalog_product_save_commit_after>
+            <catalog_category_save_commit_after>
+                <observers>
+                    <safemage_urloptimization>
+                        <type>singleton</type>
+                        <class>SafeMage_UrlOptimization_Model_Observer</class>
+                        <method>categorySaveCommitAfter</method>
+                    </safemage_urloptimization>
+                </observers>
+            </catalog_category_save_commit_after>
+        </events>
+        <translate>
+            <modules>
+                <SafeMage_UrlOptimization>
+                    <files>
+                        <default>SafeMage_UrlOptimization.csv</default>
+                    </files>
+                </SafeMage_UrlOptimization>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+        <blocks>
+            <safemage_urloptimization>
+                <class>SafeMage_UrlOptimization_Block</class>
+            </safemage_urloptimization>
+        </blocks>
+        <helpers>
+            <safemage_urloptimization>
+                <class>SafeMage_UrlOptimization_Helper</class>
+            </safemage_urloptimization>
+        </helpers>
+        <models>
+            <safemage_urloptimization>
+                <class>SafeMage_UrlOptimization_Model</class>
+                <resourceModel>safemage_urloptimization_resource</resourceModel>
+            </safemage_urloptimization>
+            <safemage_urloptimization_resource>
+                <class>SafeMage_UrlOptimization_Model_Resource</class>
+            </safemage_urloptimization_resource>
+            <catalog>
+                <rewrite>
+                    <url>SafeMage_UrlOptimization_Model_Catalog_Url</url>
+                </rewrite>
+            </catalog>
+            <catalog_resource>
+                <rewrite>
+                    <url>SafeMage_UrlOptimization_Model_Resource_Catalog_Url</url>
+                </rewrite>
+            </catalog_resource>
+        </models>
+    </global>
+    <crontab>
+        <jobs>
+            <safemage_urloptimization_clean>
+                <run>
+                    <model>safemage_urloptimization/cron::urlClean</model>
+                </run>
+            </safemage_urloptimization_clean>
+        </jobs>
+    </crontab>
+    <default>
+        <safemage_urloptimization>
+            <general>
+                <disabled_url_check>1</disabled_url_check>
+                <unique_url_check>0</unique_url_check>
+            </general>
+            <clearing_settings>
+                <clear_mode>1</clear_mode>
+                <keep_redirect_qty>1</keep_redirect_qty>
+                <remove_only_with_digit>0</remove_only_with_digit>
+                <clear_limit>250000</clear_limit>
+                <cron_enabled>0</cron_enabled>
+                <time>03,30,00</time>
+                <frequency>D</frequency>
+            </clearing_settings>
+        </safemage_urloptimization>
+    </default>
+</config>

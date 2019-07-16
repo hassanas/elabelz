@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aramex_Aramexcalculator>
+            <version>0.1.0</version>
+        </Aramex_Aramexcalculator>
+    </modules>
+    <global> 
+        <blocks>
+            <aramexcalculator>
+                <class>Aramex_Aramexcalculator_Block</class>
+            </aramexcalculator>
+        </blocks>       
+        <helpers>
+            <aramex_aramexcalculator>
+                <class>Aramex_Aramexcalculator_Helper</class>
+            </aramex_aramexcalculator>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <aramexcalculator1>
+                <use>standard</use>
+                <args>
+                    <module>Aramex_Aramexcalculator</module>
+                    <frontName>aramexcalculator</frontName>
+                </args>
+            </aramexcalculator1>
+        </routers>
+        <layout>
+            <updates>
+                <aramex_aramexcalculator module="Aramex_Aramexcalculator">
+                    <file>aramexcalculator.xml</file>
+                </aramex_aramexcalculator>
+            </updates>
+        </layout>
+    </frontend>    
+</config>

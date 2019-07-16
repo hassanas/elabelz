@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * MageWorx
+ * Order Surcharge extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersSurcharge
+ * @copyright  Copyright (c) 2016 MageWorx (http://www.mageworx.com/)
+ */
+-->
+<layout>
+
+    <default>
+        <reference name="head">
+            <action method="addCss" ifconfig="mageworx_ordersmanagement/orderssurcharge/enabled">
+                <name>css/mageworx/orderssurcharge/styles.css</name>
+            </action>
+        </reference>
+    </default>
+
+    <adminhtml_mageworx_orderssurcharge_surcharge_grid>
+        <update handle="formkey"/>
+        <block type="mageworx_orderssurcharge/adminhtml_surcharge_grid" name="mageworx_orderssurcharge.grid" output="toHtml"/>
+    </adminhtml_mageworx_orderssurcharge_surcharge_grid>
+
+    <adminhtml_mageworx_orderssurcharge_surcharge_index>
+        <reference name="content">
+            <block type="mageworx_orderssurcharge/adminhtml_surcharge_grid" name="mageworx_orderssurcharge.grid.container"/>
+        </reference>
+    </adminhtml_mageworx_orderssurcharge_surcharge_index>
+
+    <adminhtml_mageworx_orderssurcharge_surcharge_view>
+        <reference name="content">
+            <block type="mageworx_orderssurcharge/adminhtml_surcharge_view" name="surcharge_edit"/>
+        </reference>
+        <reference name="left">
+            <block type="mageworx_orderssurcharge/adminhtml_surcharge_view_tabs" name="surcharge_tabs">
+                <block type="mageworx_orderssurcharge/adminhtml_surcharge_view_tab_info" name="surcharge_tab_info"/>
+            </block>
+        </reference>
+    </adminhtml_mageworx_orderssurcharge_surcharge_view>
+
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <action method="addItem">
+                <type>js</type>
+                <name>mageworx/orderssurcharge/surcharge.js</name>
+                <params/>
+                <if/>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_view_js"
+                   name="orderssurcharge.js"
+                   template="mageworx/orderssurcharge/sales/order/view/js.phtml"
+                    />
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_mageworx_orderssurcharge_surcharge_remove>
+        <update handle="mageworx_ordersedit_order_history"/>
+    </adminhtml_mageworx_orderssurcharge_surcharge_remove>
+
+    <adminhtml_mageworx_orderssurcharge_totals>
+        <reference name="order_totals">
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_surcharge"
+                   name="orders_surcharge"
+                   template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml"
+                    />
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_linked"
+                   name="linked_total"
+                   template="mageworx/orderssurcharge/sales/order/totals/linked.phtml"
+                    />
+        </reference>
+        <reference name="invoice_totals">
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_surcharge"
+                   name="orders_surcharge"
+                   template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml"
+                    />
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_linked"
+                   name="linked_total"
+                   template="mageworx/orderssurcharge/sales/order/totals/linked.phtml"
+                    />
+        </reference>
+        <reference name="creditmemo_totals">
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_surcharge"
+                   name="orders_surcharge"
+                   template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml"
+                    />
+            <block type="mageworx_orderssurcharge/adminhtml_sales_order_totals_linked"
+                   name="linked_total"
+                   template="mageworx/orderssurcharge/sales/order/totals/linked.phtml"
+                    />
+        </reference>
+    </adminhtml_mageworx_orderssurcharge_totals>
+
+    <adminhtml_sales_order_view>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_order_invoice_new>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_invoice_new>
+
+    <adminhtml_sales_order_invoice_updateqty>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_invoice_updateqty>
+
+    <adminhtml_sales_order_invoice_view>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_invoice_view>
+
+    <adminhtml_sales_order_creditmemo_new>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_creditmemo_updateqty>
+
+    <adminhtml_sales_order_creditmemo_view>
+        <update handle="adminhtml_mageworx_orderssurcharge_totals"/>
+    </adminhtml_sales_order_creditmemo_view>
+
+</layout>

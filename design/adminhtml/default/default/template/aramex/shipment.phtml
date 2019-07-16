@@ -1,0 +1,1533 @@
+<?php
+/**
+ * ADDITIONAL HTML for Local-Extension Aramex_Shipment.
+ * (Load html for shipment creation)
+ * popup
+ */
+?>
+<?php
+$_order = Mage::getModel('sales/order')->load($this->getRequest()->getParam('order_id'));
+$shipping = $_order->getShippingAddress();
+$customerId = $_order->getCustomerId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$countryCollection = Mage::getModel('directory/country_api')->items();
+#Mage::helper('aramexshipment')->getMultiSort($countryCollection);
+
+
+$payment = $_order->getPayment();
+
+//calculating total weight of current order
+$totalWeight = 0;
+$itemscount = 0;
+$isShipped = false;
+$itemsv = $_order->getAllVisibleItems();
+
+
+$_shippedPrice = 0;
+$_shippedWeight = 0;
+
+foreach ($itemsv as $itemvv) {
+    if ($itemvv->getWeight() != 0) {
+        $weight = $itemvv->getWeight() * $itemvv->getQtyOrdered();
+    } else {
+        $weight = 0.5 * $itemvv->getQtyOrdered();
+    }
+    $totalWeight += $weight;
+    if ($itemvv->getQtyOrdered() > $itemvv->getQtyShipped()) {
+        $itemscount += $itemvv->getQtyOrdered() - $itemvv->getQtyShipped();
+
+    } else if ($itemvv->getQtyOrdered() == $itemvv->getQtyShipped()) {
+        $isShipped = true;
+        // $itemscount += $itemvv->getQtyOrdered();
+    }
+    //if($itemscount> 0) {
+
+    $_shippedPrice += $itemvv->getQtyShipped() * $itemvv->getBasePrice();
+    $_shippedWeight += $itemvv->getQtyShipped() * $itemvv->getWeight();
+    // }
+}
+if($itemscount == 0) {
+    $_shippedPrice = 0;
+    $_shippedWeight = 0;
+}
+
+///////////////////////////////
+$state = "";
+if (($shipping->getData('region_id')) && ($shipping->getCountry() == 'US')) {
+    $region = Mage::getModel('directory/region')->load($shipping->getData('region_id'));
+    $state = $region->getName();
+} else {
+    $state = $shipping->getData('region');
+}
+
+$billing_state = "";
+if ($shipping->getData('region_id')) {
+    $region = Mage::getModel('directory/region')->load($shipping->getData('region_id'));
+    $billing_state = $region->getName();
+} else {
+    $billing_state = $shipping->getData('region');
+}
+$formSession = Mage::getSingleton('adminhtml/session');
+$formData = $formSession->getData('form_data');
+$session = false;
+Mage::getSingleton('core/session')->setPreviousUrl($this->helper('core/url')->getCurrentUrl());
+if (count($formData) > 0) {
+    $session = true;
+}
+
+?>
+
+    <!-- aramex popup starts -->
+
+    <script type="text/javascript">
+        //<![CDATA[
+        optionalZipCountries = <?php echo $this->helper('directory')->getCountriesWithOptionalZip(true) ?>;
+        var aramex_shipment_shipper_country_map = zipValidateMaker('aramex_shipment_shipper_country', 'aramex_shipment_shipper_postal', 'aramex_shipment_shipper_city', optionalZipCountries, 'required');
+        var aramex_shipment_receiver_country_map = zipValidateMaker('aramex_shipment_receiver_country', 'aramex_shipment_receiver_postal', 'aramex_shipment_receiver_city', optionalZipCountries, 'required');
+        <?php
+        $is_secure = Mage::app()->getStore()->isCurrentlySecure();
+        ?>
+
+        var system_base_url = "<?php echo Mage::helper("adminhtml")->getUrl("apilocationvalidator/index/searchautocities");?>";
+
+
+        function AutoSearchControls(type, search_city) {
+            return jQuery('input[name="' + type + '[city]"]')
+                .autocomplete({
+                    minLength: 0,
+                    scroll: true,
+                    source: function (req, responseFn) {
+                        var re = jQuery.ui.autocomplete.escapeRegex(req.term);
+                        var matcher = new RegExp("^" + re, "i");
+                        var a = jQuery.grep(search_city, function (item, index) {
+                            return matcher.test(item);
+                        });
+                        responseFn(a);
+                    },
+                    response: function (event, ui) {
+                        if (type == 'billing' && billing_aramex_cities_temp == '') {
+                            var temp_arr = [];
+                            jQuery(ui.content).each(function (i, v) {
+                                temp_arr.push(v.value);
+                            });
+                            billing_aramex_cities_temp = temp_arr;
+                            billingAramexCitiesObj.autocomplete("option", "source", function (req, responseFn) {
+                                var re = jQuery.ui.autocomplete.escapeRegex(req.term);
+                                var matcher = new RegExp("^" + re, "i");
+                                var a = jQuery.grep(billing_aramex_cities_temp, function (item, index) {
+                                    return matcher.test(item);
+                                });
+                                responseFn(a);
+                            });
+                            /* force to enable to go next step*/
+                            var container = $('billing-buttons-container');
+                            var isDisabled = (false ? true : false);
+                            if (!isDisabled) {
+                                container.removeClassName('disabled');
+                                container.setStyle({opacity: 1});
+                            }
+                            //checkout._disableEnableAll(container, isDisabled);
+                            Element.hide('billing_city_loading_autocomplete');
+                            jQuery('input[name="' + type + '[city]"]').val('');
+
+                        }
+                        if (type == 'shipping' && shipping_aramex_cities_temp == '') {
+                            var temp_arr = [];
+                            jQuery(ui.content).each(function (i, v) {
+                                temp_arr.push(v.value);
+                            });
+                            shipping_aramex_cities_temp = temp_arr;
+                            shippingAramexCitiesObj.autocomplete("option", "source", function (req, responseFn) {
+                                var re = jQuery.ui.autocomplete.escapeRegex(req.term);
+                                var matcher = new RegExp("^" + re, "i");
+                                var a = jQuery.grep(shipping_aramex_cities_temp, function (item, index) {
+                                    return matcher.test(item);
+                                });
+                                responseFn(a);
+                            });
+                            /* force to enable to go next step*/
+                            var container = $('shipping-buttons-container');
+                            var isDisabled = (false ? true : false);
+                            if (!isDisabled) {
+                                container.removeClassName('disabled');
+                                container.setStyle({opacity: 1});
+                            }
+                            //checkout._disableEnableAll(container, isDisabled);
+                            Element.hide('shipping_city_loading_autocomplete');
+                            jQuery('input[name="' + type + '[city]"]').val('');
+                        }
+                    },
+                    select: function (event, ui) {
+                        jQuery('input[name="' + type + '[city]"]').attr('rel', ui.item.label);
+                    },
+                    open: function () {
+                        jQuery('input[name="' + type + '[city]"]').attr('rel', 0);
+                    },
+                    close: function () {
+                        if (jQuery('input[name="' + type + '[city]"]').attr('rel') == '0')
+                            jQuery('input[name="' + type + '[city]"]').val('');
+                    }
+                }).focus(function () {
+                    jQuery(this).autocomplete("search", "");
+                });
+        }
+
+
+        jQuery(function () {
+            var aramex_shipment_shipper_city_map = new Ajax.Autocompleter("aramex_shipment_shipper_city", "aramex_shipment_shipper_city_autocomplete", system_base_url, {
+                paramName: "value",
+                minChars: 2,
+                parameters: "&country_code=" + jQuery("#aramex_shipment_shipper_country").val(),
+                callback: function (element, entry) {
+                    /* hook added to hide  load-mask */
+                    setTimeout(function () {
+                        toggleSelectsUnderBlock($('loading-mask'), true);
+                        Element.hide('loading-mask');
+                    }, 15000);
+                    return entry;
+                }
+            });
+
+            var aramex_shipment_receiver_city_map = new Ajax.Autocompleter("aramex_shipment_receiver_city", "aramex_shipment_receiver_city_autocomplete", system_base_url, {
+                paramName: "value",
+                minChars: 2,
+                parameters: "&country_code=" + jQuery("#aramex_shipment_receiver_country").val(),
+                callback: function (element, entry) {
+                    /* hook added to hide  load-mask */
+                    setTimeout(function () {
+                        toggleSelectsUnderBlock($('loading-mask'), true);
+                        Element.hide('loading-mask');
+                    }, 15000);
+                    return entry;
+                }
+            });
+
+            jQuery(".aramex_countries").change(function () {
+
+                var country_id = jQuery(this).attr('id');
+                var country_param = "&country_code=" + jQuery(this).val();
+
+                if (country_id == 'aramex_shipment_shipper_country') {
+                    aramex_shipment_shipper_country_map.checkoptions();
+                    aramex_shipment_shipper_city_map.options.parameters = country_param;
+                    aramex_shipment_shipper_city_map.options.defaultParams = country_param;
+                }
+                if (country_id == 'aramex_shipment_receiver_country') {
+                    aramex_shipment_receiver_country_map.checkoptions();
+                    aramex_shipment_receiver_city_map.options.parameters = country_param;
+                    aramex_shipment_receiver_city_map.options.defaultParams = country_param;
+                }
+                if (jQuery("select[name=aramex_shipment_shipper_country]").val() != jQuery("select[name=aramex_shipment_receiver_country]").val()) {
+                    jQuery("select[name=aramex_shipment_info_product_group]").val('EXP');
+                    jQuery("#aramex_shipment_info_product_group").trigger('change');
+                    jQuery("select[name=aramex_shipment_info_additional_services] option:selected").removeAttr("selected");
+                    jQuery("select[name=aramex_shipment_info_additional_services] .express_service").attr("selected", "selected");
+
+
+                } else {
+                    jQuery("select[name=aramex_shipment_info_product_group]").val('DOM');
+                    jQuery("#aramex_shipment_info_product_group").trigger('change');
+                    jQuery("select[name=aramex_shipment_info_additional_services] option:selected").removeAttr("selected");
+                    jQuery("select[name=aramex_shipment_info_additional_services] .domestic_service").attr("selected", "selected");
+
+                }
+
+                jQuery("#aramex_shipment_info_product_group_div").html(jQuery("select[name=aramex_shipment_info_product_group] option:selected").text());
+                jQuery("#aramex_shipment_info_service_type_div").html(jQuery("select[name=aramex_shipment_info_service_type] option:selected").text());
+                jQuery("#aramex_shipment_info_additional_services_div").html(jQuery("select[name=aramex_shipment_info_additional_services] option:selected").text());
+            });
+
+
+        });
+
+        //]]>
+    </script>
+
+    <div id="aramex_overlay">
+        <div id="aramex_shipment_creation">
+            <form id="aramex_shipment" method="post"
+                  action="<?php echo $this->getUrl('aramexshipment/shipment/post'); ?>" enctype="multipart/form-data">
+                <input type="hidden" name="aramex_shipment_referer"
+                       value="<?php echo $this->helper('core/url')->getCurrentUrl(); ?>"/>
+                <input name="form_key" type="hidden"
+                       value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                <?php
+                $storeId = $_order->getStore()->getId();
+                $aramex_shipment_shipper_account_cod = Mage::getStoreConfig('aramexsettings/settings/cod_account_number', $storeId);
+                $aramex_shipment_shipper_account_pin_cod = Mage::getStoreConfig('aramexsettings/settings/cod_account_pin', $storeId);
+                $aramex_shipment_shipper_account = Mage::getStoreConfig('aramexsettings/settings/account_number', $storeId);
+                $aramex_shipment_shipper_account_pin = Mage::getStoreConfig('aramexsettings/settings/account_pin', $storeId);
+
+                ?>
+                <input type="hidden" value="<?php echo $storeId; ?>" name="store_id"/>
+                <input name="aramex_shipment_shipper_account" type="hidden"
+                       value="<?php echo $aramex_shipment_shipper_account; ?>"/>
+                <input name="aramex_shipment_shipper_account_pin" type="hidden"
+                       value="<?php echo $aramex_shipment_shipper_account_pin; ?>"/>
+                <input name="aramex_shipment_shipper_account_cod" type="hidden"
+                       value="<?php echo $aramex_shipment_shipper_account_cod; ?>"/>
+                <input name="aramex_shipment_shipper_account_pin_cod" type="hidden"
+                       value="<?php echo $aramex_shipment_shipper_account_pin_cod; ?>"/>
+
+                <input name="aramex_shipment_original_reference" type="hidden"
+                       value="<?php echo $_order->getIncrementId() ?>"/>
+                <FIELDSET class="aramex_shipment_creation_fieldset_big" id="aramex_shipment_creation_general_info">
+                    <legend>Billing Account</legend>
+                    <div id="general_details" class="aramex_shipment_creation_part">
+                        <div class="text_short">
+                            <label>Account</label>
+                            <select class="aramex_all_options" name="aramex_shipment_shipper_account_show">
+                                <option value="1">Normal Account</option>
+                                <?php if (Mage::getStoreConfig('aramexsettings/settings/allowed_cod', $storeId) == "1") { ?>
+                                    <option value="2">COD Account</option>
+                                <?php } ?>
+                            </select>
+                            <div class="little_description">Taken from Aramex Global Settings</div>
+                            <div class="aramex_clearer"></div>
+                        </div>
+                    </div>
+
+                    <div class="text_short">
+                        <label>Payment</label>
+                        <select class="aramex_all_options" name="aramex_shipment_info_billing_account"
+                                id="aramex_shipment_info_billing_account_id" onchange="resetShipperDetail(this);">
+                            <?php if (!$isShipped or true): ?>
+                                <option
+                                        value="1" <?php echo ($session and $formData['aramex_shipment_info_billing_account'] == '1') ? 'selected="selected"' : '' ?>>
+                                    Shipper Account
+                                </option>
+                            <?php endif; ?>
+                            <option
+                                    value="2" <?php echo ($session and $formData['aramex_shipment_info_billing_account'] == '2') ? 'selected="selected"' : '' ?>>
+                                Consignee Account
+                            </option>
+                            <option
+                                    value="3" <?php echo ($session and $formData['aramex_shipment_info_billing_account'] == '3') ? 'selected="selected"' : '' ?>>
+                                Third Party
+                            </option>
+
+                        </select>
+                        <div id="aramex_shipment_info_service_type_div" style="display: none;"></div>
+                    </div>
+
+                    <?php //barry code;?>
+                    <div class="cal-rate-button" style="float:right;">
+                        <button name="aramex_rate_calculate" type="button" id="aramex_rate_calculate"
+                                onclick="myObj.openCalc();">Calculate Rate
+                        </button>
+                        <button name="aramex_schedule_pickup" type="button" id="aramex_schedule_pickup"
+                                onclick="myObj.openPickup();">Schedule Pickup
+                        </button>
+                    </div>
+
+                    <?php //barry code end;?>
+                </FIELDSET>
+                <div id="aramex_messages"></div>
+                <FIELDSET class="aramex_shipment_creation_fieldset">
+                    <legend>Shipper Details</legend>
+                    <div id="shipper_details" class="aramex_shipment_creation_part">
+                        <div class="text_short">
+                            <label>Reference</label><input type="text" name="aramex_shipment_shipper_reference"
+                                                           value="<?php echo $_order->getIncrementId() ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_name = ($session) ? $formData['aramex_shipment_shipper_name'] : Mage::getStoreConfig('aramexsettings/shipperdetail/name', $storeId); ?>
+                            <label>Name <span class="red">*</span></label><input type="text" class="required"
+                                                                                 id="aramex_shipment_shipper_name"
+                                                                                 name="aramex_shipment_shipper_name"
+                                                                                 value="<?php echo $_name; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_email = ($session) ? $formData['aramex_shipment_shipper_email'] : Mage::getStoreConfig('aramexsettings/shipperdetail/email', $storeId); ?>
+                            <label>Email <span class="red">*</span></label><input type="text" class="required email"
+                                                                                  id="aramex_shipment_shipper_email"
+                                                                                  name="aramex_shipment_shipper_email"
+                                                                                  value="<?php echo $_email; ?>"/>
+                        </div>
+                        <div class="text_short">
+
+                            <?php $company_name = isset($billing) ? $billing->getData('company') : ''; ?>
+                            <?php $_company = ($session) ? $formData['aramex_shipment_shipper_company'] : Mage::getStoreConfig('aramexsettings/shipperdetail/company', $storeId); ?>
+                            <label>Company</label><input type="text" id="aramex_shipment_shipper_company"
+                                                         name="aramex_shipment_shipper_company"
+                                                         value="<?php echo $_company; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_street = ($session) ? $formData['aramex_shipment_shipper_street'] : Mage::getStoreConfig('aramexsettings/shipperdetail/address', $storeId); ?>
+                            <label>Address <span class="red">*</span></label><textarea rows="4" class="required"
+                                                                                       cols="26" type="text"
+                                                                                       id="aramex_shipment_shipper_street"
+                                                                                       name="aramex_shipment_shipper_street"><?php echo $_street; ?></textarea>
+                        </div>
+                        <div class="text_short">
+                            <label>Country <span class="red">*</span></label>
+                            <?php $_country = ($session) ? $formData['aramex_shipment_shipper_country'] : Mage::getStoreConfig('aramexsettings/shipperdetail/country', $storeId); ?>
+                            <select class="aramex_countries validate-select" id="aramex_shipment_shipper_country"
+                                    name="aramex_shipment_shipper_country">
+                                <?php
+                                foreach ($countryCollection as $country) {
+                                    ?>
+                                    <option value="<?php echo $country['country_id'] ?>" <?php if ($_country) {
+                                        echo ($_country == $country['country_id']) ? 'selected="selected"' : '';
+                                    } ?> ><?php echo $country['name'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+
+
+                        </div>
+
+
+                        <div class="text_short">
+                            <?php $_city = ($session) ? $formData['aramex_shipment_shipper_city'] : Mage::getStoreConfig('aramexsettings/shipperdetail/city', $storeId); ?>
+                            <label>City <span class="red no-display">*</span></label><input class="" type="text"
+                                                                                            id="aramex_shipment_shipper_city"
+                                                                                            autocomplete="off"
+                                                                                            name="aramex_shipment_shipper_city"
+                                                                                            value="<?php echo $_city; ?>"/>
+                            <div id="aramex_shipment_shipper_city_autocomplete" class="am_autocomplete"></div>
+                        </div>
+                        <div class="text_short">
+                            <?php $_postalcode = ($session) ? $formData['aramex_shipment_shipper_postal'] : Mage::getStoreConfig('aramexsettings/shipperdetail/postalcode', $storeId); ?>
+                            <label>Postal Code <span class="red no-display">*</span></label><input class="" type="text"
+                                                                                                   id="aramex_shipment_shipper_postal"
+                                                                                                   name="aramex_shipment_shipper_postal"
+                                                                                                   value="<?php echo $_postalcode; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_state = ($session) ? $formData['aramex_shipment_shipper_state'] : Mage::getStoreConfig('aramexsettings/shipperdetail/state', $storeId); ?>
+                            <label>State</label><input type="text" id="aramex_shipment_shipper_state"
+                                                       name="aramex_shipment_shipper_state"
+                                                       value="<?php echo $_state; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_phone = ($session) ? $formData['aramex_shipment_shipper_phone'] : Mage::getStoreConfig('aramexsettings/shipperdetail/phone', $storeId); ?>
+                            <label>Phone</label><input class="required" type="text" id="aramex_shipment_shipper_phone"
+                                                       name="aramex_shipment_shipper_phone"
+                                                       value="<?php echo $_phone; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_mobile = ($session) ? $formData['aramex_shipment_shipper_mobile'] : Mage::getStoreConfig('aramexsettings/shipperdetail/mobile', $storeId); ?>
+                            <label>Mobile</label><input  type="text" id="aramex_shipment_shipper_mobile"
+                                                         name="aramex_shipment_shipper_mobile"
+                                                         value="<?php echo $_mobile; ?>"/>
+                        </div>
+                    </div>
+                </FIELDSET>
+                <FIELDSET class="aramex_shipment_creation_fieldset">
+                    <legend>Receiver Details</legend>
+                    <div id="receiver_details" class="aramex_shipment_creation_part">
+                        <div class="text_short">
+                            <label>Reference</label><input type="text" id="aramex_shipment_receiver_reference"
+                                                           name="aramex_shipment_receiver_reference"
+                                                           value="<?php echo $_order->getIncrementId() ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_name = ($shipping) ? $shipping->getName() : ''; ?>
+                            <?php $_name = ($session) ? $formData['aramex_shipment_receiver_name'] : $_name; ?>
+                            <label>Name <span class="red">*</span></label><input class="required" type="text"
+                                                                                 id="aramex_shipment_receiver_name"
+                                                                                 name="aramex_shipment_receiver_name"
+                                                                                 value="<?php echo $_name; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_email = ($customer->getEmail()) ? $customer->getEmail() : $_order->getData('customer_email'); ?>
+                            <?php $_email = ($session) ? $formData['aramex_shipment_receiver_email'] : $_email; ?>
+                            <label>Email <span class="red">*</span></label><input class="email required" type="text"
+                                                                                  id="aramex_shipment_receiver_email"
+                                                                                  name="aramex_shipment_receiver_email"
+                                                                                  value="<?php echo $_email; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $company_name = ($company_name) ? $company_name : ''; ?>
+                            <?php $company_name = (empty($company_name) and $shipping) ? $shipping->getName() : $company_name; ?>
+                            <?php $company_name = ($shipping) ? $shipping->getData('company') : ''; ?>
+                            <?php $company_name = ($session) ? $formData['aramex_shipment_receiver_company'] : $company_name;
+                            $company_name = (empty($company_name) and $shipping) ? $shipping->getName() : $company_name; ?>
+                            <label>Company</label><input type="text" id="aramex_shipment_receiver_company"
+                                                         name="aramex_shipment_receiver_company"
+                                                         value="<?php echo $company_name ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $street = ($shipping) ? $shipping->getData('street') : ''; ?>
+                            <?php $street = ($session) ? $formData['aramex_shipment_receiver_street'] : $street; ?>
+                            <label>Address <span class="red">*</span></label><textarea class="required" rows="4"
+                                                                                       cols="26" type="text"
+                                                                                       id="aramex_shipment_receiver_street"
+                                                                                       name="aramex_shipment_receiver_street"><?php echo $street; ?></textarea>
+                        </div>
+                        <div class="text_short">
+                            <label>Country <span class="red">*</span></label>
+                            <?php $_country = ($shipping) ? $shipping->getCountry() : ''; ?>
+                            <?php $_country = ($session) ? $formData['aramex_shipment_receiver_country'] : $_country; ?>
+                            <select class="aramex_countries" id="aramex_shipment_receiver_country"
+                                    name="aramex_shipment_receiver_country">
+                                <?php
+                                foreach ($countryCollection as $country) {
+                                    ?>
+                                    <option
+                                            value="<?php echo $country['country_id'] ?>" <?php echo ($_country == $country['country_id']) ? 'selected="selected"' : ''; ?> ><?php echo $country['name'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="text_short">
+                            <?php $_city = ($shipping) ? $shipping->getData('city') : ''; ?>
+                            <?php $_city = ($session) ? $formData['aramex_shipment_receiver_city'] : $_city; ?>
+                            <label>City <span class="red no-display">*</span></label><input class="" type="text"
+                                                                                            id="aramex_shipment_receiver_city"
+                                                                                            autocomplete="off"
+                                                                                            name="aramex_shipment_receiver_city"
+                                                                                            value="<?php echo $_city; ?>"/>
+                            <div id="aramex_shipment_receiver_city_autocomplete" class="am_autocomplete"></div>
+                        </div>
+                        <div class="text_short">
+                            <?php $_postcode = ($shipping) ? $shipping->getData('postcode') : ''; ?>
+                            <?php $_postcode = ($session) ? $formData['aramex_shipment_receiver_postal'] : $_postcode; ?>
+                            <label>Postal Code <span class="red no-display">*</span></label><input type="text" class=""
+                                                                                                   id="aramex_shipment_receiver_postal"
+                                                                                                   name="aramex_shipment_receiver_postal"
+                                                                                                   value="<?php echo $_postcode; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_state = ($shipping) ? $state : ''; ?>
+                            <?php $_state = ($session) ? $formData['aramex_shipment_receiver_state'] : $_state; ?>
+                            <label>State</label><input type="text" id="aramex_shipment_receiver_state"
+                                                       name="aramex_shipment_receiver_state"
+                                                       value="<?php echo $_state; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_phone = ($shipping) ? $shipping->getData('telephone') : ''; ?>
+                            <?php $_phone = ($session) ? $formData['aramex_shipment_receiver_phone'] : $_phone; ?>
+                            <label>Phone</label><input class="required" type="text" id="aramex_shipment_receiver_phone"
+                                                       name="aramex_shipment_receiver_phone"
+                                                       value="<?php echo $_phone; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_receiver_mobile = ($session) ? $formData['aramex_shipment_receiver_mobile'] : $_phone; ?>
+                            <label>Mobile</label><input type="text" id="aramex_shipment_receiver_mobile"
+                                                        name="aramex_shipment_receiver_mobile"
+                                                        value="<?php echo $_receiver_mobile; ?>"/>
+                        </div>
+                    </div>
+                </FIELDSET>
+                <div class="aramex_clearer"></div>
+                <FIELDSET class="aramex_shipment_creation_fieldset_big">
+                    <legend>Shipment Information</legend>
+                    <div id="shipment_infromation" class="aramex_shipment_creation_part">
+                        <div class="text_short" style="display:none">Total weight: <span
+                                    id="order-total-weight"><?php echo number_format($totalWeight, 2); ?></span> KG
+                        </div>
+                        <div class="text_short">
+                            <?php $_weight =  $totalWeight - $_shippedWeight;
+                            ?>
+                            <?php $_weightUnit = ($session) ? $formData['weight_unit'] : 'KG'; ?>
+                            <label>Total weight:</label>
+                            <input type="text" id="order_weight" name="order_weight" value="<?php echo number_format($_weight, 2); ?>"
+                                   class="fl width-60 mar-right-10"/>
+                            <select name="weight_unit" class="fl width-60">
+                                <option value="KG" <?php echo ($_weightUnit == 'KG') ? 'selected="selected"' : ''; ?> >
+                                    KG
+                                </option>
+                                <option value="LB" <?php echo ($_weightUnit == 'LB') ? 'selected="selected"' : ''; ?>>
+                                    LB
+                                </option>
+                            </select>
+                        </div>
+                        <div class="text_short">
+                            <label>Reference</label><input type="text" id="aramex_shipment_info_reference"
+                                                           name="aramex_shipment_info_reference"
+                                                           value="<?php echo $_order->getIncrementId() ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <label>Product Group</label>
+                            <?php $_country = ($shipping) ? $shipping->getCountry() : ''; ?>
+                            <?php $_group = ($session) ? $formData['aramex_shipment_info_product_group'] : ''; ?>
+                            <?php
+                            $checkCountry = false;
+                            if ($_group == '') {
+                                $checkCountry = ($_country == Mage::getStoreConfig('aramexsettings/shipperdetail/country', $storeId)) ? true : false;
+                            }
+                            ?>
+                            <select class="aramex_all_options" id="aramex_shipment_info_product_group"
+                                    name="aramex_shipment_info_product_group">
+
+                                <option <?php echo ($_group == 'DOM' or $checkCountry) ? 'selected="selected"' : ''; ?>
+                                        value="DOM">Domestic
+                                </option>
+                                <option <?php echo ($_group == 'EXP' or ($_group == '' and !$checkCountry)) ? 'selected="selected"' : ''; ?>
+                                        value="EXP">International Express
+                                </option>
+
+                            </select>
+                            <div id="aramex_shipment_info_product_group_div" style="display: none;"></div>
+                        </div>
+                        <div class="text_short">
+                            <label>Service Type</label>
+                            <?php
+                            $_service_type = ($shipping) ? $_order->getShippingMethod() : '';
+                            $_service_type = trim($_service_type, "aramex_");
+                            ?>
+
+                            <?php $_country = ($shipping) ? $shipping->getCountry() : ''; ?>
+                            <?php $_type = ($session) ? $formData['aramex_shipment_info_product_type'] : $_service_type; ?>
+                            <?php $notHide = '';
+                            if ($_country != Mage::getStoreConfig('aramexsettings/shipperdetail/country', $storeId) and $_type == '') {
+                                $notHide = 'display: none';
+                            }
+                            $checkCountry = false;
+                            if ($_type == '') {
+                                $checkCountry = ($_country == Mage::getStoreConfig('aramexsettings/shipperdetail/country', $storeId)) ? true : false;
+                            }
+                            ?>
+                            <?php
+                            $allowed_domestic_methods = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_domestic_methods', $storeId));
+                            $allowed_international_methods = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_international_methods', $storeId));
+                            $domestic_methods = Mage::getModel('aramex/carrier_aramex_source_domesticmethods')->toOptionArray();
+                            $international_methods = Mage::getModel('aramex/carrier_aramex_source_internationalmethods')->toOptionArray();
+                            $allowed_domestic_methods_apply = array();
+                            $allowed_international_methods_apply = array();
+
+                            ?>
+                            <select class="aramex_all_options" id="aramex_shipment_info_product_type"
+                                    name="aramex_shipment_info_product_type">
+
+                                <?php if (count($allowed_domestic_methods) > 0) {
+                                    $i = 1;
+                                    foreach ($domestic_methods as $key => $val) {
+                                        if (in_array($val['value'], $allowed_domestic_methods)) {
+                                            $selected_str = '';
+                                            //$selected_str =($_service_type == $val['value']) ? 'selected="selected"' : '';
+                                            if ($i == 1) {
+                                                $selected_str = ($_type == $val['value'] or $checkCountry) ? 'selected="selected"' : '';
+                                            } else {
+                                                $selected_str = ($_type == $val['value']) ? 'selected="selected"' : '';
+                                            }
+                                            $allowed_domestic_methods_apply[$val['value']] = $val['label'];
+
+                                            ?>
+
+                                            <option <?php echo $selected_str; ?> value="<?php echo $val['value']; ?>"
+                                                                                 id="<?php echo $val['value']; ?>"
+                                                                                 class="DOM"><?php echo $val['label']; ?></option>
+                                            <?php $i++;
+                                        }
+                                    }
+                                }
+                                ?>
+
+                                <?php if (count($allowed_international_methods) > 0) {
+                                    $i = 1;
+
+                                    foreach ($international_methods as $key => $val) {
+                                        if (in_array($val['value'], $allowed_international_methods)) {
+                                            $selected_str = '';
+                                            if ($i == 1) {
+
+                                                if ($_type == $val['value'] or (!$checkCountry and $_type == '')) {
+                                                    $selected_str = 'selected="selected"';
+                                                }
+                                            } else {
+                                                if ($_type == $val['value']) {
+                                                    $selected_str = 'selected="selected"';
+                                                }
+                                            }
+                                            $allowed_international_methods_apply[$val['value']] = $val['label'];
+                                            /* style="<?php echo ($checkCountry or $_group=='DOM')?'display: none':''; ?>" */
+
+                                            ?>
+                                            <option <?php echo $selected_str; ?> value="<?php echo $val['value']; ?>"
+                                                                                 id="<?php echo $val['value']; ?>"
+                                                                                 class="EXP"><?php echo $val['label']; ?></option>
+                                            <?php $i++;
+                                        }
+                                    }
+                                }
+                                ?>
+
+                            </select>
+                            <div id="aramex_shipment_info_service_type_div" style="display: none;"></div>
+                        </div>
+
+
+                        <div class="text_short">
+                            <label>Additional Services</label>
+
+                            <?php $_type = $_order->getPayment()->getMethodInstance()->getCode(); ?>
+                            <?php $_type = ($session) ? $formData['aramex_shipment_info_service_type'][0] : $_type;
+
+                            ?>
+                            <select multiple class="aramex_all_options" id="aramex_shipment_info_service_type"
+                                    name="aramex_shipment_info_service_type[]">
+
+                                <!--<option value=""></option>-->
+
+                                <?php
+                                $allowed_domestic_additional_services = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_domestic_additional_services', $storeId));
+                                $allowed_international_additional_services = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_international_additional_services', $storeId));
+                                $domestic_additional_services = Mage::getModel('aramex/carrier_aramex_source_domesticAdditionalServices')->toOptionArray();
+                                $international_additional_services = Mage::getModel('aramex/carrier_aramex_source_internationalAdditionalServices')->toOptionArray();
+                                ?>
+
+                                <?php if (count($allowed_domestic_additional_services) > 0) {
+                                    $i = 1;
+                                    foreach ($domestic_additional_services as $key => $val) {
+                                        if (in_array($val['value'], $allowed_domestic_additional_services)) {
+
+                                            ?>
+                                            <option <?php echo ($_type == $val['value'] and $_group == 'DOM') ? 'selected="selected"' : ''; ?>
+                                                    value="<?php echo $val['value']; ?>"
+                                                    id="dom_as_<?php echo $val['value']; ?>"
+                                                    class="DOM local"><?php echo $val['label']; ?></option>
+                                            <?php $i++;
+                                        }
+                                    }
+                                } ?>
+                                <?php if (count($allowed_international_additional_services) > 0) {
+                                    $i = 1;
+                                    foreach ($international_additional_services as $key => $val) {
+                                        if (in_array($val['value'], $allowed_international_additional_services)) {
+                                            ?>
+                                            <option <?php echo ($_type == $val['value'] and $_group == 'DOM') ? 'selected="selected"' : ''; ?>
+                                                    value="<?php echo $val['value']; ?>"
+                                                    id="exp_as_<?php echo $val['value']; ?>"
+                                                    class="non-local EXP"><?php echo $val['label']; ?></option>
+                                            <?php $i++;
+                                        }
+                                    }
+                                } ?>
+                            </select>
+
+                        </div>
+
+                        <div class="text_short">
+                            <label>Payment Type</label>
+                            <?php $_type = ($session) ? $formData['aramex_shipment_info_payment_type'] : ''; ?>
+                            <select class="aramex_all_options" id="aramex_shipment_info_payment_type"
+                                    name="aramex_shipment_info_payment_type">
+
+                                <option value="P" <?php if ($_type == 'P') {
+                                    echo 'selected="selected"';
+                                } ?>>Prepaid
+                                </option>
+                                <option value="C" <?php if ($_type == 'C') {
+                                    echo 'selected="selected"';
+                                } ?>>Collect
+                                </option>
+                                <option value="3" <?php if ($_type == '3') {
+                                    echo 'selected="selected"';
+                                } ?>>Third Party
+                                </option>
+
+                            </select>
+                            <div id="aramex_shipment_info_service_type_div" style="display: none;"></div>
+                        </div>
+                        <div class="text_short">
+                            <label>Payment Option</label>
+                            <?php $_option = ($session) ? $formData['aramex_shipment_info_payment_option'] : ''; ?>
+                            <select class="" id="aramex_shipment_info_payment_option"
+                                    name="aramex_shipment_info_payment_option">
+
+                                <option value=""></option>
+                                <!-- <option id="ASCC" value="ASCC" style="display: none;">Needs Shipper Account Number to be
+                                     filled
+                                 </option>
+                                 <option id="ARCC" value="ARCC" style="display: none;">Needs Consignee Account Number to
+                                     be filled
+                                 </option>-->
+                                <option id="CASH" value="CASH" <?php if ($_option == 'CASH') {
+                                    echo 'selected="selected"';
+                                } ?>>Cash
+                                </option>
+                                <option id="ACCT" value="ACCT" <?php if ($_option == 'ACCT') {
+                                    echo 'selected="selected"';
+                                } ?>>Account
+                                </option>
+                                <option id="PPST" value="PPST" <?php if ($_option == 'PPST') {
+                                    echo 'selected="selected"';
+                                } ?>>Prepaid Stock
+                                </option>
+                                <option id="CRDT" value="CRDT" <?php if ($_option == 'CRDT') {
+                                    echo 'selected="selected"';
+                                } ?>>Credit
+                                </option>
+
+                            </select>
+
+                        </div>
+                        <div class="text_short">
+                            <?php $_amount = ($_order->getPayment()->getMethodInstance()->getCode() != 'ccsave') ? round($_order->getData('grand_total')- $_shippedPrice, 2) : ''; ?>
+                            <?php //$_amount = ($session) ? $formData['aramex_shipment_info_cod_amount'] : $_amount; ?>
+                            <?php // if (Mage::getStoreConfig('aramexsettings/config/sandbox_flag', $storeId) == 1) {
+                            //     $_amount = '';
+                            // } ?>
+
+                            <label>COD Amount</label><input class="" type="text" id="aramex_shipment_info_cod_amount"
+                                                            name="aramex_shipment_info_cod_amount"
+                                                            value="<?php echo $_amount; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $_amount = ($session) ? $formData['aramex_shipment_info_custom_amount'] : $_amount; ?>
+                            <?php
+                            $customs_value = $_order->getSubtotal();
+                            $baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+                            // Current Currency ('USD')
+                            $currentCurrencyCode = $_order->getOrderCurrencyCode();
+                            // Allowed currencies
+                            $allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+                            $rates = Mage::getModel('directory/currency')->getCurrencyRates($baseCurrencyCode, array_values($allowedCurrencies));
+
+                            if ($currentCurrencyCode != 'AED') {
+                                // the price converted
+                                $customs_value = $customs_value / $rates[$currentCurrencyCode];
+                                if ((int)$customs_value >= 1000) {
+                                    $randomValue = mt_rand(800, 1000);
+                                    $randomValue = ($randomValue / $rates['AED']) * $rates[$currentCurrencyCode];
+                                }else{
+                                    $randomValue = ($customs_value / $rates['AED']) * $rates[$currentCurrencyCode];
+                                }
+                            }else{
+                                if ((int)$customs_value >= 1000) {
+                                    $randomValue = mt_rand(800, 1000);
+                                }else{
+                                    $randomValue = $customs_value;
+                                }
+                            }
+                            ?>
+                            <label>Custom Amount</label><input class="" type="text"
+                                                               id="aramex_shipment_info_custom_amount"
+                                                               name="aramex_shipment_info_custom_amount"
+                                                               value="<?php echo round($randomValue); ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $_code = ($session) ? $formData['aramex_shipment_currency_code'] : $_order->getData('base_currency_code'); ?>
+                            <label>COD Currency</label><input type="text" class="" id="aramex_shipment_currency_code"
+                                                              name="aramex_shipment_currency_code"
+                                                              value="<?php echo $_code ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $_code = ($session) ? $formData['aramex_shipment_currency_code_custom'] : $_code; ?>
+                            <label>Customs Currency</label><input type="text" class=""
+                                                                  id="aramex_shipment_currency_code_custom"
+                                                                  name="aramex_shipment_currency_code_custom"
+                                                                  value="<?php echo $_code; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $_comment = ($session) ? $formData['aramex_shipment_info_comment'] : ''; ?>
+                            <label>Comment</label><textarea rows="4"
+                                                            cols="<?php if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox')) { ?>29 <?php } else { ?>35<?php } ?>"
+                                                            type="text" id="aramex_shipment_info_comment"
+                                                            name="aramex_shipment_info_comment"><?php echo $_comment; ?></textarea>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $_foreignhawb = ($session) ? $formData['aramex_shipment_info_foreignhawb'] : ''; ?>
+                            <label>Foreign Shipment No</label><input class="" type="text"
+                                                                     id="aramex_shipment_info_foreignhawb"
+                                                                     name="aramex_shipment_info_foreignhawb"
+                                                                     value="<?php echo $_foreignhawb; ?>"/>
+                        </div>
+                        <?php ?>
+                        <div class="text_short">
+                            <label for="file1">Filename 1:</label>
+                            <div id="file1_div" style="float: left;width: 145px;">
+                                <input type="file" name="file1" id="file1" size="7">
+                            </div>
+                            <div style="float: right;">
+                                <input type="button" name="filereset" id="filereset" value="Reset"
+                                       style="width: 60px;height: 24px;"/>
+                            </div>
+                        </div>
+                        <div class="text_short">
+                            <label for="file2">Filename 2:</label>
+                            <div id="file2_div" style="float: left;width: 145px;">
+                                <input type="file" name="file2" id="file2" size="7">
+                            </div>
+                            <div style="float: right;">
+                                <input type="button" name="file2reset" id="file2reset" value="Reset"
+                                       style="width: 60px;height: 24px;"/>
+                            </div>
+                        </div>
+                        <div class="text_short">
+                            <label for="file">Filename 3:</label>
+                            <div id="file3_div" style="float: left;width: 145px;">
+                                <input type="file" name="file3" id="file3" size="7">
+                            </div>
+                            <div style="float: right;">
+                                <input type="button" name="file3reset" id="file3reset" value="Reset"
+                                       style="width: 60px;height: 24px;"/>
+                            </div>
+                        </div>
+                        <?php ?>
+                        <div class="text_short">
+                            <label>Description</label><textarea rows="4" cols="31" type="text"
+                                                                id="aramex_shipment_description"
+                                                                name="aramex_shipment_description"
+                                                                style="display: none;"><?php
+                                $itemsnamecounter = 1;
+                                $item_supplier_id = '';
+                                foreach ($_order->getAllVisibleItems() as $itemname) {
+                                    if ($itemname->getQtyOrdered() > $itemname->getQtyShipped()) {
+                                        echo $itemname->getId() . ' - ' . trim($itemname->getName());
+                                    }
+                                    $itemsnamecounter++;
+                                    $supplier_different = false;
+                                    $atleast_item_shipped = false;
+                                    if (!$item_supplier_id) {
+                                        $item_supplier_id = $itemname->getUdropshipVendor();
+                                    } else {
+                                        if ($item_supplier_id != $itemname->getUdropshipVendor()) {
+                                            if (!$supplier_different) {
+                                                $supplier_different = true;
+                                            }
+                                        }
+                                    }
+
+                                    if ($itemname->getQtyOrdered() == $itemname->getQtyShipped()) {
+                                        if (!$atleast_item_shipped) {
+                                            $atleast_item_shipped = true;
+                                        }
+                                    }
+                                }
+
+
+                                ?>
+					</textarea>
+                            <div id="aramex_shipment_description_div" style="    float: left;
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-top: 2px;
+    width: 202px;">
+                                <?php
+                                $itemsnamecounter1 = 1;
+                                foreach ($_order->getAllVisibleItems() as $itemname1) {
+                                    //echo $itemsnamecounter1;
+                                    if ($itemname1->getQtyOrdered() > $itemname1->getQtyShipped()) {
+                                        echo '<p id="' . $itemname1->getId() . '">' . trim($itemname1->getName()) . '</p>';
+                                    }
+                                    $itemsnamecounter1++;
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="text_short">
+                            <label>Items Price</label><input type="text" id="aramex_shipment_info_items_subtotal"
+                                                             name="aramex_shipment_info_items_subtotal"
+                                                             disabled="disabled" style="width: 165px; float: left;"
+                                                             value="<?php echo $_order->getBaseSubtotal() - $_shippedPrice; ?>"/>
+                            <div
+                                    style="float: left; padding-left: 5px;"><?php echo $_order->getData('base_currency_code'); ?></div>
+                        </div>
+                        <div class="text_short">
+                            <?php $_number = ($session) ? $formData['number_pieces'] : 1; ?>
+                            <label>Number of Pieces</label><input type="text" name="number_pieces"
+                                                                  value="<?php echo $_number; ?>"
+                                                                  style="width: 165px; float: left;"/>
+                            <div style="float: left; padding-left: 5px;"></div>
+                        </div>
+                        <?php if ($payment->getData('method') == 'ig_cashondelivery') { ?>
+                            <?php if ($supplier_different) { ?>
+                                <div class="text_short">
+                                    <label>Shipping Charges</label><input type="text"
+                                                                          id="aramex_shipment_info_shipping_charges"
+                                                                          name="aramex_shipment_info_shipping_charges"
+                                                                          style="width: 165px; float: left;" value=""/>
+                                    <div
+                                            style="float: left; padding-left: 5px;"><?php echo $_order->getData('base_currency_code'); ?></div>
+                                </div>
+                                <?php
+                            } else {
+                                if ($atleast_item_shipped) {
+                                    ?>
+                                    <div class="text_short">
+                                        <label>Shipping Charges</label><input type="text"
+                                                                              id="aramex_shipment_info_shipping_charges"
+                                                                              name="aramex_shipment_info_shipping_charges"
+                                                                              style="width: 165px; float: left;"
+                                                                              value=""/>
+                                        <div
+                                                style="float: left; padding-left: 5px;"><?php echo $_order->getData('base_currency_code'); ?></div>
+                                    </div>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <div class="text_short">
+                                        <label>Shipping Charges</label><input type="text"
+                                                                              id="aramex_shipment_info_shipping_charges"
+                                                                              name="aramex_shipment_info_shipping_charges"
+                                                                              style="width: 165px; float: left;"
+                                                                              value="<?php echo $_order->getData('base_shipping_amount'); ?>"/>
+                                        <div
+                                                style="float: left; padding-left: 5px;"><?php echo $_order->getData('base_currency_code'); ?></div>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            ?>
+                            <div class="text_short">
+                                <?php $cod_value = $_order->getData('base_shipping_amount') + $_order->getBaseSubtotal();
+
+                                ?>
+
+                                <label>COD Value</label><input type="text" id="aramex_shipment_info_cod_value"
+                                                               name="aramex_shipment_info_cod_value"
+                                                               style="width: 165px; float: left;"
+                                                               value="<?php echo $cod_value; ?>"/>
+                                <div
+                                        style="float: left; padding-left: 5px;"><?php echo $_order->getData('base_currency_code'); ?></div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div id="shipment_infromation2" class="aramex_shipment_creation_part">
+                        <div class="text_short" id="aramex_shipment_info_items">
+                            <div>
+                                <?php if ($itemscount != 0) { ?>
+                                    <div style="margin-bottom: -15px;">Items not shipped yet</div>
+                                    <br/>
+                                    <table id="aramex_items_table">
+                                        <tr>
+                                            <th class="aramex_item_options">Action</th>
+                                            <th class="aramex_item_name">Name</th>
+                                            <th class="aramex_item_qty">Qty</th>
+                                        </tr>
+                                        <?php
+                                        foreach ($itemsv as $item) {
+                                            if ($item->getQtyOrdered() > $item->getQtyShipped() /*or $isShipped*/) {
+                                                ?>
+                                                <tr id="item<?php echo $item->getId(); ?>"
+                                                    class="aramex_item_tobe_shipped">
+                                                    <td class="aramex_item_options">
+                                                        <a href="javascript:aramexhide('<?php echo $item->getId(); ?>', '<?php echo $item->getBasePrice() * ($item->getQtyOrdered()- $item->getQtyShipped()); ?>', '<?php echo($item->getWeight() * ($item->getQtyOrdered()-$item->getQtyShipped())) ?>', '<?php echo($item->getWeight()) ?>');">Remove</a>
+                                                    </td>
+                                                    <?php
+                                                    $_qty = abs($item->getQtyOrdered() - $item->getQtyShipped());
+                                                    if ($_qty == 0 and $isShipped) {
+                                                        $_qty = intval($item->getQtyShipped());
+                                                    }
+                                                    ?>
+                                                    <td class="aramex_item_name">
+                                                        <span
+                                                                title="<?php echo $item->getName(); ?>"><?php echo substr($item->getName(), 0, 21); ?>
+                                                            ...</span>
+                                                        <input type="hidden"
+                                                               id="aramex_items_<?php echo $item->getId(); ?>"
+                                                               name="aramex_items[<?php echo $item->getId(); ?>]"
+                                                               value="<?php echo $_qty; ?>"/>
+                                                    </td>
+                                                    <td class="aramex_item_qty">
+                                                        <input class="aramex_input_items_qty" type="text"
+                                                               name="<?php echo $item->getId(); ?>"
+                                                               value="<?php echo $_qty; ?>"/>
+
+                                                        <input type="hidden"
+                                                               id="aramex_items_base_price_<?php echo $item->getId(); ?>"
+                                                               name="aramex_items_base_price_<?php echo $item->getId(); ?>"
+                                                               value="<?php echo $item->getBasePrice() ?>"/>
+                                                        <input type="hidden"
+                                                               id="aramex_items_base_weight_<?php echo $item->getId(); ?>"
+                                                               name="aramex_items_base_weight_<?php echo $item->getId(); ?>"
+                                                               value="<?php echo $item->getWeight() ?>"/>
+                                                        <input type="hidden"
+                                                               id="aramex_items_total_<?php echo $item->getId(); ?>"
+                                                               name="aramex_items_total_<?php echo $item->getId(); ?>"
+                                                               value="<?php echo $_qty; ?>"/>
+
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td colspan="2"
+                                                style="font-weight: bold;background: none repeat scroll 0% 0% rgb(224, 224, 224);">
+                                                Number of items to be shipped:
+                                            </td>
+                                            <td>
+								<span id="items_tobe_shipped_number">
+								<?php echo $itemscount; ?>
+								</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <?php } else { ?>
+                                    <div style="color: green; width: 200px; margin: 0pt auto;">All items have been
+                                        shipped
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aramex_clearer"></div>
+                </FIELDSET>
+                <div class="aramex_clearer"></div>
+
+                <div style="float: right; width: 100%; width: 30px;">
+                    <div style="float: right;font-size: 11px;height: 30px;margin-bottom: 6px;width: 184px;"><input
+                                style="float: left; width: 30px;" type="checkbox" name="aramex_email_customer" value="yes"/>
+                        <span style="float: left; margin-top: -2px;">Notify customer by email</span></div>
+                </div>
+                <div class="aramex_clearer"></div>
+                <div style="float: right;margin-bottom: 20px;margin-top: -11px;">
+                    <?php if ($_order->canShip()): ?>
+                        <input name="aramex_return_shipment_creation_date" type="hidden" value="create"/>
+                        <button id="aramex_shipment_creation_submit_id" type="submit"
+                                name="aramex_shipment_creation_submit">Create Shipment
+                        </button>
+                    <?php endif; ?>
+
+                    <?php
+
+                    $shipments = Mage::getResourceModel('sales/order_shipment_collection')
+                        ->addAttributeToSelect('*')
+                        ->addFieldToFilter("order_id", $_order->getId())->join("sales/shipment_comment", 'main_table.entity_id=parent_id', 'comment')->addFieldToFilter('comment', array('like' => "%{$_order->getIncrementId()}%"))->load();
+
+                    $aramex_return_button = false;
+
+                    if ($shipments->count()) {
+                        foreach ($shipments as $key => $comment) {
+                            if (version_compare(PHP_VERSION, '5.3.0') <= 0) {
+                                $awbno = substr($comment->getComment(), 0, strpos($comment->getComment(), "- Order No"));
+                            } else {
+                                $awbno = strstr($comment->getComment(), "- Order No", true);
+                            }
+                            $awbno = trim($awbno, "AWB No.");
+                            break;
+                        }
+                        if ((int)$awbno)
+                            $aramex_return_button = true;
+                    }
+
+                    if (!$_order->canShip() && $aramex_return_button) {
+
+                        ?>
+
+                        <input name="aramex_return_shipment_creation_date" type="hidden" value="return"/>
+                        <button id="aramex_return_shipment_creation_submit_id" type="submit"
+                                name="aramex_return_shipment_creation_submit_id">Return Order
+                        </button>
+                        <script>
+                            var jccc = jQuery.noConflict();
+                            jccc(function () {
+                                jccc("#aramex_shipment_info_billing_account_id").val(2);
+                                jccc("#aramex_shipment_info_billing_account_id").trigger('change');
+                            });
+                        </script>
+                    <?php } ?>
+
+                    <button onclick="aramexclose()" type="button">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<?php
+$allowed_domestic_methods = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_domestic_methods', $storeId));
+$allowed_international_methods = explode(',', Mage::getStoreConfig('aramexsettings/config/allowed_international_methods', $storeId));
+
+?>
+
+    <script src="<?php echo $this->getSkinUrl('aramex/js/jquery-ui.js'); ?>"></script>
+    <link rel="stylesheet" href="<?php echo $this->getSkinUrl('aramex/css/jquery-ui.css'); ?>"/>
+    <script type="text/javascript" src="<?php echo $this->getSkinUrl('aramex/js/jquery.validate.min.js'); ?>"></script>
+
+    <script>
+        var jccc = jQuery.noConflict();
+
+        var allowed_domestic_methods = <?php echo json_encode($allowed_domestic_methods); ?>;
+        var allowed_international_methods = <?php echo json_encode($allowed_international_methods); ?>;
+
+        var allowed_domestic_methods_apply = <?php echo json_encode($allowed_domestic_methods_apply); ?>;
+        var allowed_international_methods_apply = <?php echo json_encode($allowed_international_methods_apply); ?>;
+
+
+        var aramex_shipment_shipper_name = document.getElementById('aramex_shipment_shipper_name').value;
+        var aramex_shipment_shipper_email = document.getElementById('aramex_shipment_shipper_email').value;
+        var aramex_shipment_shipper_company = document.getElementById('aramex_shipment_shipper_company').value;
+        var aramex_shipment_shipper_street = document.getElementById('aramex_shipment_shipper_street').value;
+        var aramex_shipment_shipper_country = document.getElementById('aramex_shipment_shipper_country').value;
+        var aramex_shipment_shipper_city = document.getElementById('aramex_shipment_shipper_city').value;
+        var aramex_shipment_shipper_postal = document.getElementById('aramex_shipment_shipper_postal').value;
+        var aramex_shipment_shipper_state = document.getElementById('aramex_shipment_shipper_state').value;
+        var aramex_shipment_shipper_phone = document.getElementById('aramex_shipment_shipper_phone').value;
+        var aramex_shipment_shipper_mobile = document.getElementById('aramex_shipment_shipper_mobile').value;
+
+        var aramex_shipment_receiver_name = document.getElementById('aramex_shipment_receiver_name').value;
+        var aramex_shipment_receiver_email = document.getElementById('aramex_shipment_receiver_email').value;
+        var aramex_shipment_receiver_company = document.getElementById('aramex_shipment_receiver_company').value;
+        var aramex_shipment_receiver_street = document.getElementById('aramex_shipment_receiver_street').value;
+        var aramex_shipment_receiver_country = document.getElementById('aramex_shipment_receiver_country').value;
+        var aramex_shipment_receiver_city = document.getElementById('aramex_shipment_receiver_city').value;
+        var aramex_shipment_receiver_postal = document.getElementById('aramex_shipment_receiver_postal').value;
+        var aramex_shipment_receiver_state = document.getElementById('aramex_shipment_receiver_state').value;
+        var aramex_shipment_receiver_phone = document.getElementById('aramex_shipment_receiver_phone').value;
+        var aramex_shipment_receiver_mobile = document.getElementById('aramex_shipment_receiver_mobile').value;
+
+        function resetShipperDetail(el) {
+            //alert(el.value);
+            var elValue = el.value;
+            var flag = 0;
+
+
+            if (elValue == 2) {
+                document.getElementById('aramex_shipment_shipper_name').value = aramex_shipment_receiver_name;
+                document.getElementById('aramex_shipment_shipper_email').value = aramex_shipment_receiver_email;
+                document.getElementById('aramex_shipment_shipper_company').value = aramex_shipment_receiver_company;
+                document.getElementById('aramex_shipment_shipper_street').value = aramex_shipment_receiver_street;
+                document.getElementById('aramex_shipment_shipper_country').value = aramex_shipment_receiver_country;
+                document.getElementById('aramex_shipment_shipper_city').value = aramex_shipment_receiver_city;
+                document.getElementById('aramex_shipment_shipper_postal').value = aramex_shipment_receiver_postal;
+                document.getElementById('aramex_shipment_shipper_state').value = aramex_shipment_receiver_state;
+                document.getElementById('aramex_shipment_shipper_phone').value = aramex_shipment_receiver_phone;
+                document.getElementById('aramex_shipment_shipper_mobile').value = aramex_shipment_receiver_mobile;
+                document.getElementById('aramex_shipment_receiver_name').value = aramex_shipment_shipper_name;
+                document.getElementById('aramex_shipment_receiver_email').value = aramex_shipment_shipper_email;
+                document.getElementById('aramex_shipment_receiver_company').value = aramex_shipment_shipper_company;
+                document.getElementById('aramex_shipment_receiver_street').value = aramex_shipment_shipper_street;
+                document.getElementById('aramex_shipment_receiver_country').value = aramex_shipment_shipper_country;
+                document.getElementById('aramex_shipment_receiver_city').value = aramex_shipment_shipper_city;
+                document.getElementById('aramex_shipment_receiver_postal').value = aramex_shipment_shipper_postal;
+                document.getElementById('aramex_shipment_receiver_state').value = aramex_shipment_shipper_state;
+                document.getElementById('aramex_shipment_receiver_phone').value = aramex_shipment_shipper_phone;
+                document.getElementById('aramex_shipment_receiver_mobile').value = aramex_shipment_shipper_mobile;
+                flag = 1;
+            }
+            else if (elValue == 3) {
+                document.getElementById('aramex_shipment_shipper_name').value = "";
+                document.getElementById('aramex_shipment_shipper_email').value = "";
+                document.getElementById('aramex_shipment_shipper_company').value = "";
+                document.getElementById('aramex_shipment_shipper_street').value = "";
+                document.getElementById('aramex_shipment_shipper_country').value = "";
+                document.getElementById('aramex_shipment_shipper_city').value = "";
+                document.getElementById('aramex_shipment_shipper_postal').value = "";
+                document.getElementById('aramex_shipment_shipper_state').value = "";
+                document.getElementById('aramex_shipment_shipper_phone').value = "";
+                document.getElementById('aramex_shipment_shipper_mobile').value = "";
+
+                document.getElementById('aramex_shipment_info_payment_type').value = '3';
+
+                document.getElementById('ASCC').style.display = 'block';
+                document.getElementById('ARCC').style.display = 'block';
+
+                document.getElementById('CASH').style.display = 'none';
+                document.getElementById('ACCT').style.display = 'none';
+                document.getElementById('PPST').style.display = 'none';
+                document.getElementById('CRDT').style.display = 'none';
+
+                jccc('#aramex_shipment_info_payment_option').val("");
+
+
+                flag = 2;
+            }
+            else {
+                if (flag = 1) {
+                    document.getElementById('aramex_shipment_receiver_name').value = aramex_shipment_receiver_name;
+                    document.getElementById('aramex_shipment_receiver_email').value = aramex_shipment_receiver_email;
+                    document.getElementById('aramex_shipment_receiver_company').value = aramex_shipment_receiver_company;
+                    document.getElementById('aramex_shipment_receiver_street').value = aramex_shipment_receiver_street;
+                    document.getElementById('aramex_shipment_receiver_country').value = aramex_shipment_receiver_country;
+                    document.getElementById('aramex_shipment_receiver_city').value = aramex_shipment_receiver_city;
+                    document.getElementById('aramex_shipment_receiver_postal').value = aramex_shipment_receiver_postal;
+                    document.getElementById('aramex_shipment_receiver_state').value = aramex_shipment_receiver_state;
+                    document.getElementById('aramex_shipment_receiver_phone').value = aramex_shipment_receiver_phone;
+                    document.getElementById('aramex_shipment_receiver_mobile').value = aramex_shipment_receiver_mobile;
+
+                    document.getElementById('aramex_shipment_shipper_name').value = aramex_shipment_shipper_name;
+                    document.getElementById('aramex_shipment_shipper_email').value = aramex_shipment_shipper_email;
+                    document.getElementById('aramex_shipment_shipper_company').value = aramex_shipment_shipper_company;
+                    document.getElementById('aramex_shipment_shipper_street').value = aramex_shipment_shipper_street;
+                    document.getElementById('aramex_shipment_shipper_country').value = aramex_shipment_shipper_country;
+                    document.getElementById('aramex_shipment_shipper_city').value = aramex_shipment_shipper_city;
+                    document.getElementById('aramex_shipment_shipper_postal').value = aramex_shipment_shipper_postal;
+                    document.getElementById('aramex_shipment_shipper_state').value = aramex_shipment_shipper_state;
+                    document.getElementById('aramex_shipment_shipper_phone').value = aramex_shipment_shipper_phone;
+                    document.getElementById('aramex_shipment_shipper_mobile').value = aramex_shipment_shipper_mobile;
+
+                    document.getElementById('aramex_shipment_info_payment_type').value = 'P';
+
+                    document.getElementById('ASCC').style.display = 'none';
+                    document.getElementById('ARCC').style.display = 'none';
+
+                    document.getElementById('CASH').style.display = 'block';
+                    document.getElementById('ACCT').style.display = 'block';
+                    document.getElementById('PPST').style.display = 'block';
+                    document.getElementById('CRDT').style.display = 'block';
+
+                    jccc('#aramex_shipment_info_payment_option').val("");
+
+
+                }
+                else if (flag = 2) {
+                    document.getElementById('aramex_shipment_shipper_name').value = aramex_shipment_shipper_name;
+                    document.getElementById('aramex_shipment_shipper_email').value = aramex_shipment_shipper_email;
+                    document.getElementById('aramex_shipment_shipper_company').value = aramex_shipment_shipper_company;
+                    document.getElementById('aramex_shipment_shipper_street').value = aramex_shipment_shipper_street;
+                    document.getElementById('aramex_shipment_shipper_country').value = aramex_shipment_shipper_country;
+                    document.getElementById('aramex_shipment_shipper_city').value = aramex_shipment_shipper_city;
+                    document.getElementById('aramex_shipment_shipper_postal').value = aramex_shipment_shipper_postal;
+                    document.getElementById('aramex_shipment_shipper_state').value = aramex_shipment_shipper_state;
+                    document.getElementById('aramex_shipment_shipper_phone').value = aramex_shipment_shipper_phone;
+                    document.getElementById('aramex_shipment_shipper_mobile').value = aramex_shipment_shipper_mobile;
+
+                    document.getElementById('aramex_shipment_receiver_name').value = aramex_shipment_receiver_name;
+                    document.getElementById('aramex_shipment_receiver_email').value = aramex_shipment_receiver_email;
+                    document.getElementById('aramex_shipment_receiver_company').value = aramex_shipment_receiver_company;
+                    document.getElementById('aramex_shipment_receiver_street').value = aramex_shipment_receiver_street;
+                    document.getElementById('aramex_shipment_receiver_country').value = aramex_shipment_receiver_country;
+                    document.getElementById('aramex_shipment_receiver_city').value = aramex_shipment_receiver_city;
+                    document.getElementById('aramex_shipment_receiver_postal').value = aramex_shipment_receiver_postal;
+                    document.getElementById('aramex_shipment_receiver_state').value = aramex_shipment_receiver_state;
+                    document.getElementById('aramex_shipment_receiver_phone').value = aramex_shipment_receiver_phone;
+                    document.getElementById('aramex_shipment_receiver_mobile').value = aramex_shipment_receiver_mobile;
+
+                    document.getElementById('aramex_shipment_info_payment_type').value = 'P';
+
+                    document.getElementById('ASCC').style.display = 'none';
+                    document.getElementById('ARCC').style.display = 'none';
+
+                    document.getElementById('CASH').style.display = 'block';
+                    document.getElementById('ACCT').style.display = 'block';
+                    document.getElementById('PPST').style.display = 'block';
+                    document.getElementById('CRDT').style.display = 'block';
+
+                    jccc('#aramex_shipment_info_payment_option').val("");
+
+
+                }
+                flag = 0;
+            }
+            /* hot fix  P.R */
+            jccc(".aramex_countries").trigger('change');
+        }
+
+        jccc('#aramex_shipment_info_payment_type').change(function () {
+            //alert('Hello');
+            if (jccc('#aramex_shipment_info_payment_type').val() == "P") {
+                document.getElementById('ASCC').style.display = 'none';
+                document.getElementById('ARCC').style.display = 'none';
+
+                document.getElementById('CASH').style.display = 'block';
+                document.getElementById('ACCT').style.display = 'block';
+                document.getElementById('PPST').style.display = 'block';
+                document.getElementById('CRDT').style.display = 'block';
+
+                jccc('#aramex_shipment_info_payment_option').val("");
+
+
+            }
+            else {
+                document.getElementById('ASCC').style.display = 'block';
+                document.getElementById('ARCC').style.display = 'block';
+
+                document.getElementById('CASH').style.display = 'none';
+                document.getElementById('ACCT').style.display = 'none';
+                document.getElementById('PPST').style.display = 'none';
+                document.getElementById('CRDT').style.display = 'none';
+
+                jccc('#aramex_shipment_info_payment_option').val("");
+
+            }
+        });
+
+
+        function togglePickup() {
+            jccc('#pickup_infromation').toggle('slow');
+        }
+
+
+        function aramexpop(itemscount) {
+            if (itemscount >= 0) {
+                jccc("#aramex_overlay").css("display", "block");
+                jccc("#aramex_shipment_creation").fadeIn(1000);
+            }
+            else {
+                alert('Cannot create a shipment, all items have been shipped');
+            }
+
+        }
+
+        function aramexreturnpop() {
+
+            jccc("#aramex_overlay").css("display", "block");
+            jccc("#aramex_return_shipment_creation_submit_id").css("display", "in-block");
+            jccc("#aramex_shipment_info_billing_account_id").val(2);
+            jccc("#aramex_shipment_info_billing_account_id").trigger('change');
+            jccc("#aramex_shipment_info_payment_type").val("C");
+            jccc("#aramex_shipment_creation").fadeIn(1000);
+
+
+        }
+
+
+        function aramexclose() {
+            jccc("#aramex_overlay").css("display", "none");
+            jccc("#aramex_shipment_creation").fadeOut(500);
+        }
+
+        function aramexhide(aramexid, item_price, order_total_weight, item_weight) {
+            if (jccc(".aramex_item_tobe_shipped").length > 1) {
+                //alert((parseFloat(jccc("#order-total-weight").html()) - parseFloat(order_total_weight)).toFixed(2));
+
+
+                jccc("#order-total-weight").html((parseFloat(jccc("#order-total-weight").html()) - parseFloat(order_total_weight)).toFixed(2));
+
+                jccc("#order_weight").val(parseFloat(jccc("#order_weight").val() - parseFloat(parseInt(jccc("input[name=" + aramexid + "]").val()) * parseFloat(item_weight) )).toFixed(2));
+
+                jccc("input[name=aramex_shipment_info_items_subtotal]").val((parseFloat(jccc("input[name=aramex_shipment_info_items_subtotal]").val()) - parseFloat(item_price)).toFixed(2));
+
+                //new
+                jccc('#aramex_shipment_info_cod_amount').val((parseFloat(jccc('#aramex_shipment_info_cod_amount').val()) - parseFloat(parseInt(jccc("input[name=" + aramexid + "]").val()) * parseFloat(jccc('#aramex_items_base_price_' + aramexid).val()))).toFixed(2));
+
+                jccc("#item" + aramexid).css('background', '#F2C2C8');
+                jccc("#item" + aramexid).fadeOut(500);
+                jccc("#item" + aramexid + " input").val(0);
+                jccc("#item" + aramexid).remove();
+                jccc("#" + aramexid).remove();
+                jccc("textarea[name=aramex_shipment_description]").text(jccc("#aramex_shipment_description_div").text());
+                get_tobe_shipped_items_number();
+            } else {
+                alert('At least one item is needed to create a shipment.');
+            }
+        }
+
+        function get_tobe_shipped_items_number() {
+            items_tobe_shipped_number = 0;
+            jccc("#aramex_items_table .aramex_input_items_qty").each(function (qty_index) {
+                items_tobe_shipped_number += parseFloat(jccc(this).val());
+            });
+            //items_tobe_shipped_number = jccc(".aramex_item_tobe_shipped").length;
+            jccc("#items_tobe_shipped_number").html(items_tobe_shipped_number);
+        }
+
+        var codTotal = jccc("#aramex_shipment_info_cod_amount").val();
+
+        jccc(".aramex_input_items_qty").keyup(function () {
+            var the_id = jccc(this).attr('name');
+            var items_price = 0;
+
+            var itemWeight = 0;
+            var itemTotalPrice = 0;
+
+            jccc("#aramex_items_" + the_id).val(jccc(this).val());
+            jccc(".aramex_input_items_qty").each(function (price_index) {
+                var the_id_qty = jccc(this).attr('name');//alert(the_id_qty);
+                items_price += jccc(this).val() * jccc("#aramex_items_base_price_" + the_id_qty).val();
+
+                itemWeight += jccc(this).val() * jccc("#aramex_items_base_weight_" + the_id_qty).val();
+                itemTotalPrice += (parseInt(jccc("#aramex_items_total_" + the_id_qty).val()) - parseInt(jccc(this).val())) * jccc("#aramex_items_base_price_" + the_id_qty).val();
+
+            });
+
+            //jccc("input[name=aramex_shipment_info_items_subtotal]").val(items_price);
+
+            jccc("input[name=aramex_shipment_info_items_subtotal]").val(items_price.toFixed(2));
+            jccc("#order-total-weight").html(itemWeight.toFixed(2));
+            jccc("#order_weight").val(itemWeight.toFixed(2));
+
+            if (itemTotalPrice) {
+
+                jccc("#aramex_shipment_info_cod_amount").val((parseFloat('<?php echo round($_order->getData('grand_total') - $_shippedPrice, 2) ?>') - parseFloat(itemTotalPrice)).toFixed(2));
+            }
+            else if (itemTotalPrice == 0) {
+                jccc("#aramex_shipment_info_cod_amount").val(codTotal);
+            }
+
+            jccc("input[name=aramex_shipment_info_cod_value]").val(parseFloat(items_price) + parseFloat(jccc("input[name=aramex_shipment_info_shipping_charges]").val()));
+            get_tobe_shipped_items_number();
+        });
+
+        var messages_content;
+        <?php
+        if(Mage::app()->getRequest()->getParam('aramexpopup') == 'show'){
+        ?>
+        aramexpop(1);
+        jccc("#messages").ready(function () {
+            jccc("#aramex_messages").html(jccc("#messages").html());
+        });
+        <?php
+        }
+        ?>
+
+        jccc("input[name=aramex_shipment_info_shipping_charges]").change(function () {
+            var cod_value = parseFloat(jccc("input[name=aramex_shipment_info_shipping_charges]").val()) + parseFloat(jccc("input[name=aramex_shipment_info_items_subtotal]").val());
+            jccc("input[name=aramex_shipment_info_cod_value]").val(cod_value);
+        });
+
+
+        jccc("#aramex_shipment_info_product_group").change(function () {
+
+            if (jccc("select[name=aramex_shipment_info_product_group]").val() == 'EXP') {
+                jccc("select[name=aramex_shipment_info_additional_services] option:selected").removeAttr("selected");
+                jccc("select[name=aramex_shipment_info_additional_services] .express_service").attr("selected", "selected");
+                jccc("#aramex_shipment_info_product_type option").hide();
+                /*jccc(allowed_international_methods).each(function(index,val){
+                 if(index==0){
+                 document.getElementById('aramex_shipment_info_product_type').value = val;
+                 }
+                 document.getElementById(val).style.display = 'block';
+                 });*/
+
+
+            } else if (jccc("select[name=aramex_shipment_info_product_group]").val() == 'DOM') {
+                jccc("select[name=aramex_shipment_info_additional_services] option:selected").removeAttr("selected");
+                jccc("select[name=aramex_shipment_info_additional_services] .domestic_service").attr("selected", "selected");
+                jccc("#aramex_shipment_info_product_type option").hide();
+                /*jccc(allowed_domestic_methods).each(function(index,val){
+                 if(index==0){
+                 document.getElementById('aramex_shipment_info_product_type').value = val;
+                 }
+                 document.getElementById(val).style.display = 'block';
+                 });*/
+
+            }
+            jccc("#aramex_shipment_info_service_type_div").html(jccc("select[name=aramex_shipment_info_service_type] option:selected").text());
+            jccc("#aramex_shipment_info_additional_services_div").html(jccc("select[name=aramex_shipment_info_additional_services] option:selected").text());
+
+        });
+        jccc("#aramex_shipment_info_product_group_div").html(jccc("select[name=aramex_shipment_info_product_group] option:selected").text());
+        jccc("#aramex_shipment_info_service_type_div").html(jccc("select[name=aramex_shipment_info_service_type] option:selected").text());
+        jccc("#aramex_shipment_info_additional_services_div").html(jccc("select[name=aramex_shipment_info_additional_services] option:selected").text());
+
+        //jccc("#aramex_shipment").validate();
+
+        jccc(document).ready(function () {
+            aramex_shipment_shipper_country_map.checkoptions();
+            aramex_shipment_receiver_country_map.checkoptions();
+
+            if ((jccc('#aramex_messages').html() != "") && (jccc('.error-msg'))) {
+                jccc("#aramex_overlay").css("display", "block");
+                jccc("#aramex_shipment_creation").fadeIn(1000);
+            }
+
+            jccc(function () {
+                //jccc( "#datepicker" ).datepicker();
+                jccc("#aramex_shipment_info_pickup_date").datepicker({dateFormat: "yy-mm-dd"});
+                jccc("#aramex_shipment_info_ready_time").datepicker({dateFormat: "yy-mm-dd"});
+                jccc("#aramex_shipment_info_last_pickup_time").datepicker({dateFormat: "yy-mm-dd"});
+                jccc("#aramex_shipment_info_closing_time").datepicker({dateFormat: "yy-mm-dd"});
+            });
+
+            jccc('#filereset').click(function () {
+                jccc("#file1_div").html(jccc("#file1_div").html());
+            });
+            jccc('#file2reset').click(function () {
+                jccc("#file2_div").html(jccc("#file2_div").html());
+            });
+            jccc('#file3reset').click(function () {
+                jccc("#file3_div").html(jccc("#file3_div").html());
+            });
+            jccc("#aramex_shipment").validate();
+
+        });
+
+        jQuery("#aramex_shipment_info_product_type").chained("#aramex_shipment_info_product_group");
+        jQuery("#aramex_shipment_info_service_type").chained("#aramex_shipment_info_product_group");
+
+    </script>
+<?php $formSession->unsetData('form_data') ?>

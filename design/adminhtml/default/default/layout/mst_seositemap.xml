@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>mst_seositemap/css/base.css</name></action>
+        </reference>
+    </default>
+</layout>

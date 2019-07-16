@@ -1,0 +1,98 @@
+<?php
+    /**
+     * User: Saroop
+     * Date: 07/04/2017
+     *
+     * RTB House Code added on Category pages.
+     *
+     * */
+    //Get Current Category Id
+    $categoryId = $this->getCurrentCategory()->getId();
+?>
+<iframe src="//creativecdn.com/tags?id=pr_X6Bd26dydFjQmhr1EINF_category2_<?php echo $categoryId; ?>" width="1" height="1" scrolling="no" frameBorder="0"
+        style="display: none;">
+
+</iframe>
+
+<?php
+/**
+ * User: Saroop
+ * Date: 18/05/2017
+ * Emarsys Predictor. Run when user is loggedin.
+ * */
+
+$customerEmail = "";
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $customerEmail = $customer->getEmail();
+}
+    //Create Url Like breadcrumb.
+    $json_category_obj = Mage::registry("current_category");
+    $category = '';
+    $dataLayerContainer = '';
+    if ( $json_category_obj) {
+        $category = $json_category_obj;
+        $pathInStore = $category->getPathInStore();
+        $pathIds = array_reverse(explode(',', $pathInStore));
+        //Get Default Store ID
+        $iDefaultStoreId = Mage::app()
+                            ->getWebsite()
+                            ->getDefaultGroup()
+                            ->getDefaultStoreId();
+        //Show only one type category name for all store english/arabic. 
+        $categoryName = Mage::getResourceModel('catalog/category_collection')
+                            ->setStoreId($iDefaultStoreId)
+                            ->addAttributeToSelect('name')
+                            ->addAttributeToSelect('entity_id')
+                            ->addFieldToFilter('entity_id', array('in'=>$pathIds));
+        $categories = array();
+        foreach( $categoryName as $cname  ){
+            $categories[$cname->getEntityId()] = $cname->getName();
+        }
+
+        // add category path breadcrumb
+        $count = 1;
+        $totalCount = count($pathIds);
+        foreach ($pathIds as $categoryId) {
+            if (isset($categories[$categoryId]) && $categories[$categoryId] ) {
+                $category .= $categories[$categoryId];
+                if( $count < $totalCount )
+                    $category .= ' > ';
+                $count++;
+            }
+        }
+    }
+
+
+    $cart = Mage::getSingleton('checkout/session')->getQuote();
+    $cartItem = $cart->getAllVisibleItems();
+    $count = 1;
+    $emarsysString = ''; //Create html.
+    $totalCount = count($cartItem);
+    if( $totalCount > 0 ){
+        foreach ( $cartItem as $item) {
+            //Get Parent Product Sku.
+            $sku = Mage::getResourceModel('catalog/product')->getProductsSku($item->getProductId());
+            $productSku  =  $sku[0]['sku'];
+            $emarsysString .="{item:'".$productSku."', price:".$item->getPrice().",quantity:".$item->getQty()."}";
+            if( $count < $totalCount ){
+                $emarsysString .=",";
+            }
+            $count++;
+        }
+    }
+
+?>
+<script type="text/javascript">
+    <?php if( !empty($customerEmail) ) { ?>
+        ScarabQueue.push(['setEmail', '<?php echo $customerEmail ; ?>']);
+    <?php } ?>
+    ScarabQueue.push(['category', '<?php echo  $category; ?>' ]);
+    ScarabQueue.push(['cart', [
+            <?php echo $emarsysString ; ?>
+    ]]);
+    //Use testMode to prevent enqueued data-collection events from being logged
+    //ScarabQueue.push(['testMode']);
+
+    ScarabQueue.push(['go']);
+</script>

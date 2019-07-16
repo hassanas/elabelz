@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_GuestToCustomer>
+            <version>1.0</version>
+        </Progos_GuestToCustomer>
+    </modules>
+
+    <global>
+        <blocks>
+            <GuestToCustomer>
+                <class>Progos_GuestToCustomer_Block</class>
+            </GuestToCustomer>
+        </blocks>
+    </global>
+    
+    <frontend>
+        <routers>
+            <GuestToCustomer>
+                <use>standard</use>
+                <args>
+                    <module>Progos_GuestToCustomer</module>
+                    <frontName>GuestToCustomer</frontName>
+                </args>
+            </GuestToCustomer>
+        </routers>
+    </frontend>
+    
+    <admin>
+        <routers>
+            <GuestToCustomer>
+                <use>admin</use>
+                <args>
+                    <module>Progos_GuestToCustomer</module>
+                    <frontName>GuestToCustomer</frontName>
+                </args>
+            </GuestToCustomer>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <menu>
+            <customer>
+                <children>
+                    <progos_guesttocustomer_item translate="title">
+                        <title>Guests Orders Conversion</title>
+                        <action>GuestToCustomer/adminhtml_GuestToCus</action>
+                    </progos_guesttocustomer_item>
+                </children>
+            </customer>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <customer>
+                            <children>
+                                <progos_guesttocustomer_item>
+                                    <title>Guests To Customers</title>
+                                </progos_guesttocustomer_item>
+                            </children>
+                        </customer>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <guesttocustomer>
+                                            <title>Guests Orders Conversion Settings</title>
+                                        </guesttocustomer>
+                                        <frontendcustomer>
+                                            <title>Frontend Track Order Settings</title>
+                                        </frontendcustomer>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+</config>

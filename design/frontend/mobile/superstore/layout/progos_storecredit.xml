@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <onestepcheckout_index_index translate="label">
+        <reference name="head">
+            <action method="addCss">
+                <name>aw_storecredit/css/styles.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>progos_storecredit/js/aw_storecredit_payment.js</name>
+            </action>
+        </reference>
+        <reference name="checkout.onepage.payment">
+            <block type="aw_storecredit/frontend_checkout_onepage_payment_additional" template="progos_storecredit/onestepcheckout/payment/additional.phtml" name="aw_storecredit.additional" output="toHtml"/>
+        </reference>
+    </onestepcheckout_index_index>
+</layout>

@@ -1,0 +1,23 @@
+<script type="text/javascript">
+function openPopupForm(url,item_id,product_id,parent_item_id){
+
+  var win = new Window({
+      className:'magento',
+      title:'Inventory',
+      url:url,
+      width:970,
+      height:400,
+      minimizable:false,
+      maximizable:false,
+      showEffectOptions: {duration:0.4},
+      hideEffectOptions:{duration:0.4},
+      onClose:function (param, el) {
+
+      }
+  });
+  win.setZIndex(100);
+  win.showCenter(true);
+}
+
+</script>
+<div class="values"></div>

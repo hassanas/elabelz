@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Rewrite_Adminhtml>
+            <version>0.1.0</version>
+        </Rewrite_Adminhtml>
+    </modules>
+    <global>
+        <models>
+            <rewrite_adminhtml>
+                <class>Rewrite_Adminhtml_Model</class>
+            </rewrite_adminhtml>
+            <adminhtml>
+                <rewrite>
+                    <session_quote>Rewrite_Adminhtml_Model_Session_Quote</session_quote>
+                </rewrite>
+            </adminhtml>
+        </models>
+        <blocks>
+            <adminhtml>
+                <rewrite>
+                    <customer_edit_tab_view_orders>Rewrite_Adminhtml_Block_Customer_Edit_Tab_View_Orders</customer_edit_tab_view_orders>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+    </global>
+</config>

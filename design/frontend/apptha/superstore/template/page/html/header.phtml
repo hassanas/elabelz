@@ -1,0 +1,94 @@
+<?php /* @var $this Progos_Page_Block_Page_Html_Header */ ?>
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+$current_body_class = $this->getLayout()->getBlock('root')->getData('body_class');
+$cookie = Mage::getSingleton('core/cookie');
+$store_code = Mage::app()->getStore()->getCode();
+if (!$cookie->get("store_new_code")) {
+    $cookie->set('store_new_code', $store_code, time() + 86400, '/');
+}
+?>
+    <div id="overlay"></div>
+    <div dir="ltr" id="wrapper">
+    <header id="site_header" data-test="rackspace1">
+        <div class="labelz_topmenu">
+            <div id="nm-topMenu">
+                <ul id="nm-topMenuLeft">
+                    <li>
+                        <a href="http://help.elabelz.com/<?php echo $store_code; ?>/" target="_blank"><?php echo $this->__('Help & FAQs'); ?></a>
+                    </li>
+                </ul>
+                <ul class="site_options" id="nm-topMenuRight">
+                    <li>
+                        <?php echo $this->getChildHtml('store_language'); ?>
+                    </li>
+                    <?php echo $this->getChildHtml('topLinks'); ?>
+                </ul>
+            </div>
+        </div>
+
+        <div id="nm-main-container">
+            <!-- Logo -->
+            <div id="nm-logo">
+                <a href="<?php echo Mage::getBaseUrl(); ?>" title="<?php echo $this->__('ELABELZ') ?>">
+                    <?php $lan = explode("_", Mage::app()->getStore()->getCode()); ?>
+                    <img src="<?php echo $this->getSkinUrl('css/images/svg-icons/logo-'.$lan[0].'.svg'); ?>" />
+                </a>
+            </div>
+
+            <!-- Menu -->
+            <div id="nm-nav_search_container">
+                <?php echo $this->getChildHtml('topMenu'); ?>
+            </div>
+
+            <!-- Search bar -->
+            <div id="nm-searchArea">
+                <?php echo  $this->getChildHtml('topSearch'); ?>
+            </div>
+
+            <div id="nm-acount-cart">
+                <div id="nm-account">
+                    <?php if ($this->helper('customer')->isLoggedIn()) : ?>
+                        <a href="<?php echo Mage::helper('customer')->getDashboardUrl(); ?>" title="<?php echo $this->getChildHtml('welcome'); ?>">
+                        </a>
+                    <?php else : ?>
+                        <a href="<?php echo Mage::helper('customer')->getLoginUrl(); ?>" title="<?php echo $this->__('My Account') ?>"></a>
+                    <?php endif; ?>
+                </div>
+                <div id="nm-cart">
+                    <?php echo $this->getChildHtml('minicart_head'); ?>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<?php echo $this->getChildHtml('topContainer'); ?>

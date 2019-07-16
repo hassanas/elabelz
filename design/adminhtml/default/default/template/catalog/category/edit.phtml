@@ -1,0 +1,670 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Adminhtml_Block_Catalog_Category_Cointainer
+ */
+?>
+<script type="text/javascript">
+    
+/**
+ * Started, Added by MBT
+ * Updated on 
+ */
+
+(function($){ // Immidiate function
+
+    $(function() { // DOM Ready
+
+        window.sortEleObj = {
+            helperVarOne: '',
+            isDebug: false,
+            extraMargins: 14,
+            isSelection: true,
+            initialW: '',
+            initialH: '',
+            inQueueElements: new Array(),
+            selectedElements: new Array(),
+            doSortElements: function(targetProduct) {
+                if (typeof this.helperVarOne == 'undefined'){
+                    return;
+                }
+                var e1 = $('.'+this.helperVarOne).parent().parent().parent(), 
+                    e2 = $('.'+targetProduct).parent().parent().parent(),
+                    container = $('#category-products-list'),
+                    s1 = e1.attr('id').split('-'), 
+                    s2 = e2.attr('id').split('-');
+
+                    /**
+                    *   Same values of s1 and s2
+                    */
+                    if ( s1[1] == s2[1] ) {
+                        return;
+                    }
+
+                    /**
+                    *   e1: selected '+ this.helperVarOne
+                    *   e2: dropped on '+ targetProduct
+                    */
+
+                if ( s1[1] < s2[1] ) {
+
+                    var left = (e2.offset().left - container.offset().left),
+                        top = (e2.offset().top - container.offset().top);
+
+                    var x = (left - (e1.offset().left - container.offset().left) ),
+                        y = (top - (e1.offset().top - container.offset().top) );
+
+                    e1.find('.product').simulate("drag", {dx: x, dy: y});
+
+                } else if ( s1[1] > s2[1] ) {
+                    
+                    var left = (e2.offset().left - container.offset().left),
+                        top = (e2.offset().top - container.offset().top);
+
+                    var x = ( left - (e1.offset().left - container.offset().left) ),
+                        y = ( top - (e1.offset().top - container.offset().top) );
+
+                    e1.find('.product').simulate("drag", {dx: x, dy: y});
+
+                }
+            },
+            showSelectedElementBox: function(i) {
+                
+                var proImgSrc = $('.'+i).parent().prev().attr('src');
+                var proName = $('.'+i).parent().find('span.proName').html();
+                
+                var prepareMarkUp = '<div class="selected-product" id="'+i+'"><img src="'+proImgSrc+'" />';
+                    prepareMarkUp += '<h2 class="product-name">';
+                    prepareMarkUp += proName+'<br /><span><strong>SKU: </strong>'+i+'</span>';
+                    prepareMarkUp += '</h2></div>';
+                    if ($('.product_selection_box .add-all').html()=='') {
+                        $('.product_selection_box .add-all').html(prepareMarkUp);
+                    } else {
+                        $('.product_selection_box .add-all').append(prepareMarkUp);
+                    }
+                    $('.product_selection_box').fadeIn('fast');
+                    
+                /**
+                *   set the selection box top position
+                */
+                var selectBoxOffset = $("#category_info_tabs_magidev_sort_content").offset().top, 
+                    selectBoxOffsetHeight = $('.product_selection_box .search-products').height(),
+                    extraMargins = 14,
+                    finalDistanceFromTop = parseInt(selectBoxOffset+this.extraMargins);
+
+                $('.product_selection_box .search-products').css('top', finalDistanceFromTop);
+                $('.search-products-container .search-products').animate({
+                    top: parseInt(finalDistanceFromTop+selectBoxOffsetHeight+this.extraMargins)
+                });
+            },
+            hideSelectedElementBox: function() {
+                var selectBoxOffset = $("#category_info_tabs_magidev_sort_content").offset().top,
+                    finalDistanceFromTop = parseInt(selectBoxOffset+this.extraMargins);
+
+                $('.product_selection_box').fadeOut('slow', function() {
+                    /**
+                    *   reset the box positions
+                    */
+                    $('.search-products-container .search-products').animate({
+                        top: finalDistanceFromTop
+                    }, function () {
+                        $('.search-products-container .search-products').css({top: 'auto'});
+                    });
+                });
+            },
+            removeCurrentSelectedElement: function () {
+                $('.selection-fieldset .add-all #'+this.helperVarOne).remove();
+                var index = sortEleObj.selectedElements.indexOf(sortEleObj.helperVarOne);
+                sortEleObj.selectedElements.splice(index, 1);
+                this.isSelection = true;
+            },
+            destroySelectionBox: function() {
+                $('.selection-fieldset .add-all > div').animate(function() {
+                    height: '0px'
+                }, 'slow', function () {
+                    $(this).remove();
+                });
+                this.isSelection = true;
+                this.selectedElements = [];
+                this.helperVarOne = "";
+                this.inQueueElements = [];
+            },
+            selectCollideElements: function(e) {
+                
+                $('.product_selection_box .selection-fieldset').css({maxHeight: ($(window).height() - 250)+'px', overflow: 'auto'});
+                
+                $(document).off("mousemove");
+                $(document).off("mouseup");
+                
+                var maxX      = 0,
+                minX          = 5000,
+                maxY          = 0,
+                minY          = 5000,
+                totalElements = 0,
+                elementArr    = new Array(),
+                element       = e.data.element,
+                type          = e.data.type;
+
+                element.each(function () {
+
+                    var aElem = $(".s-rectBox"),
+                    bElem     = $(this),
+                    result    = sortEleObj.doObjectsCollide(aElem, bElem);
+
+                    if (result == true) {
+
+                        if (type=='products') {
+                            
+                            $('#loading-mask').show();
+                            
+                            bElem.find('.product').css({border: '2px solid #f1af73'});
+                            var skuIdentifier = bElem.find('h2 span.proSKU').html();
+
+                            if (sortEleObj.isSelection) {
+
+                                if ($.inArray(skuIdentifier, sortEleObj.selectedElements) == -1) {
+
+                                    sortEleObj.selectedElements.push(skuIdentifier);
+                                    sortEleObj.showSelectedElementBox(skuIdentifier);
+
+                                } else {
+
+                                    /**
+                                    *   You already selected this product here!
+                                    */
+                                    var container = $('.selection-fieldset .add-all'),
+                                    vp            = $('#'+skuIdentifier).offset().top-container.offset().top + container.scrollTop();
+                                    container.animate({
+                                        scrollTop: vp
+                                    }, 100, function () {
+                                        new Effect.Shake(skuIdentifier);
+                                    });
+
+                                }
+                            }
+
+                        } else {
+                            bElem.addClass('active');
+                            sortEleObj.inQueueElements.push(bElem.attr('id'));
+                        }
+                    }
+                });
+
+                if (sortEleObj.inQueueElements.length>0) {
+                    sortEleObj.isSelection = false;
+                    sortEleObj.helperVarOne = sortEleObj.inQueueElements[0];
+                }
+
+                $(".s-rectBox").remove();
+                $('#loading-mask').hide();
+            },
+            drawRectangle: function(e) {
+
+                var w = Math.abs(sortEleObj.initialW - e.pageX),
+                h     = Math.abs(sortEleObj.initialH - e.pageY);
+                $(".s-rectBox").css({'width': w, 'height': h});
+
+                if (e.pageX <= sortEleObj.initialW && e.pageY >= sortEleObj.initialH) {
+
+                    $(".s-rectBox").css({'left': e.pageX});
+
+                } else if (e.pageY <= sortEleObj.initialH && e.pageX >= sortEleObj.initialW) {
+                    
+                    $(".s-rectBox").css({'top': e.pageY});
+
+                } else if (e.pageY < sortEleObj.initialH && e.pageX < sortEleObj.initialW) {
+                    
+                    $(".s-rectBox").css({'left': e.pageX,"top": e.pageY});
+
+                }
+                
+                if (e.data.type=="selectedProducts") {
+                    sortEleObj.selectElementsInSelectionBox($(".selected-product"), e);
+                }
+                
+                sortEleObj.autoScrollingOnProducts(e);
+                
+            },
+
+            // https://gist.github.com/netgfx/8887917
+            doObjectsCollide: function (a, b) { // a and b are our objects
+                if (a.length!=0) {
+                    
+                    var aTop = a.offset().top,
+                    aLeft    = a.offset().left,
+                    bTop     = b.offset().top,
+                    bLeft    = b.offset().left;
+
+                    return !(
+                        ((aTop + a.height()) < (bTop)) ||
+                        (aTop > (bTop + b.height())) ||
+                        ((aLeft + a.width()) < bLeft) ||
+                        (aLeft > (bLeft + b.width()))
+                    );
+                }
+            },
+            autoScrollingOnProducts: function(event) {
+                
+                if (event.data.type=='products') {
+                
+                    var bottom = $(window).height() - 120,
+                        closeToBottom = $(window).height() - 60,
+                        top = 120,
+                        closeToTop = 60;
+    
+                    if (event.clientY > closeToBottom) {
+                        window.scrollBy(0,110);
+                    } else if (event.clientY < closeToTop) {
+                        window.scrollBy(0,-110);
+                    } else if (event.clientY > bottom) {
+                        window.scrollBy(0,40);
+                    } else if (event.clientY < top && $(window).scrollTop() > 0) {
+                        window.scrollBy(0,-40);
+                    }
+                    
+                } else if (event.data.type=='selectedProducts') {
+                    
+                    var container = $(".product_selection_box .fieldset-wide.selection-fieldset"),
+                        bottom = container.innerHeight() - 20,
+                        closeToBottom = container.innerHeight() - 10,
+                        top = 100,
+                        closeToTop = 70,
+                        currentPosition = container.scrollTop();
+                    
+                    if (event.clientY > closeToBottom) {
+                        container.scrollTop(currentPosition+30);
+                    } else if (event.clientY < closeToTop) {
+                        container.scrollTop(currentPosition-30);
+                    } else if (event.clientY > bottom) {
+                        container.scrollTop(currentPosition+10);
+                    } else if (event.clientY < top && container.scrollTop() > 0) {
+                        container.scrollTop(currentPosition-10);
+                    }
+                    
+                }
+                    
+
+            },
+            floatSelectionBoxOnScroll: function() {
+                
+                $(window).scroll(function() {
+                    if ($(window).scrollTop()>333) {
+                        $('.product_selection_box').css({position: 'fixed', top: '44px', zIndex: '99'});
+                    } else {
+                        $('.product_selection_box').removeAttr('style');
+                    }
+                });
+
+            },
+            
+            unBindRectangle: function(e) {
+                
+                $(document).off("mousemove");
+                $(document).off("mouseup");
+                 $(".s-rectBox").remove();
+                $('#loading-mask').hide();
+                
+            },
+            selectElementsInSelectionBox: function (element, e) {
+                
+                $('.product_selection_box .selection-fieldset').css({maxHeight: ($(window).height() - 250)+'px', overflow: 'auto'});
+                
+                var maxX      = 0,
+                minX          = 5000,
+                maxY          = 0,
+                minY          = 5000,
+                totalElements = 0,
+                elementArr    = new Array(),
+                element       = element;
+                
+                element.each(function () {
+
+                    var aElem = $(".s-rectBox"),
+                    bElem     = $(this),
+                    result    = sortEleObj.doObjectsCollide(aElem, bElem);
+
+                    if (result == true) {
+
+                        bElem.addClass('active');
+                        if ($.inArray(bElem.attr('id'), sortEleObj.inQueueElements) === -1) {
+                            sortEleObj.inQueueElements.push(bElem.attr('id'));
+                        }
+                    
+                    }
+                    
+                });
+
+                if (sortEleObj.inQueueElements.length>0) {
+                    sortEleObj.isSelection = false;
+                    sortEleObj.helperVarOne = sortEleObj.inQueueElements[0];
+                }
+                
+            },
+            removeAllDroppedElements: function() {
+                
+                jQuery.each(sortEleObj.inQueueElements, function(index, value) {
+                    $('.selection-fieldset .add-all #'+value).remove();
+                    var index = sortEleObj.selectedElements.indexOf(value);
+                    sortEleObj.selectedElements.splice(index, 1);
+                });
+                
+                sortEleObj.inQueueElements = [];
+                this.isSelection = true;
+            }
+        };
+
+
+        /**
+        *   This event will start sorting which are in queue
+        */
+        $(document).on('click', '.pages .products-grid .item', function(){
+
+            var skuIdentifier = $(this).find('h2 span.proSKU').html();
+
+            if (sortEleObj.isSelection==false) {
+
+                if (skuIdentifier == sortEleObj.helperVarOne) {
+                    alert('Selecting the same product again!!! click another to sort.'); return;
+                } else {
+                    /**
+                    *   Here the selection initialize
+                    */
+                    $('#loading-mask').css({display: 'block', position: 'fixed'});
+                    
+                    // selected all the selected elements
+                    
+                    setTimeout(function() {
+
+                        $.each(sortEleObj.inQueueElements, function(index, value) {
+                            $("."+value).parent().parent().parent().addClass('selected');
+                        });
+                        // drag elements which will drag all the selected
+                        // empty array after drag complete
+                        // remove all selected elements from selection box
+                        setTimeout(function() {
+                            sortEleObj.helperVarOne = sortEleObj.inQueueElements[0];
+                            sortEleObj.doSortElements(skuIdentifier);
+                            if (sortEleObj.isDebug) {
+                                console.log('APPLIED');
+                            }
+                        },2000);
+
+                    },1000);
+                }
+
+            }
+        });
+
+    });
+    
+
+    /**
+    *   This event applied on selected products list for sorting
+    */
+    $(document).on('mousedown', "#product_selection_all", function (e) {
+        $(".selected-product").removeClass('active');
+        sortEleObj.inQueueElements = [];
+        sortEleObj.isSelection = true;
+        $("body").append("<div class='s-rectBox'></div>");
+        $('.s-rectBox').css({'left': e.pageX,'top': e.pageY});
+        sortEleObj.initialW = e.pageX;
+        sortEleObj.initialH = e.pageY;
+        $(document).bind("mouseup", {type: 'selected', element: $(".selected-product")}, sortEleObj.unBindRectangle);
+        $(document).bind("mousemove", {type: 'selectedProducts'}, sortEleObj.drawRectangle);
+    });
+
+    /**
+    *   This event on main product listing  
+    */
+    $(document).on('mousedown', "#category-products-list .pages", function (e) {
+        $("body").append("<div class='s-rectBox'></div>");
+        $('.s-rectBox').css({'left': e.pageX,'top': e.pageY});
+        sortEleObj.initialW = e.pageX;
+        sortEleObj.initialH = e.pageY;
+        $(document).bind("mouseup", {type: 'products', element: $(".item")}, sortEleObj.selectCollideElements);
+        $(document).bind("mousemove", {type: 'products'}, sortEleObj.drawRectangle);
+        
+        sortEleObj.floatSelectionBoxOnScroll();
+    });
+    
+
+}(jQuery));
+
+/**
+ * End
+ */
+
+</script>
+
+<div id="category-edit-container" class="category-content">
+    <?php echo $this->getChildHtml('form') ?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+
+    function categoryReset(url,useAjax){
+        if(useAjax){
+            var params = {active_tab_id:false};
+            updateContent(url, params);
+        }else{
+            location.href = url;
+        }
+    }
+
+    /**
+    * Delete some category
+    * This routine get categoryId explicitly, so even if currently selected tree node is out of sync
+    * with this form, we surely delete same category in the tree and at backend
+    */
+    function categoryDelete(url, useAjax, categoryId) {
+        if (confirm('<?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Are you sure you want to delete this category?')) ?>')){
+            if (useAjax){
+                tree.nodeForDelete = categoryId;
+                updateContent(url, {}, true);
+            } else {
+                location.href = url;
+            }
+        }
+    }
+
+    /**
+     * Update category content area
+     */
+    function updateContent(url, params, refreshTree) {
+
+        sortEleObj.destroySelectionBox();
+
+
+        if (!params) {
+            params = {};
+        }
+        if (!params.form_key) {
+            params.form_key = FORM_KEY;
+        }
+        toolbarToggle.stop();
+
+       /*if(params.node_name)
+       {
+           var currentNode = tree.getNodeById(tree.currentNodeId);
+           currentNode.setText(params.node_name);
+       }*/
+
+        var categoryContainer = $('category-edit-container');
+        var messagesContainer = $('messages');
+        var thisObj = this;
+        new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
+            parameters:  params,
+            evalScripts: true,
+            onComplete: function () {
+                /**
+                 * This func depends on variables, that came in response, and were eval'ed in onSuccess() callback.
+                 * Since prototype's Element.update() evals javascripts in 10 msec, we should exec our func after it.
+                 */
+                setTimeout(function() {
+                    try {
+                        if (refreshTree) {
+                            thisObj.refreshTreeArea();
+                        }
+                        toolbarToggle.start();
+                    } catch (e) {
+                        alert(e.message);
+                    };
+                }, 25);
+            },
+            onSuccess: function(transport) {
+                try {
+                    if (transport.responseText.isJSON()) {
+                        var response = transport.responseText.evalJSON();
+                        var needUpdate = true;
+                        if (response.error) {
+                            alert(response.message);
+                            needUpdate = false;
+                        }
+                        if(response.ajaxExpired && response.ajaxRedirect) {
+                            setLocation(response.ajaxRedirect);
+                            needUpdate = false;
+                        }
+                        if (needUpdate){
+                            if (response.content){
+                                $(categoryContainer).update(response.content);
+                            }
+                            if (response.messages){
+                                $(messagesContainer).update(response.messages);
+                            }
+                        }
+                    } else {
+                        $(categoryContainer).update(transport.responseText);
+                    }
+                }
+                catch (e) {
+                    $(categoryContainer).update(transport.responseText);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Refresh tree nodes after saving or deleting a category
+     */
+    function refreshTreeArea(transport)
+    {
+        if (tree && window.editingCategoryBreadcrumbs) {
+            // category deleted - delete its node
+            if (tree.nodeForDelete) {
+                var node = tree.getNodeById(tree.nodeForDelete);
+                tree.nodeForDelete = false;
+
+                if (node) { // Check maybe tree became somehow not synced with ajax and we're trying to delete unknown node
+                    node.parentNode.removeChild(node);
+                    tree.currentNodeId = false;
+                }
+            }
+            // category created - add its node
+            else if (tree.addNodeTo) {
+                var parent = tree.getNodeById(tree.addNodeTo);
+                tree.addNodeTo = false;
+
+                if (parent) { // Check maybe tree became somehow not synced with ajax and we're trying to add to unknown node
+                    var node = new Ext.tree.AsyncTreeNode(editingCategoryBreadcrumbs[editingCategoryBreadcrumbs.length - 1]);
+                    node.loaded = true;
+                    tree.currentNodeId = node.id;
+                    parent.appendChild(node);
+
+                    if (parent.expanded) {
+                        tree.selectCurrentNode();
+                    } else {
+                        var timer;
+                        parent.expand();
+                        var f = function(){
+                            if(parent.expanded){ // done expanding
+                                clearInterval(timer);
+                                tree.selectCurrentNode();
+                            }
+                        };
+                        timer = setInterval(f, 200);
+                    }
+                }
+            }
+
+            // update all affected categories nodes names
+            for (var i = 0; i < editingCategoryBreadcrumbs.length; i++) {
+                var node = tree.getNodeById(editingCategoryBreadcrumbs[i].id);
+                if (node) {
+                    node.setText(editingCategoryBreadcrumbs[i].text);
+                }
+            }
+        }
+    }
+
+    function displayLoadingMask()
+    {
+       var loaderArea = $$('#html-body .wrapper')[0]; // Blocks all page
+        Position.clone($(loaderArea), $('loading-mask'), {offsetLeft:-2});
+        toggleSelectsUnderBlock($('loading-mask'), false);
+        Element.show('loading-mask');
+    }
+
+    var i = 1;
+    function autosort(url, useAjax, categoryId) {
+        if (confirm('Are you sure you want to Autosort this category?\n\nREMEMBER: It will take several minutes to complete, depending on the number of products in the category.\n\nProceed now ... ?')){
+            if (!categoryId) {
+                alert("Select category from the left category tree.");
+            } else {
+                updateContents(url, {"id":categoryId}, true);
+            }
+        }
+    }
+
+    function updateContents(url, params, refreshTree) {
+        
+        // sortEleObj.destroySelectionBox();
+
+        if (!params) {
+            params = {};
+        }
+        if (!params.form_key) {
+            params.form_key = FORM_KEY;
+        }
+
+        toolbarToggle.stop();
+
+        new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
+            parameters:  params,
+            evalScripts: true,
+            onComplete: function () {
+                toolbarToggle.start();
+            },
+            onSuccess: function(transport) {
+                var html = "<ul class='messages'><li class='success-msg'><ul><li>Auto sort successfully completed for " + transport.responseText + " products.</li></ul></li></ul>";
+                $('messages').update(html);
+            }
+        });
+    }
+//]]>
+</script>

@@ -1,0 +1,86 @@
+<div id="checkout-review" class="onestepcheckout_block">
+    <h2 class="op_block_title" id="review">3. <?php echo $this->__('Order Review') ?></h2>
+    <div id="checkout-review-load">
+        <?php echo $this->getChildHtml('info') ?>
+    </div>
+	<div id="checkout-coupon-discount-load">
+		<?php //echo $this->getChildHtml('coupon') ?>
+		<?php echo Mage::app()->getLayout()->createBlock('checkout/cart_coupon')->setTemplate('onestepcheckout/onepage/coupon.phtml')->toHtml(); ?>
+	</div>
+    <div id="checkout-review-submit">
+        <?php echo $this->getChildHtml('agreements') ?>
+        <div class="buttons-set" id="review-buttons-container">
+
+<!-- Heard Us -->
+
+	<?php
+
+ 		/*$hearus_conditions =(Mage::getStoreConfig('onestepcheckout/heardus/enabled'));
+ 		$hearus_values_admin = (Mage::getStoreConfig('onestepcheckout/heardus/output'));
+
+	if ($hearus_conditions == 1) : ?>
+
+   	<div class="hearedus">
+
+        	<?php
+					echo $this->__('How did you hear about us?');
+
+			?>
+       <p>
+           <?php $hearus_values_users =  explode(',',$hearus_values_admin) ?>
+         	  <select>
+				 	 <?php  for($i=0;$i<sizeof($hearus_values_users);$i++){ ?>
+
+                          <option value="<?php echo $hearus_values_users[$i]; ?>"><?php echo $hearus_values_users[$i]; ?></option>
+
+					<?php }?>
+		  </select>
+   	  </p>
+
+    </div>
+
+    <?php endif; */ ?>
+
+<!-- Heard Us -->
+
+
+        <button type="submit" id="checkout-form-submit" title="<?php echo $this->__('Buy Now') ?>" class="button btn-checkout"><?php echo $this->__('Buy Now') ?></button>
+            <span id="review-please-wait" style="display:none;">
+                <img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>" alt="<?php echo $this->__('Submitting order information...') ?>" title="<?php echo $this->__('Submitting order information...') ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?>
+            </span>
+        </div>
+    </div>
+</div>
+<script>
+  $j(document).ready(function(){
+    $j(document).on('blur keyup change', '#bill_form:not(#ship_form) :input', function () {
+        var sameAsBilling = $j("#shipping\\:same_as_billing").attr("checked");
+        if( sameAsBilling != undefined && sameAsBilling == "checked" ){
+            var a = '[name="'+$j(this).attr('name').replace('billing[','shipping[')+'"]';
+            if($j(a).length){
+                $j(a).val($j(this).val());
+            }
+        }
+    });
+    $j('#checkout-form-submit').on('click', function(){
+      var sameAsBilling = $j("#shipping\\:same_as_billing").attr("checked");
+      if( sameAsBilling != undefined && sameAsBilling == "checked" ){
+          var billingSection = $j("#bill_form:not(#ship_form) :input");
+          $j.each(billingSection, function(i, input){
+              var ele = $j(input);
+              if( ele.attr("name") !== undefined ){
+                  var element = '[name="'+$j(this).attr('name').replace('billing[','shipping[')+'"]';
+                  if( $j("#ship_form "+ element).length ){
+                      $j("#ship_form "+ element).val(ele.val());
+                  }
+              }
+          });
+      }
+      checkout.update({
+        'paymentMethod': 1,
+        // 'shipping-method': 1
+      }, true);
+      return false;
+    });
+  });
+</script>

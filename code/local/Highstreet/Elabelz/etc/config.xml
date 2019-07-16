@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Highstreet_Elabelz_module
+*
+ * @package     Highstreet_Elabelz
+ * @author      Radovan Dodic (radovan.dodic@atessoft.rs) ~ AtesSoft
+ * @copyright   Copyright (c) 2016 Highstreet
+*/
+-->
+<config>
+    <modules>
+        <Highstreet_Elabelz>
+            <version>1.0.0</version>
+        </Highstreet_Elabelz>
+    </modules>
+   
+   <frontend>
+        <routers>
+            <hsapi>
+                <args>
+                    <modules>
+                        <highstreet_elabelz before="Highstreet_Hsapi">Highstreet_Elabelz</highstreet_elabelz>
+                    </modules>
+                </args>
+            </hsapi>
+        </routers>
+    </frontend>
+ 
+    <global>
+        <models>
+            <highstreet_elabelz>
+                <class>Highstreet_Elabelz_Model</class>
+            </highstreet_elabelz>
+            <highstreet_hsapi>
+                <rewrite>
+                    <products>Highstreet_Elabelz_Model_Products</products>
+                </rewrite>
+            </highstreet_hsapi>
+        </models>
+        <helpers>
+            <highstreet_elabelz>
+                <class>Highstreet_Elabelz_Helper</class>
+            </highstreet_elabelz>
+            <highstreet_hsapi>
+                <rewrite>
+                    <config_account>Highstreet_Elabelz_Helper_Config_Account</config_account>
+                    <config_cart>Highstreet_Elabelz_Helper_Config_Cart</config_cart>
+                    <config_checkout>Highstreet_Elabelz_Helper_Config_Checkout</config_checkout>
+                </rewrite>
+            </highstreet_hsapi>
+        </helpers>
+    </global>
+</config>

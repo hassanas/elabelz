@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<config>
+	<modules>
+		<Progos_Sizeguide>
+			<version>0.1.1</version>
+		</Progos_Sizeguide>
+	</modules>
+	<frontend>
+		<routers>
+			<sizeguide>
+				<use>standard</use>
+				<args>
+					<module>Progos_Sizeguide</module>
+					<frontName>sizeguide</frontName>
+				</args>
+			</sizeguide>
+		</routers>
+		<layout>
+			<updates>
+				<sizeguide>
+					<file>sizeguide.xml</file>
+				</sizeguide>
+			</updates>
+		</layout>
+	</frontend>
+	<global>
+		<blocks>
+			<sizeguide>
+			<!-- Set a block definition and lookup directory -->
+			<class>Progos_Sizeguide_Block</class>
+			</sizeguide>
+		</blocks>
+		<helpers>
+		  <sizeguide>
+		  <!-- This is where we define our helper directory -->
+			<class>Progos_Sizeguide_Helper</class>
+		  </sizeguide>
+		</helpers>
+		<models>
+			<sizeguide>
+			 <!-- This is where we define our model directory -->
+				<class>Progos_Sizeguide_Model</class>
+				<!-- Define a resource to create a custom table -->
+				<resourceModel>sizeguide_mysql4</resourceModel>
+			</sizeguide>
+			<!-- Here's our resource model we'll use to create a database table -->
+			<sizeguide_mysql4>
+				<class>Progos_Sizeguide_Model_Mysql4</class>
+				<entities>
+				 <!-- Let's define our table, we'll call it with the baz name, but the real table is foo_bar_baz -->
+                 <!-- After we define our entity, we can call it with our model by calling foo_bar/baz -->
+					<sizeguide>
+						<table>sizeguide</table><!-- Db table name  -->
+					</sizeguide>
+				</entities>
+			</sizeguide_mysql4>
+		</models>
+		
+		<!-- And finally we define our resource setup script -->
+		 <!-- allow the plugin to read and write -->
+		<resources>	
+			<sizeguide_setup>
+				<setup>
+					<module>Progos_Sizeguide</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</sizeguide_setup>
+			<!-- connection to write -->
+			<sizeguide_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</sizeguide_write>
+			<sizeguide_read>
+			  <connection>
+				 <use>core_read</use>
+			  </connection>
+			</sizeguide_read>
+		</resources>
+	</global>
+	 <!-- admin menu configuration -->
+	<admin>
+     <routers>
+         <sizeguide>
+            <use>admin</use>
+            <args>
+               <module>Progos_Sizeguide</module>
+               <frontName>sizeguide</frontName>
+            </args>
+         </sizeguide>
+      </routers>
+ </admin>
+ <adminhtml>
+   <layout>
+      <updates>
+          <sizeguide>
+              <file>sizeguide.xml</file>
+           </sizeguide>
+      </updates>
+   </layout>
+</adminhtml>
+</config>

@@ -1,0 +1,172 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<div class="page-title">
+    <h1><?php echo $this->__('Edit Email Preferences') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<form action="<?php echo $this->getUrl('customer/account/prefrencePost') ?>" method="post" autocomplete="off" id="form-validate" class=" email_preference_form" enctype="multipart/form-data">
+    <div class="fieldset">
+        <?php echo $this->getBlockHtml('formkey')?>
+        <h2 class="legend"><?php echo $this->__('Email Preferences') ?></h2>
+        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+        <ul class="form-list">
+            <li class="fields">
+                <?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getCustomer())->toHtml() ?>
+            </li>
+            <li class="field">
+                <label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+                <div class="input-box">
+                    <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="email" id="email" value="<?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?>" 
+                    title="<?php echo $this->__('Email Address') ?>" class="input-text required-entry validate-email" />
+                </div>
+            </li>
+            <?php 
+            /**
+             * Create Block for dob
+             */
+            
+            ?>
+        <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+        <?php //if ($_dob->isEnabled()): ?>
+            <li class="field"><?php echo $_dob->setDate($this->getCustomer()->getDob())->toHtml() ?></li>
+        <?php // endif ?>
+         <?php 
+            /**
+             * Create Block for Tax
+             */
+            
+            ?>
+        <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+        <?php if ($_taxvat->isEnabled()): ?>
+            <li class="field"><?php echo $_taxvat->setTaxvat($this->getCustomer()->getTaxvat())->toHtml() ?></li>
+        <?php endif; ?>
+         <?php 
+            /**
+             * Create Block for gender
+             */
+            
+            ?>
+        <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+        <?php if ($_gender->isEnabled()): ?>
+            <li class="field"><?php echo $_gender->setGender($this->getCustomer()->getGender())->toHtml() ?></li>
+        <?php endif; ?>
+        <?php //print_r($this->getCustomer());
+        $allLanguages = Mage::app()->getLocale()->getOptionLocales();
+        $localeCode = Mage::getStoreConfig('general/locale/code', $storeId);
+        $languageLabel = '';
+        foreach ($allLanguages as $language) {
+
+            if ($language['value'] == $localeCode) {
+                $languageLabel = $language['label'];
+                $parts = explode('(', $languageLabel);
+                $languageLabel = trim($parts[0]);
+                break;
+            }
+        }
+        ?>
+        <?php 
+        /*-------------Edited by Humera Batool (28/03/2017) for saving store view in newsletter---------------------------*/
+            /**
+             * Get Country and language
+            */
+        $collection = Mage::getModel('newsletter/subscriber')->getCollection()
+                     ->addFieldToFilter('subscriber_email',$this->getCustomer()->getEmail())->getFirstItem();
+        if($collection->getSubscriberId() != ""):
+        $collection_store_newsletter = Mage::getModel('core/store')->getCollection()
+                           ->addFieldToFilter('store_id',$collection->getStoreId())->getFirstItem();
+        $store_code_newsletter = $collection_store_newsletter->getCode();
+        $store_code_newsletter = explode("_",$store_code_newsletter);
+        if($store_code_newsletter[0] == "en"):
+            $store_label = "English";
+            $store_code_other = "ar";
+            $store_code_other_label = "Arabic";
+        elseif($store_code_newsletter[0] == "ar"):
+            $store_label = "Arabic";
+            $store_code_other = "en";
+            $store_code_other_label = "English";
+        endif;
+
+        if($localeCode == "en_US"):
+            $store_code = "en";
+        elseif($localeCode == "ar_SA"):
+            $store_code = "ar";
+        endif;
+        $collection_store = Mage::getModel('core/store')->getCollection()
+                           ->addFieldToFilter('name', array('neq' => $this->getCustomer()->getCreated_in()))
+                           ->addFieldToFilter('code', array('like' => "%".$store_code."%"));
+         ?>
+        <li class="field">
+            <label for="language" class="required"><em>*</em><?php echo $this->__('Language') ?></label>
+            <div class="input-box">
+            <select id="language" name="language" title="Availabe Language">
+              <option value="<?php echo $store_code_newsletter[0] ?>" selected="selected"><?php echo $this->__($store_label); ?></option>
+              <option value="<?php echo $store_code_other ?>"><?php echo $this->__($store_code_other_label); ?></option>
+              </select>
+            </div>
+        </li>
+        <li class="field">
+            <label for="country" class="required"><em>*</em><?php echo $this->__('Country') ?></label>
+            <div class="input-box">
+            <select id="country" name="country" title="<?php echo $this->__('Country') ?>">
+              <option value="<?php echo $collection_store_newsletter->getCode() ?>" selected="selected"><?php echo $this->escapeHtml($this->__($collection_store_newsletter->getName())); ?></option>
+              <?php 
+              foreach($collection_store as $store): ?>
+                  <option value="<?php echo $store->getCode() ?>"><?php echo $this->escapeHtml($store->getName()); ?></option>
+                <?php endforeach;
+              ?>
+              </select>
+            </div>
+        </li>
+        <?php else: ?>
+          <li>
+            <div class="input-box">    
+            <label for="is_subscribed" class="is_subscribed_label"><input type="checkbox" name="is_subscribed" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Sign Up for Newsletter')) ?>" value="1" id="is_subscribed" class="checkbox" style="display:inline-block;vertical-align:top;margin:-6px 0;" /><?php echo $this->__('Sign Up for Newsletter') ?></label>
+            </div>
+            <?php /* Extensions placeholder */ ?>
+            <?php echo $this->getChildHtml('customer.form.register.newsletter')?>
+          </li>
+       <?php endif;/*-----*/?>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="back-link">
+        <a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>">
+        <small>&laquo; </small>
+        <?php echo $this->__('Back') ?></a>
+        </p>
+        <button type="submit" title="<?php echo $this->__('Save') ?>" class="button">
+        <span>
+        <span><?php echo $this->__('Save') ?></span>
+        </span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+//]]>
+</script>

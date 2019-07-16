@@ -1,0 +1,86 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div id="comments_block">
+    <span class="field-row">
+        <label class="normal" for="history_comment"><?php echo Mage::helper('sales')->__('Comment Text') ?></label><br/>
+        <textarea name="comment[comment]" rows="3" cols="2" style="height:6em; width:99%;" id="history_comment" class="required-entry"></textarea>
+        <div class="error"></div>
+    </span>
+    <div class="f-left">
+        <input name="comment[is_visible_on_front]" type="checkbox" id="history_visible" value="1" /><label class="normal" for="history_visible"> <?php echo Mage::helper('sales')->__('Visible on Frontend') ?></label>
+    </div>
+    <div class="f-right">
+        <button  type="submit" class="button" title="<?php echo $this->__('Submit') ?>" name="submit_comment_button" id="submit_comment_button" onclick="submitall()">
+            <span><span><?php echo $this->__('Submit Comment') ?></span></span></button>
+    </div>
+    <div class="clear"></div>
+    <ul class="note-list">
+        <?php $increment_id = Mage::app()->getRequest()->getParam('order_id');
+        $item_id = Mage::app()->getRequest()->getParam('product_id');?>
+
+        <?php $notes = $this->getOrderNotes(); ?>
+        <?php foreach ($notes as $_comment):
+            $increment_id = $_comment->getIncrementId();
+            $item_id = $_comment->getItemId();?>
+            <li>
+                <strong><?php
+                    echo $this->helper('core')->formatDate($_comment->getUpdatedAt(), 'medium') ?></strong>
+                <?php echo $this->helper('core')->formatTime($_comment->getUpdatedAt(), 'medium') ?>
+                <br/>
+                <?php echo $this->escapeHtml($_comment->getNote(), array('b', 'br', 'strong', 'i', 'u', 'a')) ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <?php $currentDate = Mage::getModel('core/date')->date('Y-m-d H:i:s');
+    $this->helper('core')->formatDate($currentDate, 'medium');?>
+</div>
+<script>
+    function submitall(){
+        var comment = document.getElementById("history_comment").value;
+        if(comment == ""){
+            jQuery('.error').html("Comment is required");
+            return;
+        }
+        else{
+            jQuery('.error').html("");
+        }
+        var increment_id = <?php echo $increment_id ?>;
+        var product_id  = <?php echo $item_id ?>;
+        var date_new = "<?php echo $this->helper('core')->formatDate($current_time, 'medium')?>";
+        var time_new = "<?php echo $this->helper('core')->formatTime($current_time, 'medium')?>";
+        var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/saveMarketplaceNotes', array('_secure'=>true)) ?>";
+        new Ajax.Request(url,
+            {
+                method:'post',
+                parameters: {"comment":comment,"increment_id":increment_id,"product_id":product_id},
+                onComplete:function(request, json) {
+                    jQuery("#history_comment").val("");
+                    jQuery('.note-list').prepend("<li><strong>"+date_new+"</strong> "+time_new+"<br/>"+comment+"</li>");
+                }
+            });
+    }
+</script>

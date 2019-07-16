@@ -1,0 +1,43 @@
+<?php
+/**
+ * Created by Azhar 10-11-2016
+ */
+?>
+<button style="" onclick="javascript:static_block_menu(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
+    <span><?php echo $this->escapeHtml($this->getButtonLabel()) ?></span>
+</button>
+<script type="text/javascript">
+    function static_block_menu() {
+        //alert("url Refresh is working "); return;
+
+        var request = new Ajax.Request('<?php echo $this->getUrl('marketplaceadmin/adminhtml_restmob/categoriestreecron'); ?>', {
+            method: 'get',
+            parameters: {
+               // domain: document.getElementById('zendesk_general_domain').value,
+               // username: document.getElementById('zendesk_general_email').value,
+               // password: document.getElementById('zendesk_general_password').value
+            },
+            onCreate: function() {
+                document.getElementById('refresh-menu-results').innerHTML = 'Process is running, it will take some time and do not close the window.';
+                document.getElementById('loading-mask').style.display = "block";
+            },
+            onSuccess: function(transport) {
+                document.getElementById('refresh-menu-results').innerHTML = '';
+                document.getElementById('loading-mask').style.display = "none";
+                var message = '<ul class="messages"><li class="success-msg">Process successfully complete for menu please refresh Block html cache type and collection data cache type </li></ul>';
+                    document.getElementById('refresh-menu-results').innerHTML = message;
+                //alert(transport.responseJSON.msg); 
+                  //  return;
+                if (transport.responseJSON.success == 'true') {                    
+                    var message = '<ul class="messages"><li class="success-msg">Process successfully complete for menu please refresh Block html cache type</li></ul>';
+                    document.getElementById('refresh-menu-results').innerHTML = message;
+                } else {
+                    var message = '<ul class="messages"><li class="error-msg">Unable to Process the request, Please try again or contact with technical team </li></ul>';
+                    document.getElementById('refresh-menu-results').innerHTML = message;
+                }
+            }
+        });
+    }
+</script>
+<div id="refresh-menu-results"></div>
+

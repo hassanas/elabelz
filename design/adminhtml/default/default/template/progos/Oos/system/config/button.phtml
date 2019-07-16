@@ -1,0 +1,22 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function check() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                alert( transport.responseText );
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will run the script and Remove OOS product from Quote which are not ordered.
+    </span>
+</p>
+

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <progos_vendorqtyupdate translate="label" module="vendorqtyupdate">
+            <label>Vendors Qty Update Configurations</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>302</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <chickshopconfiguration translate="label">
+                    <label>Chic Shop</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <file_url translate="label">
+                            <label>Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Server File Path</comment>
+                        </file_url>
+                        <emails translate="label">
+                            <label>Emails</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter emails to receive alert , separated</comment>
+                        </emails>
+                    </fields>
+                </chickshopconfiguration>
+                <ownthelookconfiguration translate="label">
+                    <label>Own The Look</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <file_url translate="label">
+                            <label>Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Server File Path</comment>
+                        </file_url>
+                        <emails translate="label">
+                            <label>Emails</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter emails to receive alert. More then one add. More then one add , separated
+                            </comment>
+                        </emails>
+                    </fields>
+                </ownthelookconfiguration>
+                <anothaeleganzaconfiguration translate="label">
+                    <label>Anotha and Eleganza</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <file_url translate="label">
+                            <label>Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Server File Path</comment>
+                        </file_url>
+                        <emails translate="label">
+                            <label>Emails</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter emails to receive alert. More then one add , separated</comment>
+                        </emails>
+                    </fields>
+                </anothaeleganzaconfiguration>
+            </groups>
+        </progos_vendorqtyupdate>
+    </sections>
+</config>

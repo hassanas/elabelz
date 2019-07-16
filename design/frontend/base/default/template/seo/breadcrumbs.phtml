@@ -1,0 +1,28 @@
+<?php
+    $separator = $this->getBreadcrumbsSeparator();
+?>
+
+<?php if($crumbs && is_array($crumbs)): ?>
+    <?php $crumbs = $this->checkBreadcrumbs($crumbs); ?>
+    <div class="breadcrumbs">
+        <ul>
+            <?php foreach($crumbs as $_crumb): ?>
+            <li style ="display: inline-block;" <?php if (!$_crumb['last']) { ?>typeof="v:Breadcrumb"<?php } ?>>
+            <?php if(!empty($_crumb['link']) && (!$_crumb['last'])): ?>
+                <a href="<?php echo $_crumb['link'] ?>" title="<?php echo $this->htmlEscape($_crumb['label']) ?>" rel="v:url" property="v:title">
+                    <?php echo $this->htmlEscape($_crumb['label']) ?>
+                </a>
+            <?php elseif($_crumb['last']): ?>
+                <strong><?php echo $this->htmlEscape($_crumb['label']) ?></strong>
+            <?php else: ?>
+                <?php echo $this->htmlEscape($_crumb['label']) ?>
+            <?php endif; ?>
+            <?php if(!$_crumb['last']): ?>
+                <span><?php echo $separator; ?></span>
+            <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+

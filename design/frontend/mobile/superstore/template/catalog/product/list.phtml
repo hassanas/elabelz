@@ -1,0 +1,293 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+  * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_MageShop
+ * @version     1.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/** 
+ * @var $this Mage_Catalog_Block_Product_List 
+ */
+?>
+
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+?>
+
+<?php
+/**
+ * Get Customer Details
+ */
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+/**
+ * Get Wishlist
+ */
+$wishListDatas = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($customer);
+/**
+ * Get Item Collection
+ */
+$wishListItemCollection = $wishListDatas->getItemCollection();
+$arrProductIds = array();
+/**
+ * Check the wish list item collection has values
+ */
+if (count($wishListItemCollection)) {
+	foreach ($wishListItemCollection as $item) {
+		$product = $item->getProduct();
+		$arrProductIds[] = $product->getId();
+	}
+}
+
+?>
+<?php
+/** 
+ * Load Product Collection
+ */
+
+$_productCollection=$this->getLoadedProductCollection();
+$_helper = $this->helper('catalog/output');
+    //  echo  'ff'.$_productCollection; exit;
+?>
+<?php 
+/**
+ * Check the product collection count is not defined already
+ * if so display message like there are no products matching the selection
+ */
+if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+	<div class="category-products">
+		
+		<?php 
+
+		// commented due to the toolbar we are showing at top outside the content in breadcrumbs.phtml
+		// for that we create new template named toolbar_top.phtml and see also local.xml
+		// echo $this->getToolbarHtml(); 
+
+		?>
+		<?php 
+	/**
+	 * Product Collection
+	 */
+	?>
+	<?php $_collectionSize = $_productCollection->count() ?>
+	<?php 
+/**
+ * Get Count 
+ */
+
+?>
+<script>
+	var prosData = {activeSku: ''};
+</script>
+<?php $_columnCount = $this->getColumnCount(); ?>
+<ul class="less products-grid--max-<?php echo $_columnCount; ?>-col" id="catalog_listings">
+	<?php 
+	$i=0; 
+	/*Datalayer prepare for PLP */
+	$json_category_obj = Mage::registry("current_category");
+	$request = Mage::app()->getRequest();
+	$pathinfo = $request->getPathInfo();
+	$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();	
+	$user 			= 'Guest';
+	$customerId 	= '';
+	$loggedInStatus	= 'Logged Out';
+	if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+		$user 			= 	'User';
+		$customer 		= 	Mage::getSingleton('customer/session')->getCustomer();
+	    $customerId 	= 	$customer->getId();
+	    $loggedInStatus	= 	'Logged In';
+	}
+
+	$codeArray = explode('_',$store->getCode());
+	$language = '';
+	if( !empty( $codeArray ) )
+		$language = strtoupper( $codeArray[0] );
+
+	$position = 1;
+    $category = '';
+    if( strpos($pathinfo, "brand/index/view/") !== false ){
+    	$brand_id = $request->getParam("id");
+	    $brand = Mage::getModel('shopbybrand/brand')->load($brand_id);
+	    $category = trim($brand->getName());
+    }else if( strpos($pathinfo, "/catalogsearch/result/") !== false ){
+    	$category = $this->__("Search results for %s", $this->helper('catalogsearch')->getEscapedQueryText());
+    }else if( $landing = Mage::registry('amlanding_page') ){
+    	$category = $landing->getMetaTitle();
+    }else if ( $json_category_obj) {
+        $category = $json_category_obj;
+        $pathInStore = $category->getPathInStore();
+        $pathIds = array_reverse(explode(',', $pathInStore));
+        $categories = $category->getParentCategories();
+        // add category path breadcrumb
+        $count = 1;
+        $totalCount = count($pathIds);
+        foreach ($pathIds as $categoryId) {
+            if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                $category .= $categories[$categoryId]->getName();
+                if( $count < $totalCount )
+                    $category .= '/';
+                $count++;
+            }
+        }
+    }else{
+    	$category = "No Category";
+    }
+    $impression = "";
+    $category = addslashes($category);
+	foreach ($_productCollection as $_product): 
+		$productName = addslashes($_product->getName());
+		?>
+	<?php 
+		$impression .="
+			'".$_product->getSku()."':{
+				'name': '".$productName."',
+    			'id': '".$_product->getSku()."',
+    			'price': '".$_product->getPrice()."',
+    			'category': '".$category."',
+    			'brand': '".$manf."',
+    			'variant': '".$_product->getSku()."',
+    			'list':'".$category."',
+    			'position': '".$position."',
+    			'dimension5':'New'
+			},
+		";
+		$manf = $_product->getAttributeText('manufacturer');
+		$plpDatalayer = "
+			dataLayer.push({
+				'pageType': 'PLP',
+		        'pageCategory':'No Category',
+		        'userId':'".$customerId."',
+		        'userType':'".$user."',
+		        'loggedInStatus':'".$loggedInStatus."',
+		        'storeCountry':'".$store->getName()."',
+		        'storeLanguage':'".$language."',
+		        'currencyCode':'".$currency_code."',
+		        'event':'productClick',
+		        'ecommerce':{
+		        	'currencyCode':'".$currency_code."',
+		        	'click':{
+		        		'actionField':{'list':'".$category."'},
+		        		'products':[{
+		        			'name': '".$productName."',
+		        			'id': '".$_product->getSku()."',
+		        			'quantity':'".$_product->getQty()."',
+		        			'price': '".$_product->getPrice()."',
+		        			'category': '".$category."',
+		        			'brand': '".$manf."',
+		        			'variant': '".$_product->getSku()."',
+		        			'position': '".$position."',
+		        			'dimension5':'New'
+		        		}]
+		        	}
+		        }
+			});
+		";
+		$position++;
+
+		if ($manf!='') {
+			$_brandId = $_product->getManufacturer();
+			$_shopbybrands = Mage::getSingleton('shopbybrand/brand')->load($_brandId, 'option_id');
+			$_brandUrlKey = Mage::helper('shopbybrand')->refineUrlKey($_shopbybrands->getUrl_key());
+			$_brandLink = Mage::getBaseUrl() . $_brandUrlKey;
+		} else {
+			$_brandLink = '';
+			$_brandId = '';
+		}
+		$_description = $_product->getDescription();
+	?>
+	<script>
+		prosData["<?php echo $_product->getSku();?>"] = {
+			pName: "<?php echo str_replace(array("'",'"', "/", "'\'"), "", $_product->getName()) ?>",
+			pDesc: "",
+			price: "<?php echo $_product->getPrice(); ?>",
+			pLink: "<?php echo $_product->getProductUrl() ?>",
+			brand: "<?php echo $manf;?>",
+			brandID: "<?php echo $_brandId; ?>",
+			brandLink: "<?php echo $_brandLink;?>",
+			cat: "<?php echo trim(strrchr($category, '/'), '/'); ?>",
+			catStructure: "<?php echo $category; ?>",
+			catLink: "<?php echo Mage::registry("current_category")->getUrl(); ?>",
+			catsID: "<?php echo implode(',', $_product->getCategoryIds()); ?>",
+			pId: "<?php echo $_product->getId() ?>",
+			currency_code: "<?php echo $currency_code; ?>",
+			user: "<?php echo $user; ?>",
+			customerId: "<?php echo $customerId; ?>",
+			loggedInStatus: "<?php echo $loggedInStatus; ?>",
+			language: "<?php echo $language; ?>",
+			storeCountry: "<?php echo $store->getName(); ?>"
+		};
+	</script>
+
+	<li class="listing closed">
+		<a class="product_listing_link" onclick="<?php echo $plpDatalayer;?>" data-itemid="<?php echo $_product->getSku();?>" <?php if (Mage::getStoreConfig('progos_catalog/general/boolean')) {echo "data-href='".$_product->getProductUrl()."'";} else {echo "href='".$_product->getProductUrl()."'";} ?> title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+			<?php $_imgSize = 254; ?>
+			<div class="image_container listing_lazy_img_wrapper">
+				<div class="listing_lazy_img_inner">
+					<img 
+					id="product-collection-image-<?php echo $_product->getId(); ?>" 
+					data-src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(400,578); ?>" data-image="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(500,722); ?>" 
+					alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+				</div>
+				<div class="preloader" style="visibility:hidden"></div>
+			</div>
+			<?php
+			$prNameFix = $prName = $_product->getName();
+			?>
+			<div class="details_container">
+				<p class="brand">
+					<?php if($_product->getAttributeText('manufacturer')=='') { ?>
+						<?php echo $prName; ?>
+					<?php } else { ?>
+						<?php echo $this->__($_product->getAttributeText('manufacturer'));
+					} ?>
+				</p>
+				<div class="description"><?php echo $this->__($prNameFix); ?></div>
+				<?php echo $this->getPriceHtml($_product, true) ?>
+			</div>
+		</a>
+	</li>
+	<?php endforeach ?>
+</ul>
+<script>
+	var impressionsOnScroll = {
+		<?php echo $impression;?>
+	};
+</script>
+<div class="toolbar-bottom">
+	<?php //echo $this->getToolbarHtml() ?>
+	<?php echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar-bottom.phtml')->toHtml() ?>
+</div>
+</div>
+<?php endif; ?>

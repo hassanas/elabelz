@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <fpccache translate="title" module="fpccache">
+                                        <title>Mobile Cache Api</title>
+                                        <sort_order>200</sort_order>
+                                    </fpccache>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                     <fpc translate="title" module="fpccache">
+                        <title>Fpc Controller</title>
+                        <sort_order>10</sort_order>
+                        <children>
+                            <brand translate="title">
+                                <title>Brand Action</title>
+                                <sort_order>1</sort_order>
+                            </brand>
+                        </children>
+                    </fpc>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

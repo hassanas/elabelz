@@ -1,0 +1,192 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento community edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Rma
+ * @version    1.6.0
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?><?php if ($this->getRmaRequest() && $this->getFormData()) : ?>
+    <?php $rmaRequest = $this->getRmaRequest();?>
+    <style type="text/css">
+        .awrma-left-column {
+            width: 50%;
+            float: left;
+        }
+        .awrma-right-column {
+            width: 50%;
+            float: right;
+        }
+        .awrma-line {
+            border-bottom: dotted 1px #000;
+        }
+        .awrma-table td {
+            padding-right: 7px;
+        }
+    </style>
+    <?php $content = $rmaRequest->getTextId(); 
+    $content = str_replace("#","",$content);
+    ?>
+    <img class="rp_top_header_barcode" style="width:100%" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'generate_bigger.php?content='. $content ?>">
+    <h1><?php echo $this->__('RMA') . ' ' . $rmaRequest->getTextId() ?></h1>
+    <p><?php echo $this->__('Date:') ?> <?php echo $this->formatDate($rmaRequest->getCreatedAt()) ?></p>
+    <p class="awrma-line" style="margin-bottom: 15px;"></p>
+    <div class="awrma-left-column">
+    
+
+
+             
+            <h2><?php echo $this->__('Return Address') ?></h2>
+            <table width="90%"  style="border-left: 1px solid #000; border-top: 1px solid #000;  border-right: 1px solid #000;">
+            <tr style="border-bottom: 1px solid #000;">
+            <td style=" height: 22px; padding: 3px 5px;">
+            <?php echo $this->getFormData()->getFirstname() ?> <?php echo $this->getFormData()->getLastname() ?><br />
+            </td>
+            </tr>
+
+            <tr style="border-bottom: 1px solid #000;">
+            <td style=" height: 22px; padding: 3px 5px;">
+            <?php if ($this->getFormData()->getCompany()) : ?>
+            <?php echo $this->getFormData()->getCompany() ?><br /><?php endif ?>
+            </td>
+            </tr>
+
+            <tr style="border-bottom: 1px solid #000;">
+            <td style=" height: 22px; padding: 3px 5px;">
+            <?php foreach ($this->getFormData()->getStreetaddress() as $address) : ?>
+            <?php if ($address) : ?><?php echo $address ?><br /><?php endif ?>
+            <?php endforeach ?>
+            </td>
+            </tr>
+
+            <tr style="border-bottom: 1px solid #000;">
+            <td style=" height: 22px; padding: 3px 5px;">
+            <?php echo $this->getFormData()->getCity() ?><?php if ($this->getFormData()->getStateprovince() || $this->getRegionName()) : ?>, 
+            <?php endif ?><?php echo $this->getFormData()->getStateprovince() != '' ? $this->getFormData()->getStateprovince() : $this->getRegionName() ?>, <?php echo $this->getFormData()->getPostcode() ?><br />
+            </td>
+            </tr>
+
+            <tr style="border-bottom: 1px solid #000;">
+            <td style=" height: 22px; padding: 3px 5px;">
+            <?php echo $this->getCountryName() ?><br />
+            <?php echo $this->getFormData()->getTelephone() ?><?php if ($this->getFormData()->getFax()) : ?>, <?php echo $this->getFormData()->getFax() ?><?php endif ?>
+            </td>
+            </tr>
+
+       </table>
+    </div>
+    <div class="awrma-right-column">
+        <h2><?php echo $this->__('Details') ?></h2>
+        <table width="100%"  style="border-left: 1px solid #000; border-top: 1px solid #000;  border-right: 1px solid #000;" class="awrma-table">
+
+            <tr style="border-bottom: 1px solid #000;">
+                <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Order ID:') ?></td>
+                <td style=" height: 24px; padding: 3px 5px;">#<?php echo $rmaRequest->getOrderId() ?></td>
+            </tr>
+            <?php if ($rmaRequest->getRequestType()) : ?>
+                <tr style="border-bottom: 1px solid #000;">
+             <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Request Type:') ?></td>
+            <td style=" height: 24px; padding: 3px 5px;"><?php echo $rmaRequest->getRequestTypeName() ?></td>
+                </tr>
+            <?php endif ?>
+            <tr style="border-bottom: 1px solid #000;">
+                <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Package Opened:') ?></td>
+                <td style=" height: 24px; padding: 3px 5px;"><?php echo $rmaRequest->getPackageOpenedLabel() ?></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #000;">
+                <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Approvement Code:') ?></td>
+                <td style=" height: 24px; padding: 3px 5px;"><?php echo $rmaRequest->getApprovementCode() ?></td>
+            </tr>
+            <?php if (Mage::helper('awrma/config')->getReasonsEnabled()) : ?>
+                <tr style="border-bottom: 1px solid #000;">
+                    <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Reason:') ?></td>
+                    <td style=" height: 24px; padding: 3px 5px;"><?php if ($rmaRequest->getReasonId() === '0') : ?>
+                            <?php echo $this->__('Other'); ?>
+                        <?php else: ?>
+                            <?php echo Mage::getModel('awrma/entityreason')->load($rmaRequest->getReasonId())->getName() ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php if ($rmaRequest->getReasonId() === '0') : ?>
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td style=" height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Reason Details:') ?></td>
+                        <td style=" height: 24px; padding: 3px 5px;"><?php echo $rmaRequest->getReasonDetails(); ?></td>
+                    </tr>
+                <?php endif ?>
+            <?php endif;?>
+        </table>
+    </div>
+    <div style="clear: both"></div>
+    <?php if ($this->getFormData()->getAdditionalinfo()) : ?>
+        <p><?php echo nl2br($this->htmlEscape($this->getFormData()->getAdditionalinfo())) ?></p>
+    <?php endif ?>
+    <h2 style="margin-top: 12px;"><?php echo $this->__('Items Return Requested for') ?></h2>
+    <?php $_order = $rmaRequest->getOrder() ?>
+    <table id="awrma-requested-items" width="100%" style="border-left: 1px solid #000; border-top: 1px solid #000;  border-right: 1px solid #000; padding: 3px;">
+        <col />
+        <col width="1" />
+        <col width="1"/>
+        <thead>
+            <tr style="border-bottom: 1px solid #000; height: 30px">
+                <th style="vertical-align: middle height: 24px; padding: 3px 5px; border-right: 1px solid #000;;"><?php echo $this->__('Product Name') ?></th>
+                <th style="vertical-align: middle; height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('SKU') ?></th>
+                <th style="vertical-align: middle; height: 24px; padding: 3px 5px; border-right: 1px solid #000;"><?php echo $this->__('Qty') ?></th>
+            </tr>
+        </thead>
+        <tbody style="border-right: 1px solid #000;">
+            <?php $content_product = array(); 
+            $i = 0;?>
+            <?php $_requestedItems = $rmaRequest->getOrderItems(); ?>
+            <?php foreach($_requestedItems as $key=>$items):
+            $itemObject = Mage::getModel('sales/order_item')->load($key);
+            $content_product[$i] = $itemObject->getSku();
+            $i = $i + 1;
+            endforeach;
+            ?>
+                <?php $counter = 0; ?>
+                <?php foreach (Mage::helper('awrma')->getItemsHtml($rmaRequest, array('view_only' => true, 'items' => array_keys($_requestedItems))) as $item) : ?> 
+                    <?php echo $item ?>
+                    <tr style="border-bottom: 1px solid #000; border-right: 1px solid #000;">
+
+                    <td colspan="3">
+                    <div style="width: 100%; text-align: center; padding: 0 0 12px 12px;">
+                    <img style="width: 70%; height: 70px;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'generate.php?content=' . $content_product[$counter] ?>">
+                    </div>
+                    </td>
+                    </tr>
+                    <?php $counter = $counter + 1; ?>
+                <?php endforeach ?>                    
+        </tbody>
+    </table>
+<?php endif ?>
+<script type="text/javascript">
+    decorateTable('awrma-requested-items');
+    window.print();
+</script>
+
+<style type="text/css">
+
+#awrma-requested-items tr {  }
+#awrma-requested-items tr th { padding: 14px !important; }
+#awrma-requested-items tr td { padding: 14px; }
+#awrma-requested-items .a-right{ text-align: center !important;}
+.rp_top_header_barcode { height: 100px; margin-bottom: 20px; }
+
+</style>

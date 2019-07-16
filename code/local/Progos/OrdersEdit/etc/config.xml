@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Progos_OrdersEdit
+ *
+ * @category    Progos
+ * @package     Progos_OrdersEdit
+ * @author      Sergejs Plisko <sergejs.plisko@redboxdigital.com>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+-->
+<config> 
+    <modules>
+        <Progos_OrdersEdit>
+            <version>0.1.0</version>
+        </Progos_OrdersEdit>
+    </modules>
+    <global>
+        <models>
+            <mageworx_ordersedit>
+                <rewrite>
+                    <edit>Progos_OrdersEdit_Model_Edit</edit>
+                    <edit_quote>Progos_OrdersEdit_Model_Edit_Quote</edit_quote>
+                    <edit_log>Progos_OrdersEdit_Model_Edit_Log</edit_log>
+                    <observer>Progos_OrdersEdit_Model_Observer</observer>                   
+                </rewrite>
+            </mageworx_ordersedit>
+        </models>
+        <blocks>
+            <mageworx_ordersedit>
+                <rewrite>
+                    <adminhtml_sales_order_history>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_History</adminhtml_sales_order_history>
+                    <adminhtml_sales_order_totals>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_Totals</adminhtml_sales_order_totals>
+                    <adminhtml_sales_order_edit_form_address>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_Edit_Form_Address</adminhtml_sales_order_edit_form_address>
+                    <adminhtml_sales_order_edit_form_items_itemsgrid>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_Edit_Form_Items_Itemsgrid</adminhtml_sales_order_edit_form_items_itemsgrid>
+                    <adminhtml_sales_order_edit_form_items_grid>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_Edit_Form_Items_Grid</adminhtml_sales_order_edit_form_items_grid>
+                </rewrite>
+            </mageworx_ordersedit>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view_tab_invoices>Progos_OrdersEdit_Block_Adminhtml_Sales_Order_View_Tab_Invoices</sales_order_view_tab_invoices>
+                </rewrite>
+                <rewrite>
+                    <sales_invoice_grid>Progos_OrdersEdit_Block_Adminhtml_Sales_Invoice_Grid</sales_invoice_grid>
+                </rewrite>
+            </adminhtml>
+
+        </blocks>
+        <helpers>
+            <progos_ordersedit>
+                <class>Progos_OrdersEdit_Helper</class>
+            </progos_ordersedit>
+            <mageworx_ordersedit>
+                <rewrite>
+                    <edit>Progos_OrdersEdit_Helper_Edit</edit>
+                </rewrite>
+            </mageworx_ordersedit>
+            <marketplace>
+                <rewrite>
+                    <marketplace>Progos_OrdersEdit_Helper_Marketplace</marketplace>
+                </rewrite>
+            </marketplace>
+        </helpers>
+    </global>
+	<adminhtml>
+        <layout>
+            <updates>
+                <progos_ordersedit>
+                    <file>progos_ordersedit.xml</file>
+                </progos_ordersedit>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <progos_ordersedit before="MageWorx_OrdersEdit_Adminhtml">Progos_OrdersEdit_Adminhtml</progos_ordersedit>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

@@ -1,0 +1,255 @@
+<script>
+    categoryId = "<?php echo (int)$this->getCategoryId(); ?>";
+    productPositions = <?php echo Mage::helper('core')->jsonEncode($this->getProductPositions()) ?>;
+</script>
+<?php
+/** @var Progos_Magidev_Block_Sort_Adminhtml_Catalog_Category_Tab_Sort $this */
+
+/** @var Mage_Catalog_Helper_Output $_helper */
+$_helper = $this->helper('catalog/output');
+$cronBasedMerchandising = $this->cronBasedMerchandising();
+$_collectionSize = $this->getCollectionSize();
+$_columnCount = $this->getColumnCount();
+$_pageCount = $this->getPageCount();
+$catId =  $this->getCategoryId();
+$statusLabel = "";
+$manualFlag = '0';
+$obj = Mage::getModel('progos_merchandising/positions')->load($catId, 'category_id');
+if(!empty($obj->getData('position_id'))){
+    $publishOrNot = $obj->getData('is_active');
+    if($publishOrNot && Mage::getSingleton('admin/session')->isAllowed('catalog/categories/merchandisingpublish')){
+        $statusLabel = $this->__("Latest changes are not published yet on frontend");
+        $manualFlag = '1';
+    }else if($publishOrNot && !Mage::getSingleton('admin/session')->isAllowed('catalog/categories/merchandisingpublish')){
+        $statusLabel = $this->__("Latest changes are not published yet on frontend");
+    }else{
+        $statusLabel = $this->__("Latest changes are published on frontend");
+    }
+}else{
+    $statusLabel = "";
+}
+
+?>
+<?php if ($_collectionSize && $this->getCategoryId()): ?>
+    <table>
+        <tr>
+            <td>
+                <div class="category-products" id="category-products-list"
+                     data-column-count="<?php echo $_columnCount; ?>"
+                     data-collection-count="<?php echo $_collectionSize; ?>"
+                     data-category-id="<?php echo $this->getCategoryId() ?>"
+                     data-save-url="<?php echo $this->getAdminUrl("*/sortproduct/save", array()); ?>?isAjax=true"
+                     data-add-url="<?php echo $this->getAdminUrl("*/sortproduct/add", array()); ?>?isAjax=true"
+                     data-sort-type="<?php echo $this->getType() ?>"
+                >
+                    <table>
+                        <tr>
+                            <td>
+                                <?php
+                                if($cronBasedMerchandising){
+                                    if(!empty($statusLabel)){
+                                        echo '<p class="publish-status"><b>Status:</b>&nbsp<span>'.$statusLabel.'</span></p>';
+                                    }
+                                    if($manualFlag == '1'){
+                                        echo '<button class="scalable save" id="manualPublication">Publish Manually</button>';
+                                    }
+                                }
+                                ?>
+
+                                <button class="scalable save" id="loadMerchandising">Load Merchandising</button>
+                                <div id="product-pages"></div>
+                            </td>
+                            <td>
+                                <div class="product_selection_box" style="display: none;">
+                                    <div class="search-products">
+                                        <div class="entry-edit">
+                                            <div class="entry-edit-head">
+                                                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Your Selection') ?></h4>
+                                            </div>
+                                            <div class="fieldset fieldset-wide selection-fieldset">
+                                                <div class="add-all" id="product_selection_all"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="search-products-container" style="display: none;">
+                                    <div class="search-products">
+                                        <div class="entry-edit">
+                                            <div class="entry-edit-head">
+                                                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('SKU or Name') ?></h4>
+
+                                                <div class="form-buttons umar">
+                                                    <input type="text" name="search" id="search-new-products-query"
+                                                           onkeyup="Search.search(jQuery.trim($('search-new-products-query').value),<?php echo $this->getCategoryId() ?>,'<?php echo $this->getAdminUrl('*/sortproduct/search', []) ?>')"/>
+                                                    <button class="scalable"
+                                                            onclick="Search.search(jQuery.trim($('search-new-products-query').value),<?php echo $this->getCategoryId() ?>,'<?php echo $this->getAdminUrl('*/sortproduct/search', []) ?>')"
+                                                            type="button" id="search-new-products">
+                                                        <span><span><span><?php echo $this->__('Search') ?></span></span></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="fieldset fieldset-wide">
+                                                <div class="hor-scroll">
+                                                    <div id="add-product-container"></div>
+
+                                                </div>
+                                                <div class="add-all">
+                                                    <button class="scalable" type="button" id="search-new-products"
+                                                            onclick="Search.addAll()">
+                                                        <span><span><span><?php echo $this->__('Add all') ?></span></span></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div id="edit-form" style="display: none;">
+        <table cellspacing="0" class="form-list">
+            <tbody>
+            <tr>
+                <td class="label">
+                    <label><?php echo $this->__('Product Name') ?></label>
+                </td>
+                <td class="value">
+                    <input type="text" name="quick[title]" id="m.quick.title" value="" class="input-text"/>
+                </td>
+                <td class="scope-label"><span class="nobr">[<?php echo $this->getScope('name') ?>]</span></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label><?php echo $this->__('SKU') ?></label>
+                </td>
+                <td class="value">
+                    <input type="text" name="quick[sku]" value="" id="m.quick.sku" class="input-text"/>
+                </td>
+                <td class="scope-label"><span class="nobr">[<?php echo $this->getScope('sku') ?>]</span></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label><?php echo $this->__('Price') ?></label>
+                </td>
+                <td class="value">
+                    <input type="text" name="quick[price]" value="" id="m.quick.price" class="input-text"/>
+                </td>
+                <td class="scope-label"><span class="nobr">[<?php echo $this->getScope('price') ?>]</span></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label><?php echo $this->__('Special Price') ?></label>
+                </td>
+                <td class="value">
+                    <input type="text" name="quick[special_price]" value="" id="m.quick.s.price" class="input-text"/>
+                </td>
+                <td class="scope-label"><span class="nobr">[<?php echo $this->getScope('special_price') ?>]</span></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <label><?php echo $this->__('Short Description') ?></label>
+                </td>
+                <td class="value">
+                    <textarea type="text" name="quick[short_description]" value="" id="m.quick.short.description"
+                              class="textarea"></textarea>
+                </td>
+                <td class="scope-label"><span class="nobr">[<?php echo $this->getScope('short_description') ?>]</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        <?php // Use jQuery to prevent the magento loading mask showing up when sending Ajax requests ?>
+        btn = jQuery("#loadMerchandising");
+        btn1 = jQuery("#manualPublication");
+            jQuery(document).on("click", "#loadMerchandising", loadSort);
+            jQuery(document).on("click", "#manualPublication", manualPublication);
+
+        function manualPublication(e){
+            e.preventDefault();
+            var placeholder = jQuery('#product-pages');
+            jQuery.ajax({
+                type: 'post',
+                cache: false,
+                url: '<?php echo $this->getAdminUrl('*/sortproduct/mannualpublish', array()) ?>?isAjax=1',
+                data: {
+                    form_key: FORM_KEY,
+                    id: categoryId
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    placeholder.html("");
+                    jQuery("#loading-mask").show();
+                    jQuery(".search-products-container").hide();
+                    btn1.text("Loading, please wait ...");
+                    btn1.prop("disabled", true);
+                },
+                success: function(response) {
+                    jQuery("#loading-mask").hide();
+                    if (response.status == true) {
+                        jQuery('.publish-status span').html('Latest changes are published on frontend');
+                        jQuery(".search-products-container").show();
+                        btn1.prop("disabled", false);
+                        btn1.hide();
+                        showMessage('Changes are published successfully!','success');
+
+                    } else {
+                        jQuery('.publish-status span').html('Latest changes are not published yet on frontend');
+                        btn1.prop("disabled", false);
+                        showMessage('Changes are not published!','error');
+
+                    }
+                }
+            });
+            return false;
+        }
+        function showMessage(txt, type) {
+            var html = '<ul class="messages"><li class="'+type+'-msg"><ul><li>' + txt + '</li></ul></li></ul>';
+            $('messages').update(html);
+        }
+        function loadSort(e) {
+            e.preventDefault();
+            var placeholder = jQuery('#product-pages');
+            jQuery.ajax({
+                type: 'post',
+                cache: false,
+                url: '<?php echo $this->getAdminUrl('*/sortproduct/loadProducts', array()) ?>?isAjax=1',
+                data: {
+                    form_key: FORM_KEY,
+                    id: categoryId,
+                    product_positions: productPositions
+                },
+                beforeSend: function() {
+                    placeholder.html("");
+                    jQuery(".search-products-container").hide();
+                    btn.text("Loading, please wait ...");
+                    btn.prop("disabled", true);
+                },
+                success: function(response) {
+                    if (response !== null) {
+                        jQuery(".search-products-container").show();
+                        btn.text("Done ... reload again!");
+                        placeholder.html(response);
+                        btn.prop("disabled", false);
+                    } else {
+                        jQuery(".search-products-container").hide();
+                        btn.text("Error ... Retry!");
+                        btn.prop("disabled", false);
+                    }
+                },
+                dataType: 'json'
+            });
+            return false;
+        }
+        //]]>
+    </script>
+<?php endif; ?>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>mst_seo/css/base.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>mst_seo/js/base.js</name></action>
+            <action method="setCanLoadExtJs"><flag>1</flag></action>
+            <action method="setCanLoadRulesJs"><flag>1</flag></action>
+        </reference>
+    </default>
+</layout>

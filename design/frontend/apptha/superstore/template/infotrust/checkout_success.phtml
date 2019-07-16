@@ -1,0 +1,442 @@
+<?php
+if (!(Mage::getStoreConfig('api/ecoprocessor/enableNewCheckout'))) {
+    require_once 'common.phtml';
+    $pageTitle = 'Confirmation';
+    $order = Mage::getModel('sales/order');
+    $get_last_real_order_id = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+    $order->loadByIncrementId($get_last_real_order_id);
+    $_items = $order->getAllVisibleItems();
+    $infotrust = '';
+    $orderId = $order->getData("increment_id");
+    $totalCount = count($_items);
+    if ($totalCount > 0) {
+        foreach ($_items as $item) {
+
+            $_product = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->addAttributeToSelect('manufacturer')
+                ->addAttributeToSelect('category_ids')
+                ->addAttributeToSelect('sku')
+                ->addAttributeToFilter('entity_id', $item->getProductId())
+                ->getFirstItem();
+            /* Get Category tree path of Product */
+            $currentCatIds = $_product->getCategoryIds();
+            $categoryLevelCollection = array();
+            $categoryLevelCollection = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToSelect('name')//2 is actually the first level
+                ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+                ->addAttributeToFilter('level', 2)
+                ->addAttributeToFilter('is_active', 1);
+            $counter_category = $counter_newarrivals = $counter_sales = 0;
+            foreach ($categoryLevelCollection as $cat):
+                if ($cat->getName() != "Sales" && $cat->getName() != "Create Your Own" && $cat->getName() != "New Arrivals"):
+                    $counter_category = 1;
+                    $curen_category_name = $cat->getName();
+                elseif ($cat->getName() == "Create Your Own" || $cat->getName() == "New Arrivals"):
+                    $counter_newarrivals = 1;
+                elseif ($cat->getName() == "Sales"):
+                    $counter_sales = 1;
+                endif;
+            endforeach;
+            $path = array();
+            $categoryCollection =
+                Mage::getModel('catalog/category')->getCollection()
+                    ->addAttributeToSelect('*')//2 is actually the first level
+                    ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+                    ->addAttributeToFilter('is_active', 1)
+                    ->addAttributeToSort('level', DESC);
+            foreach ($categoryCollection as $cat):
+                $path_cat = $cat->getPath();
+                $ids = explode('/', $path_cat);
+
+                if (isset($ids[2])) {
+                    $topParent = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($ids[2]);
+                } else {
+                    $topParent = null;//it means you are in one catalog root.
+                }
+                if ($counter_category == 1):
+                    if ($topParent->getName() == $curen_category_name):
+                        $pathInStore = $cat->getPathInStore();
+                        $pathIds = array_reverse(explode(',', $pathInStore));
+
+                        $categories = $cat->getParentCategories();
+
+                        // add category path breadcrumb
+                        foreach ($pathIds as $categoryId) {
+                            if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                $path['category' . $categoryId] = array(
+                                    'label' => $categories[$categoryId]->getName(),
+                                );
+                            }
+                        }
+                        break;
+                    endif;
+                elseif ($counter_category != 1 && $counter_newarrivals == 1):
+                    if ($topParent->getName() == "Create Your Own" || $topParent->getName() == "New Arrivals"):
+                        $pathInStore = $cat->getPathInStore();
+                        $pathIds = array_reverse(explode(',', $pathInStore));
+
+                        $categories = $cat->getParentCategories();
+
+                        // add category path breadcrumb
+                        foreach ($pathIds as $categoryId) {
+                            if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                $path['category' . $categoryId] = array(
+                                    'label' => $categories[$categoryId]->getName(),
+                                );
+                            }
+                        }
+                        break;
+                    endif;
+                elseif ($counter_category != 1 && $counter_newarrivals != 1 && $counter_sales == 1):
+                    if ($topParent->getName() == "Sales"):
+                        $pathInStore = $cat->getPathInStore();
+                        $pathIds = array_reverse(explode(',', $pathInStore));
+
+                        $categories = $cat->getParentCategories();
+                        // add category path breadcrumb
+                        foreach ($pathIds as $categoryId) {
+                            if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                $path['category' . $categoryId] = array(
+                                    'label' => $categories[$categoryId]->getName(),
+                                );
+                            }
+                        }
+                        break;
+                    endif;
+                endif;
+            endforeach;
+
+            $categorys = '';
+            $pathIncreament = 1;
+            $tatol_count = count($path);
+            foreach ($path as $pathvalues) {
+                $categorys .= $pathvalues['label'];
+                if ($pathIncreament < $tatol_count) {
+                    $categorys .= '/';
+                }
+                $pathIncreament++;
+            }
+            /* Category Path get End */
+            //Get Parent Product Sku.
+            $productSku = $_product->getSku();
+            $brand = $_product->getAttributeText('manufacturer');
+            $productName = addslashes($item->getName());
+            $categorys = addslashes($categorys);
+            $infotrust .= "{'name':'" . $productName . "','id':'" . $productSku . "',
+        			   'quantity':'" . $item->getQtyOrdered() . "', 'price':'" . $item->getPrice() . "',
+        			   'category':'" . $categorys . "',
+        			   'coupon':'" . $item->getCouponCode() . "',
+        			   'metric3':'" . $item->getDiscountAmount() . "',
+        			   'brand':'" . $brand . "',
+        			   'variant':'" . $item->getSku() . "','dimension5': 'New'
+        				}";
+
+            if ($count < $totalCount) {
+                $infotrust .= ",";
+            }
+            $count++;
+        }
+    }
+
+    $amt = $order->getSubtotal() + $order->getShippingAmount();
+    $baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+    $currentCurrencyCode = 'USD';
+    $currentCurrencyCode1 = $currency_code;
+// Allowed currencies
+    if ($currency_code != "USD") {
+        $allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+        $rates = Mage::getModel('directory/currency')->getCurrencyRates($baseCurrencyCode, array_values($allowedCurrencies));
+        $price = ($amt / $rates[$currentCurrencyCode1]) * $rates[$currentCurrencyCode];
+    } else {
+        $price = $amt;
+    }
+    ?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer = [{
+            'pageType': '<?php echo $pageTitle; ?>',
+            'pageCategory': 'No Category',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+    </script>
+    <?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>
+    <script>
+        jQuery(window).on('load', function () {
+            dataLayer.push({
+                'pageType': '<?php echo $pageTitle; ?>',
+                'pageCategory': 'No Category',
+                'userId': '<?php echo $customerId; ?>',
+                'userEmail': '<?php echo $order->getCustomerEmail();?>',
+                'userName': '<?php echo $order->getCustomerName(); ?>',
+                'userType': '<?php echo $user; ?>',
+                'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                'storeCountry': '<?php echo $store->getName(); ?>',
+                'storeLanguage': '<?php echo $language; ?>',
+                'currencyCode': '<?php echo $currency_code; ?>',
+                'cashOnDeliveryFee': '<?php echo $order->getMspCashondelivery(); ?>',
+                'event': 'purchase',
+                'eventCategory': 'Ecommerce',
+                'eventAction': 'Completed Purchase',
+                'eventLabel': 'Order ID - <?php echo $orderId ?>',
+                'currencyCode': '<?php echo $currency_code; ?>',
+                'paymentMethod': '<?php echo $order->getPayment()->getMethodInstance()->getTitle(); ?>',
+                'ecommerce': {
+                    'currencyCode': '<?php echo $currency_code; ?>',
+                    'purchase': {
+                        'actionField': {
+                            'id': '<?php echo $orderId ?>',
+                            'affiliation': 'Elabelz Online Store',
+                            'revenue': '<?php echo $amt; ?>',//subtotal+shipping , $order->getSubtotal() + $order->getShippingAmount()
+                            'revenueusd': '<?php echo $price; ?>',
+                            'subTotalIncludeTax': '<?php echo ($amt + $order->getTaxAmount()) + ($order->getDiscountAmount()); ?>',//subtotal + shipping + tax
+                            'tax': '<?php echo $order->getTaxAmount(); ?>',
+                            'shipping': '<?php echo $order->getShippingAmount();?>',
+                            'coupon': '<?php  echo $order->getCouponCode(); ?>',
+                            'couponOrderAmount': '<?php echo abs($order->getDiscountAmount()); ?>',
+                        },
+                        'products': [<?php echo $infotrust; ?>]
+                    }
+                }
+            });
+        });
+    </script>
+<?php } else {
+    require_once 'common.phtml';
+    $pageTitle = 'Confirmation';
+    $session = Mage::getSingleton('core/session');
+    $get_last_real_order_id = $session->getLastRealOrderId();
+    $mdlEcoprocessor = Mage::getModel('ecoprocessor/quote_index');
+    $quoteId = $session->getLastQuoteId();
+    $quote = Mage::getModel("sales/quote")->loadByIdWithoutStore($quoteId);
+    $res = $quote->getReservedOrderId();
+    $id = $mdlEcoprocessor->getIdByReserveId($get_last_real_order_id);
+    if ($id) {
+        $mdlEcoprocessor->load($id);
+        $_items = $quote->getAllVisibleItems();
+        $infotrust = '';
+        $orderId = $get_last_real_order_id;
+        $totalCount = count($_items);
+        $discountTotal = 0;
+        if ($totalCount > 0) {
+            foreach ($_items as $item) {
+
+                $_product = Mage::getModel('catalog/product')
+                    ->getCollection()
+                    ->addAttributeToSelect('manufacturer')
+                    ->addAttributeToSelect('category_ids')
+                    ->addAttributeToSelect('sku')
+                    ->addAttributeToFilter('entity_id', $item->getProductId())
+                    ->getFirstItem();
+                /* Get Category tree path of Product */
+                $currentCatIds = $_product->getCategoryIds();
+                $categoryLevelCollection = array();
+                $categoryLevelCollection = Mage::getModel('catalog/category')->getCollection()
+                    ->addAttributeToSelect('name')//2 is actually the first level
+                    ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+                    ->addAttributeToFilter('level', 2)
+                    ->addAttributeToFilter('is_active', 1);
+                $counter_category = $counter_newarrivals = $counter_sales = 0;
+                foreach ($categoryLevelCollection as $cat):
+                    if ($cat->getName() != "Sales" && $cat->getName() != "Create Your Own" && $cat->getName() != "New Arrivals"):
+                        $counter_category = 1;
+                        $curen_category_name = $cat->getName();
+                    elseif ($cat->getName() == "Create Your Own" || $cat->getName() == "New Arrivals"):
+                        $counter_newarrivals = 1;
+                    elseif ($cat->getName() == "Sales"):
+                        $counter_sales = 1;
+                    endif;
+                endforeach;
+                $path = array();
+                $categoryCollection =
+                    Mage::getModel('catalog/category')->getCollection()
+                        ->addAttributeToSelect('*')//2 is actually the first level
+                        ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+                        ->addAttributeToFilter('is_active', 1)
+                        ->addAttributeToSort('level', DESC);
+                foreach ($categoryCollection as $cat):
+                    $path_cat = $cat->getPath();
+                    $ids = explode('/', $path_cat);
+
+                    if (isset($ids[2])) {
+                        $topParent = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($ids[2]);
+                    } else {
+                        $topParent = null;//it means you are in one catalog root.
+                    }
+                    if ($counter_category == 1):
+                        if ($topParent->getName() == $curen_category_name):
+                            $pathInStore = $cat->getPathInStore();
+                            $pathIds = array_reverse(explode(',', $pathInStore));
+
+                            $categories = $cat->getParentCategories();
+
+                            // add category path breadcrumb
+                            foreach ($pathIds as $categoryId) {
+                                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                    $path['category' . $categoryId] = array(
+                                        'label' => $categories[$categoryId]->getName(),
+                                    );
+                                }
+                            }
+                            break;
+                        endif;
+                    elseif ($counter_category != 1 && $counter_newarrivals == 1):
+                        if ($topParent->getName() == "Create Your Own" || $topParent->getName() == "New Arrivals"):
+                            $pathInStore = $cat->getPathInStore();
+                            $pathIds = array_reverse(explode(',', $pathInStore));
+
+                            $categories = $cat->getParentCategories();
+
+                            // add category path breadcrumb
+                            foreach ($pathIds as $categoryId) {
+                                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                    $path['category' . $categoryId] = array(
+                                        'label' => $categories[$categoryId]->getName(),
+                                    );
+                                }
+                            }
+                            break;
+                        endif;
+                    elseif ($counter_category != 1 && $counter_newarrivals != 1 && $counter_sales == 1):
+                        if ($topParent->getName() == "Sales"):
+                            $pathInStore = $cat->getPathInStore();
+                            $pathIds = array_reverse(explode(',', $pathInStore));
+
+                            $categories = $cat->getParentCategories();
+                            // add category path breadcrumb
+                            foreach ($pathIds as $categoryId) {
+                                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                                    $path['category' . $categoryId] = array(
+                                        'label' => $categories[$categoryId]->getName(),
+                                    );
+                                }
+                            }
+                            break;
+                        endif;
+                    endif;
+                endforeach;
+
+                $categorys = '';
+                $pathIncreament = 1;
+                $tatol_count = count($path);
+                foreach ($path as $pathvalues) {
+                    $categorys .= $pathvalues['label'];
+                    if ($pathIncreament < $tatol_count) {
+                        $categorys .= '/';
+                    }
+                    $pathIncreament++;
+                }
+                /* Category Path get End */
+                //Get Parent Product Sku.
+                $productSku = $_product->getSku();
+                $brand = $_product->getAttributeText('manufacturer');
+                $productName = addslashes($item->getName());
+                $categorys = addslashes($categorys);
+                $infotrust .= "{'name':'" . $productName . "','id':'" . $productSku . "',
+                            'quantity':'" . $item->getQty() . "', 'price':'" . $item->getPrice() . "',
+                            'category':'" . $categorys . "',
+                            'coupon':'" . $item->getCouponCode() . "',
+                            'metric3':'" . $item->getDiscountAmount() . "',
+                            'brand':'" . $brand . "',
+                            'variant':'" . $item->getSku() . "','dimension5': 'New'
+                            }";
+
+                if ($count < $totalCount) {
+                    $infotrust .= ",";
+                }
+                $count++;
+                // calculate total discount amount from Quote
+                $discountTotal += $item->getDiscountAmount();
+            }
+        }
+        $shippingInfo = json_decode($mdlEcoprocessor->getShippingAddress(), true);
+        $billingInfo = json_decode($mdlEcoprocessor->getBillingAddress(), true);
+        $shippingFee = Mage::helper('ecoprocessor')->getShipmentCharges($shippingInfo['country_id'], $quote->getBaseSubtotal());
+        $codCharges = 0;
+        $amt = $quote->getBaseSubtotal() + $shippingFee;
+        $quoteCurrency = $quote->getQuoteCurrencyCode();
+        $amt = Mage::helper('directory')->currencyConvert($amt, "AED", $quoteCurrency);
+        $paymentMethod = "Credit Card";
+        if ($mdlEcoprocessor->getPayemntMethod() == "msp_cashondelivery") {
+            $codCharges = Mage::helper('ecoprocessor')->getCodCharges($billingInfo['country_id']);
+            $codCharges = Mage::helper('directory')->currencyConvert($codCharges, "AED", $quoteCurrency);
+            $paymentMethod = "Cash On Delivery";
+        }
+        $baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+        $currentCurrencyCode = 'USD';
+        $currentCurrencyCode1 = $currency_code;
+        // Allowed currencies
+        if ($currency_code != "USD") {
+            $allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+            $rates = Mage::getModel('directory/currency')->getCurrencyRates($baseCurrencyCode, array_values($allowedCurrencies));
+            $price = ($amt / $rates[$currentCurrencyCode1]) * $rates[$currentCurrencyCode];
+        } else {
+            $price = $amt;
+        }
+        ?>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            dataLayer = [{
+                'pageType': '<?php echo $pageTitle; ?>',
+                'pageCategory': 'No Category',
+                'userId': '<?php echo $customerId; ?>',
+                'sha256Email': '<?php echo $customerSha256Email; ?>',
+                'md5Email': '<?php echo $customerMd5Email; ?>',
+                'userType': '<?php echo $user; ?>',
+                'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                'storeCountry': '<?php echo $store->getName(); ?>',
+                'storeLanguage': '<?php echo $language; ?>',
+                'currencyCode': '<?php echo $currency_code; ?>'
+            }];
+        </script>
+        <?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>
+        <script>
+            jQuery(window).on('load', function () {
+                dataLayer.push({
+                    'pageType': '<?php echo $pageTitle; ?>',
+                    'pageCategory': 'No Category',
+                    'userId': '<?php echo $customerId; ?>',
+                    'userEmail': '<?php echo $billingInfo['email'];?>',
+                    'userName': '<?php echo $billingInfo['firstname'] . " " . $billingInfo['lastname']; ?>',
+                    'userType': '<?php echo $user; ?>',
+                    'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                    'storeCountry': '<?php echo $store->getName(); ?>',
+                    'storeLanguage': '<?php echo $language; ?>',
+                    'currencyCode': '<?php echo $currency_code; ?>',
+                    'cashOnDeliveryFee': '<?php echo $codCharges; ?>',
+                    'event': 'purchase',
+                    'eventCategory': 'Ecommerce',
+                    'eventAction': 'Completed Purchase',
+                    'eventLabel': 'Order ID - <?php echo $orderId ?>',
+                    'currencyCode': '<?php echo $currency_code; ?>',
+                    'paymentMethod': '<?php echo $paymentMethod; ?>',
+                    'ecommerce': {
+                        'currencyCode': '<?php echo $currency_code; ?>',
+                        'purchase': {
+                            'actionField': {
+                                'id': '<?php echo $orderId ?>',
+                                'affiliation': 'Elabelz Online Store',
+                                'revenue': '<?php echo $amt; ?>',//subtotal+shipping , $order->getSubtotal() + $order->getShippingAmount()
+                                'revenueusd': '<?php echo $price; ?>',
+                                'subTotalIncludeTax': '<?php echo ($amt + $quote->getShippingAddress()->getData('tax_amount')) + ($quote->getDiscountAmount()); ?>',//subtotal + shipping + tax
+                                'tax': '<?php echo $quote->getTaxAmount(); ?>',
+                                'shipping': '<?php echo $amt;?>',
+                                'coupon': '<?php  echo $quote->getCouponCode(); ?>',
+                                'couponOrderAmount': '<?php echo abs($discountTotal); ?>',
+                            },
+                            'products': [<?php echo $infotrust; ?>]
+                        }
+                    }
+                });
+            });
+        </script>
+        <?php
+    }
+} ?>

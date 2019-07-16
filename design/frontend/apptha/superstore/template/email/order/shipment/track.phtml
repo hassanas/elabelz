@@ -1,0 +1,79 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_shipment=$this->getShipment() ?>
+<?php $_order=$this->getOrder() ?>
+<?php if ($_shipment && $_order && $_shipment->getAllTracks()): ?>
+<p style="margin:0 0 25px;"><?php echo $this->__("Thank you for shopping with Elabelz. Your order has now been shipped via our carrier. You can track the progress of your order using the detail below:");?></p>
+
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Shipped By') ?></th>
+            <th align="center" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Tracking Number') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php $i=0; foreach ($_shipment->getAllTracks() as $_item): $i++ ?>
+        <tr <?php echo $i%2?'bgcolor="#F6F6F6"':'' ?>>
+            <?php $title = $this->escapeHtml($_item->getTitle()); ?>
+
+            <td align="left" valign="top" style="padding:3px 9px"><?php echo $title; ?></td>
+            <?php
+            if($_item->getCarrier()):
+            $trackInfo = $_item->getNumberDetail()->getData();
+            endif;
+            $trackingNumber = $this->escapeHtml($_item->getNumber());
+            ?>
+        <?php
+        if($title == "Aramex"){ ?>
+        <td align="center" valign="top" style="padding:3px 9px"><a target="_blank" href="https://www.aramex.com/track/shipments"><?php echo $trackingNumber; ?></a></td>
+        <?php  }
+        elseif ($title == "Federal Express") { ?>
+        <td align="center" valign="top" style="padding:3px 9px"><a target="_blank" href="https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers=<?php echo $trackingNumber; ?>"><?php echo $trackingNumber; ?></a></td>
+       <?php }
+        elseif ($title == "United States Postal Service") { ?>
+        <td align="center" valign="top" style="padding:3px 9px"><a target="_blank" href="http://trkcnfrm1.smi.usps.com/PTSInternetWeb/InterLabelInquiry.do?origTrackNum=<?php echo $trackingNumber; ?>"><?php echo $trackingNumber; ?></a></td>
+       <?php }
+       elseif ($title == "DHL") { ?>
+        <td align="center" valign="top" style="padding:3px 9px"><a target="_blank" href="http://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=<?php echo $trackingNumber; ?>"><?php echo $trackingNumber; ?></a></td>
+       <?php }
+       elseif($title == "Fetchr"){ 
+        ?>
+           <td align="center" valign="top" style="padding:3px 9px"><a target="_blank" href="https://track.fetchr.us/track/<?php echo $trackingNumber; ?>"><?php echo $trackingNumber; ?></a></td>
+        <?php }
+        else { 
+        ?>
+            <td align="center" valign="top" style="padding:3px 9px"><?php if($trackInfo['url'] != ""){ ?><a target="_blank" href="<?php echo $trackInfo['url']; ?>"><?php echo $trackingNumber; ?></a><?php } else { ?><?php echo $trackingNumber; ?><?php } ?></td>
+       <?php }?>
+
+        </tr>
+    <?php endforeach ?>
+    </tbody>
+</table>
+<?php else: ?>
+<p style="margin:0 0 25px;"><?php echo $this->__("Thank you for shopping with Elabelz. Your order has now been shipped.")?></p>
+<?php endif; ?>

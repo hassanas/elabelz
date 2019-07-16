@@ -1,0 +1,200 @@
+<?php $categories =  $this->categoryTree();
+$genders = array( 22=>"WOMEN" , 20=>"MEN" , 12=>"KIDS" );
+$arabicGender = array( "WOMEN" => "النساء" , "MEN" => "الرجال" , "KIDS"=> "الاطفال" );
+$storeId = Mage::app()->getStore()->getId();
+$store_code = Mage::app()->getStore()->getCode();
+$path = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/category/';
+?>
+<div class="navbar navbar-default yamm">
+    <div class="navbar-header">
+    </div>
+    <div id="navbar-collapse-grid" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav nhide">
+            <?php foreach( $genders as $key => $gender  ){ ?>
+                <li  class="dropdown yamm-fw menu-<?php echo $gender; ?>">
+                    <script type="text/javascript">
+                        jQuery(document).ready(function($) {
+                            function megamenufunction(){
+                                  var classCheck = jQuery(this).hasClass('m-open');
+                                  if (classCheck == true) {
+                                      var columnDiv = jQuery(".popup_<?php echo $gender; ?> .navColsOuter div.col-sm-2");
+                                      var totalWidth = 0;
+                                      columnDiv.each(function() {
+                                          var getWidth = jQuery(this).outerWidth();
+                                          totalWidth+=getWidth;
+                                      });
+                                      var widthDiv = (totalWidth + 21);
+                                      jQuery(".popup_<?php echo $gender; ?>").css('min-width', widthDiv).addClass('hover');
+                                      jQuery(".megamenuOverlay_<?php echo $gender; ?>").addClass('megamenuOverlay');
+                                  }
+                            }
+                            jQuery(".dropdown.yamm-fw.menu-<?php echo $gender; ?>").hover(megamenufunction);
+
+                            jQuery(document).on('touchstart click', ".megamenuOverlay_<?php echo $gender; ?>", function(){
+                                jQuery(".dropdown.yamm-fw.menu-<?php echo $gender; ?>").removeClass('m-open');
+                                jQuery(this).removeClass('megamenuOverlay');
+                                jQuery(".popup_<?php echo $gender; ?>").removeClass('hover');
+                            });
+
+                            jQuery(".megamenuOverlay_<?php echo $gender; ?>").hover(function(){
+                                jQuery(".dropdown.yamm-fw.menu-<?php echo $gender; ?>").removeClass('m-open');
+                                jQuery(this).removeClass('megamenuOverlay');
+                                jQuery(".popup_<?php echo $gender; ?>").removeClass('hover');
+                            });
+
+                            jQuery("li.dropdown.yamm-fw").mouseleave(function () {
+                                jQuery(".megamenuOverlay_<?php echo $gender; ?>").removeClass('megamenuOverlay');
+                                jQuery(".dropdown.yamm-fw").removeClass("m-open");
+                                jQuery(".popup_<?php echo $gender; ?>").removeClass('hover');
+                            });
+                        });
+                    </script>
+                    <a onclick="topMenuTrigger('<?php echo $gender; ?>')" href="<?php echo Mage::getBaseUrl().strtolower($gender).'/';?>" data-toggle="dropdown" class="dropdown-toggle"><?php echo $this->__($gender) ; ?></a>
+                    <ul class="dropdown-menu multi-column columns-3 open popup_<?php echo $gender; ?>">
+                        <div class="row">
+                            <div class="navColsOuter">
+
+                                <?php
+                                $changeColumnAfter = $key;
+                                $count = 1;
+                                $liCount = 0;
+                                $html = '';
+                                $kidsCount = 1;
+                                $child_category = 1;
+                                $datalayerUrlVariable = "";
+                                foreach( $categories as $category ){
+                                    $child_category = count($categories);
+                                    if( $count == 1 )
+                                        $html .= $this->openHtmlBlock();
+
+                                    $children = $category->children;
+                                    if( !$children )
+                                        $children = $category->children;
+
+                                if( strtolower($category->title) == strtolower('New Arrivals') || trim($category->title) == "وصلنا حديثاً" ){
+
+                                    $liCount ++;
+                                    foreach ($children as $child) {
+
+                                            /* If current category and current gender is matched then It enter into the block */
+                                            if ($child->include_in_menu==false) { continue; }
+                                            if( strtolower($child->title) == strtolower($gender) || $arabicGender[$gender] == $this->__(trim($child->title)) ){
+                                                //getting url of category according to store
+                                                $url_category = str_replace("en_ae",$store_code,$child->url);
+                                                $datalayerUrlVariable = $category->title." | ".$child->title;
+                                                $html .= '<li  class="firstchild"><a onclick="topMenuTrigger(\''.$datalayerUrlVariable.'\')" href="'.$url_category.'">'.$this->__($category->name).'</a></li>';
+                                                /* Load Thumbnail Image for Menu from Category */
+
+
+
+                                                /* Show Image of category if category image is added for top postion. */
+                                                if( !empty( $child->MegamenubannerPosition) && $child->MegamenubannerPosition== 'top' ){
+                                                    $html .= '<img src="'.$path.$child->Megamenubanner.'"/>';
+                                                }
+
+
+                                                $tempResutl = $this->generateChildLevelCategoryNewArrivalDesktop($child , $liCount , $changeColumnAfter , $kidsCount , $datalayerUrlVariable );
+                                                $liCount = $tempResutl['liCount'];
+                                                $html .= $tempResutl['html'];
+
+                                                /* Show Image of category if category image is added for bottom postion. */
+                                                if( !empty( $child->MegamenubannerPosition) && $child->MegamenubannerPosition== 'bottom' ){
+                                                    $html .= '<img src="'.$path.$child->Megamenubanner.'"/>';
+                                                }
+
+                                            }
+
+                                        }
+                                    }else if( strtolower($category->title) ==  strtolower($gender) || $arabicGender[$gender] == $this->__(trim($category->title))  ){
+
+                                        /* Show Image of category if category image is added for top postion. */
+                                        if( !empty( $category->MegamenubannerPosition) && $category->MegamenubannerPosition== 'top' ){
+                                            $html .= '<img src="'.$path.$category->Megamenubanner.'"/>';
+                                        }
+
+                                        foreach ($children as $child) {
+                                            if ($child->include_in_menu==false) { continue; }
+                                            $datalayerUrlVariable = $category->title." | ".$child->title;
+                                            //getting url of category according to store
+                                                $url_category = str_replace("en_ae",$store_code,$child->url);
+                                            $html .= '<li  class="firstchild"><a onclick="topMenuTrigger(\''.$datalayerUrlVariable.'\')" href="'.$url_category.'">'.$this->__($child->name).'</a></li>';
+                                            $liCount ++;
+                                            $tempResutl = $this->generateChildLevelCategoryDesktop($child , $liCount , $changeColumnAfter , $kidsCount , $datalayerUrlVariable );
+                                            $liCount = $tempResutl['liCount'];
+                                            $html .= $tempResutl['html'];
+                                        }
+
+                                        /* Show Image of category if category image is added for bottom postion. */
+                                        if( !empty( $category->MegamenubannerPosition) && $category->MegamenubannerPosition== 'bottom' ){
+                                            $html .= '<img src="'.$path.$category->Megamenubanner.'"/>';
+                                        }
+
+                                }else if( strtolower($category->title) == strtolower('Sales') || trim($category->title) =="تخفيضات" ){
+                                    foreach ($children as $child) {
+                                            if ($child->include_in_menu==false) { continue; }
+                                            /* If current category and current gender is matched then It enter into the block */
+                                            if( strtolower($child->title) == strtolower($gender) || $arabicGender[$gender] == $this->__(trim($child->title)) ){
+
+                                                $identifierLandingPages = "mega-menu-desktop-landingpages-".strtolower($gender);
+
+                                                $staticLandingPages =  $this->getLayout()->createBlock('cms/block')->setStoreId($storeId)->setBlockId($identifierLandingPages)->toHtml();
+                                                if( $staticLandingPages != '' ){
+                                                    $html .= $staticLandingPages;
+                                                    $liCount = $liCount + 3;
+                                                }
+
+
+                                                /* Load Thumbnail Image for Menu from Category */
+
+                                                $datalayerUrlVariable = $category->title." | ".$child->title;
+                                                //getting url of category according to store
+                                                $url_category = str_replace("en_ae",$store_code,$category->url);
+                                                $html .= '<li  class="firstchild sale"><a onclick="topMenuTrigger(\''.$datalayerUrlVariable.'\')" href="'.$url_category.'">'.$this->__($category->title).'</a></li>';
+
+                                                /* Show Image of category if category image is added for top postion. */
+                                                if( !empty( $child->MegamenubannerPosition) && $child->MegamenubannerPosition== 'top' ){
+                                                    $html .= '<img src="'.$path.$child->Megamenubanner.'"/>';
+                                                }
+                                                $liCount ++;
+                                                $tempResutl = $this->generateChildLevelCategoryDesktop( $child , $liCount , $changeColumnAfter , $kidsCount , $datalayerUrlVariable );
+                                                $liCount = $tempResutl['liCount'];
+                                                $html .= $tempResutl['html'];
+
+                                                /* Show Image of category if category image is added for bottom postion. */
+                                                if( !empty( $child->MegamenubannerPosition) && $child->MegamenubannerPosition== 'bottom' ){
+                                                    $html .= '<img src="'.$path.$child->Megamenubanner.'"/>';
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if( is_array($changeColumnAfter) )
+                                        $changeColumnAfter = $changeColumnAfter[$kidsCount];
+
+                                    if( $liCount == $changeColumnAfter &&  $count != $child_category ){
+                                        $html .= $this->closeHtmlBlock();
+                                        $html .= $this->openHtmlBlock();
+                                        $liCount = 0;
+                                        $kidsCount++;
+                                    }
+
+                                    if( $count == $child_category ){
+                                        $html .= $this->closeHtmlBlock();
+                                    }
+
+
+                                    $count++;
+                                }
+                                echo $html;
+                                $identifier = "mega-menu-desktop-".strtolower($gender);
+                                echo $this->getLayout()->createBlock('cms/block')->setStoreId($storeId)->setBlockId($identifier)->toHtml();
+                                ?>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+            <?php } ?>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setStoreId($storeId)->setBlockId('mega-menu-static-links')->toHtml(); ?>
+        </ul>
+    </div>
+</div>

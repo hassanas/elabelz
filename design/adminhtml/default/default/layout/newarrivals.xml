@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <newarrivals_adminhtml_newarrivals_new>
+	<reference name="content">
+	  <block type="newarrivals/adminhtml_newarrivals" name="newarrivals" />
+	</reference>
+  </newarrivals_adminhtml_newarrivals_new>
+  <newarrivals_adminhtml_newarrivals_old>
+	<reference name="content">
+	  <block type="newarrivals/adminhtml_expired" name="expired" />
+	</reference>
+  </newarrivals_adminhtml_newarrivals_old>
+</layout>

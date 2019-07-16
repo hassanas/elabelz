@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Api_List>
+            <version>0.1.0</version>
+        </Progos_Api_List>
+    </modules>
+    <global>
+        <models>
+            <api-list>
+                <class>Progos_Api_List_Model</class>
+            </api-list>
+        </models>
+        <helpers>
+            <api-list>
+                <class>Progos_Api_List_Helper</class>
+            </api-list>
+        </helpers>
+    </global>
+</config>

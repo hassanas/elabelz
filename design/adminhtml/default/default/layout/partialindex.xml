@@ -1,0 +1,7 @@
+<layout version="0.1.0">
+    <partialindex_adminhtml_index_index>
+        <reference name="content">
+            <block type="partialindex/adminhtml_grid" name="partialindex" />
+        </reference>
+    </partialindex_adminhtml_index_index>
+</layout>

@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <sections>
+        <seo translate="label" module="seo">
+            <label>SEO</label>
+            <tab>mstcore</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>400</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label" module="seo">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>500</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_add_canonical_url translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Add Canonical URL Meta Header</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <backend_model>seo/system_config_backend_canonical</backend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_add_canonical_url>
+                        <associated_canonical_configurable_product  translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Associated Products Canonical Tag for Configurable Products</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <frontend_class>free-method</frontend_class>
+                            <source_model>seo/system_config_source_associatedcanonical_product</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </associated_canonical_configurable_product>
+                        <associated_canonical_grouped_product  translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Associated Products Canonical Tag for Grouped Products</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_associatedcanonical_product</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </associated_canonical_grouped_product>
+                        <associated_canonical_bundle_product  translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Associated Products Canonical Tag for Bundle Products</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_associatedcanonical_product</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </associated_canonical_bundle_product>
+                        <crossdomain translate="label">
+                            <label>Cross Domain Canonical URL</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_crossdomain</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </crossdomain>
+                        <paginated_canonical translate="label">
+                            <label>Add '?p=' to paginated content</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </paginated_canonical>
+                        <canonical_url_ignore_pages translate="label">
+                            <label>Don't use canonical urls on pages</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_add_canonical_url>1</is_add_canonical_url></depends>
+                        </canonical_url_ignore_pages>
+                        <noindex_pages2 translate="label">
+                            <label>Robots Meta Header</label>
+                            <frontend_model>seo/adminhtml_system_noindexPages</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </noindex_pages2>
+                        <https_noindex_pages translate="label">
+                            <label>Robots Meta Header for HTTPS</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_httpsnoindexpages</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </https_noindex_pages>
+                        <is_alternate_hreflang translate="label">
+                            <label>Enable Link Rel="alternate" and hreflang</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_alternate_hreflang>
+                        <hreflang_locale_code translate="label">
+                            <label>Hreflang locale code (not necessary)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>95</sort_order>
+                            <show_in_default>0</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_alternate_hreflang>1</is_alternate_hreflang></depends>
+                        </hreflang_locale_code>
+                        <is_paging_prevnext translate="label">
+                            <label>Enable Link Rel="next/prev"</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_paging_prevnext>
+                        <robots_editor translate="label">
+                            <label>Robots.txt Editor</label>
+                            <frontend_type>textarea</frontend_type>
+                            <backend_model>seo/system_config_backend_robot</backend_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </robots_editor>
+                        <is_category_meta_tags_used translate="label">
+                            <label>Use meta tags from categories if they are not empty</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_category_meta_tags_used>
+                        <is_product_meta_tags_used translate="label">
+                            <label>Use meta tags from products if they are not empty</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_product_meta_tags_used>
+                    </fields>
+                </general>
+                 <extended translate="label" module="seo">
+                    <label>Extended Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>600</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <meta_title_page_number>
+                            <label>Page Number for Meta Title</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_metatitlepagenumber</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </meta_title_page_number>
+                        <meta_description_page_number>
+                            <label>Page Number for Meta Description</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_metadescriptionpagenumber</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </meta_description_page_number>
+                        <meta_title_max_length>
+                            <label>Max Length for Meta Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </meta_title_max_length>
+                        <meta_description_max_length>
+                            <label>Max Length for Meta Description</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </meta_description_max_length>
+                    </fields>
+                </extended>
+                <snippets translate="label" module="seo">
+                    <label><![CDATA[Rich Snippets and Opengraph ( You can validate rich snippets at <span class="m-seo-group-link"
+                            title="https://developers.google.com/structured-data/testing-tool/"
+                            onclick="
+                                window.open(
+                                  'https://developers.google.com/structured-data/testing-tool/',
+                                  '_blank'
+                                ); return false;">Structured Data Testing Tool</span> )]]>
+                    </label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>700</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_rich_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Enable Product Rich Snippets</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_rich_snippets>
+                        <rich_snippets_payment_method translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Payment Methods</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_payment_method>
+                        <rich_snippets_delivery_method translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Delivery Methods</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_delivery_method>
+                        <rich_snippets_product_category translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Product Category</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_product_category>
+                        <rich_snippets_brand_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Brand Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_brand_config>
+                        <rich_snippets_model_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Model Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_model_config>
+                        <rich_snippets_color_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Color Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_color_config>
+                        <rich_snippets_weight_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Weight</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_weightrichsnippets</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_weight_config>
+                        <rich_snippets_dimensions_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Enable Rich Snippets Dimensions Configuration</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_dimensions_config>
+                        <rich_snippets_dimensional_unit translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Unit</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_dimensions_config>1</rich_snippets_dimensions_config></depends>
+                        </rich_snippets_dimensional_unit>
+                        <rich_snippets_height_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Height Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_dimensions_config>1</rich_snippets_dimensions_config></depends>
+                        </rich_snippets_height_config>
+                        <rich_snippets_width_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Width Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_dimensions_config>1</rich_snippets_dimensions_config></depends>
+                        </rich_snippets_width_config>
+                        <rich_snippets_depth_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Depth Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_dimensions_config>1</rich_snippets_dimensions_config></depends>
+                        </rich_snippets_depth_config>
+                        <rich_snippets_product_condition_config translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Product Condition Configuration</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_conditionrichsnippets</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </rich_snippets_product_condition_config>
+                        <rich_snippets_product_condition_attribute translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Condition Attribute</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_product_condition_config>2</rich_snippets_product_condition_config></depends>
+                        </rich_snippets_product_condition_attribute>
+                        <rich_snippets_product_condition_new translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">New Attribute Value</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_product_condition_config>2</rich_snippets_product_condition_config></depends>
+                        </rich_snippets_product_condition_new>
+                        <rich_snippets_product_condition_used translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Used Attribute Value</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_product_condition_config>2</rich_snippets_product_condition_config></depends>
+                        </rich_snippets_product_condition_used>
+                        <rich_snippets_product_condition_refurbished translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Refurbished Attribute Value</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_product_condition_config>2</rich_snippets_product_condition_config></depends>
+                        </rich_snippets_product_condition_refurbished>
+                        <rich_snippets_product_condition_damaged translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Damaged Attribute Value</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                            <depends><rich_snippets_product_condition_config>2</rich_snippets_product_condition_config></depends>
+                        </rich_snippets_product_condition_damaged>
+                        <delete_wrong_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Delete old snippets inside product block</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_rich_snippets>1</is_rich_snippets></depends>
+                        </delete_wrong_snippets>
+                        <category_rich_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Category Rich Snippets</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_categoryrichsnippets</source_model>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </category_rich_snippets>
+                       <!--  <category_rich_snippets_price_text translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Price Text</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>220</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><category_rich_snippets separator="|"><value>1|2</value></category_rich_snippets></depends>
+                        </category_rich_snippets_price_text>
+                        <category_rich_snippets_rating_text translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Rating Text</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><category_rich_snippets separator="|"><value>1|2</value></category_rich_snippets></depends>
+                        </category_rich_snippets_rating_text>
+                        <category_rich_snippets_rewiew_count_text translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Review Count Text</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><category_rich_snippets separator="|"><value>1|2</value></category_rich_snippets></depends>
+                        </category_rich_snippets_rewiew_count_text> -->
+                        <category_rich_snippets_rewiew_count translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Review Count will show</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_rewiewcount</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><category_rich_snippets separator="|"><value>1|2</value></category_rich_snippets></depends>
+                        </category_rich_snippets_rewiew_count>
+                        <!-- <hide_category_rich_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Hide Category Rich Snippets block</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>260</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><category_rich_snippets separator="|"><value>1|2</value></category_rich_snippets></depends>
+                        </hide_category_rich_snippets> -->
+                        <is_breadcrumbs translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Rich Snippets Breadcrumbs</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_breadcrumbs</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_breadcrumbs>
+                        <breadcrumbs_separator translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Separator</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_breadcrumbs>1</is_breadcrumbs></depends>
+                        </breadcrumbs_separator>
+                        <is_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Enable Organization snippets</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_general</source_model>
+                            <sort_order>350</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_organization_snippets>
+                        <name_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Name for Organization</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_name</source_model>
+                            <sort_order>360</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </name_organization_snippets>
+                        <manual_name_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Name</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>370</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                            <depends><name_organization_snippets>1</name_organization_snippets></depends>
+                        </manual_name_organization_snippets>
+                        <country_address_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Country Address</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_countryaddress</source_model>
+                            <sort_order>380</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </country_address_organization_snippets>
+                        <manual_country_address_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Country</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>390</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                            <depends><country_address_organization_snippets>1</country_address_organization_snippets></depends>
+                        </manual_country_address_organization_snippets>
+                        <manual_locality_address_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Locality Address</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </manual_locality_address_organization_snippets>
+                        <manual_postal_code_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Postal Code</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>410</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </manual_postal_code_organization_snippets>
+                        <street_address_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Street Address</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_streetaddress</source_model>
+                            <sort_order>420</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </street_address_organization_snippets>
+                        <manual_street_address_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Street Address</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>430</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                            <depends><street_address_organization_snippets>1</street_address_organization_snippets></depends>
+                        </manual_street_address_organization_snippets>
+                        <telephone_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Telephone Number</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_telephone</source_model>
+                            <sort_order>440</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </telephone_organization_snippets>
+                        <manual_telephone_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Telephone Number</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>450</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                            <depends><telephone_organization_snippets>1</telephone_organization_snippets></depends>
+                        </manual_telephone_organization_snippets>
+                        <manual_faxnumber_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Fax Number</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>460</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </manual_faxnumber_organization_snippets>
+                        <email_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1 m-seo-settings-field-arrow">Email</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_organizationsnippets_email</source_model>
+                            <sort_order>470</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                        </email_organization_snippets>
+                        <manual_email_organization_snippets translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-2">Email</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>480</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_organization_snippets separator="|"><value>1|2</value></is_organization_snippets></depends>
+                            <depends><email_organization_snippets>1</email_organization_snippets></depends>
+                        </manual_email_organization_snippets>
+                        <is_opengraph translate="label">
+                            <label><![CDATA[Enable Opengraph]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_opengraph>
+                    </fields>
+                </snippets>
+                <url translate="label" module="seo">
+                    <label>SEO-friendly URLs Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>800</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <layered_navigation_friendly_urls translate="label">
+                            <label>Enable SEO-friendly URLs for Layered Navigation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_model>seo/adminhtml_system_config_warning</frontend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </layered_navigation_friendly_urls>
+                        <trailing_slash translate="label">
+                            <label>Trailing Slash</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_trailingslash</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </trailing_slash>
+                        <product_url_format translate="label">
+                            <label>Product URL</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>seo/system_config_source_producturlformat</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_url_format>
+                        <product_url_key translate="label">
+                            <label>Product URL Key Template</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_url_key>
+                        <apply_template>
+                            <label></label>
+                            <button_label>Apply Template For Product URLs</button_label>
+                            <button_action>applyUrlTemplate</button_action>
+                            <frontend_model>seo/adminhtml_system_btnAction</frontend_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </apply_template>
+                        <category_url_format translate="label">
+                            <label>Remove Parent Category Path for Category URLs</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_model>seo/adminhtml_system_config_CheckDuplicateCategoryUrl</frontend_model>
+                            <sort_order>95</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </category_url_format>
+                        <tag_friendly_urls translate="label">
+                            <label>Enable SEO-friendly URLs for tags</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tag_friendly_urls>
+                        <review_friendly_urls translate="label">
+                            <label>Enable SEO-friendly URLs for reviews</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </review_friendly_urls>
+                    </fields>
+                </url>
+                <image translate="label" module="seo">
+                    <label>Product Images Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>900</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_enable_image_friendly_urls translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Enable SEO-friendly URLs for Product Images</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enable_image_friendly_urls>
+                        <image_url_template translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Template for URL key of Product Images</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_enable_image_friendly_urls>1</is_enable_image_friendly_urls></depends>
+                        </image_url_template>
+                        <is_enable_image_alt translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Enable generation of Product Images Alt and Title</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_enable_image_alt>
+                        <image_alt_template translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Template for Product Images Alt and Title</span>]]></label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><is_enable_image_alt>1</is_enable_image_alt></depends>
+                        </image_alt_template>
+                    </fields>
+                </image>
+                <info>
+                    <label>Info (visible in frontend, will not work if FPC or Varnish enabled)</label>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <sort_order>1100</sort_order>
+                    <frontend_model>mstcore/system_config_form_fieldset</frontend_model>
+                    <expanded>1</expanded>
+                    <fields>
+                        <info translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-arrow">Show Info</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </info>
+                        <alt_link_info translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Show empty or missing links <br/>of alt tags</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><info>1</info></depends>
+                        </alt_link_info>
+                        <templates_rewrite_info translate="label">
+                            <label><![CDATA[<span class="m-seo-settings-field-level-1">Show SEO Templates and Rewrite Info</span>]]></label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><info>1</info></depends>
+                        </templates_rewrite_info>
+                        <allowed_ip translate="label">
+                            <label>Show info only for</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </allowed_ip>
+                    </fields>
+                </info>
+            </groups>
+       </seo>
+    </sections>
+</config>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Api_Cache>
+            <version>0.1.0</version>
+        </Progos_Api_Cache>
+    </modules>
+    <global>
+        <helpers>
+            <api-cache>
+                <class>Progos_Api_Cache_Helper</class>
+            </api-cache>
+        </helpers>
+        <models>
+            <api-cache>
+                <class>Progos_Api_Cache_Model</class>
+            </api-cache>
+        </models>
+        <events>
+            <api_retrieve_data_before>
+                <observers>
+                    <retrieve_data_before>
+                        <class>api-cache/fpc</class>
+                        <method>prepareData</method>
+                    </retrieve_data_before>
+                </observers>
+            </api_retrieve_data_before>
+        </events>
+        <cache>
+            <types>
+                <list translate="label,description" module="api-cache">
+                    <label><![CDATA[List]]></label>
+                    <description><![CDATA[Category Api]]></description>
+                    <tags><![CDATA[categoryapi2tags]]></tags>
+                </list>
+                <productfilters translate="label,description" module="api-cache">
+                    <label><![CDATA[Category Filters]]></label>
+                    <description><![CDATA[Category Filter Api]]></description>
+                    <tags><![CDATA[categoryapi2filtertags]]></tags>
+                </productfilters>
+                <search translate="label,description" module="api-cache">
+                    <label><![CDATA[Search]]></label>
+                    <description><![CDATA[Search Api]]></description>
+                    <tags><![CDATA[searchapi2tags]]></tags>
+                </search>
+                <searchfilters translate="label,description" module="api-cache">
+                    <label><![CDATA[Search Filters]]></label>
+                    <description><![CDATA[Search Filters Api]]></description>
+                    <tags><![CDATA[searchapi2filtertags]]></tags>
+                </searchfilters>
+                <productdetail translate="label,description" module="api-cache">
+                    <label><![CDATA[Product Page]]></label>
+                    <description><![CDATA[Product Page Rest Api]]></description>
+                    <tags><![CDATA[productdetailtags]]></tags>
+                </productdetail>
+            </types>
+        </cache>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <progos_cache_api>
+                                            <title>Cache Api</title>
+                                        </progos_cache_api>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <events>
+            <controller_action_predispatch_adminhtml_cache_massRefresh>
+                <observers>
+                    <cacheapi_controller_action_predispatch_adminhtml_cache_massRefresh>
+                        <class>api-cache/clean</class>
+                        <type>singleton</type>
+                        <method>controllerActionPredispatchAdminhtmlCacheMassRefresh</method>
+                    </cacheapi_controller_action_predispatch_adminhtml_cache_massRefresh>
+                </observers>
+            </controller_action_predispatch_adminhtml_cache_massRefresh>
+        </events>
+    </adminhtml>
+    <default>
+        <progos_cache_api>
+            <apicache>
+                <min_page_limit>10</min_page_limit>
+                <max_page_limit>200</max_page_limit>
+            </apicache>
+        </progos_cache_api>
+    </default>
+</config>

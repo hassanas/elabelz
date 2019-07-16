@@ -1,0 +1,228 @@
+<?php
+require_once 'common.phtml';
+$_product = Mage::registry('current_product');
+//condition ends on EOF 
+if ($_product) {
+
+    $store = Mage::app()->getStore();
+    $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+    if ($_product->getSpecialPrice() && Mage::getStoreConfig('infotrust/infotrust/specialprice') == '1') {
+        //get special price by date magetno way
+        $price = Mage::getModel('catalog/product_type_price')->calculatePrice($_product->getPrice(), $_product->getSpecialPrice(), $_product->getSpecialFromDate(), $_product->getSpecialToDate(), null, null, null, $_product->getId());
+        $price = Mage::helper('core')->currency($price, false, false);
+    } else {
+        $price = Mage::helper('core')->currency($_product->getPrice(), false, false);
+    }
+    $pageTitle = '';
+
+    $mageSession = Mage::getSingleton("core/session", array("name" => "frontend"));
+    if ($categoryPaths = $mageSession->getBreadcrumbProductDatalayer()) {// Unset Breadcrump if Product Page refresh.
+        $count = 1;
+        $totalCount = count($categoryPaths);
+        foreach ($categoryPaths as $categoryPath):
+            $pageTitle .= $categoryPath['label'];
+            if ($count < $totalCount)
+                $pageTitle .= '/';
+            $count++;
+        endforeach;
+    }
+    $photo = $this->helper('catalog/image')->init($_product, 'thumbnail');
+    $isStock = "instock";
+    $qty = 1;
+    if (!$_product->isSaleable()) {
+        $isStock = "outofstock";
+        $qty = null;
+    }
+    //If found single or double quote then add \ infront of quotes.
+    $pageTitle = addslashes($pageTitle);
+    $productName = addslashes($_product->getName());
+    $user = 'Guest';
+    $customerId = '';
+    $loggedInStatus = 'Logged Out';
+    if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+        $user = 'User';
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        $customerId = $customer->getId();
+        $loggedInStatus = 'Logged In';
+    }
+
+    $codeArray = explode('_', $store->getCode());
+    $language = '';
+    if (!empty($codeArray))
+        $language = strtoupper($codeArray[0]);
+
+
+    ?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        //add property for page category to use in Add To Cart Popup @RT
+        window.promotionData.pageCategory = "<?php echo $pageTitle; ?>";
+        dataLayer = [{
+            'pageType': 'PDP',
+            'pageCategory': '<?php echo $pageTitle; ?>',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+    </script>
+    <?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>
+    <script type="text/javascript">
+        function clickAddToCart(object) {
+            var variant = jQuery('.product-variant-class').text();
+            var quantity = jQuery('#qty').val();
+            sessionStorage.recentProductAddToCart = '';
+            sessionStorage.recentAddedVariant = variant;
+            sessionStorage.recentAddedQty = quantity;
+            productAddToCartForm.submit(object);
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            'pageType': 'PDP',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>',
+            'event': 'productViewLoad',
+            'ecommerce': {
+                'currencyCode': '<?php echo $currency_code; ?>',
+                'detailload': {
+                    'products': [{
+                        'name': '<?php echo $productName;?>',
+                        'id': '<?php echo $_product->getSku();?>',
+                        'quantity': '<?php echo $qty; ?>',
+                        'availability': '<?php echo $isStock ?>',
+                        'photourl': '<?php echo $photo; ?>',
+                        'price': '<?php echo $price; ?>',
+                        'brand': '<?php echo $_product->getAttributeText("manufacturer");?>',
+                        'dimension5': 'New'
+                    }]
+                }
+            }
+        });
+        jQuery(document).ready(function ($) {
+            setTimeout(function () {
+                var variant = jQuery('.product-variant-class').text();
+                var quantity = jQuery('#qty').val();
+                if (quantity == undefined)
+                    quantity = null;
+                jQuery('#qty').attr('data-old-qty', quantity);
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'pageType': 'PDP',
+                    'pageCategory': '<?php echo $pageTitle; ?>',
+                    'userId': '<?php echo $customerId; ?>',
+                    'userType': '<?php echo $user; ?>',
+                    'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                    'storeCountry': '<?php echo $store->getName(); ?>',
+                    'storeLanguage': '<?php echo $language; ?>',
+                    'currencyCode': '<?php echo $currency_code; ?>',
+                    'event': 'productView',
+                    'ecommerce': {
+                        'currencyCode': '<?php echo $currency_code; ?>',
+                        'detail': {
+                            'products': [{
+                                'name': '<?php echo $productName;?>',
+                                'id': '<?php echo $_product->getSku();?>',
+                                'quantity': quantity,
+                                'availability': '<?php echo $isStock ?>',
+                                'photourl': '<?php echo $photo; ?>',
+                                'price': '<?php echo $price; ?>',
+                                'category': '<?php echo $pageTitle; ?>',
+                                'brand': '<?php echo $_product->getAttributeText("manufacturer");?>',
+                                'variant': variant,
+                                'dimension5': 'New',
+                            }]
+                        }
+                    }
+                });
+
+                if (jQuery('#' + 'messages_product_view').length > 0 && (jQuery("#messages_product_view li:first").hasClass('success-msg'))) {
+                    if (typeof(sessionStorage.recentProductAddToCart) !== 'undefined') {
+                        var variantCart = sessionStorage.recentAddedVariant;
+                        var quantityCart = sessionStorage.recentAddedQty;
+                        window.dataLayer = window.dataLayer || [];
+                        dataLayer.push({
+                            'pageType': 'PDP',
+                            'pageCategory': '<?php echo $pageTitle; ?>',
+                            'userId': '<?php echo $customerId; ?>',
+                            'userType': '<?php echo $user; ?>',
+                            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                            'storeCountry': '<?php echo $store->getName(); ?>',
+                            'storeLanguage': '<?php echo $language; ?>',
+                            'currencyCode': '<?php echo $currency_code; ?>',
+                            'event': 'addToCart',
+                            'ecommerce': {
+                                'currencyCode': '<?php echo $currency_code; ?>',
+                                'add': {
+                                    'products': [{
+                                        'name': '<?php echo $productName;?>',
+                                        'id': '<?php echo $_product->getSku();?>',
+                                        'quantity': quantityCart,
+                                        'price': '<?php echo $price; ?>',
+                                        'category': '<?php echo $pageTitle; ?>',
+                                        'brand': '<?php echo $_product->getAttributeText("manufacturer");?>',
+                                        'variant': variantCart,
+                                        'coupon': '',
+                                        'dimension5': 'New',
+                                    }]
+                                }
+                            }
+                        });
+                        sessionStorage.removeItem("recentProductAddToCart");
+                        sessionStorage.removeItem("recentAddedVariant");
+                        sessionStorage.removeItem("recentAddedQty");
+                    }
+                }
+
+            }, 100);
+            window.addToCartEvent = function () {
+                var variant = jQuery('.product-variant-class').text();
+                var quantity = jQuery('#qty').val();
+                sessionStorage.recentProductAddToCart = '';
+                sessionStorage.recentAddedVariant = variant;
+                sessionStorage.recentAddedQty = quantity;
+                if (typeof(sessionStorage.recentProductAddToCart) !== 'undefined') {
+                    var variantCart = sessionStorage.recentAddedVariant;
+                    var quantityCart = sessionStorage.recentAddedQty;
+                    window.dataLayer = window.dataLayer || [];
+                    dataLayer.push({
+                        'pageType': 'PDP',
+                        'pageCategory': '<?php echo $pageTitle; ?>',
+                        'userId': '<?php echo $customerId; ?>',
+                        'userType': '<?php echo $user; ?>',
+                        'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+                        'storeCountry': '<?php echo $store->getName(); ?>',
+                        'storeLanguage': '<?php echo $language; ?>',
+                        'currencyCode': '<?php echo $currency_code; ?>',
+                        'event': 'addToCart',
+                        'ecommerce': {
+                            'currencyCode': '<?php echo $currency_code; ?>',
+                            'add': {
+                                'products': [{
+                                    'name': '<?php echo $productName;?>',
+                                    'id': '<?php echo $_product->getSku();?>',
+                                    'quantity': quantityCart,
+                                    'price': '<?php echo $price; ?>',
+                                    'category': '<?php echo $pageTitle; ?>',
+                                    'brand': '<?php echo $_product->getAttributeText("manufacturer");?>',
+                                    'variant': variantCart,
+                                    'coupon': '',
+                                    'dimension5': 'New',
+                                }]
+                            }
+                        }
+                    });
+                    sessionStorage.removeItem("recentProductAddToCart");
+                    sessionStorage.removeItem("recentAddedVariant");
+                    sessionStorage.removeItem("recentAddedQty");
+                }
+            }
+        });
+    </script>
+<?php } ?>

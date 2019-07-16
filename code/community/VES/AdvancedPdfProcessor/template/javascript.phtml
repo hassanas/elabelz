@@ -1,0 +1,118 @@
+<script type="text/javascript"><!--
+//<![CDATA[
+
+var templateJSON 		= <?php echo $this->getTemplateJson(); ?>;
+var typeJSON 			= <?php echo $this->getTypeJSON() ?>;
+var easyPdfVariables 	= <?php echo $this->getJsonVariables(); ?>;
+var editorIds 			= ['order_template','invoice_template','shipment_template','creditmemo_template'];
+var defaultCssUrl 		= '<?php $this->getSkinUrl('ves_pdfpros/default.css');?>';
+var currentTemplate 	= '<?php if($template = $this->getCurrentTemplate()){echo $template->getSku();}?>';
+var vesEditorConfigJSON	= <?php echo $this->getEditorConfigJSON();?>;
+Event.observe(window,'load',function(){
+		/*Add body class if customer use template*/
+	/*
+		if(templateValue = $('template_id').value){
+			editorIds.each(function(editorId){
+				var vesEditor = tinyMCE.get(editorId);
+				vesEditor.dom.addClass(vesEditor.dom.select('body'), templateJSON[templateValue].sku);
+			});
+		}
+	*/
+	 	// change template when change template selectbox
+		$('template_id').observe('change',function() {
+			var label = this.options[this.selectedIndex].text;
+			var index = this.options[this.selectedIndex].value;
+
+			$$('p#css_note').each(function(note) {
+				(index == '') ? note.update('You do <b>not</b> choose template.') : 
+					note.update('Your classes must be start by <b>.'+templateJSON[index]['sku'] + '</b>. Ex .'+templateJSON[index]['sku'] + ' .your_class');	
+			});
+			
+			typeJSON.each(function(elm) {
+				if(index == '') {
+					(tinyMCE.get(elm) === undefined) ? $(elm).value = '' : tinyMCE.get(elm).setContent('');
+				} else {
+					(tinyMCE.get(elm) === undefined) ? $(elm).value = templateJSON[index][elm] : tinyMCE.get(elm).setContent(templateJSON[index][elm]);
+				}
+			});
+			templateValue = $('template_id').value;
+			
+			editorIds.each(function(editorId){
+				var vesEditor = tinyMCE.get(editorId);
+				/*remove current class*/
+				vesEditor.dom.removeClass(vesEditor.dom.select('body'), currentTemplate);
+				/*add new class*/
+				var newTemplate = templateJSON[templateValue]?templateJSON[templateValue].sku:'';
+				vesEditor.dom.addClass(vesEditor.dom.select('body'), newTemplate);
+				currentTemplate = newTemplate;
+
+				/*Remove CSS*/
+				var links = vesEditor.dom.select('head link');
+				links.each(function(link){
+					if((link.href.toString().indexOf('ves_pdfpros/default.css') == -1) && 
+							(link.href.toString().indexOf('default/content.css') == -1)){
+						vesEditor.dom.remove(link);
+					}
+				});
+
+				/*Add new CSS*/
+				if(templateJSON[templateValue]){
+					vesEditor.dom.loadCSS(templateJSON[templateValue].css_url);
+				}
+			});
+			
+			
+		});
+
+
+		//modified for MagentovariablePlugin and Variables
+		// in variables.js
+		
+		MagentovariablePlugin.loadChooser = function(textareaId) {
+			MagentovariablePlugin.textareaId = textareaId;		//set textareId
+	        Variables.init(null, 'MagentovariablePlugin.insertVariable');
+	        MagentovariablePlugin.openChooser();
+	        
+	        return;
+	    }
+	    
+		MagentovariablePlugin.openChooser = function() {
+	        Variables.openVariableChooser();
+	    }
+	    
+		Variables.openVariableChooser = function() {
+	        if (Variables.variablesContent == null) {
+	            Variables.variablesContent = '<?php echo $this->getVariablesHtml(); ?>';
+	        }
+	        if (Variables.variablesContent) {
+	        	Variables.openDialogWindow(Variables.variablesContent);
+	        	$$('li.doc-type').each(function(item){item.hide();});
+	        	if(MagentovariablePlugin.editor.id === undefined)		//if MagentovariablePlugin editor id not exist
+	        		var id = MagentovariablePlugin.textareaId;
+	        	else if(MagentovariablePlugin.editor.id && tinyMCE.get(MagentovariablePlugin.editor.id) === undefined)		//if MagentovariablePlugin editor id
+		        	// exist but editor not exist(textare Mode)
+	        		var id = MagentovariablePlugin.textareaId;
+	        	else
+		        	var id = MagentovariablePlugin.editor.id;
+        		
+	        	if(id == 'invoice_template') var template = 'invoice';
+	        	else if(id == 'shipment_template') var template = 'shipment';
+	        	else if(id == 'creditmemo_template') var template = 'creditmemo';	
+				$$('li.'+template).each(function(item){item.show();});
+	        	
+	        	$$('.control').each(function(item) {
+	        		item.observe('click',function() {
+	        			item.next('.variables-list').toggle();
+	        			if(item.next('.variables-list').getStyle('display') === 'block') item.addClassName('selected');
+	        			else item.removeClassName('selected');
+	        		});
+	        	});
+	        }
+	    }
+
+
+	    //modifield for WysiwygWidget.Widget
+		
+});
+//]]>
+--></script>

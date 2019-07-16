@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_Guestordertocust>
+      <version>0.1.0</version>
+    </Progos_Guestordertocust>
+  </modules>
+  
+  <frontend>
+    <routers>
+      <guestordertocust>
+        <use>standard</use>
+          <args>
+            <module>Progos_Guestordertocust</module>
+            <frontName>guestordertocust</frontName>
+          </args>
+      </guestordertocust>
+    </routers>
+  </frontend>
+  
+  <global>
+    <helpers>
+      <guestordertocust>
+        <class>Progos_Guestordertocust_Helper</class>
+      </guestordertocust>
+    </helpers>
+    <blocks>
+      <guestordertocust>
+        <class>Progos_Guestordertocust_Block</class>
+      </guestordertocust>
+    </blocks>
+    <models>
+      <guestordertocust>
+        <class>Progos_Guestordertocust_Model</class>
+      </guestordertocust>
+    </models>
+    <events>
+      <checkout_onepage_controller_success_action>
+        <observers>
+          <guestordertocust>
+            <type>singleton</type>
+            <class>guestordertocust/observer</class>
+            <method>successAfterOrder</method>
+          </guestordertocust>
+        </observers>
+      </checkout_onepage_controller_success_action>
+    </events>
+  </global>
+
+</config> 

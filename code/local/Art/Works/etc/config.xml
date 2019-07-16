@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Art_Works>
+      <version>0.1.0</version>
+    </Art_Works>
+  </modules>
+  <global>
+    <helpers>
+      <works>
+        <class>Art_Works_Helper</class>
+      </works>
+    </helpers>
+	<models>
+	  <works>
+		<class>Art_Works_Model</class>
+		<resourceModel>works_mysql4</resourceModel>
+	  </works>
+	</models>
+    <events>
+	  <newsletter_subscriber_save_before> <!-- identifier of the event we want to catch -->
+        <observers>
+          <newsletter_subscriber_save_before_handler> <!-- identifier of the event handler -->
+            <type>model</type> <!-- class method call type; valid are model, object and singleton -->
+            <class>works/observer</class> <!-- observers class alias -->
+            <method>setUpdateDate</method>  <!-- observer's method to be called -->
+            <args></args> <!-- additional arguments passed to observer -->
+          </newsletter_subscriber_save_before_handler>
+        </observers>
+      </newsletter_subscriber_save_before>
+    </events>
+  </global>
+</config> 

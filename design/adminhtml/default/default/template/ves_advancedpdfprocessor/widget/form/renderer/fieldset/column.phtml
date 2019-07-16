@@ -1,0 +1,188 @@
+<?php
+/* @var $this VES_AdvancedPdfProcessor_Block_Adminhtml_Widget_Form_Renderer_Fieldset_Column */
+?>
+<?php $_htmlId      = $this->getElement()->getHtmlId() ?>
+<?php $_htmlClass   = $this->getElement()->getClass() ?>
+<?php $_htmlName    = $this->getElement()->getName() ?>
+<style>
+	.grid-widget td, .grid-widget th{padding: 2px 4px !important;}
+	.hide_border {border:none !important;}
+</style>
+<tr>
+    <td colspan="10" class="grid grid-widget tier">
+    <table cellspacing="0" class="border" id="tiers_table">
+        <col width="28%" />
+        <col width="16%" />
+        <col width="20%" />
+        <col width="10%" />
+        <col width="10%"/>
+        <col width="5%" />
+        <thead>
+            <tr class="headings">
+            	<th><?php echo Mage::helper('advancedpdfprocessor')->__('Option') ?></th>
+            	<th><?php echo Mage::helper('advancedpdfprocessor')->__('Option Type') ?></th>
+                <th><?php echo Mage::helper('advancedpdfprocessor')->__('Title') ?></th>
+                <th><?php echo Mage::helper('advancedpdfprocessor')->__('Width, px') ?></th>
+                <th><?php echo Mage::helper('advancedpdfprocessor')->__('Sort Order') ?></th>
+                <th class="last"><?php echo Mage::helper('advancedpdfprocessor')->__('Action') ?></th>
+            </tr>
+        </thead>
+        <tbody id="<?php echo $_htmlId ?>_container"></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="a-right"><?php echo $this->getAddButtonHtml() ?></td>
+            </tr>
+        </tfoot>
+    </table>
+
+<script type="text/javascript">
+//<![CDATA[
+           
+
+                     
+var columnTemplate = '<tr>'
+    + '<td>'
+    + '<select class="<?php echo $_htmlClass ?> input-text required-entry" name="parameters[<?php echo $_htmlName ?>][{{index}}][option]" id="column_row_{{index}}_option">'
+    <?php foreach ($this->getInitialOptions()->getData() as $_id => $_group): ?>
+    + '<optgroup label="<?php echo $_group['label'] ?>">'
+    	<?php foreach($_group['value'] as $_gid => $_option):?>
+    	+ '<option value="<?php echo $_option['code'] ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($_option['title'])) ?></option>'
+    	<?php endforeach ?>
+    + '</optgroup>'
+    <?php endforeach ?>
+    + '</select>'
+
+	+ '<input style="display:none;width: 83%; margin-top: 3px;" type="text" class="<?php echo $_htmlClass ?> input-text" name="parameters[<?php echo $_htmlName ?>][{{index}}][custom]" id="column_row_{{index}}_custom" value="{{custom}}"/>'
+    + '</td>'
+
+
+    //add option type column
+    + '<td>'
+     + '<select style="width:82%;" class="<?php echo $_htmlClass ?> input-text required-entry" name="parameters[<?php echo $_htmlName ?>][{{index}}][option_choose]" id="column_row_{{index}}_option_choose">'
+    <?php foreach ($this->getOptionType() as $_id => $_option): ?>
+    + '<option value="<?php echo $_option['code'] ?>"><?php echo $this->jsQuoteEscape($this->htmlEscape($_option['title'])) ?></option>'
+    <?php endforeach ?>
+    + '</select>'
+
+	+ '<table id="column_row_{{index}}_div" class="hide_border">'
+	+ '<tr>'
+	+ '<td class="hide_border"><span>Width</span></td>'
+	+ '<td class="hide_border"><input style="width:70%;" type="text" class="<?php echo $_htmlClass ?> input-text" name="parameters[<?php echo $_htmlName ?>][{{index}}][option_width]" id="column_row_{{index}}_option_width" value="{{option_width}}"/></td>'
+	+ '</tr>'
+	+ '<tr>'
+	+ '<td class="hide_border"><span>Height</span></td>'
+	+ '<td class="hide_border"><input style="width:70%;" type="text" class="<?php echo $_htmlClass ?> input-text" name="parameters[<?php echo $_htmlName ?>][{{index}}][option_height]" id="column_row_{{index}}_option_height" value="{{option_height}}"/></td>'
+	+ '</tr>'
+	+ '</table>'
+	
+    +'</td>'
+    //end add
+    
+    + '<td><input type="text" class="<?php echo $_htmlClass ?> input-text required-entry" name="parameters[<?php echo $_htmlName ?>][{{index}}][title]" id="column_row_{{index}}_title" value="{{title}}"/></td>'
+    + '<td><input type="text" class="<?php echo $_htmlClass ?> input-text required-entry validate-greater-than-zero" name="parameters[<?php echo $_htmlName ?>][{{index}}][width]" value="{{width}}" id="column_row_{{index}}_width" /></td>'
+    + '<td><input type="text" class="<?php echo $_htmlClass ?> input-text required-entry validate-greater-than-zero" name="parameters[<?php echo $_htmlName ?>][{{index}}][sortorder]" value="{{sortorder}}" id="column_row_{{index}}_sortorder" /></td>'
+    + '<td class="last"><input type="hidden" name="parameters[<?php echo $_htmlName ?>][{{index}}][delete]" class="delete" value="" id="column_row_{{index}}_delete" />'
+    + '<button title="<?php echo Mage::helper('advancedpdfprocessor')->__("Delete Column") ?>" type="button" class="scalable delete icon-btn delete-product-option" id="column_row_{{index}}_delete_button" onclick="this.up().up().remove()">'
+    + '<span><span><span><?php echo Mage::helper('advancedpdfprocessor')->__("Delete Column") ?></span></span></span></button></td>'
+    + '</tr>';
+
+
+var columnControl = {
+    template: new Template(columnTemplate, new RegExp('(^|.|\\r|\\n)({{\\s*(\\w+)\\s*}})', "")),
+    itemsCount: 0,
+    addItem : function () {
+        var data = {
+            option_width: '',
+            option_height: '',
+            title: '',
+            width: '',
+            sortorder: '',
+            index: this.itemsCount++,
+            custom: '',
+        };
+			data.option 			= arguments[0];
+			data.option_choose		= arguments[1];
+			data.option_width 		= arguments[2];
+			data.option_height  	= arguments[3];
+            data.title 				= arguments[4];
+            data.width      		= arguments[5];
+            data.sortorder        	= arguments[6];
+            data.custom 			= arguments[7];
+
+
+        Element.insert($('<?php echo $_htmlId ?>_container'), {
+            bottom : this.template.evaluate(data)
+        });
+
+		var choose 			= $('column_row_' + data.index + '_option_choose');	//choose type of option(default,image)
+		var option 			= $('column_row_' + data.index + '_option');			//attribute item select
+		var custom 			= $('column_row_' + data.index + '_custom');	
+		var option_height 	= $('column_row_' + data.index + '_option_height');
+		var option_width 	= $('column_row_' + data.index + '_option_width');
+		var div 			= $('column_row_' + data.index + '_div');
+		
+        choose.observe('change',function(){
+			var value = choose.options[choose.selectedIndex].value;
+			switch(value) {
+				case '<?php echo VES_AdvancedPdfProcessor_Model_Source_Widget_Optiontype::OPTION_TEXT ?>': 
+					div.hide();break;
+				case '<?php echo VES_AdvancedPdfProcessor_Model_Source_Widget_Optiontype::OPTION_IMAGE ?>':
+					div.show();break;
+			}
+        });
+
+        /*event for option select*/
+        option.observe('change',function(){
+			var value = option.options[option.selectedIndex].value;
+			if(value == 'ves_custom') {
+				custom.show();
+			}
+			else {
+				custom.hide();
+			}
+        });
+
+
+        option.value = data.option;	//set data for select option field
+        
+        //added
+        choose.value = data.option_choose;
+
+        /*initial option select*/
+        div.hide();
+		if(data.option_choose == '<?php echo VES_AdvancedPdfProcessor_Model_Source_Widget_Optiontype::OPTION_IMAGE?>') {
+			div.show();
+        }
+
+        custom.hide();
+        if(data.option == 'ves_custom')
+            custom.show();
+
+		
+    },
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input', 'select']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    }
+};
+
+$$('.easypdf-add').each(function(item) {
+	item.observe('click',function() {
+		columnControl.addItem();
+	});
+});
+<?php $value = base64_decode($this->getValues()); $value = unserialize($value); ?>
+<?php foreach ($value as $_item): ?>
+columnControl.addItem('<?php echo $_item['option'] ?>', '<?php echo isset($_item['option_choose'])?$_item['option_choose']:'' ?>', '<?php echo isset($_item['option_width'])?$_item['option_width']:'' ?>','<?php echo isset($_item['option_height'])?$_item['option_height']:'' ?>' , '<?php echo $_item['title'] ?>', '<?php echo $_item['width'] ?>', '<?php echo $_item['sortorder'] ?>' , '<?php echo $_item['custom']?>');
+<?php endforeach; ?>
+//]]>
+
+
+</script>
+</td></tr>

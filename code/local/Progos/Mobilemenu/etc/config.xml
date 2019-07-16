@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Mobilemenu>
+            <version>1.0</version>
+        </Progos_Mobilemenu>
+    </modules>
+    <global>
+        <blocks>
+            <progos_mobilemenu>
+                <class>Progos_Mobilemenu_Block</class>
+            </progos_mobilemenu>
+        </blocks>
+    </global>
+</config>

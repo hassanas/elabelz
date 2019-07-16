@@ -1,0 +1,370 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+$current_body_class = $this->getLayout()->getBlock('root')->getData('body_class');
+// var_dump($current_body_class);
+$no_menu_id = ["customer-account","checkout-cart-index"];
+
+$locale = Mage::app()->getLocale()->getLocaleCode();
+// var_dump($locale);
+$allLanguages = Mage::app()->getLocale()->getOptionLocales();
+// var_dump($allLanguages);
+?>
+
+    <div class="visually_hidden" id="overlay"></div>
+
+    <div dir="ltr" id="wrapper">
+
+        <header id="site_header" data-test="rackspace2">
+        
+            <div class="labelz_topmenu">
+                <div class="secondary_row">
+                    <ul class="site_options">
+                      <li>
+                       <?php  echo $this->getChildHtml('store_language') ; ?>
+                    </li>  
+                        <?php
+                        $is_seller = false;
+                        if (! Mage::helper ( 'marketplace' )->checkMarketplaceKey ()) {
+
+                            $loginId            = Mage::getSingleton ( 'customer/session' )->isLoggedIn ();
+                            $groupId            = Mage::getSingleton ( 'customer/session' )->getCustomerGroupId ();
+                            $getGroupId         = Mage::helper ( 'marketplace' )->getGroupId ();
+                            $customer           = Mage::getSingleton ( "customer/session" )->getCustomer ();
+                            $customer_status    = $customer->getCustomerstatus ();
+                            $fb_page            = Mage::getStoreConfig ( 'marketplace/marketplace/facebook_page' );
+                            $twitter_page       = Mage::getStoreConfig ( 'marketplace/marketplace/twitter_page' ); //$customer->getEntityId
+                            // $is_seller = Mage::getModel('marketplace/sellerprofile')->collectprofile(5)->getSellerId()?true:false;
+                            if ($groupId == $getGroupId && $customer->getCustomerstatus()) {
+                                $is_seller = true;
+                            }
+                        ?>
+                        
+                        <?php } else { 
+                            
+                            ?>
+                            
+                        <li><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getAdditionalHtml() ?></li>
+                            
+                        <?php }
+                        if (
+                            (strpos($current_body_class,'customer-account')) ||
+                            (strpos($current_body_class,'checkout-onepage-success')) ||
+                            (strpos($current_body_class,'checkout-onepage-index')) ||
+							(strpos($current_body_class,'marketplace-seller-login')) 
+							
+							) {
+                        } else {
+                            echo $this->getChildHtml('topLinks');
+                        }
+                        ?>
+                    </ul>
+
+		<?php if(
+				!((strpos($current_body_class,'customer-account')) ||
+				(strpos($current_body_class,'customer-account-login')) ||
+                (strpos($current_body_class,'checkout-onepage-index')) ||
+				(strpos($current_body_class,'marketplace-seller-login'))
+		     	))  
+		{ ?>
+			<ul id="mp_top_nav" class="seller_link_dropdwon_header">
+           <?php /*?> 
+		   	<li class="mp_engage_tab"><a><span><?php echo $this->__('Engage'); ?> </span></a>
+            <div>
+            <ul>
+            <li><a href="https://www.facebook.com/<?php echo $fb_page; ?>"
+            title="" target="_blank"><span><?php echo $this->__('Join us on facebook'); ?></span></a></li>
+            <li><a href="https://www.twitter.com/<?php echo $twitter_page; ?>"
+            title="" target="_blank"><span><?php echo $this->__('Join us on twitter'); ?></span></a></li>
+            </ul>
+            </div>
+            </li>
+            <li class="mp_sellers">
+            <a><span><?php echo $this->__('Sellers'); ?> </span></a>
+            <div>
+            <ul>
+            <?php if ($groupId != $getGroupId && $loginId) { ?>
+            <li><a
+            href="<?php echo Mage::getUrl('marketplace/general/changebuyer'); ?>"
+            title=""><span><?php echo $this->__('Become a seller'); ?></span></a></li>
+            <?php } else {
+            if ($groupId != $getGroupId || !$loginId) { ?>
+            <li><a
+            href="<?php echo Mage::helper('marketplace/url')->getregisterUrl(); ?>"
+            title=""><span><?php echo $this->__('Register as seller '); ?></span></a></li> 
+            <?php }
+            } ?>
+            <?php if ($groupId == $getGroupId && $loginId && $customer_status == 1) { ?>
+            <li><a
+            href="<?php echo Mage::helper('marketplace/dashboard')->dashboardUrl(); ?>"
+            title=""><span><?php echo $this->__('Seller dashboard'); ?></span></a></li>
+            <?php } elseif ($groupId != $getGroupId && !$loginId) { ?>
+            <li><a
+            href="<?php echo Mage::helper('marketplace/dashboard')->getregister(); ?>"
+            title=""><span><?php echo $this->__('Seller login'); ?></span></a></li>
+            <?php } else { ?>
+            <li><a
+            href="<?php echo Mage::getUrl('customer/account'); ?>" title="">
+            <span><?php echo $this->__('Account Dashboard'); ?></span></a></li>
+            <?php } ?>
+            </ul>
+            </div>
+            </li><?php */?>
+            <li class="mp_sellers_tab">
+            <a><span><?php echo $this->__('Our sellers'); ?> </span></a>
+            <?php $increment = 0; ?>
+            <div>
+            <ul>
+            <?php
+            $model = Mage::getModel ( 'customer/customer' )->getCollection ()->addAttributeToFilter ( 'customerstatus', 1 );
+            $id = array ();
+            if ($model->getSize () > 0) {
+            foreach ( $model as $_model ) {
+            $id [] = $_model ['entity_id'];
+            }
+            $collection = Mage::getModel ( 'marketplace/sellerprofile' )->topSeller ( $id );
+            foreach ( $collection as $_collection ) {
+            $seller_id = $_collection ['seller_id'];
+            $target_path = 'marketplace/seller/displayseller/id/' . $seller_id;
+            $mainUrlRewrite = Mage::getModel ( 'core/url_rewrite' )->load ( $target_path, 'target_path' );
+            $getRequestPath = $mainUrlRewrite->getRequestPath ();
+            $get_requestPath = Mage::getUrl ( $getRequestPath );
+            if ($increment < 5 && $_collection ['store_title'] != '') {
+            ?>
+            <li><a href="<?php echo $get_requestPath; ?>" title="<?php
+            echo $_collection['store_title']; ?>"> <span><?php
+            echo $_collection['store_title']; ?></span></a></li><?php
+            }
+            $increment ++;
+            }
+            }
+            ?>
+            <li><a href="<?php echo Mage::helper('marketplace/url')->getviewallsellerUrl(); ?>">
+            <span><?php echo $this->__('View All'); ?></span></a></li>
+            </ul>
+            </div>
+            </li>
+            </ul>
+
+		<?php } ?>
+
+                    <?php
+                    if (
+                        (strpos($current_body_class,'customer-account')) ||
+                        (strpos($current_body_class,'checkout-onepage-success')) ||
+                        (strpos($current_body_class,'checkout-onepage-index')) ||
+						(strpos($current_body_class,'marketplace-seller-login'))
+						
+						) {
+                        if(($this->helper('customer')->isLoggedIn())) {
+                    ?>
+                            <span class="contact_us_account"><?php echo $this->__('Need Help?'); ?> <span><?php echo $this->__('CALL US 800 123 456'); ?></span></span>
+                            <?php
+                            if ($is_seller && !strpos($current_body_class,'checkout-onepage-index') && !strpos($current_body_class,'checkout-onepage-success')) {
+                            ?>
+                                <a href="<?php echo Mage::helper('customer')->getDashboardUrl(); ?>" class="continue_shopping"><?php echo "Welcome, " . $this->__('%s!', Mage::getSingleton('customer/session')->getCustomer()->getName()); ?></a>
+                            <?php
+                            } else { 
+                                if (strpos($current_body_class,'checkout-onepage-index')) {
+
+                                } else {
+                                ?>
+                                <a href="<?php echo Mage::getBaseUrl(); ?>" class="continue_shopping"><?php echo $this->__('CONTINUE SHOPPING'); ?></a>
+                            <?php
+                                }
+                            }
+                        } else { ?>
+                            <span class="contact_us_account"><?php echo $this->__('Need Help?'); ?> <span><?php echo $this->__('CALL US 800 123 456'); ?></span></span>
+                            <a href="<?php echo Mage::getBaseUrl(); ?>" class="continue_shopping"><?php echo $this->__('CONTINUE SHOPPING'); ?></a>
+                        <?php
+                        }
+                    } else {
+                    echo $this->getLayout()->createBlock('cms/block')->setBlockId('minimall_header_left_block')->toHtml();
+                    }
+                    ?>
+
+                </div>
+            </div>
+            
+            <div class="site_width_container">
+
+                <div class="primary_row">
+                <?php
+                $logout_c_url = false;
+                if(($this->helper('customer')->isLoggedIn())) {
+                    $logout_c_url = true;
+                        if ($is_seller && !strpos($current_body_class,'checkout-onepage-index')) {
+                            if (
+                                (strpos($current_body_class,'customer-account')) ||
+                                (strpos($current_body_class,'checkout-onepage-success')) ||
+                                (strpos($current_body_class,'checkout-onepage-index'))
+								) {
+                                if (strpos($current_body_class,'checkout-onepage-success')) { ?>
+                                    <a class="download_app_header" href="<?php echo Mage::helper('customer')->getDashboardUrl(); ?>" title="Welcome">
+                                        <?php echo $this->__('%s!', Mage::getSingleton('customer/session')->getCustomer()->getName()); ?>
+                                    </a>
+                                <?php
+                                }
+                            } else { ?>
+                                <a class="download_app_header" href="<?php echo Mage::helper('customer')->getDashboardUrl(); ?>" title="Welcome">
+                                    <?php echo $this->__('%s!', Mage::getSingleton('customer/session')->getCustomer()->getName()); ?>
+                                </a>
+                            <?php
+                            }
+                        } else { ?>
+                        <a class="download_app_header" href="<?php echo Mage::helper('customer')->getDashboardUrl(); ?>" title="Welcome">
+                            <?php echo $this->__('%s!', Mage::getSingleton('customer/session')->getCustomer()->getName()); ?>
+                        </a>
+                        <?php
+                        }
+                    } else { 
+                        $logout_c_url = false;
+                    ?>
+                    <a class="download_app_header" href="<?php echo Mage::helper('customer')->getLoginUrl(); ?>" title="My Account">
+                        My Account&nbsp;
+                    </a>
+                    <?php
+                    }
+                    ?>
+                    <a href="<?php echo Mage::getBaseUrl(); ?>" id="site_logo" title="ELABELZ">ELABELZ</a>
+                    <?php
+                    if (
+                        (strpos($current_body_class,'customer-account')) ||
+                        (strpos($current_body_class,'checkout-onepage-success')) ||
+                        (strpos($current_body_class,'checkout-onepage-index'))) {
+                        if ($logout_c_url) { ?>
+                            <a class="header_logout_link" href="<?php echo Mage::helper('customer')->getLogoutUrl(); ?>" title="Logout"><?php echo $this->__('Logout'); ?></a>
+                        <?php
+                        }
+                    } else {
+                    ?>
+                    <ul class="customer_options header_minicart_wrrapger">
+                        <li class="closed" data-nm-hover-toggle="data-nm-hover-toggle">
+                            <a href="javascript:void(0)" id="cart_link" title=
+                            "Go to Bag"><i id="cart_count">
+                                <?php
+                        $_cartQty = Mage::getSingleton('checkout/cart')->getItemsCount();
+                        echo $_cartQty;
+                        ?>
+                            </i><?php echo $this->__('Shopping bag'); ?></a>
+                            <div class="hoverToggled" id="cart_review_container">
+                            <?php echo $this->getChildHtml('minicart_head');?>
+                            </div>
+                        </li>
+                    </ul>
+                    <?php
+                    }
+                    ?>
+
+                </div>
+            </div>
+        </header>
+<div id="header-nav" class="skip-content">
+
+<?php
+if (
+    (strpos($current_body_class,'customer-account')) ||
+    (strpos($current_body_class,'checkout-onepage-success')) ||
+    (strpos($current_body_class,'checkout-onepage-index'))) {
+    
+} else {
+    echo $this->getChildHtml('topMenu');
+	 
+}
+?>
+
+
+</div>
+
+<?php echo $this->getChildHtml('topContainer'); ?>
+
+<script type="text/javascript">
+document.observe("dom:loaded", function() {
+// Sticky header scroll function
+    var facebookVar= 0;
+Event.observe(window, 'scroll', function() {
+var scrollOffsets = document.viewport.getScrollOffsets();
+    var scrollTop = scrollOffsets.top;    
+if(scrollTop){
+     if (scrollTop > 50) {
+        //$('header').addClassName('f-header');
+     } else {    
+        //$('header').removeClassName('f-header');
+     }     
+}
+
+});
+window.onscroll = appthascroll;
+var reviewScroll = 0;
+function appthascroll () {
+var scrollOffsets = document.viewport.getScrollOffsets();
+    var scrollTop = scrollOffsets.top;  
+    if(scrollTop == 0){
+    jQuery('header').removeClassName('f-header');
+    }
+            
+}
+
+});
+
+jQuery(document).ready(function() {
+var isWindowsPhone = /windows phone/i.test(navigator.userAgent.toLowerCase());  
+var ll = jQuery( window ).width();
+if(isWindowsPhone){
+    jQuery("#mp_top_nav li.mp_engage_tab").click(function() {
+        jQuery("#mp_top_nav li.mp_engage_tab ul").toggle();
+        jQuery("#mp_top_nav li.mp_sellers ul").hide();
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+        });
+        jQuery("#mp_top_nav li.mp_sellers").click(function() {
+        jQuery("#mp_top_nav li.mp_sellers ul").toggle();
+        jQuery("#mp_top_nav li.mp_engage_tab ul").hide();
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+        });
+        jQuery("#mp_top_nav li.mp_sellers_tab").click(function() {      
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle();
+        jQuery("#mp_top_nav li.mp_sellers ul").hide();
+        jQuery("#mp_top_nav li.mp_engage_tab ul").hide();   
+        }); 
+}else{
+if(ll == 320 || ll == 1000)
+{
+jQuery("#mp_top_nav li.mp_engage_tab").click(function() {
+jQuery("#mp_top_nav li.mp_engage_tab ul").toggle()
+});
+jQuery("#mp_top_nav li.mp_sellers").click(function() {
+jQuery("#mp_top_nav li.mp_sellers ul").toggle()
+});
+jQuery("#mp_top_nav li.mp_sellers_tab").click(function() {
+jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle()
+});
+}
+}
+});
+</script>

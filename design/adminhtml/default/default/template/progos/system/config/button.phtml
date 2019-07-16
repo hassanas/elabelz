@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function check() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            onSuccess: function(transport){
+                
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will run the script and will remove all the duplicate options in the database
+    </span>
+</p>
+
+<?php 
+    
+    $logs = Mage::helper('duplicateoptions')->getDuplicateOptionsLogs(); 
+    echo PHP_EOL.PHP_EOL;
+    foreach ($logs as $key => $log) {
+        echo "<a href='".$log."' download>".$log."</a>";
+        echo PHP_EOL;
+    }
+
+?>
+

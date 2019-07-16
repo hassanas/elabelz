@@ -1,0 +1,2401 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <dhllabel translate="label comment" module="dhllabel">
+            <tab>sales</tab>
+            <label>DHL Shipping Labels</label>
+            <frontend_type>text</frontend_type>
+            <sort_order>330</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <credentials translate="label comment" module="dhllabel">
+                    <label>Your DHL Account Credentials</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <userid translate="label comment">
+                            <label>Site Id</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                        </userid>
+                        <password translate="label comment">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                        </password>
+                        <shippernumber translate="label comment">
+                            <label>Billing Shipper Number</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                        </shippernumber>
+                        <shippernumbercod translate="label comment">
+                            <label>Billing Shipper Number For COD</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                        </shippernumbercod>
+                    </fields>
+                </credentials>
+                <testmode translate="label comment" module="dhllabel">
+                    <label>Test Mode</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <testing translate="label">
+                            <label>Test mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </testing>
+                    </fields>
+                </testmode>
+                <packaging translate="label comment" module="dhllabel">
+                    <label>Default Packaging Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <packagingtypecode translate="label comment">
+                            <label>Packaging Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_dhlpackagecode</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </packagingtypecode>
+                        <frontend_multipackes_enable translate="label">
+                            <label>Create packages for each Product in an Order?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </frontend_multipackes_enable>
+                        <packages_by_attribute_enable translate="label">
+                            <label>Create packages for product attribute?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </packages_by_attribute_enable>
+                        <packages_by_attribute_code translate="label">
+                            <label>Attribute</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <packages_by_attribute_enable>
+                                    <value>1</value>
+                                </packages_by_attribute_enable>
+                            </depends>
+                        </packages_by_attribute_code>
+                    </fields>
+                </packaging>
+                <shipping translate="label comment" module="dhllabel">
+                    <label>Default Shipping Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>40</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <regioncode translate="label">
+                            <label>Region Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_dhlregioncode</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </regioncode>
+                        <defaultshipmentmethod translate="label">
+                            <label>Default Shipping Method for Domestic</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_dhlmethod</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </defaultshipmentmethod>
+                        <defaultshipmentmethodworld translate="label">
+                            <label>Default Shipping Method for International</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_dhlmethod</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </defaultshipmentmethodworld>
+                        <shipping_method_native translate="label">
+                            <label>Use the compliance of methods</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>
+                                <model>dhllabel/config_shippingSettingsLink</model>
+                            </comment>
+                        </shipping_method_native>
+                        <shipmentdescription translate="label">
+                            <label>Shipment description</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_shipdesc</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipmentdescription>
+                        <shipmentdescription_custom translate="label">
+                            <label>Description custom value</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <shipmentdescription>
+                                    <value>5</value>
+                                </shipmentdescription>
+                            </depends>
+                        </shipmentdescription_custom>
+                        <defaultshipper translate="label">
+                            <label>Default Shipper address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_defaultaddress</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </defaultshipper>
+                        <!--<defaultshipfrom translate="label">
+                            <label>Default Ship from address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_defaultaddress</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </defaultshipfrom>-->
+                        <addtrack translate="label">
+                            <label>Add tracking number automatically ?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addtrack>
+                        <track_send translate="label">
+                            <label>Send tracking number on customer email</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </track_send>
+                        <reference_id translate="label comment">
+                            <label>Reference ID</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_referenceid</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </reference_id>
+                        <doorto translate="label">
+                            <label>Door to</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_doorto</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </doorto>
+                        <dangerous_goods translate="label">
+                            <label>Dangerous goods</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dangerous_goods>
+                        <dg_attribute_content_id translate="label">
+                            <label>Attribute for Dangerous Goods Content ID</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <dangerous_goods>
+                                    <value>1</value>
+                                </dangerous_goods>
+                            </depends>
+                        </dg_attribute_content_id>
+                        <dg_attribute_label translate="label">
+                            <label>Attribute for Dangerous Label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <dangerous_goods>
+                                    <value>1</value>
+                                </dangerous_goods>
+                            </depends>
+                        </dg_attribute_label>
+                        <dg_attribute_uncode translate="label">
+                            <label>Attribute for Dangerous UNCode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <dangerous_goods>
+                                    <value>1</value>
+                                </dangerous_goods>
+                            </depends>
+                        </dg_attribute_uncode>
+                    </fields>
+                </shipping>
+                <return translate="label comment" module="dhllabel">
+                    <label>Return Labels</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <frontend_customer_return translate="label">
+                            <label>Printing "Return label" by customer?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </frontend_customer_return>
+                        <refundaccess translate="label">
+                            <label>Refund</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </refundaccess>
+                        <default_return translate="label">
+                            <label>Create return label by default</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </default_return>
+                        <default_return_amount translate="label">
+                            <label>Order amount for default return label, from</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </default_return_amount>
+                        <default_return_method translate="label">
+                            <label>Default shipping method for return labels</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_dhlmethod</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </default_return_method>
+                        <return_time_old translate="label">
+                            <label>Retention period</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_retention</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </return_time_old>
+                    </fields>
+                </return>
+                <weightdimension translate="label comment" module="dhllabel">
+                    <label>Weight and Dimensions</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <weightunits translate="label">
+                            <label>Weight units</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_weight</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </weightunits>
+                        <defweigth translate="label">
+                            <label>Default weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </defweigth>
+                        <packweight translate="label">
+                            <label>Pack weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </packweight>
+                        <unitofmeasurement translate="label">
+                            <label>Default unit of dimensions</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_unitofmeasurement</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </unitofmeasurement>
+                        <attribute_code_width translate="label">
+                            <label>Attribute for width</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </attribute_code_width>
+                        <attribute_code_height translate="label">
+                            <label>Attribute for height</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </attribute_code_height>
+                        <attribute_code_length translate="label">
+                            <label>Attribute for length</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </attribute_code_length>
+                    </fields>
+                </weightdimension>
+                <ratepayment translate="label comment" module="dhllabel">
+                    <label>Rates and Payments</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>70</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <methodofpayment translate="label">
+                            <label>Method of Payment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_methodofpayment</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </methodofpayment>
+                        <currencycode translate="label">
+                            <label>Default Currency code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_currency</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </currencycode>
+                        <cod translate="label">
+                            <label>COD (default)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cod>
+                        <cod_shipping_cost translate="label">
+                            <label>Add shipping cost to COD</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cod_shipping_cost>
+                        <cod_discount translate="label">
+                            <label>Apply discount for COD</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cod_discount>
+                        <duty_method translate="label">
+                            <label>Method of Payment for Duties &amp; Taxes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_methodofpaymentduty</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </duty_method>
+                    </fields>
+                </ratepayment>
+                <quantum translate="label comment" module="dhllabel">
+                    <label>Notification</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>80</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <qvn translate="label">
+                            <label>Notification Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qvn>
+                        <qvn_message translate="label">
+                            <label>Notification Message</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qvn_message>
+                        <qvn_email_shipper translate="label">
+                            <label>Shipper Email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qvn_email_shipper>
+                    </fields>
+                </quantum>
+                <printing translate="label comment" module="dhllabel">
+                    <label>Printing Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>90</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <printer translate="label">
+                            <label>Label format</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_printType</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </printer>
+                        <printer_format translate="label">
+                            <label>Print format</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_printTypeFormat</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <printer separator="|">
+                                    <value>8X4_thermal|8X4_CI_thermal|6X4_thermal</value>
+                                </printer>
+                            </depends>
+                        </printer_format>
+                        <printer_name translate="label">
+                            <label>Name of printer</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry</validate>
+                            <comment>If you use more than one printer, enter them separated by commas</comment>
+                            <depends>
+                                <printer separator="|">
+                                    <value>8X4_thermal|8X4_CI_thermal|6X4_thermal</value>
+                                </printer>
+                            </depends>
+                        </printer_name>
+                        <automatic_printing translate="label">
+                            <label>Automatic printing</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <printer separator="|">
+                                    <value>8X4_thermal|8X4_CI_thermal|6X4_thermal</value>
+                                </printer>
+                            </depends>
+                        </automatic_printing>
+                        <automatic_printing_ip translate="label">
+                            <label>IP</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>16</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <printer separator="|">
+                                    <value>8X4_thermal|8X4_CI_thermal|6X4_thermal</value>
+                                </printer>
+                                <automatic_printing>
+                                    <value>1</value>
+                                </automatic_printing>
+                            </depends>
+                        </automatic_printing_ip>
+                        <automatic_printing_port translate="label">
+                            <label>Port</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>17</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <printer separator="|">
+                                    <value>8X4_thermal|8X4_CI_thermal|6X4_thermal</value>
+                                </printer>
+                                <automatic_printing>
+                                    <value>1</value>
+                                </automatic_printing>
+                            </depends>
+                        </automatic_printing_port>
+                        <archive translate="label">
+                            <label>Archive doc</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </archive>
+                    </fields>
+                </printing>
+                <address_1 translate="label comment" module="dhllabel">
+                    <label>Address 1</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>110</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <addressname translate="label comment">
+                            <label>Address Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressname>
+                        <companyname translate="label comment">
+                            <label>Company Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </companyname>
+                        <attentionname translate="label comment">
+                            <label>Attention Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </attentionname>
+                        <phonenumber translate="label comment">
+                            <label>Phone Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </phonenumber>
+                        <addressline1 translate="label comment">
+                            <label>Street Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline1>
+                        <addressline2 translate="label comment">
+                            <label>Street Address 2</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline2>
+                        <addressline3 translate="label comment">
+                            <label>Street Address 3</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline3>
+                        <city translate="label">
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </city>
+                        <stateprovincecode translate="label">
+                            <label>State Province Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stateprovincecode>
+                        <postalcode translate="label">
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <countrycode translate="label">
+                            <label>Country Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </countrycode>
+                        <residential translate="label">
+                            <label>Residential Indicator</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_residential</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </residential>
+                        <shipperid translate="label">
+                            <label>Shipper Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </shipperid>
+                    </fields>
+                </address_1>
+                <address_2 translate="label comment" module="dhllabel">
+                    <label>Address 2</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>120</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <addressname translate="label comment">
+                            <label>Address Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressname>
+                        <companyname translate="label">
+                            <label>Company Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </companyname>
+                        <attentionname translate="label">
+                            <label>Attention Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </attentionname>
+                        <phonenumber translate="label">
+                            <label>Phone Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </phonenumber>
+                        <addressline1 translate="label">
+                            <label>Street Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline1>
+                        <addressline2 translate="label comment">
+                            <label>Street Address 2</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline2>
+                        <addressline3 translate="label comment">
+                            <label>Street Address 3</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline3>
+                        <city translate="label">
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </city>
+                        <stateprovincecode translate="label">
+                            <label>State Province Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stateprovincecode>
+                        <postalcode translate="label">
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <countrycode translate="label">
+                            <label>Country Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </countrycode>
+                        <residential translate="label">
+                            <label>Residential Indicator</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_residential</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </residential>
+                        <shipperid translate="label">
+                            <label>Shipper Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </shipperid>
+                    </fields>
+                </address_2>
+                <address_3 translate="label comment" module="dhllabel">
+                    <label>Address 3</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>130</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <addressname translate="label comment">
+                            <label>Address Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressname>
+                        <companyname translate="label">
+                            <label>Company Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </companyname>
+                        <attentionname translate="label">
+                            <label>Attention Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </attentionname>
+                        <phonenumber translate="label">
+                            <label>Phone Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </phonenumber>
+                        <addressline1 translate="label">
+                            <label>Street Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline1>
+                        <addressline2 translate="label comment">
+                            <label>Street Address 2</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline2>
+                        <addressline3 translate="label comment">
+                            <label>Street Address 3</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline3>
+                        <city translate="label">
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </city>
+                        <stateprovincecode translate="label">
+                            <label>State Province Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stateprovincecode>
+                        <postalcode translate="label">
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <countrycode translate="label">
+                            <label>Country Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </countrycode>
+                        <residential translate="label">
+                            <label>Residential Indicator</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_residential</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </residential>
+                        <shipperid translate="label">
+                            <label>Shipper Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </shipperid>
+                    </fields>
+                </address_3>
+                <address_4 translate="label comment" module="dhllabel">
+                    <label>Address 4</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>140</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <addressname translate="label comment">
+                            <label>Address Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressname>
+                        <companyname translate="label">
+                            <label>Company Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </companyname>
+                        <attentionname translate="label">
+                            <label>Attention Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </attentionname>
+                        <phonenumber translate="label">
+                            <label>Phone Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </phonenumber>
+                        <addressline1 translate="label">
+                            <label>Street Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline1>
+                        <addressline2 translate="label comment">
+                            <label>Street Address 2</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline2>
+                        <addressline3 translate="label comment">
+                            <label>Street Address 3</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline3>
+                        <city translate="label">
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </city>
+                        <stateprovincecode translate="label">
+                            <label>State Province Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stateprovincecode>
+                        <postalcode translate="label">
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <countrycode translate="label">
+                            <label>Country Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </countrycode>
+                        <residential translate="label">
+                            <label>Residential Indicator</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_residential</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </residential>
+                        <shipperid translate="label">
+                            <label>Shipper Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </shipperid>
+                    </fields>
+                </address_4>
+                <address_5 translate="label comment" module="dhllabel">
+                    <label>Address 5</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>150</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <addressname translate="label comment">
+                            <label>Address Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressname>
+                        <companyname translate="label">
+                            <label>Company Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </companyname>
+                        <attentionname translate="label">
+                            <label>Attention Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </attentionname>
+                        <phonenumber translate="label">
+                            <label>Phone Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </phonenumber>
+                        <addressline1 translate="label">
+                            <label>Street Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </addressline1>
+                        <addressline2 translate="label comment">
+                            <label>Street Address 2</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline2>
+                        <addressline3 translate="label comment">
+                            <label>Street Address 3</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addressline3>
+                        <city translate="label">
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </city>
+                        <stateprovincecode translate="label">
+                            <label>State Province Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </stateprovincecode>
+                        <postalcode translate="label">
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <countrycode translate="label">
+                            <label>Country Code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </countrycode>
+                        <residential translate="label">
+                            <label>Residential Indicator</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_residential</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </residential>
+                        <shipperid translate="label">
+                            <label>Shipper Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                        </shipperid>
+                    </fields>
+                </address_5>
+                <dimansion_1 translate="label comment" module="dhllabel">
+                    <label>Box 1</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>210</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <dimansionname translate="label comment">
+                            <label>Box Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </dimansionname>
+                        <width translate="label comment">
+                            <label>Width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </width>
+                        <outer_width translate="label comment">
+                            <label>Outer width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_width>
+                        <height translate="label comment">
+                            <label>Height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </height>
+                        <outer_height translate="label comment">
+                            <label>Outer height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_height>
+                        <length translate="label comment">
+                            <label>Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </length>
+                        <outer_length translate="label comment">
+                            <label>Outer length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_length>
+                        <emptyWeight translate="label comment">
+                            <label>Box empty weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </emptyWeight>
+                        <maxWeight translate="label comment">
+                            <label>Box max weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </maxWeight>
+                    </fields>
+                </dimansion_1>
+                <dimansion_2 translate="label comment" module="dhllabel">
+                    <label>Box 2</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>220</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <dimansionname translate="label comment">
+                            <label>Box Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </dimansionname>
+                        <width translate="label comment">
+                            <label>Width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </width>
+                        <outer_width translate="label comment">
+                            <label>Outer width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_width>
+                        <height translate="label comment">
+                            <label>Height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </height>
+                        <outer_height translate="label comment">
+                            <label>Outer height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_height>
+                        <length translate="label comment">
+                            <label>Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </length>
+                        <outer_length translate="label comment">
+                            <label>Outer length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_length>
+                        <emptyWeight translate="label comment">
+                            <label>Box empty weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </emptyWeight>
+                        <maxWeight translate="label comment">
+                            <label>Box max weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </maxWeight>
+                    </fields>
+                </dimansion_2>
+                <dimansion_3 translate="label comment" module="dhllabel">
+                    <label>Box 3</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>230</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <dimansionname translate="label comment">
+                            <label>Box Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </dimansionname>
+                        <width translate="label comment">
+                            <label>Width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </width>
+                        <outer_width translate="label comment">
+                            <label>Outer width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_width>
+                        <height translate="label comment">
+                            <label>Height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </height>
+                        <outer_height translate="label comment">
+                            <label>Outer height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_height>
+                        <length translate="label comment">
+                            <label>Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </length>
+                        <outer_length translate="label comment">
+                            <label>Outer length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_length>
+                        <emptyWeight translate="label comment">
+                            <label>Box empty weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </emptyWeight>
+                        <maxWeight translate="label comment">
+                            <label>Box max weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </maxWeight>
+                    </fields>
+                </dimansion_3>
+                <dimansion_4 translate="label comment" module="dhllabel">
+                    <label>Box 4</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>240</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <dimansionname translate="label comment">
+                            <label>Box Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </dimansionname>
+                        <width translate="label comment">
+                            <label>Width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </width>
+                        <outer_width translate="label comment">
+                            <label>Outer width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_width>
+                        <height translate="label comment">
+                            <label>Height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </height>
+                        <outer_height translate="label comment">
+                            <label>Outer height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_height>
+                        <length translate="label comment">
+                            <label>Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </length>
+                        <outer_length translate="label comment">
+                            <label>Outer length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_length>
+                        <emptyWeight translate="label comment">
+                            <label>Box empty weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </emptyWeight>
+                        <maxWeight translate="label comment">
+                            <label>Box max weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </maxWeight>
+                    </fields>
+                </dimansion_4>
+                <dimansion_5 translate="label comment" module="dhllabel">
+                    <label>Box 5</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>250</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <dimansionname translate="label comment">
+                            <label>Box Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </dimansionname>
+                        <width translate="label comment">
+                            <label>Width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </width>
+                        <outer_width translate="label comment">
+                            <label>Outer width</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_width>
+                        <height translate="label comment">
+                            <label>Height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </height>
+                        <outer_height translate="label comment">
+                            <label>Outer height</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_height>
+                        <length translate="label comment">
+                            <label>Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </length>
+                        <outer_length translate="label comment">
+                            <label>Outer length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </outer_length>
+                        <emptyWeight translate="label comment">
+                            <label>Box empty weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </emptyWeight>
+                        <maxWeight translate="label comment">
+                            <label>Box max weight</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <enable>
+                                    <value>1</value>
+                                </enable>
+                            </depends>
+                        </maxWeight>
+                    </fields>
+                </dimansion_5>
+                <paperless translate="label comment" module="dhllabel">
+                    <label>International invoice</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <type translate="label">
+                            <label>Paperless invoice</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </type>
+                        <create_pdf translate="label">
+                            <label>Create Invoice PDF</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </create_pdf>
+                        <commodity_attribute translate="label">
+                            <label>Attribute for Commodity code</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </commodity_attribute>
+                        <terms_of_trade translate="label">
+                            <label>Terms of trade</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_termsOfTrade</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </terms_of_trade>
+                        <special_document translate="label">
+                            <label>Special document</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_specialDocument</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </special_document>
+                        <IECNo translate="label comment">
+                            <label>IECNo</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <special_document>
+                                    <value>csb-v_for_india</value>
+                                </special_document>
+                            </depends>
+                        </IECNo>
+                        <usingecommerce translate="label comment">
+                            <label>Using eCommerce</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <special_document>
+                                    <value>csb-v_for_india</value>
+                                </special_document>
+                            </depends>
+                        </usingecommerce>
+                        <commodityType translate="label comment">
+                            <label>Attribute for Commodity Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_productAttributes</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <special_document>
+                                    <value>csb-v_for_india</value>
+                                </special_document>
+                            </depends>
+                            <comment>Attribute must have these options Handicraft Items/Products, Handloom Products, Books/Periodicals, Leather Footwear, Toys, Customized Fashion Garments, Others</comment>
+                        </commodityType>
+                        <GSTIN translate="label comment">
+                            <label>GSTIN</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <special_document>
+                                    <value>csb-v_for_india</value>
+                                </special_document>
+                            </depends>
+                        </GSTIN>
+                        <isUsingIGST translate="label comment">
+                            <label>IsUsingIGST</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <special_document>
+                                    <value>csb-v_for_india</value>
+                                </special_document>
+                            </depends>
+                        </isUsingIGST>
+                    </fields>
+                </paperless>
+                <frontend_autocreate_label translate="label comment" module="dhllabel">
+                    <label>Automatic labels creation</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <frontend_order_autocreate_label_enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </frontend_order_autocreate_label_enable>
+                        <apply_to translate="label">
+                            <label>Create labels for Shipping Methods</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhllabel/config_frontShippingMethod</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <frontend_order_autocreate_label_enable>
+                                    <value>1</value>
+                                </frontend_order_autocreate_label_enable>
+                            </depends>
+                        </apply_to>
+                        <orderstatus translate="label">
+                            <label>Create labels for Orders Statuses</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhllabel/config_orderStatuses</source_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <frontend_order_autocreate_label_enable>
+                                    <value>1</value>
+                                </frontend_order_autocreate_label_enable>
+                            </depends>
+                        </orderstatus>
+                    </fields>
+                </frontend_autocreate_label>
+                <bulk_create_labels translate="label comment" module="dhllabel">
+                    <label>Settings for bulk labels creation</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment>
+                        <![CDATA[<b>To create labels for many orders simultaneously:</b><br>
+                        On the order's page select all orders you want to create labels.<br>
+                        Then in Actions select "Create DHL labels for orders" and click Submit.<br>
+                        Labels will be created for selected orders in accordance with these settings.<br><br>]]>
+                    </comment>
+                    <fields>
+                        <bulk_shipping_methods translate="label">
+                            <label>Create labels for Shipping Methods</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_bulkSpecifyTypes</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </bulk_shipping_methods>
+                        <apply_to translate="label">
+                            <label>Specify Shipping Methods</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhllabel/config_frontShippingMethod</source_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <bulk_shipping_methods>
+                                    <value>specify</value>
+                                </bulk_shipping_methods>
+                            </depends>
+                        </apply_to>
+                        <bulk_order_status translate="label">
+                            <label>Create labels for Orders Statuses</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_bulkSpecifyTypes</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </bulk_order_status>
+                        <orderstatus translate="label">
+                            <label>Specify Orders Statuses</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhllabel/config_orderStatuses</source_model>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Required field</comment>
+                            <validate>required-entry</validate>
+                            <depends>
+                                <bulk_order_status>
+                                    <value>specify</value>
+                                </bulk_order_status>
+                            </depends>
+                        </orderstatus>
+                        <print_immediately translate="label">
+                            <label>Download created labels in one PDF for printing</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </print_immediately>
+                    </fields>
+                </bulk_create_labels>
+                <additional_settings translate="label comment" module="dhllabel">
+                    <label>Additional settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>6000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <!--<order_number translate="label comment">
+                            <label>Order number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Order number when purchasing</comment>
+                            <validate>required-entry</validate>
+                        </order_number>-->
+                        <order_grid_column_enable translate="label">
+                            <label>Add column "Status" in order grid?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0<!--no_collector--></show_in_website>
+                            <show_in_store>0<!--no_collector--></show_in_store>
+                        </order_grid_column_enable>
+                        <multiple_pdf_label translate="label">
+                            <label>Number of copies of the label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_copyLabels</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </multiple_pdf_label>
+                        <umlaut translate="label">
+                            <label>Umlauts transformation in Latin characters</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </umlaut>
+                        <orderstatuses translate="label">
+                            <label>Order status after label creation</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhllabel/config_orderCustomStatuses</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </orderstatuses>
+                    </fields>
+                </additional_settings>
+            </groups>
+        </dhllabel>
+    </sections>
+</config>

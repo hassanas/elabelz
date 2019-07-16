@@ -1,0 +1,43 @@
+<!--
+* @author Hassan Ali shahzad
+* This template is the form which will use to wormup App filters json files
+* class Progos_Emapi_Block_Adminhtml_Appfilters
+-->
+<div class="content-header">
+    <table cellspacing="0">
+        <tbody>
+        <tr>
+            <td><h3 class="icon-head head-tax-rate-importExport">Manually Warm-Up New App Filters Cache</h3></td>
+        </tr>
+        <tr>
+            <td>
+                <p></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="entry-edit">
+    <div class="box-left">
+        <form id="import_attribute_form" action="<?php echo $this->getSaveUrl() ?>" method="post"
+              onsubmit="return confirm('Do you really want to submit the form? It will take long time dont close This Form.');">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend">Add Comma(,) separated Category (213,214) Id's Or Leave Empty for Full Warm Up</h4>
+            </div>
+            <fieldset>
+                <label for="logs">Want to Log Results?</label>
+                <select id="logs" name="logs" style="width:50px;margin-left: 3px" title="Select Yes if you want to log for current warnup in file 'app_new_filters.log'">
+                    <option value="0" selected>No</option>
+                    <option value="1">yes</option>
+                </select><br><br>
+                <textarea name="categories" id="categories" title="categories" class="input-text" cols="50" rows="2"></textarea><br>
+                <p class="note"><span>Enter Category Ids.</span></p>
+                <button id="" title="Import Attributes" type="submit" class="scalable "
+                        style=""><span><span><span>Warm UP</span></span></span></button>
+            </fieldset>
+        </form>
+        <script type="text/javascript">
+            var importForm = new varienForm('import_attribute_form');
+        </script>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<p class="aramex_apilocation_validator" style="display:none; "><?php 
+echo $mage_country_code = Mage::getStoreConfig('aramexsettings/apilocationvalidator/active');
+?></p>
+
+<script type="text/javascript">
+//<![CDATA[
+    function getSystemBaseUrl(){
+		return BASE_URL='<?php echo Mage::getBaseUrl();?>';
+	}  	
+//]]>
+var mage_country_code ='<?php echo $mage_country_code = Mage::getStoreConfig('general/country/default');?>';
+<?php/* var billing_aramex_cities = <?php echo json_encode(Mage::getModel('apilocationvalidator/api')->fetchJsonCities($mage_country_code)); ?>; 
+/*  API not retrieve all cities  based on country code ** */
+?>
+
+var billing_aramex_cities = '';
+var shipping_aramex_cities = billing_aramex_cities;
+</script>

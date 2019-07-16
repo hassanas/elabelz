@@ -1,0 +1,126 @@
+<?php
+/**
+* PHXSolution Mergeinfo
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@magentocommerce.com so you can be sent a copy immediately.
+*
+* Original code copyright (c) 2008 Irubin Consulting Inc. DBA Varien
+*
+* @category   design
+* @package    Phxsolution_Mergeinfo
+* @author     Prakash Vaniya
+* @contact    contact@phxsolution.com
+* @site       www.phxsolution.com
+* @copyright  Copyright (c) 2014 PHXSolution Mergeinfo
+* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+?>
+
+<div class="page-title checkout_title">
+	<div class="onepage-page-title">
+		<h1><?php echo $this->__('Checkout') ?></h1>	
+		<a class="forget_item" href="<?php echo $this->getUrl('checkout/cart') ?>" title="Edit tor cart">
+			<?php echo $this->__('Forgot an Item? Edit Your Cart') ?>
+		</a>
+	</div>
+</div>
+<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+<!-- New Code Added Below  -->
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/mergeinfocheckout.js') ?>"></script>
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+<ol class="opc" id="checkoutSteps">
+<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; $i++ ?>
+    <li id="opc-<?php echo $_stepId ?>" class="section<?php echo !empty($_stepInfo['allow'])?' allow':'' ?><?php echo !empty($_stepInfo['complete'])?' saved':'' ?>">
+        <div class="step-title">
+            <h2><?php echo $i ?>. <?php echo $_stepInfo['label'] ?></h2>
+            <a href="#"><?php echo $this->__('Edit') ?></a>
+        </div>
+        <div id="checkout-step-<?php echo $_stepId ?>" class="step a-item" style="display:none;">
+            <?php echo $this->getChildHtml($_stepId) ?>
+        </div>
+    </li>
+<?php endforeach ?>
+</ol>
+<script type="text/javascript">
+//<![CDATA[
+    var accordion = new Accordion('checkoutSteps', '.step-title h2', true);
+    <?php if($this->getActiveStep()): ?>
+    accordion.openSection('opc-<?php echo $this->getActiveStep() ?>');
+    <?php endif ?>
+    //New Code Added Below
+    var checkout = new Phxsolution(accordion,{
+        progress: '<?php echo $this->getUrl('checkout/onepage/progress') ?>',
+        review: '<?php echo $this->getUrl('checkout/onepage/review') ?>',
+		update: '<?php echo $this->getUrl('checkout/onepage/update') ?>',
+        saveMethod: '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>',
+        failure: '<?php echo $this->getUrl('checkout/cart') ?>'}
+    );
+//]]>
+
+/*(function($){ 
+	$(function() {
+		updateCheckoutSectionsHeight();
+	});
+	window.updateCheckoutSectionsHeight = function() {
+		var checkoutContainerHeight 	= $j('#checkoutSteps').height();
+		var reviewSectionHeight 		= $j('.checkout_orderreview_block').height();
+		if (reviewSectionHeight > checkoutContainerHeight) { 
+			$j('#checkoutSteps').height(reviewSectionHeight+64);
+		} else { 
+			$j('#checkoutSteps').css({'min-height': '520px'});
+		}
+	};
+})(jQuery);*/
+
+</script>
+
+<div class="checkout_order_review_container">
+<?php echo $this->getChildHtml('order.review', true, true);?>
+</div>
+
+<script>
+var isXhr = null;
+function checkcustomerexist(){
+	
+	var url = "<?php echo $this->getUrl('checkout/onepage/customerexist', array('_secure'=>true)) ?>";
+
+	if( isXhr != null ) {
+		isXhr.abort();
+		isXhr = null;
+	}
+	var email = document.getElementById('ch_guest_email').value;
+	
+	isXhr = jQuery.ajax({
+		url: "<?php echo $this->getUrl('checkout/onepage/customerexist', array('_secure'=>true)) ?>",
+		type: "POST",
+		data: "email="+email,
+		beforeSend: function () {
+			jQuery('.g_allow').html("<div class='loader'><img src='<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>' onerror='this.onerror=null; this.src=\"<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>\"' /></div>");
+		},
+		success: function(result) {
+			result = $j.trim(result);
+			if(result === "true"){
+				jQuery(".emailExist").html("<?php echo $this->__('Email already registered with us, please login to checkout faster. Click &quot;Continue&quot; if you still want to login as a guest.'); ?>");
+				jQuery('.g_allow').html('<div class="buttons-set"><input type="submit" name="ch_guest_submit" class="ch_guest_submit" value="<?php echo $this->__("Continue") ?> " /></div>');
+				jQuery('.guest-or-register li:eq(1)').attr("style", "display: none !important");				
+
+				jQuery(".emailExist").parent().find('.validation-advice').hide(); 
+			} else if(result === "false"){
+				jQuery(".emailExist").html("");
+				jQuery('.g_allow').html('<div class="buttons-set"><input type="submit" name="ch_guest_submit" class="ch_guest_submit" value="<?php echo $this->__("Continue") ?> " /></div>');
+				jQuery('.guest-or-register li:eq(1)').show();
+			}
+		}
+	});
+}
+</script>

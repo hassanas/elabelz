@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_productsupdaterbackend_index>
+        <reference name="content">
+            <block type="productsupdater/adminhtml_productsUpdaterbackend" name="productsupdaterbackend"
+                   template="productsupdater/productsupdaterbackend.phtml"/>
+        </reference>
+    </adminhtml_productsupdaterbackend_index>
+</layout>

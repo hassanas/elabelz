@@ -1,0 +1,37 @@
+<config>
+    <sections>
+        <contacts>
+            <groups>
+                 <sender_notification translate="label">
+                    <label>Sender Notification</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                         <enabled translate="label">
+                            <label>Enable Sender Notification</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <backend_model>contacts/system_config_backend_links</backend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <email_template translate="label">
+                            <label>Email Template (Sender Notification)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email_template>
+                    </fields>
+                </sender_notification>
+            </groups>
+        </contacts>
+    </sections>
+</config>

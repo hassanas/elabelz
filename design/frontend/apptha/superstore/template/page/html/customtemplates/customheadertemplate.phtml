@@ -1,0 +1,26 @@
+<?php
+/**
+ * User: Hassan Ali Shahzad
+ * Date: 30/03/2017
+ * Time: 10:46:13
+ *
+ * This Template will be used to add all code to header at run time like FB js Google Analitics etc
+ *
+ * */
+?>
+<?php
+$order = Mage::getSingleton('sales/order');
+$get_last_real_order_id = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+$order->loadByIncrementId($get_last_real_order_id);
+$_items = $order->getAllVisibleItems();
+?>
+
+<!-- Twitetr conversion tracking -->
+<script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
+<script type="text/javascript">
+    twttr.conversion.trackPid('163yb', {tw_sale_amount: <?php echo $order->getGrandTotal() ?>, tw_order_quantity: <?php echo $order->getData('total_qty_ordered'); ?> });</script>
+<noscript>
+    <img height="1" width="1" style="display:none;" alt=" " src="https://analytics.twitter.com/i/adsct?txn_id=163yb&p_id=Twitter$tw_sale_amount=AMOUNT_HERE&tw_order_quantity=QUANTITY_HERE" />
+    <img height="1" width="1" style="display:none;" alt=" " src="//t.co/i/adsct?txn_id=163yb&p_id=Twitter$tw_sale_amount=0&tw_order_quantity=0" />
+</noscript>
+<!-- Twitetr conversion tracking -->

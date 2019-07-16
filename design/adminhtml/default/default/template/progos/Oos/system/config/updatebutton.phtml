@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function updateoos() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                alert( transport.responseText );
+                location.reload();
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will run the script and Update Zero Product Qty to OOS.<br>
+    </span>
+    <?php
+    if( file_exists(Mage::getBaseDir('media').DS.'oos'.DS.'oos_report.csv') ){ ?>
+        <a href="<?php echo Mage::getBaseUrl('media').DS.'oos'.DS.'oos_report.csv' ?>" target="_blank">Last Update OOS File</a>
+    <?php } ?>
+</p>

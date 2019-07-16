@@ -1,0 +1,304 @@
+<script type="text/javascript">
+    window.print();
+</script>
+<style type="text/css">
+    table.airbill {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    table.airbill * {
+        font-size: 14px;
+        font-family: Tahoma, Arial, 'Segoe UI', sans-serif;
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header {
+        width: 64%;
+        display: inline-block;
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p {
+        margin: 0 0 10px;
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p + p {
+        margin: 35px 0 10px 0;
+
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p + p > span {
+        margin: 0 0 0 10px;
+        font-weight: bold;
+        display: inline-block;
+        float: right;
+        width: 75%
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p + p + p {
+        margin: 0 0 10px;
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p + p + p > span {
+        margin: 0 0 0 10px;
+        font-weight: bold;
+        display: inline-block;
+        float: right;
+        width: 75%
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header > img + p + p + p + p > span {
+        margin: 0 0 0 10px;
+        font-weight: bold;
+        display: inline-block;
+        float: right;
+        width: 75%
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header + div {
+        display: inline-block;
+        width: 35%;
+        height: 40px;
+        float: right;
+        border: 0px solid #000;
+        vertical-align: top;
+        margin: 0 0 10px;
+    }
+
+    table.airbill tr:nth-child(1) td:nth-child(1) div.header + div > p {
+        font-size: 0px;
+        line-height: 0px;
+        padding: 0 0px;
+        float: right;
+    }
+
+    table.airbill tr:nth-child(2) td div ul {
+        margin: 0;
+        padding: 10px 0 45px 0;
+        list-style: none;
+        font-size: 15px;
+        line-height: 17px;
+        font-weight: bold;
+    }
+
+    table.airbill tr:nth-child(2) td div ul li {
+        display: inline-block;
+        padding: 0 60px 0 0px;
+    }
+
+    table.airbill tr:nth-child(2) td div ul li:last-child {
+        display: inline-block;
+        padding: 0 0px 0 0px;
+    }
+
+    table.airbill tr:nth-child(2) td div ul li > span {
+        font-weight: normal;
+        margin-left: 4px;
+    }
+
+    table.airbill tr:nth-child(2) td div ul li:first {
+        display: inline-block;
+        padding: 0px !important;
+    }
+
+    table.airbill tr:nth-child(2) td div + table {
+        border: 1px solid #ddd;
+        margin: 0 0 10px;
+    }
+
+    table.airbill tr:nth-child(2) td div + table tr th {
+        background: #000;
+        color: #fff;
+        font-size: 12px;
+        line-height: 14px;
+        width: 100px;
+        padding: 6px;
+        border-right: 1px solid #F0F0F0;
+        text-align: center
+    }
+
+    table.airbill tr:nth-child(2) td div + table tr td {
+        color: #000;
+        font-size: 12px;
+        line-height: 14px;
+        width: 150px;
+        padding: 10px;
+        text-align: center;
+        font-family: 'Gotham Book';
+    }
+
+    table.airbill tr:nth-child(3) td > div {
+        width: 64%;
+        display: inline-block;
+    }
+
+    table.airbill tr:nth-child(3) td > div > p {
+        padding-top: 72px;
+    }
+
+    table.airbill tr:nth-child(3) td > div + div {
+        display: inline-block;
+        width: 35%;
+        height: 110px;
+        border: 0px solid #000;
+        vertical-align: top;
+        float: right;
+    }
+
+    table.airbill tr:nth-child(3) td > div + div > p {
+        font-size: 0px;
+        line-height: 0px;
+        padding: 0 0px;
+    }
+
+
+</style>
+<?php
+
+$item_id = $this->getRequest()->getParam('item_id');
+
+/*
+* getting order from marketplace_commision
+* 
+*/
+$commision = Mage::getModel("marketplace/commission")->load($item_id);
+$orderId = $commision->getOrderId();
+
+/*
+* getting order from sale_order
+* 
+*/
+$orderDetails = Mage::getModel('sales/order')->load($orderId);
+
+/*
+* getting seller information
+* 
+*/
+$seller = Mage::getModel("customer/customer")->load($commision->getSellerId());
+
+/*
+* getting customer information
+* 
+*/
+$customer = Mage::getSingleton('customer/session');
+if ($customer->getId() != $commision->getSellerId()) {
+    die("You don't have permissions to see this AWB.");
+}
+
+$orderPrdouctIds = Mage::helper('marketplace/vieworder')->getOrderProductIds($customer->getId(), $orderId);
+
+/*
+* getting product information
+* 
+*/
+$_product = Mage::getModel('catalog/product')->load($commision->getProductId());
+
+$content = $_product->getSku();
+?>
+<table border="0" cellpadding="0" cellspacing="0" class="airbill">
+    <tr>
+        <td style="border-bottom:1px solid #000;">
+            <div class="header">
+                <img src="<?php echo $this->getSkinUrl('images/logo.png'); ?>" alt="image-descripation"
+                     style="margin:0 0 30px;">
+                <p>This Item is being shipped to the Hub of elabelz.com</p>
+                <p>Merchant Name: <span><?php echo $seller->getName(); ?></span></p>
+                <p>Order ID :<span><?php echo $orderDetails->getIncrementId(); ?></span></p>
+                <p>Merchant ID :<span><?php echo $seller->getId(); ?></span></p>
+            </div>
+            <div>
+                <p>
+                    <img align="right" style="width: 80%"
+                         src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'generate.php?content=' . $content ?>">
+                </p>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>
+                <ul>
+                    <?php
+                    $addr_entity_id = $orderDetails->getShippingAddressId();
+                    $shippingaddress = Mage::getModel('sales/order_address');
+                    $shippingaddress->load($addr_entity_id);
+                    $shipaddgetdat = $shippingaddress->getData();
+                    ?>
+                    <li>Customer Name:
+                        <span><?php echo $shipaddgetdat["firstname"] . " " . $shipaddgetdat["lastname"] ?></span></li>
+                    <li>Area: <span><?php echo $shipaddgetdat["region"] ?>&nbsp;</span></li>
+                </ul>
+            </div>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th style="width:10%">&nbsp;</th>
+                    <th style="width:20%">Product SKU</th>
+                    <th style="width:10%">Color</th>
+                    <th style="width:10%">Size</th>
+                    <th style="width:10%">Qty</th>
+                    <th style="width:20%">Supplier SKU</th>
+                    <th style="width:10%">Total Order <br>Products</br></th>
+                </tr>
+                <?php
+                $_product = Mage::getModel('catalog/product')->load($commision->getProductId());
+                try {
+                    $img = Mage::helper('catalog/image')->init($_product, 'small_image')->resize(75, 75);
+                } catch (Exception $e) {
+                    $img = "";
+                }
+                if ($_product->getTypeId() == "simple") {
+                    $color = $_product->getAttributeText("color");
+                    $size = $_product->getAttributeText("size");
+                } else {
+                    $options = $_product->getProductOptions();
+                    $attributes = $options["attributes_info"];
+                    $color = $attributes[0]["value"];
+                    $size = $attributes[1]["value"];
+                }
+                ?>
+                <tr>
+                    <td><img src="<?= $img ?>"></td>
+                    <td><?php echo $_product->getSku(); ?></td>
+                    <td><?php echo $color; ?></td>
+                    <td><?php echo $size; ?></td>
+                    <td><?php echo $commision->getProductQty(); ?></td>
+                    <?php if ($_product->getSupplierSku()) : ?>
+                        <td><?php echo $_product->getSupplierSku(); ?></td>
+                    <?php else: ?>
+                        <td><?php echo $_product->getSku(); ?></td>
+                    <?php endif; ?>
+                    <td><?php echo Mage::helper('marketplace/vieworder')->getOrderProductQty($customer->getId(), $orderId); ?>
+                    </td>
+                </tr>
+                <?php
+                ?>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div>
+                <p><?php echo Mage::getModel('core/date')->date('Y'); ?> © ELABELZ.COM. All Rights Reserved.</p>
+            </div>
+            <div>
+                <p>
+                    <img align="right" style="margin-top: 37px; width: 75%"
+                         src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'generate.php?content=' . $content ?>">
+                </p>
+            </div>
+            <div style="clear: both; height: 10px"></div>
+            <div style="margin-bottom:20px; width: 100%">
+                <img class="awb_printBottomImg" style="width:100%"
+                     src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'generate_bigger.php?content=' . $content ?>">
+                <br><br>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<style type="text/css">
+    .awb_printBottomImg {
+        height: 100px;
+    }
+</style>
+<?php die(); //added to resolve multiple print no need to add this template two times ?>

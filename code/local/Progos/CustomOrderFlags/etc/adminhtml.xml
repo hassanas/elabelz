@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Progos_CustomOrderFlags
+ *
+ * @category    Progos
+ * @package     Progos_CustomOrderFlags
+ * @author      Touqeer Jalal <touqeer.jalal@progos.org>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+-->
+<config>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <sales>
+                        <children>
+                            <order>
+                                <children>
+                                    <customorderflags module="customorderflags" translate="title">
+                                        <title>Custom Order Flags</title>
+                                        <sort_order>71</sort_order>
+                                    </customorderflags>
+                                </children>
+                            </order>
+                            <aramex_list_of_label module="customorderflags">
+                                <title>Aramex Shipping Labels</title>
+                                <sort_order>36</sort_order>
+                                <action>adminhtml/aramexlabel_lists</action>
+                            </aramex_list_of_label>
+                        </children>
+                    </sales>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <menu>
+        <sales module="sales">
+            <children>
+                <aramex_list_of_label module="customorderflags">
+                    <title>Aramex Shipping Labels</title>
+                    <sort_order>34</sort_order>
+                    <action>adminhtml/aramexlabel_lists</action>
+                </aramex_list_of_label>
+            </children>
+        </sales>
+    </menu>
+</config>

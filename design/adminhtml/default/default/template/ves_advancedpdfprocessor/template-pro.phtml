@@ -1,0 +1,71 @@
+<?php $config = $this->getConfig(); ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="<?php echo $this->getSkinUrl('ves_pdfpros/default.css');?>" type="text/css" charset="utf-8" />
+	<?php if(sizeof($this->getCssUrls())):?>
+		<?php foreach($this->getCssUrls() as $cssUrl):?>
+			<link rel="stylesheet" href="<?php echo $cssUrl;?>" type="text/css" charset="utf-8" />
+		<?php endforeach;?>
+	<?php endif;?>
+	<?php if($this->getCss()):?>
+		<style>
+			<?php echo $this->getCss();?>
+		</style>
+	<?php endif;?>
+	<style>
+		/* Conditional Css*/
+		.totals .shipping_excl_tax,
+		.totals .shipping_incl_tax,
+		.totals .shipping_both {display: none;}
+
+		<?php if(isset($config['display_subtotal_incl_tax']) and $config['display_subtotal_incl_tax'] != null): ?>
+		.totals .subtotal_incl_tax {display: <?php echo ($config['display_subtotal_incl_tax']) ? 'table-row' : 'none'?>;}
+		<?php endif; ?>
+		<?php if(isset($config['display_shipping_excl_tax']) and $config['display_shipping_excl_tax'] != null): ?>
+		.totals .subtotal_excl_tax {display: <?php echo ($config['display_shipping_excl_tax']) ? 'table-row' : 'none'?>;}
+		<?php endif; ?>
+		<?php if(isset($config['display_subtotal_both']) and $config['display_subtotal_both'] != null): ?>
+		.totals .subtotal_both {display: <?php echo ($config['display_subtotal_both']) ? 'table-row' : 'none'?>;}
+		<?php endif; ?>
+
+		<?php if(isset($config['display_tax_in_grandtotal']) and $config['display_tax_in_grandtotal'] != null):?>
+		.totals .tax_with_grand_total {display: table-row;}
+		.totals .grand_total {display: none;}
+		<?php else:?>
+		.totals .tax_with_grand_total {display: none;}
+		.totals .grand_total {display: table-row;}
+		<?php endif; ?>
+		<?php foreach($this->getSource() as $_invoice):?>
+		<?php $data = $_invoice->getData('data')?>
+		<?php if($data->getShippingAmount()):?>
+		<?php echo (isset($config['display_shipping_excl_tax']) and $config['display_shipping_excl_tax'] != null) ? '.totals .shipping_excl_tax {display: table-row;}' : '';?>
+		<?php echo (isset($config['display_shipping_incl_tax']) and $config['display_shipping_incl_tax'] != null) ? '.totals .shipping_incl_tax {display: table-row;}' : '';?>
+		<?php echo (isset($config['display_shipping_both']) and $config['display_shipping_both'] != null) ? '.totals .shipping_both {display: table-row;}' : '';?>
+		<?php endif?>
+		<?php endforeach;?>
+	</style>
+	<title><?php echo $this->__('Easy PDF')?></title>
+</head>
+<?php $_sources	= $this->getSource();?>
+<?php $type 		= $this->getType();?>
+<?php $_i = 0;?>
+<body>
+<?php foreach($_sources as $_invoice):?>
+	<?php $apiKey = $_invoice['key'];?>
+	<?php $sku = $this->getInvoiceSku($apiKey);?>
+	<?php $apiKeyInfo = $this->getApiKeyInfo($apiKey)?>
+	<?php $additionData	= $this->getAdditionData($apiKey);?>
+	<div class="page <?php echo $sku.' ves_'.$apiKey;?><?php if(++$_i == sizeof($_sources)):?> end-page<?php endif;?>"<?php if(isset($apiKeyInfo['rtl']) && $apiKeyInfo['rtl']):?> style="direction: rtl;"<?php endif;?>>
+		
+		<?php $html = $this->processTemplate($_invoice);?>
+		<?php $header = $this->getHeader($html);?>
+		<?php $footer = $this->getFooter($html);?>
+		<?php echo $this->getBody($html);?>
+	</div>
+<?php endforeach;?>
+</body>
+</html>

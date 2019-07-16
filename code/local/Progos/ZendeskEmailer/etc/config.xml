@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Progos_ZendeskEmailer>
+			<version>1.0</version>
+		</Progos_ZendeskEmailer>
+	</modules>
+	<frontend>
+		<routers>
+			<zendeskemailer>
+				<use>standard</use>
+				<args>
+					<module>Progos_ZendeskEmailer</module>
+					<frontName>zendesk_complain</frontName>
+				</args>
+			</zendeskemailer>
+		</routers>
+	</frontend>
+</config>

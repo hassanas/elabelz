@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_Telrtransparent>
+      <version>0.1.0</version>
+    </Progos_Telrtransparent>
+  </modules>
+  <global>
+    <models>
+      <telrtransparent>
+        <class>Progos_Telrtransparent_Model</class>
+      </telrtransparent>
+    </models>
+    <helpers>
+      <telrtransparent>
+        <class>Progos_Telrtransparent_Helper</class>
+      </telrtransparent>
+    </helpers>
+	<blocks>
+		<telrtransparent>
+			<class>Progos_Telrtransparent_Block</class>
+		</telrtransparent>
+	</blocks>
+  </global>
+  <default>
+    <payment>
+      <telrtransparent>
+        <model>telrtransparent/standard</model>
+        <active>1</active>
+        <order_status>pending</order_status>
+        <title>Credit Card(Telr)</title>
+        <payment_action>sale</payment_action>
+        <allowspecific>0</allowspecific>
+        <sort_order>1</sort_order>
+		<ivp_desc>Your order from StoreName</ivp_desc>
+		<store_id>16408</store_id>
+		<secret_key>jGV#V79ndZv</secret_key>
+		<sandbox>1</sandbox>
+      </telrtransparent>
+    </payment>
+  </default>
+  <frontend>
+    <routers>
+      <telrtransparent>
+        <use>standard</use>
+        <args>
+          <module>Progos_Telrtransparent</module>
+          <frontName>telrtransparent</frontName>
+        </args>
+      </telrtransparent>
+    </routers>
+  </frontend>
+</config>

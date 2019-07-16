@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the SafeMageEULA that is bundled with this package in the file LICENSE.txt.
+
+It is also available at this URL: http://www.safemage.com/LICENSE_EULA.txt
+
+Copyright (c)  SafeMage (http://www.safemage.com/)
+-->
+<layout>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addCss">
+                <name>safemage/extensions/css/style.css</name>
+            </action>
+        </reference>
+    </adminhtml_system_config_edit>
+</layout>

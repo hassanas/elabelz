@@ -1,0 +1,54 @@
+<?php
+/**
+ * IDEALIAGroup srl
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@idealiagroup.com so we can send you a copy immediately.
+ *
+ * @category   MSP
+ * @package    MSP_CashOnDelivery
+ * @copyright  Copyright (c) 2013 IDEALIAGroup srl (http://www.idealiagroup.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/** @var MSP_CashOnDelivery_Block_Form $this */
+
+$_code = $this->getMethodCode();
+$quote = Mage::getSingleton('adminhtml/session_quote')->getQuote();
+$_helper = Mage::helper('msp_cashondelivery');
+
+if(Mage::app()->getRequest()->getParam('order_id')):
+$order_id = Mage::app()->getRequest()->getParam('order_id');
+$order = Mage::getModel('sales/order')->load($order_id);
+$_totalDatas = $order->getData();
+$quote = Mage::getModel('sales/quote')->loadByIdWithoutStore($_totalDatas['quote_id']);
+$_extraFee = $_totalDatas['order_currency_code'].$this->getMethod()->getExtraFee($quote);
+$_extraFeeInclTaxes = $_totalDatas['order_currency_code'].' '.$this->getMethod()->getExtraFeeInclTax($quote);
+else:
+    $_extraFee = $quote['quote_currency_code'].' '.$this->getMethod()->getExtraFee($quote);
+    $_extraFeeInclTaxes = $quote['quote_currency_code'].' '.$this->getMethod()->getExtraFeeInclTax($quote);
+endif;
+
+$_description = $_helper->getCodDescription();
+$_displayBothPrices = $_helper->displayCodBothPrices();
+$_displayInclTax = $_helper->displayCodIncludingTax();
+?>
+<ul id="payment_form_<?php echo $_code ?>" style="display:none">
+		<li>
+			<?php echo $_description ?><br/>
+			<?php if ($_displayBothPrices) :?>
+			<?php echo $this->__('You will be charged an extra fee of %s (Incl. Taxes %s)', $_extraFee, $_extraFeeInclTaxes) ?>
+			<?php elseif ($_displayInclTax) : ?>
+			<?php echo $this->__('You will be charged an extra fee of %s Incl. Taxes', $_extraFeeInclTaxes) ?>
+			<?php else : ?>
+			<?php echo $this->__('You will be charged an extra fee of %s', $_extraFee) ?>
+			<?php endif;?>
+		</li>
+</ul>

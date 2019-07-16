@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Customsitemap>
+            <version>0.1.0</version>
+        </Progos_Customsitemap>
+    </modules>
+    <global>
+        <models>
+            <progos_customsitemap>
+                <class>Progos_Customsitemap_Model</class>
+                <resourceModel>progos_customsitemap_resource</resourceModel>
+            </progos_customsitemap>
+            <progos_customsitemap_resource>
+                <class>Progos_Customsitemap_Model_Resource</class>
+            </progos_customsitemap_resource>
+            <sitemap>
+                <rewrite>
+                    <sitemap>Progos_Customsitemap_Model_Sitemap</sitemap>
+                </rewrite>
+            </sitemap>
+        </models>
+        <blocks>
+            <progos_customsitemap>
+                <class>Progos_Customsitemap_Block</class>
+            </progos_customsitemap>
+        </blocks>
+        <helpers>
+            <progos_customsitemap>
+                <class>Progos_Customsitemap_Helper</class>
+            </progos_customsitemap>
+        </helpers>
+    </global>
+</config>

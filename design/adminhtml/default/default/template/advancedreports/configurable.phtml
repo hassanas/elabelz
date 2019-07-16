@@ -1,0 +1,80 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<table width="50%" cellpadding="0" cellspacing="0" class="data">
+                    <col width="1" />
+                    <col width="1" />
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <thead>
+                      <tr class="headings">
+                        <td style="text-align: center; padding: 8px 150px !important">Name</td>
+                        <td style="text-align: center; padding: 8px 10px !important">Sold</td>
+                        <td style="text-align: center; padding: 8px 10px !important">Remaining</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                <?php
+                $parent_product_id = Mage::app()->getRequest()->getParam('parent_item_id');
+                $item_id = Mage::app()->getRequest()->getParam('item_id');
+                
+                $product = Mage::getModel('catalog/product')->load($parent_product_id);
+
+                $childProducts = Mage::getModel('catalog/product_type_configurable')                        
+                ->getUsedProductCollection($product)
+                ->addAttributeToSelect('*');
+
+                
+                
+                foreach($childProducts as $child):
+
+                $_product = Mage::getModel('catalog/product')->loadByAttribute('sku', $child->getSku());
+                $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product);
+                $productId = $_product->getId();
+                $collection = Mage::getModel('sales/order_item')->getCollection();
+                $collection->addAttributeToFilter('product_id', $productId); 
+                $collection->getSelect()
+                ->columns('SUM(qty_ordered) AS qty')
+                ->group('product_id'); 
+                
+                if($collection->getSize()): 
+                foreach($collection as $col):
+                    $qty = $col->getQty();
+                endforeach;
+                else:
+                    $qty = 0;
+                endif;     
+                ?>
+                <tr>
+                  <td style="text-align: left; padding: 8px 40px !important"><?php echo $child->getSku() ?></td>
+                  <td style="text-align: left; padding: 8px 10px !important"><?php echo $qty ?></td>
+                  <td style="text-align: left; padding: 8px 10px !important"><?php echo $stock->getQty() ?></td>
+                </tr>
+               <?php endforeach; ?>
+                </tbody>
+            </table>

@@ -1,0 +1,70 @@
+<!-- <div class="category-banner">
+    <div class="category_banner">
+        <div class="catalog_banner_top tb_one three_line">   
+        <p style="width: 1000px; max-height: 530px; overflow: hidden;"><img alt="" src="http://ae.elabelz.com/media/wysiwyg/women-1.jpg"></p>
+        <h1 style="font-size: 4.3em; position: absolute; right: 140px; top: 30%; font-family: 'Gotham Bold'; color: #fff; cursor: pointer;">Women</h1>
+        </div>
+    </div>
+</div> -->
+
+<?php
+$identifier = "sports-shop-top-banner";
+$active = Mage::getModel('cms/block')->load($identifier)->getIsActive();
+if ($active == 1){?>
+<div class="category_banner">
+    <div class="catalog_banner_top tb_one three_line">   
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($identifier)->toHtml() ?>
+    </div>
+</div>
+<?php
+}
+?>
+                
+
+    <div class="col-left sidebar col-left-first">
+
+        <div class="block block-layered-nav block-layered-nav--no-filters">
+            <div class="block-content toggle-content open">
+                <dl id="narrow-by-list2">
+                    <dd class="odd">
+                        <ol>
+                            <li data-toggle="collapse" data-target="#section_1" class="li_collapse ">
+                                <a href="<?php echo Mage::getBaseUrl() ?>women-sports-collection"><?php echo $this->__('Women')?>
+                                    
+                                </a>
+                            </li>
+                            <dd id="section_1" class="collapse even">
+                                <ol style="padding-left:10px">
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>women-clothing-sportswear"><?php echo $this->__('Clothing')?>
+                                    </a></li>
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>women-shoes-sports"><?php echo $this->__('Shoes')?>
+                                        
+                                    </a></li>
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>women-bags-sportsbags"><?php echo $this->__('Bags')?></a></li>
+                                </ol>
+                            </dd>
+                            <li data-toggle="collapse" data-target="#section_2" class="li_collapse ">
+                                <a href="<?php echo Mage::getBaseUrl() ?>men-sports-collection"><?php echo $this->__('Men')?></a>
+                            </li>
+                            <dd id="section_2" class="collapse even">
+                                <ol style="padding-left:10px">
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>men-clothing-sportswear"><?php echo $this->__('Clothing')?></a></li>
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>men-shoes-sports"><?php echo $this->__('Shoes')?></a></li>
+                                    <li><a href="<?php echo Mage::getBaseUrl() ?>men-bags-sportsbags"><?php echo $this->__('Bags')?>
+                                        
+                                    </a></li>
+                                </ol>
+                            </dd>
+
+                        </ol>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">decorateDataList('narrow-by-list2')</script>
+
+    <div class="col-main">
+        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId("sports-shop")->toHtml() ?>
+    </div>

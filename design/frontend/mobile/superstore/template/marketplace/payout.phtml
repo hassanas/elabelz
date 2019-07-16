@@ -1,0 +1,171 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.6
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+
+<div id="errormsg"></div>
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+?>
+
+<?php
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $sellerData = Mage::getSingleton('customer/session')->getCustomer();
+    $sellerId = $sellerData->getId();
+    $allowedAmount = $this->availablePayoutAmount($sellerId);
+}
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('Payout Request'); ?></h1>
+</div>
+<div class="my-account-wrapper">
+    <form action="<?php echo $this->payoutSaveUrl(); ?>" method="post"
+          id="payoutsave" class="payoutsave" enctype="multipart/form-data">
+        <div class="fieldset payoutsave_fieldset">
+            <ul class="form-list">
+                <!-- seller id -->
+                <input type="hidden" name="seller_id" id="seller_id"
+                       value="<?php echo $sellerId; ?>"/>
+                <!-- Store Name -->
+                <li class="fields">
+                    <div class="field">
+                        <label for="store_name" class="required">  <?php echo $this->__('Request Amount'); ?>
+                            <em><?php echo $this->__('*'); ?></em>
+                        </label>
+                        <div class="input-box">
+                            <input type="text" name="request_amount" id="request_amount"
+                                   value="<?php echo $allowedAmount; ?>"
+                                   class="input-text required-entry"/>
+                        </div>
+                    </div>
+                </li>
+                <li class="fields">
+                    <div>
+                        <button type="submit" class="button"
+                                title="<?php echo $this->__('Place Request') ?>" name="save_payout"
+                                id="save_payout">
+                            <span><span><?php echo $this->__('Place Request') ?></span></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+<?php
+/**
+ * Form validation script
+ */
+
+$customer = Mage::getSingleton("customer/session")->getCustomer();
+?>
+
+<div class="page-title sellers_store mp_order_transaction" id="mp_order_transaction"><h1><?php echo $this->__('Payout Request History'); ?></h1>
+    <?php //Display remaining amount and received amount from admin ?>
+    <div class="top_amount">
+        <span class="right_space">
+            <?php echo $this->__('Total Amount Received') ?> : <b><?php
+                echo Mage::helper('marketplace/transaction')->getAmountReceived(); ?></b>
+        </span>
+        <span> <?php if($locale == "ar_SA"){ echo $this->__($currency_symbol); } ?></span>
+        <span>
+            <?php echo $this->__('Amount Pending') ?> :  <b><?php
+                $remainingAmount = Mage::helper('marketplace/marketplace')->getSellerRemainingAmount($customer->getId());
+                echo Mage::helper ( 'core' )->currency ( $remainingAmount, true, false );
+                ?>
+                
+                </b>
+                <span> <?php if($locale == "ar_SA"){ echo $this->__($currency_symbol); } ?></span>
+        </span>
+    </div>
+</div>
+<?php
+// Display transaction history of the seller
+
+$loginId = Mage::getSingleton('customer/session')->isLoggedIn();
+$groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$getGroupId = Mage::helper('marketplace')->getGroupId();
+$customer_status = $customer->getCustomerstatus();
+if ($groupId != $getGroupId  || $customer_status != 1) {
+    return;
+}
+//Get Transaction collection
+$collection = $this->getCollection();
+$count = count($collection);
+?>
+<style>
+    .customer-account #my-orders-table thead th {
+        max-width: 20%;
+        min-width: 20px;
+    }
+</style>
+<table class="data-table my-orders-table" id="my-orders-table" summary="<?php echo $this->__('Items Ordered') ?>">
+    <thead>
+    <tr>
+        <th class="a-center"><?php echo $this->__('Id') ?></th>
+        <th class="a-center"><?php echo $this->__('Requested Amount') ?></th>
+        <th class="a-center"><?php echo $this->__('Status') ?></th>
+        <th class="a-center"><?php echo $this->__('Requested on') ?></th>
+        <th class="a-center"><?php echo $this->__('Updated on') ?></th>
+    </tr>
+    </thead>
+    <?php
+    //Display transaction info
+    if ($count > 0) {
+        foreach ($collection as $_collection) {
+            $commission_id = $_collection['commission_id'];
+            $order_id = $_collection['order_id'];
+            $orderModel = Mage::getModel('sales/order')->load($order_id);
+            ?>
+            <tbody>
+            <tr>
+                <td class="a-center"><?php echo $_collection['id']; ?></td>
+                <td class="a-center"><?php echo Mage::helper('core')->currency($_collection['request_amount'], true, false); ?>
+                <span> <?php if($locale == "ar_SA"){ echo $this->__($currency_symbol); } ?></span>
+                </td>
+                <td class="a-center"><?php echo $_collection['status']; ?></td>
+                <td class="a-center">
+                    <?php echo date('M j, Y', strtotime($_collection['created_at']));?>
+                </td>
+                <td class="a-center">
+                    <?php echo date('M j, Y', strtotime($_collection['updated_at']));?>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    <?php } else { ?>
+        <tfoot><tr><td colspan="6" class="a-center no_product_content"><?php echo $this->__('No Requests to Show'); ?></td></tr></tfoot>
+    <?php } ?>
+</table>
+<?php //Display pagination
+echo $this->getPagerHtml();
+?>

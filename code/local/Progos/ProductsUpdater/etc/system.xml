@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <progos translate="label" >
+            <label>Progos</label>
+            <sort_order>300</sort_order>
+        </progos>
+    </tabs>
+    <sections>
+        <products_updator translate="label" module="productsupdater">
+            <label>Products Updator</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>301</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <products_attribute_updator translate="label">
+                    <label>Update Products Attributes For Stores</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <english_stores_to_update translate="label">
+                            <label>Select English Stores to Update</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>adminhtml/system_config_source_store</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </english_stores_to_update>
+                        <arabic_stores_to_update translate="label">
+                            <label>Select Arabic Stores to Update</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>adminhtml/system_config_source_store</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </arabic_stores_to_update>
+                    </fields>
+                </products_attribute_updator>
+            </groups>
+        </products_updator>
+    </sections>
+</config>

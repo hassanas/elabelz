@@ -1,0 +1,64 @@
+<?php
+/**
+ * @author : Humaira Batool
+ * @purpose : ajax call after change in cart
+ */
+?>
+<?php
+/**
+ * Shopping cart totals template
+ *
+ * @see Mage_Checkout_Block_Cart_Totals
+ * @var $this Mage_Checkout_Block_Cart_Totals
+ */
+?>
+<?php if ($this->canApplyMsrp()): ?>
+    <div class="cart-msrp-totals"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></div>
+<?php else: ?>
+    <h3><?php echo $this->__('Summary') ?></h3>
+    <table id="shopping-cart-totals-table">
+        <col />
+        <col width="1" />
+        <tfoot>
+        <?php echo $this->renderTotals('footer'); ?>
+        </tfoot>
+        <tbody>
+        <?php echo $this->renderTotals(); ?>
+        <?php
+        //adding storecredit after ajax call on cart page
+        $codes = $this->checkTotals();
+        $go_further = false;
+        foreach($codes as $code){
+            if($code == "aw_storecredit"){
+                $storecredit_available = true;
+                break;
+            }
+        }
+        if(!$storecredit_available):
+        $quote = Mage::getModel('checkout/cart')->getQuote();
+        $quoteId = Mage::getModel('checkout/cart')->getQuote()->getId();
+        $locale = Mage::app()->getLocale()->getLocaleCode();
+        $currencySymbol = Mage::app()->getStore(Mage::app()->getStore()->getId())->getCurrentCurrencyCode();
+        $quoteStorecredits = Mage::helper('aw_storecredit/totals')->getQuoteStoreCreditData($quoteId);
+        if(count($quoteStorecredits) > 0) :
+        foreach ($quoteStorecredits as $quoteStorecredit):
+        $quoteStorecredit_amount = $quote->getStore()->roundPrice($quoteStorecredit->getStorecreditAmount());
+        endforeach;
+        ?>
+        <tr>
+            <td colspan="<?php echo $this->getColspan(); ?>"  class="a-left storecredit_th">
+                    <?php echo $this->__('Store Credit'); ?>
+            </td>
+            <td class="a-right storecredit_td">
+                <?php //hardcoded for ar_SA locale, currency symbol ?>
+                <?php if($locale == "ar_SA"): ?><strong>
+                    <?php echo $this->__($currencySymbol) ?></strong>
+                <?php endif; ?>
+                -<?php echo $this->helper('checkout')->formatPrice($quoteStorecredit_amount); ?>
+            </td>
+        </tr>
+        <?php endif;?>
+        <?php endif; ?>
+        </tbody>
+    </table>
+<?php endif; ?>

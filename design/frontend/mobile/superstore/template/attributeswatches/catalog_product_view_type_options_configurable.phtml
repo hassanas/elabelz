@@ -1,0 +1,285 @@
+<?php
+/* to override the default configurable options template  */
+
+$_config = $this->getJsonConfig();
+
+$_json_config = $this->helper("attributeswatches")->addAttributeSwatches($_config);
+
+$_product = $this->getProduct();
+$_product_id = $_product->getId();
+$_settings = Mage::getStoreConfig('attributeswatches/settings');
+
+$_swatches_width = (int)$_settings['swatch_width'];
+$_swatches_height = (int)$_settings['swatch_height'];
+$options_all = array();
+
+?>
+<?php if ($_product->isSaleable() && count($_json_config["attributes"])): ?>
+    <dl id="options-container-<?php echo $_product_id; ?>">
+        <?php foreach ($_json_config["attributes"] as $_attribute): ?>
+            <?php
+            $attrInfo = "single_attribute";
+            if (count($_attribute["options"]) > 1) {
+                $attrInfo = "multiple_attributes";
+            }
+            ?>
+            <div class="<?php echo $_attribute["label"]; ?>Section SectionTitleAttr <?php echo $attrInfo; ?>">
+                <dt id="label-attribute-<?php echo $_attribute["id"] ?>"
+                    class="<?php echo $_attribute["label"]; ?>HeadProduct"><label
+                            class="required"><em>*</em><?php echo $this->__($_attribute["label"]); ?>:</label><span
+                            class="selected-label">&nbsp;</span></dt>
+                <dd class="option-container <?php echo $_attribute["label"]; ?>">
+                    <?php
+                    /* WILL DISPLAY THE COLOR SWATCHES AND ALL THE CUSTOM OPTION SELECTORS HERE */
+                    if (in_array($_attribute["swatch_type"], array("image", "child", "label"))) {
+                        ?>
+                        <div id="attribute-<?php echo $_attribute["id"] ?>-container"
+                             class="product-swatches-container">
+                            <ul id="swatches-options-<?php echo $_attribute["id"] ?>"
+                                class="<?php echo $this->__($_attribute["label"]); ?>SlideProduct has-swatches swatch-type-<?php echo $_attribute["swatch_type"] ?>"
+                                attribute="<?php echo $_attribute["id"] ?>">
+                                <?php
+                                /* preload swatches from product gallery if necessary */
+                                $_gallery_images = array();
+                                $_load_swatch_from_gallery = Mage::getStoreConfig("attributeswatches/settings/images") == "gallery";
+                                if ($_attribute["swatch_type"] == "child" && $_load_swatch_from_gallery) {
+                                    $_gallery = $_product->getSwatchesGalleryImages($_attribute["id"]);
+                                    foreach ($_gallery as $_image) {
+                                        $_gallery_images[$_image->getAttributeValue()] = $_image->getFile();
+                                    }
+                                }
+
+                                $counter = 0;
+                                foreach ($_attribute["options"] as $_option) {
+                                    ?>
+                                    <li>
+                                        <?php
+                                        switch ($_attribute["swatch_type"]) {
+
+                                            case "child":
+                                                $_image = "";
+                                                if ($_load_swatch_from_gallery) {
+                                                    if (isset($_gallery_images[$_option["id"]])) {
+                                                        $_image = $this->helper('catalog/image')->init($_product, 'image',
+                                                            $_gallery_images[$_option["id"]]);
+                                                    } else {
+                                                        $_image = $this->helper('catalog/image')->init($_product, 'image');
+                                                    }
+                                                } else {
+                                                    $_image_product = Mage::getModel('catalog/product')->load($_option["products"][0]);
+                                                    $_image = $this->helper('catalog/image')->init($_image_product,
+                                                        'image');
+                                                }
+                                                ?>
+                                                <a class=""
+                                                   style="width:<?php echo $_swatches_width ?>px; height:<?php echo $_swatches_height; ?>px;"
+                                                   title="<?php echo $_option["label"] ?>"
+                                                   data-original-title="<?php echo $_option["label"] ?>"
+                                                   rel="<?php echo $_option["id"] ?>"
+                                                   id="swatches_option_value_<?php echo $_option["id"] ?>"
+                                                   href="<?php //echo $_image;
+                                                   ?>" rev="<?php //echo $_image->resize(256);
+                                                ?>">
+                                                    <?php
+                                                    echo "<img src='" . $_image->resize($_swatches_width,
+                                                            $_swatches_height) . "' title='" . $_option["label"] . "' alt='" . $_option["label"] . "'/>";
+                                                    ?>
+                                                </a>
+                                                <span class="tooltip-container"><span
+                                                            class="tooltip"><span><?php echo $_option["label"] ?></span></span></span>
+                                                <?php
+                                                break;
+                                            case 'image':
+                                                ?>
+                                                <a class=""
+                                                   style="<?php echo $_option["swatch_value"] ?>; width:<?php echo $_swatches_width ?>px; height:<?php echo $_swatches_height; ?>px;"
+                                                   data-original-title="<?php echo $_option["label"] ?>"
+                                                   title="<?php echo $_option["label"] ?>"
+                                                   rel="<?php echo $_option["id"] ?>"
+                                                   id="swatches_option_value_<?php echo $_option["id"] ?>" href="#"
+                                                   rev="">
+                                                    <span><?php echo $_option["label"] ?></span>
+                                                </a>
+                                                <span class="tooltip-container"><span
+                                                            class="tooltip"><span><?php echo $_option["label"] ?></span></span></span>
+                                                <?php
+                                                break; ?>
+                                            <?php case 'label': ?>
+                                            <a class="swatch-label" title="<?php echo $_option["label"] ?>"
+                                               data-original-title="<?php echo $_option["label"] ?>"
+                                               rel="<?php echo $_option["id"] ?>"
+                                               id="swatches_option_value_<?php echo $_option["id"] ?>" href="#">
+                                                <?php echo $_option["label"] ?>
+                                            </a>
+
+                                            <?php break; ?>
+
+                                        <?php
+                                        }
+                                        ?>
+                                    </li>
+                                    <?php
+                                    $counter = $counter + 1;
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                        <?php
+                    }
+                    /* Eof MAIN SWATCHES CODE */
+                    ?>
+                    <?php
+                    if ($counter == 1) { ?>
+                        <p class="single_attribute"><?php echo $this->__($_option["label"]); ?></p>
+                        <div class="input-box hide">
+                            <select name="super_attribute[<?php echo $_attribute["id"] ?>]"
+                                    id="attribute<?php echo $_attribute["id"] ?>"
+                                    class="configurable-option-select required-entry super-attribute-select  swatches-type-<?php echo $_attribute["swatch_type"]; ?> <?php echo(($_attribute["hideselect"]) ? "hideselect" : ""); ?> <?php echo(($_attribute["switchgallery"]) ? "switch-gallery" : ""); ?>">
+                                <option value=""><?php echo $this->__('Choose an Option...') ?></option>
+                            </select>
+                        </div>
+                    <?php } else { ?>
+                        <p class="single_attribute hide"><?php echo $this->__($_option["label"]); ?></p>
+                        <div class="input-box">
+                            <select name="super_attribute[<?php echo $_attribute["id"] ?>]"
+                                    id="attribute<?php echo $_attribute["id"] ?>"
+                                    class="configurable-option-select required-entry super-attribute-select  swatches-type-<?php echo $_attribute["swatch_type"]; ?> <?php echo(($_attribute["hideselect"]) ? "hideselect" : ""); ?> <?php echo(($_attribute["switchgallery"]) ? "switch-gallery" : ""); ?>">
+                                <option value=""><?php echo $this->__('Choose an Option...') ?></option>
+                            </select>
+                        </div>
+                    <?php } ?>
+                    <div class="clearer">&nbsp;</div>
+                </dd>
+            </div>
+        <?php endforeach; ?>
+    </dl>
+    <?php
+    foreach ($options_all as $key => $row) {
+        $label[$key] = $row['label'];
+        $id[$key] = $row['id'];
+    }
+    array_multisort($label, SORT_ASC, $id, SORT_DESC, $options_all);
+    ?>
+
+    <script type="text/javascript">
+        function out_of_stock_string() {
+            return "<?php echo $this->__(" (Out of Stock)"); ?>";
+        }
+
+        var mng_Config<?php echo $_product_id; ?> = null;
+        var spConfig<?php echo $_product_id; ?> = null;
+        window.addNewConfigurableProductMethods();
+        jQuery(document).ready(function () {
+
+            window.mng_Config<?php echo $_product_id; ?> = <?php echo Mage::helper('core')->jsonEncode($_json_config); ?>;
+            window.mng_Config<?php echo $_product_id; ?>.containerId = 'options-container-<?php echo $_product_id; ?>';
+
+            window.spConfig<?php echo $_product_id; ?> = new Product.Config(window.mng_Config<?php echo $_product_id; ?>);
+            jQuery(document).on("click", "#options-container-<?php echo $_product_id; ?> .has-swatches li a", function (e) {
+                e.preventDefault();
+                if (jQuery(this).hasClass("active") && !jQuery(this).hasClass("selected")) {
+                    _select = jQuery(this).closest("dd.option-container").find("select.configurable-option-select");
+                    _select.val(jQuery(this).attr("rel"));//.change();
+                    _id = _select.attr("id");
+                    window.spConfig<?php echo $_product_id; ?>.configureElement($(_id));
+                }
+            });
+        });
+        jQuery(document).ready(function ($) {
+            jQuery(".SizeHeadProduct").click(function () {
+                jQuery(".SizeSlideProduct").slideToggle();
+            });
+            var getSizeText = jQuery(".SizeSection .single_attribute").text();
+            if(getSizeText == "OS" || getSizeText == "os"){
+                jQuery(".detailpagewrrapperouter").hide();
+            }
+        });
+    </script>
+
+    <script>
+        jQuery(document).ready(function () {
+
+            jQuery("#options-container-<?php echo $_product_id; ?> .has-swatches li a").click(function (e) {
+                e.preventDefault();
+                if (jQuery(this).hasClass("active") && !jQuery(this).hasClass("selected")) {
+                    id = jQuery(this).parent().parent().attr('attribute');
+                    _select = jQuery(this).closest("dd.option-container").find("select.configurable-option-select");
+                    var value = jQuery(this).attr("rel");
+                    var changeCheck = jQuery("#attribute" + id).val(value).change();
+
+                    if (e.type == "click") {
+                        changeCheck;
+                    }
+                }
+            });
+
+            jQuery("#options-container-<?php echo $_product_id; ?> .input-box select.configurable-option-select").change(function (e) {
+                e.preventDefault();
+                var sV = jQuery("#options-container-<?php echo $_product_id; ?> .SizeSection .input-box select.configurable-option-select");
+                var OptionLen = jQuery("#options-container-<?php echo $_product_id; ?> .SizeSection .input-box select.configurable-option-select").find("option").length;
+                var OpText = sV.find("option:eq(1)").text();
+
+                if (OptionLen < "3") {
+                    jQuery("#options-container-<?php echo $_product_id; ?> .SizeSection .input-box").addClass("hide");
+                    jQuery("#options-container-<?php echo $_product_id; ?> .SizeSection .single_attribute").removeClass("hide");
+                    sV.val(sV.find("option:eq(1)").val());
+                    jQuery("#options-container-<?php echo $_product_id; ?> .SizeSection .single_attribute").text(OpText);
+                }
+                spConfig<?php echo $_product_id; ?>.getIdOfSelectedProduct();
+            });
+
+            spConfig<?php echo $_product_id; ?>.getIdOfSelectedProduct = function () {
+                var existingProducts = new Object();
+                for (var i = this.settings.length - 1; i >= 0; i--) {
+                    var selected = this.settings[i].options[this.settings[i].selectedIndex];
+                    if (selected.config) {
+
+                        for (var iproducts = 0; iproducts < selected.config.products.length; iproducts++) {
+                            var usedAsKey = selected.config.products[iproducts] + "";
+                            if (existingProducts[usedAsKey] == undefined) {
+                                existingProducts[usedAsKey] = 1;
+                            }
+                            else {
+                                existingProducts[usedAsKey] = existingProducts[usedAsKey] + 1;
+                            }
+                        }
+                    }
+                }
+
+                for (var keyValue in existingProducts) {
+                    for (var keyValueInner in existingProducts) {
+                        if (Number(existingProducts[keyValueInner]) < Number(existingProducts[keyValue])) {
+                            delete existingProducts[keyValueInner];
+                        }
+                    }
+                }
+                var sizeOfExistingProducts = 0;
+                var currentSimpleProductId = "";
+                for (var keyValue in existingProducts) {
+                    currentSimpleProductId = keyValue;
+                    sizeOfExistingProducts = sizeOfExistingProducts + 1
+                }
+
+                jQuery.ajax({
+                    type: "POST",
+                    url: "<?php echo $this->getBaseUrl()?>marketplace/product/getproducturl/",
+                    data: "id=" + currentSimpleProductId + "&pid=<?php echo $_product_id; ?>&responsetype=return&catId=<?php  echo implode(',', $_product->getCategoryIds());?>",
+                    beforeSend: function () {
+                        jQuery('.data-table tbody').css({'display':'table', 'width':'100%'}).html("<div class='loader'><img src='<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>' /></div>");
+                    },
+                    success: function (msg) {
+                        msg = jQuery.parseJSON(msg);
+                        jQuery(".data-table tbody").html(msg.html);
+                        jQuery(".productDataLayer").html(msg.datalayer);
+                        jQuery('div.detailpage_attribute_bottom a.showmore-btn-desc.opened').click();
+                        jQuery(".catalog-product-view .product-view .product-info-wr .detailpage_attribute_bottom").show();
+                    }
+
+                });
+
+
+            }
+            jQuery('.configurable-option-select').select2();
+        });
+    </script>
+<?php endif; ?>

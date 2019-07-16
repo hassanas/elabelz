@@ -1,0 +1,65 @@
+<config>
+    <api2>
+        <resource_groups>
+            <api-search translate="title" module="Progos_Api_Search">
+                <title>Product Search Api</title>
+                <sort_order>15</sort_order>
+            </api-search>
+        </resource_groups>
+        <resources>
+            <searchfilters translate="title" module="Progos_Api_Search">
+                <group>api-search</group>
+                <model>api-search/api2_filters</model>
+                <title>Search Navigation Filters</title>
+                <sort_order>20</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                    <customer>
+                        <retrieve>1</retrieve>
+                    </customer>
+                    <guest>
+                        <retrieve>1</retrieve>
+                    </guest>
+                </privileges>
+                <attributes>
+                </attributes>
+                <routes>
+                    <route>
+                        <route>/search/filters</route>
+                        <action_type>collection</action_type>
+                    </route>
+                </routes>
+                <versions>1</versions>
+            </searchfilters>
+            <search translate="title" module="Progos_Api_Search">
+                <group>api-search</group>
+                <model>api-search/api2_search</model>
+                <title>Product Search Collection</title>
+                <sort_order>10</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                    <customer>
+                        <retrieve>1</retrieve>
+                    </customer>
+                    <guest>
+                        <retrieve>1</retrieve>
+                    </guest>
+                </privileges>
+                <attributes>
+                    
+                </attributes>
+                <routes>
+                    <route>
+                        <route>/product/search</route>
+                        <action_type>collection</action_type>
+                    </route>
+                </routes>
+                <versions>1</versions>
+            </search>
+        </resources>
+    </api2>
+</config>

@@ -1,0 +1,60 @@
+<?php
+    $categorySnippetsPrice  = $this->getCategorySnippetsPrice();
+    $categorySnippetsRating = $this->getCategorySnippetsRating();
+    if ($categorySnippetsPrice) {
+        $currencyCode           = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $ratingValue            = number_format($categorySnippetsRating/100*5, 1);
+        $ratingCount            = $this->getCategorySnippetsRatingCount();
+        $formattedPrice         = number_format($categorySnippetsPrice, 2);
+        $priceSymbol            = Mage::app()->getLocale()->currency($currencyCode)->getSymbol();
+        $currentCategoryName    = Mage::registry('current_category')->getName();
+    }
+?>
+<?php if ($categorySnippetsPrice):?>
+    <?php if ($this->isHide()):?>
+         <div itemtype="http://schema.org/Product" itemscope="">
+            <meta itemprop="name" content="<?php echo $currentCategoryName ?>"/>
+            <div class="minimal-price" itemprop="offers" itemscope="" itemtype="http://schema.org/AggregateOffer">
+                <meta itemprop="priceCurrency"content="<?php echo $currencyCode ?>"/>
+                <meta itemprop="lowPrice" content="<?php echo $formattedPrice ?>"/>
+            </div>
+            <?php if ($categorySnippetsRating):?>
+                <div itemtype="http://schema.org/AggregateRating" itemscope="" itemprop="aggregateRating">
+                    <meta itemprop="ratingValue"content="<?php  echo $ratingValue ?>"/>
+                    <meta itemprop="reviewCount"content="<?php  echo $ratingCount ?>"/>
+                </div>
+            <?php endif?>
+        </div>
+    <?php else: ?>
+        <div class="block block-list" itemtype="http://schema.org/Product" itemscope="">
+            <div class="block-title">
+                <strong>
+                    <span itemprop="name"><?php echo $currentCategoryName ?></span>
+                </strong>
+            </div>
+            <div class="block-content">
+                <div id="m-snippets" class="category-sniippets">
+                    <div class="minimal-price" itemprop="offers" itemscope="" itemtype="http://schema.org/AggregateOffer">
+                        <span class="price-label"><?php echo $this->getSnippetsPriceLabel() ?></span>
+                            <meta itemprop="priceCurrency"content="<?php echo $currencyCode ?>"/>
+                            <?php echo $priceSymbol ?><span class="price" itemprop="lowPrice"><?php echo $formattedPrice ?></span>
+                    </div>
+                    <?php if ($categorySnippetsRating):?>
+                        <span class="ratings rating-label" style="float:left;" ><?php echo $this->getSnippetsRatingLabel() ?></span>
+                        <div class="ratings" itemtype="http://schema.org/AggregateRating" itemscope="" itemprop="aggregateRating">
+                            <div class="rating-box" style="float: left; margin-right: 5px;">
+                                <div class="rating" style="width: <?php echo $categorySnippetsRating ?>%"></div>
+                            </div>
+                            <div class="r-lnk">
+                                <span itemprop="ratingValue"><?php echo $ratingValue ?></span>
+                                <span> / </span>
+                                <span itemprop="reviewCount"><?php echo $ratingCount ?></span>
+                                <?php echo $this->getSnippetsRewiewCountLabel() ?>
+                            </div>
+                        </div>
+                    <?php endif?>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+<?php endif?>

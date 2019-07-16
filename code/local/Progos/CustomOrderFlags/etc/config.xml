@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Progos_CustomOrderFlags
+ *
+ * @category    Progos
+ * @package     Progos_CustomOrderFlags
+ * @author      Touqeer Jalal <touqeer.jalal@progos.org>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+-->
+<config>
+    <modules>
+        <Progos_CustomOrderFlags>
+            <version>1.0.5</version>
+        </Progos_CustomOrderFlags>
+    </modules>
+
+    <global>
+        <helpers>
+            <customorderflags>
+                <class>Progos_CustomOrderFlags_Helper</class>
+            </customorderflags>            
+        </helpers>
+
+        <models>
+            <customorderflags>
+                <class>Progos_CustomOrderFlags_Model</class>
+                <resourceModel>customorderflags_mysql4</resourceModel>
+            </customorderflags>
+            <customorderflags_mysql4>
+                <class>Progos_CustomOrderFlags_Model_Mysql4</class>
+                <entities>
+                    <aramexlabel>
+                        <table>aramexlabel</table>
+                    </aramexlabel>
+                </entities>
+            </customorderflags_mysql4>
+        </models>
+        <resources>
+            <customorderflags_setup>
+                <setup>
+                    <module>Progos_CustomOrderFlags</module>
+                    <class>Mage_Sales_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </customorderflags_setup>
+            <customorderflags_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </customorderflags_write>
+            <customorderflags_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </customorderflags_read>
+        </resources>
+        <blocks>
+			 <adminhtml>
+				<rewrite>
+					<sales_order_grid>Progos_CustomOrderFlags_Block_Sales_Order_Grid</sales_order_grid>
+				</rewrite>
+			</adminhtml>
+            <customorderflags>
+                <class>Progos_CustomOrderFlags_Block</class>
+            </customorderflags>
+        </blocks>
+    </global>
+	<adminhtml>
+        <layout>
+            <updates>
+                <progos_customorderflags>
+                    <file>progos_customorderflags.xml</file>
+                </progos_customorderflags>
+            </updates>
+        </layout>
+		<events>
+			<sales_order_grid_collection_load_before>
+                <observers>
+                    <customorderflags_add_custom_columns_select>
+                        <type>singleton</type>
+                        <class>customorderflags/observer</class>
+                        <method>addOrderTable</method>
+                    </customorderflags_add_custom_columns_select>
+                </observers>
+            </sales_order_grid_collection_load_before>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <customorderflags_custom_order_view_info>
+                        <class>customorderflags/observer</class>
+                        <method>getSalesOrderViewInfo</method>
+                    </customorderflags_custom_order_view_info>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <customorderflags_add_columns_order_grid>
+                        <class>customorderflags/observer</class>
+                        <method>beforeBlockToHtml</method>
+                    </customorderflags_add_columns_order_grid>
+                </observers>
+            </core_block_abstract_to_html_before>
+            <sales_order_shipment_track_save_after>
+                <observers>
+                    <customorderflags_aramex_shipment_save_after_track>
+                        <type>singleton</type>
+                        <class>customorderflags/observer</class>
+                        <method>aramexShipmentTrackSaveAfter</method>
+                    </customorderflags_aramex_shipment_save_after_track>
+                </observers>
+            </sales_order_shipment_track_save_after>
+        </events>
+	</adminhtml>
+	<admin>
+		<routers>
+			<adminhtml>
+				<use>admin</use>
+				<args>
+					<modules>
+						<Progos_CustomOrderFlags after="Mage_Adminhtml_Sales">Progos_CustomOrderFlags_Adminhtml</Progos_CustomOrderFlags>
+					</modules>
+				</args>
+			</adminhtml>    
+		</routers>
+	</admin>
+</config>

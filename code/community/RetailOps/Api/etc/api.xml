@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!--
+The MIT License (MIT)
+
+Copyright (c) 2015 Gud Technologies Incorporated (RetailOps by GüdTech)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<config>
+    <api>
+        <resources>
+            <retailops translate="title" module="retailops_api">
+                <title>RetailOps API</title>
+                <model>retailops_api/api</model>
+                <acl>retailops</acl><!-- acl resource alias -->
+                <methods><!-- definne the methods -->
+                    <catalog_pull translate="title" module="retailops_api">
+                        <title>Retrieve list of products</title>
+                        <method>catalogPull</method>
+                        <acl>retailops/catalog_pull</acl>
+                    </catalog_pull>
+                    <catalog_push translate="title" module="retailops_api">
+                        <title>Create/update products</title>
+                        <method>catalogPush</method>
+                        <acl>retailops/catalog_push</acl>
+                    </catalog_push>
+                    <return_push translate="title" module="retailops_api">
+                        <title>Create Credit Memo</title>
+                        <method>returnPush</method>
+                        <acl>retailops/return_push</acl>
+                    </return_push>
+                    <order_pull translate="title" module="retailops_api">
+                        <title>Retrieve list of orders</title>
+                        <method>orderPull</method>
+                        <acl>retailops/order_pull</acl>
+                    </order_pull>
+                    <inventory_push translate="title" module="retailops_api">
+                        <title>Update product inventory</title>
+                        <method>inventoryPush</method>
+                        <acl>retailops/inventory_push</acl>
+                    </inventory_push>
+                    <shipment_push translate="title" module="retailops_api">
+                        <title>Create Shipments</title>
+                        <method>shipmentPush</method>
+                        <acl>retailops/shipment_push</acl>
+                    </shipment_push>
+                    <order_close translate="title" module="retailops_api">
+                        <title>Order Close</title>
+                        <method>orderClose</method>
+                        <acl>retailops/shipment_push</acl>
+                    </order_close>
+                    <order_status_update translate="title" module="retailops_api">
+                        <title>Order Status Update</title>
+                        <method>orderStatusUpdate</method>
+                        <acl>retailops/order_pull</acl>
+                    </order_status_update>
+                </methods>
+                <faults module="retailops_api"><!-- errors that might appear-->
+                </faults>
+            </retailops>
+        </resources>
+        <acl><!-- acl definition -->
+            <resources>
+                <retailops translate="title" module="retailops_api">
+                    <title>Retailops</title>
+                    <sort_order>120</sort_order>
+                    <catalog_pull translate="title" module="retailops_api">
+                        <title>Catalog Pull</title>
+                    </catalog_pull>
+                    <catalog_push translate="title" module="retailops_api">
+                        <title>Catalog Push</title>
+                    </catalog_push>
+                    <inventory_push translate="title" module="retailops_api">
+                        <title>Inventory Push</title>
+                    </inventory_push>
+                    <order_pull translate="title" module="retailops_api">
+                        <title>Order Pull</title>
+                    </order_pull>
+                    <order_update translate="title" module="retailops_api">
+                        <title>Order Update</title>
+                    </order_update>
+                    <return_push translate="title" module="retailops_api">
+                        <title>Return Push</title>
+                    </return_push>
+                    <shipment_push translate="title" module="retailops_api">
+                        <title>Shipment Push</title>
+                    </shipment_push>
+                </retailops>
+            </resources>
+        </acl>
+    </api>
+</config>

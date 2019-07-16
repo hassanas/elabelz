@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <template>
+        <frontend>
+            <file path="design--frontend--base--default--template--checkout--cart--item--default"></file>
+            <file path="design--frontend--base--default--template--downloadable--checkout--cart--item--default"></file>
+        </frontend>
+    </template>
+</config>

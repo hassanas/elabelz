@@ -1,0 +1,138 @@
+<?php /* @var $this Progos_Page_Block_Page_Html_Header */ ?>
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+//Getting featured brands start
+$cookie = Mage::getSingleton('core/cookie');
+if (!$cookie->get("store_new_code")) :
+    $store_code = Mage::app()->getStore()->getCode();
+    $cookie->set('store_new_code', $store_code, time() + 86400, '/');
+endif;
+?>
+<script>
+    window.current_store_code = "<?php echo Mage::app()->getStore()->getCode(); ?>";
+    window.CurrentCurrencyCode = "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>";
+    window.CurrentCurrencySymbol = "<?php echo Mage::app()->getLocale()->currency( Mage::app()->getStore()->getCurrentCurrencyCode() )->getSymbol(); ?>";
+
+    window.visearchMessages = {
+        retry : {
+            "heading": "<?php echo $this->__("OOOPS!"); ?>",
+            "content": "<?php echo $this->__("We couldn't load this content"); ?>",
+            "button": "<?php echo $this->__("Retry"); ?>"
+        },
+        img_parameter: "<?php echo $this->__("Please upload an image to perform an image search"); ?>",
+        img_invalid: "<?php echo $this->__("Invalid image file format"); ?>",
+    }
+</script>
+<div class="visually_hidden" id="overlay"></div>
+<div class="site--search">
+    <div id="search--element" class="search--element">
+        <a class="cross" href="#search--element" data-auto-focus=".search--element input[type=text]">X</a>
+        <?php
+            $imageSearchEnabled = (bool)Mage::getStoreConfig('image_search/image_search_settings/enabled');
+            if($imageSearchEnabled){
+        ?>
+        <div class="image--search">
+            <label>
+                <input
+                    style="visibility: hidden;"
+                    type="file"
+                    name="image-search"
+                    id="image-search" accept="image/*">
+            </label>
+        </div>
+        <?php } ?>
+        <?php $catalogSearchHelper = $this->helper('catalogsearch'); ?>
+        <form id="search_mini_form" novalidate
+              action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get"
+              class="site_search inline_form_container ng-pristine ng-valid">
+            <label for="site_search_term">Search</label>
+            <input type="text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength(); ?>"
+                   placeholder="<?php echo $this->__('Search entire store...') ?>"
+                   name="<?php echo $catalogSearchHelper->getQueryParamName() ?>"
+                   class="site_search_term term required-entry"
+                   value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>"/>
+            <button type="submit" class="site_search_submit submit fa fa-search"
+                    title="<?php echo $this->__('Search') ?>"></button>
+            <ul ng-show="suggestions" class="site_search_suggestions ng-hide"></ul>
+            <div id="search_autocomplete" class="search-autocomplete"></div>
+        </form>
+    </div>
+</div>
+<div dir="ltr" id="wrapper">
+    <div id="menu-overlay"></div>
+    <div class="not-visible-header"></div>
+    <header id="site_header" class="animated">
+        <div class="visually_hidden" id="overlay2"></div>
+        <div class="off--canvas--menu">
+            <?php echo($this->getChildHtml('header.nav')) ?>
+        </div>
+        <div class="black clearfix">
+            <div class="row mobheader">
+                <div class="col-xs-3">
+                    <div class="site--search">
+                        <a href="#search--element" data-auto-focus=".search--element input[type=text]">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="site--logo">
+                        <a href="<?php echo Mage::getBaseUrl(); ?>" id="site_logo" title="ELABELZ">ELABELZ</a>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="site--minicart">
+                        <ul class="customer_options header_minicart_wrrapger">
+                            <li class="closed" data-nm-hover-toggle="data-nm-hover-toggle">
+                                <a href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>" id="cart_link"
+                                   title="Go to Bag">
+                                    <i id="cart_count">
+                                        <?php
+                                        $_cartQty = Mage::getSingleton('checkout/cart')->getItemsCount();
+                                        echo $_cartQty;
+                                        ?>
+                                    </i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="site--lang-switch">
+                        <?php echo $this->getChildHtml('store_language'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+<div class="smallMobile_banner">
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header-section-block')->toHtml();?>
+</div>
+<?php echo $this->getChildHtml('topContainer'); ?>

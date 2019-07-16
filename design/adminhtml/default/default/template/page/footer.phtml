@@ -1,0 +1,145 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<p class="bug-report">
+    <a href="<?php echo $this->getBugreportUrl() ?>" id="footer_bug_tracking"><?php echo $this->__('Help Us Keep Magento Healthy - Report All Bugs') ?></a><br/>
+    <?php echo $this->__('Interface Locale: %s', $this->getLanguageSelect()) ?>
+</p>
+<p class="legality">
+    <a href="<?php echo $this->getConnectWithMagentoUrl() ?>" id="footer_connect"><?php echo $this->__('Connect with the Magento Community') ?></a><br/>
+    <img src="<?php echo $this->getSkinUrl('images/varien_logo.gif') ?>" class="v-middle" alt="" />&nbsp;&nbsp;
+    <?php echo $this->__('Magento&trade; is a trademark of Magento Inc.<br/>Copyright &copy; %s Magento Inc.', date('Y')) ?>
+</p>
+<?php echo $this->__('Magento ver. %s', Mage::getVersion()) ?>
+<script type="text/javascript">
+    $('footer_bug_tracking').target = 'Varien_External';
+    $('footer_connect').target = 'Varien_External';
+    function setInterfaceLanguage(evt){
+        var elem = Event.element(evt);
+        if(elem){
+            setLocation('<?php echo $this->getChangeLocaleUrl() ?>locale/'+elem.value+'/<?php echo $this->getRefererParamName() ?>/<?php echo $this->getUrlForReferer() ?>');
+        }
+    }
+    Event.observe('interface_locale', 'change', setInterfaceLanguage)
+</script>
+<script>
+    jQuery(document).ready(function () {
+        jQuery("#seller_id").prop("readonly", true);
+        jQuery("#seller_store_name_attr").change(function () {
+            jQuery('#seller_id').val(this.value);
+        });
+    });
+
+    var sortSelect = function (e, select, attr, order, selected_value) {
+        var seller_id = jQuery('#seller_id').val();
+
+        if (attr === 'text') {
+            if (order === 'asc') {
+                jQuery(select).html(jQuery(select).children('option').sort(function (x, y) {
+                    return jQuery.trim(jQuery(x).text().toUpperCase()) < jQuery.trim(jQuery(y).text().toUpperCase()) ? -1 : 1;
+                }));
+
+                if (selected_value !== "" && selected_value !== 0) {
+                    jQuery(select).val(selected_value);
+                }
+                else if (seller_id !== 0 && seller_id !== "") {
+                    jQuery(select).val(seller_id);
+                }
+                else {
+                    jQuery(select).val(0);
+                }
+
+                e.preventDefault();
+            }
+
+            if (order === 'desc') {
+                jQuery(select).html($(select).children('option').sort(function (y, x) {
+                    return jQuery.trim(jQuery(x).text().toUpperCase()) < jQuery.trim(jQuery(y).text().toUpperCase()) ? -1 : 1;
+                }));
+
+                if (selected_value !== "" && selected_value !== 0) {
+                    jQuery(select).val(selected_value);
+                }
+                else if (seller_id !== 0 && seller_id !== "") {
+                    jQuery(select).val(seller_id);
+                }
+                else {
+                    jQuery(select).val(0);
+                }
+
+                e.preventDefault();
+            }
+        }
+    };
+
+    //, attr, order
+    jQuery(document).ready(function () {
+        var selected_value = jQuery("#seller_store_name_attr").find("option:selected").val();
+        sortSelect('#seller_store_name_attr', 'text', 'asc', selected_value);
+    });
+</script>
+<?php //make active tab configurable @RT ?>
+<?php $isActiveRecentOrdersTab = Mage::helper('progos_customer')->isActiveTabRecentOrders(); ?>
+<?php if ($isActiveRecentOrdersTab): ?>
+    <script>
+        //if not iframe then trigger click @RT
+        if (window.top == window.self) {
+            //this condition is required to allow execution only when the
+            //id exists
+            if ($$('#dt-lastOrders a').length != 0) {
+                $$('#dt-lastOrders a')[0].click();
+            }
+        }
+    </script>
+<?php endif; ?>
+<?php //to open recent order link in new tab  @RT ?>
+<?php $isOpenLinkNewTab = Mage::helper('progos_customer')->isOpenLinkNewTab(); ?>
+<?php if ($isOpenLinkNewTab): ?>
+    <script>
+        //to open each order in new tab
+        jQuery(document).on('click', '#customer_view_orders_grid_table tbody td:not(.last)', function(e) {
+            //to stop from loading on same page
+            e.preventDefault();
+            window.stop();
+            //check if tr has title or not
+            if (jQuery("#customer_view_orders_grid_table tbody tr").attr("title") != null) {
+                //this will load in new tab
+                window.open(jQuery(this).parent('tr').attr('title'));
+            }
+        });
+        //for reorder
+        jQuery(document).on('click', '#customer_view_orders_grid_table tbody tr td.last a', function(e) {
+            //to stop from loading on same page
+            e.preventDefault();
+            window.stop();
+            //check if td has a.href or not
+            if (jQuery("#customer_view_orders_grid_table tbody tr td.last a").attr("href") != null) {
+                //this will load in new tab
+                window.open(jQuery(this).attr('href'));
+            }
+        });
+    </script>
+<?php endif; ?>

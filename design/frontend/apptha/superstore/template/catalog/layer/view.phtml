@@ -1,0 +1,245 @@
+<?php
+/**
+ * Category layered navigation
+ *
+ * @var $this Amasty_Shopby_Block_Catalog_Layer_View
+ */
+?>
+<?php if ($this->canShowBlock()):
+    $parentCategory = '';
+    $parentCategoryPath = '';
+    $parentCategoryName = '';
+    $filterArray = array();
+    $brandInformationArray = array();
+    $brandPage = false;
+    $request = Mage::app()->getRequest();
+    $pathInfo = $request->getPathInfo();
+    $appliedFilters = $this->getLayer()->getState()->getFilters();
+    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+    ?>
+
+    <?php
+    // If we find the brands are coming then We store brand data array in this array variable.
+    if (strpos($pathInfo, 'brand/index/view') !== false || $pathInfo === 'shopby' || $pathInfo === 'brand') {
+        $brandId = (int)$request->getParam('id');
+        $brand = Mage::getModel('shopbybrand/brand')->load($brandId);
+
+        // We get only data from brand object.
+        $brandInformationArray = $brand->getData();
+
+        $brandAttribute = Mage::getModel('catalog/resource_eav_attribute')->load('manufacturer', 'attribute_code');
+        $brandName = $brandAttribute->getSource()->getOptionText($brand->getOptionId());
+
+        $head = $this->getLayout()->getBlock('head');
+        $head->setTitle($brandName);
+
+        $brand = explode('/', $currentUrl);
+
+        $brandPage = true;
+    }
+    ?>
+
+    <?php
+    if ($currentCategory = Mage::registry('current_category')):
+        if ($parentCategory = $currentCategory->getParentCategory()):
+            if ($parentCategory->getId() <= 2):
+                $parentCategoryName = $this->__('Home');
+                $parentCategoryPath = Mage::getBaseUrl();
+            else:
+                $parentCategoryName = $parentCategory->getName();
+                $parentCategoryPath = $parentCategory->getUrl();
+            endif;
+        endif;
+    endif;
+    ?>
+
+    <h2 class="sidebar_heading">
+        <span class="back_ico"></span>
+
+        <?php if ($parentCategory): ?>
+            <a href="<?php echo $parentCategoryPath; ?>"><?php echo $this->__('Back') . $this->__(' to ') . $parentCategoryName; ?></a>
+        <?php else: ?>
+            <a href="javascript:void(0)" onClick="window.history.back();"><?php echo $this->__('Back') ?></a>
+        <?php endif ?>
+    </h2>
+
+    <?php if ($landing = Mage::registry('amlanding_page')): ?>
+        <?php $pageId = $this->getRequest()->getParam('page_id', null); ?>
+        <?php $page = Mage::getModel('amlanding/page')->load($pageId); ?>
+        <?php $categoryCollection = Mage::getResourceModel('catalog/category_collection')
+            ->addAttributeToFilter('entity_id', array('in' => explode(',', $page->getCategory())))
+            ->addAttributeToSelect(array('is_active', 'name')); ?>
+
+        <dl id="filter_category" class="filter_cat_list">
+            <dt><?php  //echo $this->__($landing->getMetaTitle()) ?></dt>
+            <dd>
+                <ol>
+                    <?php foreach ($categoryCollection as $category): ?>
+                        <?php if ($category->getIsActive()): ?>
+                            <?php $styleAttribute = (isset($noChildrenCategoryId) && $category->getId() == $noChildrenCategoryId) ? 'style="font-weight: 900;"' : '' ?>
+                            <li>
+                                <?php
+                                $attributes = $page->getConditionsSerialized();
+                                $original_array = unserialize($attributes);
+                                $brand = array();
+                                $i = 0;
+                                $originalArrayConditions = $original_array['conditions'];
+                                if (is_array($originalArrayConditions) || is_object($originalArrayConditions) ) {
+                                    foreach ($originalArrayConditions as $condition):
+                                        if ($condition['attribute'] == 'manufacturer'):
+                                            $attr = Mage::getModel('catalog/resource_eav_attribute')->load(81)->setStoreId(1);
+                                            $brandName = $attr->getSource()->getOptionText($condition['value']);
+                                            $brandName = explode(" ", $brandName);
+                                            $brandName = implode("-", $brandName);
+                                            $brandName = strtolower($brandName);
+                                            $i = $i + 1;
+                                            $brand[$i] = $brandName;
+                                        endif;
+                                    endforeach;
+                                }
+                                $brand = implode("--", $brand);
+
+                                $appliedFilters = Mage::getSingleton('catalog/layer')->getState()->getFilters();
+
+                                if ($appliedFilters):
+                                    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+                                    $currentUrl = explode("/", $currentUrl);
+                                    $attributeFilters = end($currentUrl);
+
+                                    if ($attributeFilters == "" || $attributeFilters == "?dup=true" ):
+                                        array_pop($currentUrl);
+                                        $attributeFilters = end($currentUrl);
+                                    endif;
+
+
+                                    if ($brand):
+                                        $brandUrl = $brand . "--";
+                                    else:
+                                        $brandUrl = "";
+                                    endif;
+
+                                    if (substr($category->getUrl($category), -1) == '/'):
+                                        $childUrl = $category->getUrl($category) . $brandUrl . $attributeFilters;
+                                    else:
+                                        $childUrl = $category->getUrl($category) ."/" .$brandUrl . $attributeFilters;
+                                    endif;
+
+                                else:
+                                    if (substr($category->getUrl($category), -1) == '/'):
+                                        $childUrl = $category->getUrl($category) . $brand;
+                                    else:
+                                        $childUrl = $category->getUrl($category) . "/" . $brand;
+                                    endif;
+                                endif; ?>
+
+                                <?php $path_cat = $category->getPath();
+                                      $category_name = Mage::helper("progos_ccatalog/data")->getParentCategory($path_cat,$category); ?>
+
+
+                                <a href="<?php echo $childUrl ?>" <?php echo $styleAttribute ?>>
+                                    <?php echo $category_name; ?>
+                                    <span class="count" style="display:none"> (<?php echo $category->getProductCount() ?>)</span>
+                                </a>
+                            </li>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </ol>
+            </dd>
+        </dl>
+    <?php endif; ?>
+
+    <div class="block block-layered-nav <?php if (!$appliedFilters) echo 'block-layered-nav--no-filters' ?>">
+        <div class="old-block-title">
+            <?php echo $this->__('Refine By') ?>
+        </div>
+        <div class="block-content toggle-content">
+            <?php if ($this->canShowOptions()): ?>
+                <p class="block-subtitle block-subtitle--filter"><?php echo $this->__('Filter') ?></p>
+                <dl id="narrow-by-list">
+                    <?php foreach ($appliedFilters as $item): ?>
+                        <?php if ($item->getRemoveUrl()) $filterArray[$item->getName()] = $item->getRemoveUrl(); ?>
+                    <?php endforeach; ?>
+
+                    <?php foreach ($this->getFilters() as $filter): ?>
+                        <?php $filterName = $filter->getName(); ?>
+
+                        <dt class="filter_options <?php echo $filter->getBlockAlias(); ?>">
+                            <?php if ($filter->getBlockAlias() == 'category_filter' && $currentCategory) : ?>
+                                <?php echo $this->__($currentCategory->getName()); ?>
+                            <?php else: ?>
+                                <?php echo $this->__($filterName) ?>
+                            <?php endif; ?>
+                        </dt>
+
+                        <?php if (array_key_exists($filterName, $filterArray)): ?>
+                            <a class="clearFil" href="<?php echo $filterArray[$filterName] ?>">
+                                <?php echo $this->__('Clear') ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <dd class="collapse in">
+                            <?php echo $filter->getHtml() ?>
+                        </dd>
+                    <?php endforeach ?>
+
+                    <?php if ($brandPage): ?>
+                        <?php
+                        /* Check if Is show Information tab is enable for current Brand. */
+                        $storeId = Mage::app()->getStore()->getStoreId();
+                        $attributeValue = Mage::getModel('shopbybrand/brandvalue');//Load Brand Value Model
+                        $isShowInformationTab = $attributeValue->loadAttributeValue($brandInformationArray['brand_id'], $storeId, 'is_show_information_tab')->getData();
+                        ?>
+
+                        <?php if (!empty($isShowInformationTab['value']) && $isShowInformationTab['value'] == 1): ?>
+                            <?php
+                            $informationTitle = $attributeValue->loadAttributeValue($brandInformationArray['brand_id'], $storeId, 'information_title')->getData();
+                            $informationDescription = $attributeValue->loadAttributeValue($brandInformationArray['brand_id'], $storeId, 'information_description')->getData();
+
+                            /* If default value set for all store then It load the default store otherwise it get the store level data */
+                            if (empty($informationDescription)) {
+                                $informationDescription = (($brandInformationArray['information_description'] == '') ? 'Brand information does not exist.' : $brandInformationArray['information_description']);
+                            } else {
+                                $informationDescription = $informationDescription['value'];
+                            }
+
+                            if (empty($informationTitle)) {
+                                $informationTitle = (($brandInformationArray['information_title'] == '') ? 'Information' : $brandInformationArray['information_title']);
+                            } else {
+                                $informationTitle = $informationTitle['value'];
+                            }
+                            $informationTitle = (empty($informationTitle) ? 'Information' : $informationTitle);
+                            ?>
+                            <dt class="filter_options last even expanded" id="BrandInfo"><?php echo $this->__($informationTitle); ?></dt>
+                            <dd class="collapse in last odd" style="display: block;">
+                                <ol class="custom_scrollbar ">
+                                    <li class="main-information-block">
+                                        <div class="tab-desc-block"> <?php echo $this->__($informationDescription); ?></div>
+                                    </li>
+                                </ol>
+                            </dd>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?php if ($currentCategory = Mage::registry('current_category')): ?>
+                            <?php
+                            if ($currentCategory->getIsShowInformationTab()) {
+                                $informationDescription = (empty($currentCategory->getInformationDescription()) ? 'Brand information does not exist.' : $currentCategory->getInformationDescription());
+                                $informationTitle = (empty($currentCategory->getInformationTitle()) ? 'Information' : $currentCategory->getInformationTitle());
+                                ?>
+                                <dt class="filter_options last even expanded" id="BrandInfo"><?php echo $this->__($informationTitle); ?></dt>
+                                <dd class="collapse in last odd" style="display: block;">
+                                    <ol class="custom_scrollbar ">
+                                        <li class="main-information-block">
+                                            <div class="tab-desc-block"> <?php echo $this->__($informationDescription); ?></div>
+                                        </li>
+                                    </ol>
+                                </dd>
+                            <?php }
+                        endif ?>
+                    <?php endif ?>
+                </dl>
+
+                <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+            <?php endif ?>
+        </div>
+    </div>
+<?php endif; ?>

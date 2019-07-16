@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Progos_OrdersEdit
+ *
+ * @category    Progos
+ * @package     Progos_OrdersEdit
+ * @author      Touqeer Jalal <touqeer.jalal@progos.org>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+-->
+<layout>    
+    <adminhtml_sales_order_view>
+        <reference name="head">
+            <action method="addItem"><type>js</type><name>progos/orderedit/order_edit.js</name><params/><if/></action>
+        </reference>
+    </adminhtml_sales_order_view>
+</layout>

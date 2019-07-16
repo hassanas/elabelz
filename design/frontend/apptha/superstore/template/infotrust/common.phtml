@@ -1,0 +1,23 @@
+<?php
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user = 'Guest';
+$customerId = '';
+$customerSha256Email = '';
+$customerMd5Email = '';
+$loggedInStatus = 'Logged Out';
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $user = 'User';
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $customerId = $customer->getId();
+    $customerSha256Email = hash('sha256', $customer->getEmail());
+    $customerMd5Email = md5($customer->getEmail());
+    $loggedInStatus = 'Logged In';
+}
+
+$codeArray = explode('_', $store->getCode());
+$language = '';
+if (!empty($codeArray))
+    $language = strtoupper($codeArray[0]);
+?>

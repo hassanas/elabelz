@@ -1,0 +1,402 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/** @var Mage_Checkout_Block_Onepage_Billing $this */
+?>
+<?php //echo $this->getChildHtml('order.review', true, true);?>
+
+<form id="co-billing-form" action="">
+	<div class="fieldset billing-block">
+	
+	<?php if (!$this->isCustomerLoggedIn()): ?>
+	
+		<?php if( $this->getQuote()->isAllowedGuestCheckout() ): ?>
+			<ul class="form-list guest-or-register">
+				<?php if( $this->getQuote()->isAllowedGuestCheckout() ): ?>
+				<li class="control">
+					<input type="radio" name="checkout_method" id="login:guest" value="guest"<?php if($this->getQuote()->getCheckoutMethod()!=Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER): ?> checked="checked"<?php endif; ?> class="setMethod radio" /><label for="login:guest"><span></span><?php
+					 echo $this->__('Checkout as Guest') ?></label>
+				</li>
+				<?php endif; ?>
+				<?php if( $this->helper('customer')->isRegistrationAllowed() ): ?>
+				<li class="control">
+					<input type="radio" name="checkout_method" id="login:register" value="register"<?php if($this->getQuote()->getCheckoutMethod()==Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER || !$this->getQuote()->isAllowedGuestCheckout()): ?> checked="checked"<?php endif ?> class="setMethod radio" />
+					<label for="login:register"><span></span><?php echo $this->__('Register and Checkout') ?></label>
+				</li>
+				<?php endif; ?>
+			</ul>
+		<?php else: ?>
+			<input type="hidden" name="checkout_method" id="login:register" value="register" checked="checked" />
+		<?php endif; ?>
+	
+	<?php endif; ?>
+	
+		<!--<p class="required"><?php
+     echo $this->__('* Required Fields') ?></p>-->
+		<ul class="form-list">
+			<?php
+    /**
+     * Check the customer has address
+     * if so display the address to select as billing address
+     */
+    if ($this->customerHasAddresses()): ?>
+			<li class="wide" style="width:500px;">
+				<label for="billing-address-select"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
+				<div class="input-box">
+					<?php echo $this->getAddressesHtmlSelect('billing') ?>
+				</div>
+			</li>
+			<?php endif; ?>
+			<li id="billing-new-address-form"<?php if ($this->customerHasAddresses()): ?> style="display:none;"<?php endif; ?> class="scaffold-form">
+				<div class="fieldset">
+					<input type="hidden" name="billing[address_id]" value="<?php echo $this->getAddress()->getId() ?>" id="billing:address_id" />
+					<ul>
+						<li class="fields"><?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setForceUseCustomerRequiredAttributes(!$this->isCustomerLoggedIn())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
+						
+						<!--
+                 * Display Country information
+                 -->
+						<li class="fields b_country_field">
+							<div class="field hidden">
+								<label for="billing:postcode"><?php echo $this->__('Postal Code/Zip') ?></label>
+								<div class="input-box">
+									<input type="text" title="<?php echo $this->__('Postal Code/Zip') ?>" name="billing[postcode]" id="billing:postcode" value="<?php
+                             echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international <?php
+                             /**
+                              * Display the customer address postal code
+                              */
+                             echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" />
+								</div>
+							</div>
+							<div class="field">
+								<label for="billing:country_id" class="required"><em>*</em><?php echo $this->__('Country') ?></label>
+								<div class="input-box">
+									<?php echo $this->getCountryHtmlSelect('billing') ?>
+								</div>
+							</div>
+						</li>
+						<!--
+                 * Display city information
+                 -->
+						<li class="fields b_city_field">
+							<div class="field ">
+								<label for="billing:city" class="required"><em>*</em><?php echo $this->__('City') ?></label>
+								<div class="input-box">
+									<input type="text"
+                             title="<?php echo $this->__('City') ?>" 
+                             name="billing[city]" value="<?php
+                             echo $this->escapeHtml($this->getAddress()->getCity()) ?>" 
+                             class="input-text <?php
+                              echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="billing:city" />
+								</div>
+							</div>
+							<div class="field hidden">
+								<label for="billing:region_id">
+									<?php echo $this->__('State/Province') ?></label>
+								<div class="input-box">
+									<select
+                             id="billing:region_id"
+                              name="billing[region_id]" 
+                              title="<?php echo $this->__('State/Province') ?>"
+                               class="validate-select" style="display:none;">
+										<option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+									</select>
+									<script type="text/javascript">
+                            //<![CDATA[
+                                $('billing:region_id').setAttribute('defaultValue',  "<?php echo $this->getAddress()->getRegionId() ?>");
+                            //]]>
+                            </script>
+									<input type="text" 
+                            id="billing:region" 
+                            name="billing[region]" 
+                            value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>" 
+                             title="<?php
+                            /**
+                             * Display customer state
+                             */
+                            echo $this->__('State/Province') ?>" class="input-text <?php
+                            /**
+                             * Display customer region
+                             */
+                              echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" style="display:none;" />
+								</div>
+							</div>
+						</li>
+						<?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+						<li class="wide-test">
+							<label for="billing:street1" class="required"><em>*</em><?php echo $this->__('Address') ?></label>
+							<div class="input-box">
+								<input type="text" title="<?php echo $this->__('Street Address') ?>" name="billing[street][]" id="billing:street1" value="<?php
+                         echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>" class="input-text <?php
+                          echo $_streetValidationClass ?>" />
+							</div>
+						</li>
+						<?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+						<?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+						<li class="hidden">
+							<label for="billing:street<?php echo $_i ?>">
+								<?php
+                     echo $this->__('Street Address %s', $_i) ?>
+							</label>
+							<div class="input-box">
+								<input type="text" title="<?php echo $this->__('Street Address %s', $_i) ?>" name="billing[street][]" id="billing:street<?php
+                         echo $_i ?>" value="<?php
+                          echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>" class="input-text <?php
+                           echo $_streetValidationClass ?>" />
+							</div>
+						</li>
+						<?php endfor; ?>
+						<?php 
+                /**
+                 * Check the vat attribute of customer address is visible
+                 * if so display vat number
+                 */
+                if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+						<li class="wide">
+							<label for="billing:vat_id"><?php echo $this->__('VAT Number') ?></label>
+							<div class="input-box">
+								<input type="text" id="billing:vat_id" name="billing[vat_id]" value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()) ?>" title="<?php
+                         echo $this->__('VAT Number') ?>" class="input-text <?php
+                          echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>" />
+							</div>
+						</li>
+						<?php endif; ?>
+						<li class="fields b_email_field">
+							<div class="field hidden">
+								<label for="billing:company"><?php echo $this->__('Company') ?></label>
+								<div class="input-box">
+									<input type="text" id="billing:company" name="billing[company]" value="<?php echo $this->escapeHtml($this->getAddress()->getCompany()) ?>" title="<?php
+                             echo $this->__('Company') ?>" class="input-text <?php
+                              echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+								</div>
+							</div>
+							<?php 
+        /**
+         * Check the customer is not logged in
+         * if so display email address field
+         */
+        if(!$this->isCustomerLoggedIn()): ?>
+							<div class="field">
+								<label for="billing:email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+								<div class="input-box">
+									<input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="billing[email]" id="billing:email" value="<?php echo $this->escapeHtml($this->getAddress()->getEmail()) ?>" title="<?php
+                             echo $this->__('Email Address') ?>" class="input-text validate-email required-entry" />
+								</div>
+							</div>
+							<?php endif; ?>
+						</li>
+						<li class="fields b_phone_no">
+							<div class="field">
+								<label for="billing:telephone" class="required"><em>*</em><?php echo $this->__('Phone number') ?></label>
+								<div class="input-box">
+									<input type="tel" name="billing[telephone]" value="<?php echo $this->escapeHtml($this->getAddress()->getTelephone()) ?>" title="<?php
+                            /**
+                             * Display the customer telephone details
+                             */
+                            echo $this->__('Phone number') ?>" class="input-text <?php
+                              echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" id="billing:telephone" />
+								</div>
+							</div>
+							<div class="field hidden">
+								<label for="billing:fax"><?php echo $this->__('Fax') ?></label>
+								<div class="input-box">
+									<input type="tel" name="billing[fax]" value="<?php echo $this->escapeHtml($this->getAddress()->getFax()) ?>" title="<?php
+                             echo $this->__('Fax') ?>" class="input-text <?php
+                             /**
+                              * Display customer fax information
+                              */
+                             echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" id="billing:fax" />
+								</div>
+							</div>
+						</li>
+						<?php 
+                /**
+                 * Confirming the customer is not logged in
+                 */
+                if(!$this->isCustomerLoggedIn()): ?>
+						<?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+						<?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+						<?php 
+            /**
+             * Check the customer dob is enabled
+             * or customer gender is enabled
+             */
+            if ($_dob->isEnabled() || $_gender->isEnabled()): ?>
+						<li class="fields">
+							<?php 
+                /**
+                 * Check the customer dob is enabled
+                 */
+                if ($_dob->isEnabled()): ?>
+							<div class="field">
+								<?php echo $_dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+							</div>
+							<?php endif; ?>
+							<?php 
+                /**
+                 * Check the customer gender is enabled
+                 */
+                if ($_gender->isEnabled()): ?>
+							<div class="field">
+								<?php echo $_gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+							</div>
+							<?php endif ?>
+						</li>
+						<?php endif ?>
+						<?php 
+            /**
+             * Check the customer tax vat is enabled
+             */
+            if ($this->isTaxvatEnabled()):?>
+						<li><?php echo $this->getTaxvatHtml() ?></li>
+						<?php endif; ?>
+						<li class="fields" id="register-customer-password">
+							<div class="field">
+								<label for="billing:customer_password" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+								<div class="input-box">
+									<input type="password" name="billing[customer_password]" id="billing:customer_password" title="<?php
+                            /**
+                             * Display the user password
+                             */
+                            echo $this->__('Password') ?>" class="input-text required-entry validate-password" />
+								</div>
+							</div>
+							<div class="field">
+								<label for="billing:confirm_password" class="required"><em>*</em><?php echo $this->__('Confirm Password') ?></label>
+								<div class="input-box">
+									<input type="password" name="billing[confirm_password]" title="<?php echo $this->__('Confirm Password') ?>" id="billing:confirm_password" class="input-text required-entry validate-cpassword" />
+								</div>
+							</div>
+						</li>
+						<?php echo $this->getChildHtml('persistent.remember.me'); ?>
+						<?php endif; ?>
+						<?php 
+                /**
+                 * Check the customer is logged in
+                 * and customer has atleast one address
+                 * if so display option as save in address book
+                 */
+                if ($this->isCustomerLoggedIn() && $this->customerHasAddresses()):?>
+						<li class="control">
+							<input type="checkbox" name="billing[save_in_address_book]" value="1" title="<?php echo $this->__('Save in address book') ?>" id="billing:save_in_address_book" onchange="if(window.shipping) shipping.setSameAsBilling(false);"<?php
+                         if ($this->getAddress()->getSaveInAddressBook()):
+                         ?> checked="checked"<?php
+                          endif;?> class="checkbox" />
+							<label for="billing:save_in_address_book">
+								<?php
+                           echo $this->__('Save in address book') ?>
+							</label>
+						</li>
+						<?php else:?>
+						<li class="no-display">
+							<input type="hidden" name="billing[save_in_address_book]" value="1" />
+						</li>
+						<?php endif; ?>
+						<?php echo $this->getChildHtml('form.additional.info'); ?>
+					</ul>
+					<?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+				</div>
+			</li>
+			<?php 
+    /**
+     * Check the shipping can be done
+     */
+    if ($this->canShip()): ?>
+			<li class="control shipping_radio1">
+				<input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_yes" value="1"<?php if ($this->isUseBillingAddressForShipping()) {
+            ?> checked="checked"<?php 
+}?> title="<?php
+ echo  $this->__('Ship to this address') ?>" onclick="$('shipping:same_as_billing').checked = true;" class="radio" />
+				<label for="billing:use_for_shipping_yes">
+					<span>
+					</span>
+					<?php
+  echo  $this->__('Ship to this address') ?>
+				</label>
+			</li>
+			<li class="control shipping_radio2">
+				<input type="radio" name="billing[use_for_shipping]" id="billing:use_for_shipping_no" value="0"<?php
+            /**
+             * Check the current billing address is not set as use for shipping
+             * if so display option as ship to different address
+             */
+             if (!$this->isUseBillingAddressForShipping()) {
+             ?> checked="checked"<?php 
+}?> title="<?php
+ echo $this->__('Ship to different address') ?>" onclick="$('shipping:same_as_billing').checked = false;" class="radio" />
+				<label for="billing:use_for_shipping_no">
+					<span>
+					</span>
+					<?php
+  echo $this->__('Ship to different address') ?>
+				</label>
+			</li>
+			<?php endif; ?>
+		</ul>
+		<?php 
+    /**
+     * Check ship can not be done
+     * if so showing next steps
+     */
+    if (!$this->canShip()): ?>
+		<input type="hidden" name="billing[use_for_shipping]" value="1" />
+		<?php endif; ?>
+		<div class="buttons-set" id="billing-buttons-container">
+			<button type="button" title="<?php echo $this->__('Continue') ?>" class="button" onclick="billing.save()">
+			<span>
+			<span>
+			<?php echo $this->__('Continue') ?>
+			</span>
+			</span>
+			</button>
+			<span class="please-wait" id="billing-please-wait" style="display:none;">
+			<img src='<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>' onerror='this.onerror=null; this.src=\"<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>\"' alt="<?php echo $this->__('Loading next step...') ?>" title="<?php echo $this->__('Loading next step...') ?>" class="v-middle" /> <?php echo $this->__('Loading next step...') ?>
+			</span>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var billing = new Billing('co-billing-form', '<?php echo $this->getUrl('checkout/onepage/getAddress') ?>address/', '<?php
+     echo $this->getUrl('checkout/onepage/saveBilling') ?>');
+    var billingForm = new VarienForm('co-billing-form');
+
+    $('billing-address-select') && billing.newAddress(!$('billing-address-select').value);
+
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
+    if ($('onepage-guest-register-button')) {
+        Event.observe($('onepage-guest-register-button'), 'click', function(event) {
+            var billingRememberMe = $('co-billing-form').select('#remember-me-box');
+            if (billingRememberMe.length > 0) {
+                if ($('login:guest') && $('login:guest').checked) {
+                    billingRememberMe[0].hide();
+                } else if ($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
+                    billingRememberMe[0].show();
+                }
+            }
+        });
+    }
+//]]>
+</script>

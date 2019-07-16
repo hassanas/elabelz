@@ -1,0 +1,96 @@
+<config>
+ 
+
+	<sections>
+		<catalog>
+			<groups>
+				<simpleseo translate="label">
+					<label>Simple Seo</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>50</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<simpleseo_enable translate="label comment">
+							<label>Enable: </label>
+							<frontend_type>select</frontend_type>
+							<source_model>
+								adminhtml/system_config_source_yesno
+							</source_model>
+							<sort_order>0</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>							
+						</simpleseo_enable>
+						
+						<category_meta_title translate="label">
+							<label>Category Meta Title Forumla
+							</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</category_meta_title>
+						 <category_meta_keyword translate="label">
+							<label>Caegory Meta Keyword Forumla
+							</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</category_meta_keyword>
+						 <category_meta_description translate="label">
+							<label>Category Meta Description Forumla
+							</label>
+							<frontend_type>textarea</frontend_type>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</category_meta_description>
+						
+						
+						<product_meta_title translate="label">
+							<label>Products Meta Title Forumla
+							</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</product_meta_title>
+						 <product_meta_keyword translate="label">
+							<label>Products Meta Keyword Forumla
+							</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</product_meta_keyword>
+						 <product_meta_description translate="label">
+							<label>Products Meta Description Forumla
+							</label>
+							<frontend_type>textarea</frontend_type>
+							<sort_order>6</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</product_meta_description>
+						 
+						  
+						  
+					</fields>
+				</simpleseo>
+			</groups>
+			 
+		</catalog>
+		
+		 
+		
+		
+	</sections>
+</config>

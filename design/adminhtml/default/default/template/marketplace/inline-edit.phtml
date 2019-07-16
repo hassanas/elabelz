@@ -1,0 +1,110 @@
+<script type="text/javascript">
+function updateItemStatus(fieldId,marketplace_id,order_id)
+{
+   var select = jQuery(fieldId).attr('id');
+   var value = document.getElementById(select).value; 
+   if(value == "Yes"){
+      var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_orderitems/confirm_seller', array('_secure'=>true)) ?>";
+   }
+   else if(value == "Rejected"){
+       var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_orderitems/reject_seller', array('_secure'=>true)) ?>";
+   }
+   else if(value == "No"){
+       var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_orderitems/status', array('_secure'=>true)) ?>";
+   }
+   new Ajax.Request(url, 
+    {
+      method:'post',
+      parameters: {"id":marketplace_id,"path":"logistics_master","order_id":order_id,"status":"rsc"},
+      onComplete:function(request, json) {                            
+           var html = '<ul class="messages"><li class="success-msg"><ul><li>Logistics Grid is successfully updated</li></ul></li></ul>';
+           $('messages').update(html);
+           if( value == "Rejected"){
+            jQuery("table#logisticsGrid_table td div."+select+"_div").html("<p>Out of Stock</p>")
+           }
+       }
+    });
+   
+}
+
+function updateShipStatus(fieldId,incremenid,product_id)
+{
+   var select = jQuery(fieldId).attr('id');
+   var value = document.getElementById(select).value;
+   var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/saveShipStatus', array('_secure'=>true)) ?>";
+   new Ajax.Request(url, 
+    {
+      method:'post',
+      parameters: {"shipStatus":value,"increment_id":incremenid,"product_id":product_id},
+      onComplete:function(request, json) {                            
+           var html = '<ul class="messages"><li class="success-msg"><ul><li>Logistics Grid is successfully updated</li></ul></li></ul>';
+           $('messages').update(html);
+       }
+    });
+   
+}
+
+function updateSellerStatus(fieldId,itemid)
+{
+   var select = jQuery(fieldId).attr('id');
+   var value = document.getElementById(select).value;
+   var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/saveSellerStatus', array('_secure'=>true)) ?>";
+   new Ajax.Request(url, 
+    {
+      method:'post',
+      parameters: {"sellerStatus":value,"itemid":itemid},
+      onComplete:function(request, json) {                            
+           var html = '<ul class="messages"><li class="success-msg"><ul><li>Logistics Grid is successfully updated</li></ul></li></ul>';
+           $('messages').update(html);
+       }
+    });
+   
+}
+
+function acceptOrder(fieldId,order_id)
+{
+
+    var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/saveBuyerConfirmation', array('_secure'=>true)) ?>";
+    new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {"orderId":order_id},
+            onComplete:function(request, json) {
+                if(request.responseText == 0){
+                    var html = '<ul class="messages"><li class="error-msg"><ul><li>This Order has status canceled or all its items are already accepted or rejected</li></ul></li></ul>';
+                    $('messages').update(html);
+                }
+                else if(request.responseText == 1)
+                {
+                    var html = '<ul class="messages"><li class="success-msg"><ul><li>Order Items are Updated</li></ul></li></ul>';
+                    $('messages').update(html);
+                }
+            }
+        });
+
+}
+
+function openPopupForm(url,fieldId,incremenid,product_id){
+
+  var win = new Window({
+      className:'magento',
+      title:'Comments',
+      url:url,
+      width:970,
+      height:400,
+      minimizable:false,
+      maximizable:false,
+      showEffectOptions: {duration:0.4},
+      hideEffectOptions:{duration:0.4},
+      onClose:function (param, el) {
+            submitAndReloadArea($('html-body'), '<?php echo Mage::helper("core/url")->getCurrentUrl(); ?>') ;              
+          var html = '<ul class="messages"><li class="success-msg"><ul><li>Logistics Grid is successfully updated</li></ul></li></ul>';
+            $('messages').update(html);
+      }
+  });
+  win.setZIndex(100);
+  win.showCenter(true);
+}
+
+</script>
+<div class="values"></div>

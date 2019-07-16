@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the SafeMageEULA that is bundled with this package in the file LICENSE.txt.
+
+It is also available at this URL: http://www.safemage.com/LICENSE_EULA.txt
+
+Copyright (c)  SafeMage (http://www.safemage.com/)
+-->
+<config>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <safemage_extensions translate="title" module="safemage_extensions">
+                                        <title>SafeMage Extensions &amp; Contact</title>
+                                        <sort_order>9999</sort_order>
+                                    </safemage_extensions>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

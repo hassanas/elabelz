@@ -1,0 +1,161 @@
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+?>
+
+<?php $_item = $this->getItem()?>
+<?php
+$simpleProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+if( $simpleProduct )
+    $productImage = $simpleProduct;
+else
+    $productImage = $_item->getProduct();
+?>
+<tr>
+    <td class="img"><img class="img-responsive" src="<?php echo (string)Mage::helper('catalog/image')->init($productImage, 'small_image')->keepFrame(false)->constrainOnly(true)->resize(400); ?>" alt="<?php echo $this->htmlEscape($this->getProductName()) ?>"></td>
+    <td class="product-attr">
+        <h3 class="product-name"><?php echo $this->htmlEscape($this->getProductName()) ?></h3>
+        <?php if ($_options = $this->getOptionList()):?>
+        <dl class="item-options">
+            <?php foreach ($_options as $_option) : ?>
+            <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+            <dt><?php echo $this->__($this->htmlEscape($_option['label'])) ?></dt>
+            <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>><?php echo $this->__($_formatedOptionValue['value']) ?>
+                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                <div class="truncated_full_value">
+                    <dl class="item-options">
+                        <dt><?php echo $this->__($this->htmlEscape($_option['label'])) ?></dt>
+                        <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                    </dl>
+                </div>
+                <?php endif; ?>
+            </dd>
+            <?php endforeach; ?>
+        </dl>
+        <?php endif;?>
+        <div><?php echo $this->__('Qty'); ?>: <?php echo $_item->getQty() ?></div>
+        <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+            <span class="cart-tax-total" onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+        <?php else: ?>
+            <span class="cart-price">
+        <?php endif; ?>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?>
+
+            <?php else: ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()) ?>
+
+            <?php endif; ?>
+
+        </span>
+        <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+            <div class="cart-tax-info" id="esubtotal-item-tax-details<?php echo $_item->getId(); ?>" style="display:none;">
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>:
+
+                        <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                        <br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></small></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                        <br />
+                    <?php endforeach; ?>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                        <br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <div class="cart-tax-total" onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+                    <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br />
+
+                    <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?></span>
+                    <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+        <?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
+        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+            <span class="cart-tax-total" onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+        <?php else: ?>
+            <span class="cart-price">
+        <?php endif; ?>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+
+                <?php echo $this->helper('checkout')->formatPrice($_incl+$_item->getWeeeTaxAppliedRowAmount()); ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+            <?php else: ?>
+
+                <?php echo $this->helper('checkout')->formatPrice($_incl-$_item->getWeeeTaxRowDisposition()) ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+            <?php endif; ?>
+
+        </span>
+
+
+        <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+            <div class="cart-tax-info" id="subtotal-item-tax-details<?php echo $_item->getId(); ?>" style="display:none;">
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>:
+
+                        <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                        <br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><small><?php echo $tax['title']; ?>:
+
+                        <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></small></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                        <br />
+                    <?php endforeach; ?>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>:
+
+                        <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span>
+                        <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span><br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <div class="cart-tax-total" onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+                    <span class="nobr"><?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:<br />
+                    <?php echo $this->helper('checkout')->formatPrice($_incl+$_item->getWeeeTaxAppliedRowAmount()); ?></span>
+                    <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    </td>
+</tr>

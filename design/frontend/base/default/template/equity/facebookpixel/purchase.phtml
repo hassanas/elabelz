@@ -1,0 +1,11 @@
+<!-- Equity Facebook Pixel for Magento -->
+<script>
+fbq('track','Purchase', {
+	value: '<?php echo $this->getOrderAmount(); ?>', 
+	currency: '<?php echo $this->getStoreCurrency(); ?>',
+	content_ids: [<?php echo $this->getOrderIDs() ?>],
+  	content_type: 'product',
+    num_items: <?php echo $this->getOrderItemsCount(); ?>
+});
+</script>
+<!-- Equity Facebook Pixel for Magento -->

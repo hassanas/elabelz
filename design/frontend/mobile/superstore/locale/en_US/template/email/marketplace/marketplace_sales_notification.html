@@ -1,0 +1,31 @@
+<!--@subject Sales Orderid - #{{var order_id}}   @-->
+
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"htmlescape var=$customer.name":"Customer Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var customer.email":"Customer Email",
+"htmlescape var=$customer.password":"Customer Password"}
+@-->
+
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+{{template config_path="design/email/header"}}
+                <!-- [ middle starts here] -->
+                    <tr>
+                    <td valign="top">
+                    <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;">
+                        <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">Hi {{var ownername}},<br/><br/>
+                            Kindly check out the details on the latest product[s] purchased.<br/><br/>
+                             <a href="{{store direct_url='marketplace/seller/login/'}}" style="margin:0 0 10px;">View The Order</a><br/><br/>
+                            Customer Name: {{var customer_firstname}} <br/>
+                            Email id: {{var customer_email}}<br/>
+                        </p>
+                          {{var productdetails}}
+                        </div>
+                    </td>
+                </tr>
+{{template config_path="design/email/footer"}}

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <saleproductscategories_adminhtml_onsale_onsale>
+	<reference name="content">
+	  <block type="saleproductscategories/adminhtml_onsale" name="onsale" />
+	</reference>
+  </saleproductscategories_adminhtml_onsale_onsale>
+	<saleproductscategories_adminhtml_onsale_expired>
+	<reference name="content">
+	  <block type="saleproductscategories/adminhtml_expired" name="expired" />
+	</reference>
+  </saleproductscategories_adminhtml_onsale_expired>
+</layout>

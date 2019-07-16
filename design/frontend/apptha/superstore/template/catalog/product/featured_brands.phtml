@@ -1,0 +1,53 @@
+<?php 
+$store = Mage::app()->getStore()->getId();
+$categoryId = $this->getRequest()->getParam('category');
+
+$storeId = Mage::app()->getStore()->getId();
+
+
+$show_brands_featured = Mage::getStoreConfig('shopbybrand/brand_list/display_featured_brand', $store);
+$logo_width = Mage::getStoreConfig('shopbybrand/brand_list/brand_logo_width',$store);
+$logo_height = Mage::getStoreConfig('shopbybrand/brand_list/brand_logo_height',$store);
+$getBrands = Mage::getResourceModel('shopbybrand/brand_collection')
+                ->setStoreId($storeId)
+                ->setOrder('position_brand','DESC')
+                ->setOrder('name','ASC')
+                ->addFieldToFilter('is_featured', array('eq' => 1))
+                ->addFieldToFilter('status', array('eq' => 1));
+
+$brands = [];
+$temp = [];
+$base = Mage::getBaseUrl('media');
+//echo  '<pre>'; print_r($getBrands); echo  '</pre>';
+
+foreach ($getBrands as $row) {
+    $temp["id"] = $row->getId();
+    $temp["name"] = $row->getName();
+	$temp["url"] = $row->getUrl_key();
+    $temp["image"] = $base . 'brands/thumbnail/' . $row->getId() . '/' . $row->getThumbnailImage();
+    $brands[] = $temp;
+}
+?>
+
+<section class="module_grid" style="padding: 32px 0px 32px 10px; width: 979px; margin: 0 auto;">
+<div class="logo_scroller" style="margin-top: 1px;">
+<div class="jcarousel top_brands">
+<ul>
+
+<?php
+if ($show_brands_featured):
+    foreach ($brands as $brand):
+?>
+    <li>
+        <a title="<?php echo $brand['name'] ?>" href="<?php echo $brand['url'] ?>">
+            <img src="<?php echo $brand['image'] ?>" style="width:100%; height: auto;" width="<?php echo $logo_width ?>" height="<?php echo $logo_height ?>" title="<?php echo $brand['name'] ?>" alt="<?php echo $brand['name'] ?>" />
+        </a>
+    </li>
+<?php
+    endforeach;
+endif;
+?>
+</ul>
+</div>
+</div>
+</section>

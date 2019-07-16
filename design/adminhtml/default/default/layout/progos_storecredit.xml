@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout>
+<adminhtml_sales_order_view>
+    <reference name="order_totals">
+        <block type="core/template" template="progos/storecredit/Storecredit_form.phtml" />
+    </reference>
+</adminhtml_sales_order_view>
+</layout>

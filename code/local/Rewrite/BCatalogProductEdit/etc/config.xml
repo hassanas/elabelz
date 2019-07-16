@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Rewrite_BCatalogProductEdit>
+            <version>1.0</version>
+        </Rewrite_BCatalogProductEdit>
+    </modules>
+    <global>
+        <blocks>
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_edit>Rewrite_BCatalogProductEdit_Block_Adminhtml_Catalog_Product_Edit</catalog_product_edit>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+    </global>
+</config>

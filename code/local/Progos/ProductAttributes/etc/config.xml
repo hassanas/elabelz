@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_ProductAttributes>
+            <version>0.1.2</version>
+        </Progos_ProductAttributes>
+    </modules>
+    <global>
+        <helpers>
+            <productattributes>
+                <class>Progos_ProductAttributes_Helper</class>
+            </productattributes>
+        </helpers>
+        <resources>
+            <productattributes_setup>
+                <setup>
+                    <module>Progos_ProductAttributes</module>
+                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </productattributes_setup>
+            <productattributes_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </productattributes_write>
+            <productattributes_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </productattributes_read>
+        </resources>
+    </global>
+</config> 

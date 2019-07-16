@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <sku_vault translate="label" module="progos_skuvault">
+            <label>Skuvault</label>
+            <sort_order>100</sort_order>
+        </sku_vault>
+    </tabs>
+    <sections>
+        <sku_vault_general  translate="label" module="progos_skuvault">
+            <label>General</label>
+            <tab>sku_vault</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>0</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <sku_vault_settings translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <sku_vault_skuvault_email translate="label">
+                            <label>Skuvault Email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Account User Email</comment>
+                        </sku_vault_skuvault_email>
+                        <sku_vault_skuvault_password translate="label">
+                            <label>Password</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Account User Password</comment>
+                        </sku_vault_skuvault_password>
+                        <skuvault_save_sync_qty translate="label">
+                            <label>Save Sync Qty</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </skuvault_save_sync_qty>
+                        <skuvault_tenanttoken translate="label">
+                            <label>Tenant Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </skuvault_tenanttoken>
+                        <skuvault_usertoken translate="label">
+                            <label>User Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </skuvault_usertoken>
+                        <skuvault_item_qty_per_page translate="label">
+                            <label>Items Qty Per Page</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </skuvault_item_qty_per_page>
+                        <skuvault_item_page_start translate="label">
+                            <label>Items Page Start Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </skuvault_item_page_start>
+                        <skuvault_warehouse_id translate="label">
+                            <label>Warehouse Id</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </skuvault_warehouse_id>
+                        <skuvault_update_type translate="label">
+                            <label>Update Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>progos_skuvault/system_config_source_updatetype</source_model>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </skuvault_update_type>
+                    </fields>
+                </sku_vault_settings>
+                <skuvault_statuses>
+
+                    <label>Skuvault Order Status</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+
+                    <fields>
+                        <order_include translate="label">
+                            <label>Include Order Status</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add comma separated order status(order_status) count</comment>
+                        </order_include>
+                        <order_exclude translate="label">
+                            <label>Exclude Order Status</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add comma separated item order status(order_status) count.</comment>
+                        </order_exclude>
+                        <file_name translate="label">
+                            <label>Export CSV file name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add your file name which will be parsed and update the status in magento from skuvault</comment>
+                        </file_name>
+                        <inventry_type translate="label">
+                            <label>Inventry Type ID </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add inventry Type id In-House to match the products</comment>
+                        </inventry_type>
+                        <warehouse_code>
+                            <label>Warehouse Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Warehouse Code</comment>
+                        </warehouse_code>
+                        <item_include translate="label">
+                            <label>Include Item Status</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add comma separated item status count</comment>
+                        </item_include>
+                        <item_exclude translate="label">
+                            <label>Exclude Item Status</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add comma separated item status count.</comment>
+                        </item_exclude>
+                        <last_script_execution_time>
+                            <label>Last Api Execution Time From</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Time of last(From) script run as per utc. ie. 2018-02-08T10:00:00.0000000Z</comment>
+                        </last_script_execution_time>
+                        <last_script_execution_time_to>
+                            <label>Last Api Execution Time To</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add to time. If empty then its get current time ie. 2018-02-08T10:00:00.0000000Z</comment>
+                        </last_script_execution_time_to>
+                        <syncqty_button translate="label">
+                            <label>Run Script</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>Progos_Skuvault_Block_Adminhtml_System_Config_Form_Buttonqtysync</frontend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </syncqty_button>
+                        <syncqtysku>
+                            <label>SKU</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Pass , seperated skus to sync qty.</comment>
+                        </syncqtysku>
+                        <syncqtyskubased_button translate="label">
+                            <label>Run Script</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>Progos_Skuvault_Block_Adminhtml_System_Config_Form_ButtonqtysyncSkuBased</frontend_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </syncqtyskubased_button>
+                        <inventry_type_attriubte_id translate="label">
+                            <label>Inventry Type Attribute ID </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Add inventry Type id In-House to match the products</comment>
+                        </inventry_type_attriubte_id>
+                        <include_mage_items translate="label">
+                            <label>Include Magento Modified Items</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <comment>If yes then it will also include items which are last modified in magento catalog.</comment>
+                        </include_mage_items>
+                    </fields>
+                </skuvault_statuses>
+                <skuvault_product_code>
+                    <label>Skuvault Product Code</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <addcode_enable translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addcode_enable>
+                        <addcode_beginning translate="label">
+                            <label>Add Skuvault Code from Beginning</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addcode_beginning>
+                        <addcode_pagenumber translate="label">
+                            <label>Api Page Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addcode_pagenumber>
+                        <addcode_perpagerecord translate="label">
+                            <label>Api Record Per Page</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addcode_perpagerecord>
+                        <addcode_apply translate="label">
+                            <label>Run Script</label>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>Progos_Skuvault_Block_Adminhtml_System_Config_Form_Button</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addcode_apply>
+                    </fields>
+                </skuvault_product_code>
+            </groups>
+        </sku_vault_general>
+    </sections>
+</config>

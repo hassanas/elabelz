@@ -1,0 +1,361 @@
+<config>
+    <sections>
+        <api>
+            <groups>
+                <emapi translate="label" module="sales">
+                    <label>Elabelz Mobile API (EMAPI) Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>250</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <v1_field translate="label">
+                            <label>Soap API V1 URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </v1_field>
+                        <v2_field translate="label">
+                            <label>Soap API V2 URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </v2_field>
+                        <apiuser_field translate="label">
+                            <label>Soap API User</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </apiuser_field>
+                        <apikey_field translate="label">
+                            <label>Soap API Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </apikey_field>
+                        <authuser_field translate="label">
+                            <label>Authentication Username</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </authuser_field>
+                        <authpass_field translate="label">
+                            <label>Authentication Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </authpass_field>
+                        <setShippingAddress translate="label">
+                            <label>Set Shipping Address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>540</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </setShippingAddress>
+                        <addCustomerAddress translate="label">
+                            <label>Add Customer Address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>541</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </addCustomerAddress>
+                        <getPaymentShipment translate="label">
+                            <label>Get Payment and Shipping Methods</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>545</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </getPaymentShipment>
+                        <enableCachedPaymentShipment translate="label">
+                            <label>Enable Cache for Payment and Shipment Methods</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>546</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enableCachedPaymentShipment>
+                        <getCustomerAddress translate="label">
+                            <label>Enable Soapless Get Customer Address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>547</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </getCustomerAddress>
+                        <applyCoupon translate="label">
+                            <label>Apply Coupon</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>550</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </applyCoupon>
+                        <soaplessAddressUpdate translate="label">
+                            <label>Enable soapless call for address update</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>793</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </soaplessAddressUpdate>
+                        <soaplessAddressDelete translate="label">
+                            <label>Enable soapless call for address delete</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>794</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </soaplessAddressDelete>
+                        <checkout translate="label">
+                            <label>Enable Soapless Checkout</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>(If set to yes, it will enable soapless checkout)</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>560</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </checkout>
+                        <enableNewCheckout translate="label">
+                            <label>Enable New Checkout</label>
+                            <comment>(If set to yes, it will enable new checkout system with custom orders table)
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>561</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enableNewCheckout>
+                        <delay translate="label">
+                            <label>delay to fix 0 total issue</label>
+                            <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>562</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </delay>
+                        <coupondelay translate="label">
+                            <label>delay before applying coupon</label>
+                            <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>740</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupondelay>
+                        <getpaymentlist translate="label">
+                            <label>delay before Payment List</label>
+                            <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>760</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </getpaymentlist>
+                        <checkoutDelay translate="label">
+                            <label>Delay before placing order</label>
+                            <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>770</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </checkoutDelay>
+                        <filterLogs translate="label">
+                            <label>Enable Logs for filters</label>
+                            <comment>(If set to yes, it will enable the logs for filters)
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>562</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </filterLogs>
+                        <enableRetries translate="label">
+                            <label>Enable Retries in Cron</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>775</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enableRetries>
+                        <numberRetries translate="label">
+                            <label>Number of retries</label>
+                            <comment>(Default value for retries is 6)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>776</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </numberRetries>
+                        <cdn_url translate="label">
+                            <label>CDN URL to use</label>
+                            <comment>(if you add a url it will be replaced with default cdn url)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>777</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </cdn_url>
+                        <numberOfOrders translate="label">
+                            <label>Number of order cron process</label>
+                            <comment>Default is 10</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>780</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </numberOfOrders>
+                        <enable_storecredit translate="label">
+                            <label>Activate Store Credit</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>783</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_storecredit>
+                        <filterscompression translate="label">
+                            <label>Apply (gzcompress) Compression On New Filters</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>785</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>http://php.net/manual/en/function.gzcompress.php</comment>
+                        </filterscompression>
+                        <bin_auto_discount translate="label">
+                            <label>Enable Bank Marketing | BIN Auto Discount</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>786</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </bin_auto_discount>
+                        <bin_list translate="label">
+                            <label>Card Binaries</label>
+                            <comment>(Comma Separated list of Card Binaries)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>787</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bin_list>
+                        <discount_rule translate="label">
+                            <label>Discount Percentage</label>
+                            <comment>(Dsicount percentage needs to auto apply)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>788</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </discount_rule>
+                        <coupon_code translate="label">
+                            <label>Coupon Code</label>
+                            <comment>(Coupon code created for Card Binaries)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>789</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </coupon_code>
+                        <empty_quote_limit translate="label">
+                            <label>Number of orders cron process for Empty Quotes</label>
+                            <comment>(Number of orders cron process in case of empty quote orders. Default is 10)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>788</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </empty_quote_limit>
+                        <enable_empty_quote_retries translate="label">
+                            <label>Enable Retries for Empty Quotes</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>789</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_empty_quote_retries>
+                        <empty_quote_retries translate="label">
+                            <label>Number of retries for empty quote</label>
+                            <comment>(Number of retries for empty quote orders. Default is 6)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>790</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </empty_quote_retries>
+                        <ignore_app_limit translate="label">
+                            <label>Ignore the limit sent from app?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>791</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ignore_app_limit>
+                        <app_limit_to_use translate="label">
+                            <label>Number of of products to load for app</label>
+                            <comment>(Number of products to load for app. Default is 40)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>792</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </app_limit_to_use>
+                        <compress_products_response translate="label">
+                            <label>Apply compression for products listing?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>793</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </compress_products_response>
+                        <cdn_image_querystring translate="label">
+                            <label>Query string for CDN URLs</label>
+                            <comment>(Add query string to append with image URLs)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>793</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </cdn_image_querystring>
+                    </fields>
+                </emapi>
+            </groups>
+        </api>
+    </sections>
+</config> 

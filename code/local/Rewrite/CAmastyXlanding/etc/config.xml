@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Rewrite_CAmastyXlanding>
+            <version>1.0</version>
+        </Rewrite_CAmastyXlanding>
+    </modules>
+    <frontend>
+        <routers>
+            <amlanding>
+                <use>standard</use>
+                <args>
+                    <modules>
+                        <Rewrite_CAmastyXlanding before="Amasty_Xlanding">Rewrite_CAmastyXlanding</Rewrite_CAmastyXlanding>
+                    </modules>
+                </args>
+            </amlanding>
+        </routers>
+    </frontend>
+    <global>
+        <blocks>
+            <amlanding>
+                <rewrite>
+                    <adminhtml_page_edit_tab_main>Rewrite_CAmastyXlanding_Block_Adminhtml_Page_Edit_Tab_Main</adminhtml_page_edit_tab_main>
+                </rewrite>
+            </amlanding>
+        </blocks>
+        <helpers>
+            <amlanding>
+                <rewrite>
+                    <data>Rewrite_CAmastyXlanding_Helper_Data</data>
+                </rewrite>
+            </amlanding>
+        </helpers>
+    </global>
+</config> 

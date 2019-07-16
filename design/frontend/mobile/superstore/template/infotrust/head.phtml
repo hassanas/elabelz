@@ -1,0 +1,152 @@
+<?php
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user           = 'Guest';
+$customerId     = '';
+$loggedInStatus    = 'Logged Out';
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+    $user           =   'User';
+    $customer       =   Mage::getSingleton('customer/session')->getCustomer(); 
+    $customerId     =   $customer->getId();
+    $loggedInStatus    =   'Logged In';
+}
+ 
+$codeArray = explode('_',$store->getCode());
+$language = '';
+if( !empty( $codeArray ) )
+    $language = strtoupper( $codeArray[0] );
+?>
+<script>
+if (window.promotionData === undefined ) {
+    window.promotionData = {};
+}
+window.promotionData.userId = '<?php echo $customerId; ?>';
+window.promotionData.userType = '<?php echo $user; ?>';
+window.promotionData.loggedInStatus = '<?php echo $loggedInStatus; ?>';
+window.promotionData.storeCountry = '<?php echo $store->getName(); ?>';
+window.promotionData.storeLanguage = '<?php echo $language; ?>';
+window.promotionData.currency_code = '<?php echo $currency_code; ?>';
+</script>
+<script>
+	if (window.promotionData !== undefined ) {
+	    function topMenuTrigger(url){
+	    	dataLayer.push({
+	    		'pageType' : 'Menu',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Navigation - Menu Header Selection',
+	    		'eventLabel' : url
+	    	});
+		}
+
+		function footerMenuTrigger(url){
+	    	dataLayer.push({
+	    		'pageType' : 'Menu',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Navigation - Menu Footer Selection',
+	    		'eventLabel' : url
+	    	});
+		}
+
+		function customerServiceMenuTrigger(url){
+	    	dataLayer.push({
+	    		'pageType' : 'Customer Service',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Navigation - Customer Service Selection',
+	    		'eventLabel' : url
+	    	});
+		}
+
+		function socialmediaIconTrigger(url){
+	    	dataLayer.push({
+	    		'pageType' : 'Home',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Micro Conversion',
+	    		'eventLabel' : url
+	    	});
+		}
+
+		function affiliateProgramEmailTrigger(url){
+	    	dataLayer.push({
+	    		'pageType' :'About',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Micro Conversion',
+	    		'eventLabel' : url
+	    	});
+		}
+
+		function secretCodeTrigger(sms_code){
+			dataLayer.push({
+	    		'pageType' :'Confirmation',
+	    		'pageCategory': 'No Category',
+	    		'userId': window.promotionData.userId,
+	    		'userType': window.promotionData.userType,
+	    		'loggedInStatus': window.promotionData.loggedInStatus,
+	    		'storeCountry': window.promotionData.storeCountry,
+	    		'storeLanguage':window.promotionData.storeLanguage,
+	    		'currencyCode': window.promotionData.currency_code,
+	    		'event': 'customEvent',
+	    		'eventCategory' : 'User Engagement',
+	    		'eventAction' : 'Micro Conversion',
+	    		'eventLabel' : "'Secret Code | "+sms_code
+	    	});
+		}
+		//2058
+		function oosCategoryClick() {
+			dataLayer.push({
+                'pageType': 'PDP',
+                'pageCategory': window.promotionData.pageCategory,
+                'userId': window.promotionData.userId,
+                'userType': window.promotionData.userType,
+                'loggedInStatus': window.promotionData.loggedInStatus,
+                'storeCountry': window.promotionData.storeCountry,
+                'storeLanguage': window.promotionData.storeLanguage,
+                'currencyCode': window.promotionData.currency_code,
+                'event': 'customEvent',
+                'eventCategory' : 'User Engagement',
+                'eventAction' : 'Out of Stock',
+                'eventLabel' : 'Out of Stock - Category Click'
+            });
+		}
+	}
+</script>

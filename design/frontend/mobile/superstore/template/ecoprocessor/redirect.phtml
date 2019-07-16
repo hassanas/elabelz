@@ -1,0 +1,306 @@
+<?php
+$session = Mage::getSingleton('core/session');
+$quoteId = $session->getLastQuoteId();
+$orderId = $session->getLastOrderId();
+
+$mdlRestmob = Mage::getModel('ecoprocessor/quote_index');
+$id = $mdlRestmob->getIdByReserveId($orderId);
+$_order = $mdlRestmob->load($id);
+$store_credit = $_order->getStoreCredit();
+?>
+<style type="text/css">
+
+    .loader-wrapper {
+        background-color: #fff;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 1000;
+    }
+
+    #typing-loader {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        animation: typing 1s linear infinite alternate;
+        position: relative;
+        top: 10%;
+        left: -3rem;
+        margin: 0 auto;
+    }
+
+    @keyframes typing {
+        0% {
+            background-color: rgba(0, 0, 0, 1);
+            box-shadow: 3.2rem 0 0 0 rgba(0, 0, 0, 0.2),
+            6.4rem 0 0 0 rgba(0, 0, 0, 0.2);
+        }
+        25% {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 3.2rem 0 0 0 rgba(0, 0, 0, 2),
+            6.4rem 0 0 0 rgba(0, 0, 0, 0.2);
+        }
+        75% {
+            background-color: rgba(0, 0, 0, 0.4);
+            box-shadow: 3.2rem 0 0 0 rgba(0, 0, 0, 0.2),
+            6.4rem 0 0 0 rgba(0, 0, 0, 1);
+        }
+    }
+
+</style>
+<div class="loader-wrapper">
+    <div id="typing-loader"></div>
+</div>
+<?php
+if (Mage::helper('telrtransparent/config')->getActivePaymentMethod() == "telrtransparent") {
+    $quote = Mage::getModel("sales/quote")->loadByIdWithoutStore($quoteId);
+    $currency = $quote->getQuoteCurrencyCode();
+
+    //select shipping charges
+    $billingInfo = json_decode($_order->getBillingAddress(),true);
+    $shippingCountry = $billingInfo['country_id'];
+    $baseShippingFee = getShipmentCharges($shippingCountry, $quote->getBaseSubtotal());
+    $shippingFee = Mage::helper('directory')->currencyConvert($baseShippingFee, "AED", $currency);
+    $price = $quote->getGrandTotal() + $shippingFee;
+    $allowedCurrencies = array("USD", "AED", "SAR");
+    /*
+     * Code for store credit
+     */
+    $storeBalance = 0;
+    $baseStoreBalance = 0;
+    if ($store_credit) {
+        $quoteStorecredits = Mage::helper('aw_storecredit/totals')->getQuoteStoreCredit($quoteId);
+        if (count($quoteStorecredits) > 0) {
+            foreach ($quoteStorecredits as $quoteStorecredit) {
+                $_baseStorecreditAmount = $quoteStorecredit->getBaseStorecreditAmount();
+                $baseStoreBalance = Mage::helper('directory')->currencyConvert($_baseStorecreditAmount, "AED", $currency);
+                $storeBalance = Mage::helper('directory')->currencyConvert($_baseStorecreditAmount, "AED", $currency);
+            }
+        }
+    }
+    if (!in_array($currency, $allowedCurrencies)) {
+        $currency = "USD";
+        $shippingFee = $baseShippingFee;
+        $price = $quote->getBaseGrandTotal() + $shippingFee;
+        $price = Mage::helper('directory')->currencyConvert($price, "AED", "USD");
+        $price = number_format(($price - $storeBalance), 2, '.', '');
+    } else {
+        $price = number_format(($price - $baseStoreBalance), 2, '.', '');
+    }
+
+
+    $email = $billingInfo['email'];
+
+    $ivp_store = Mage::getStoreConfig('payment/telrtransparent/store_id', Mage::app()->getStore());
+    $ivp_test = Mage::getStoreConfig('payment/telrtransparent/sandbox', Mage::app()->getStore());
+    $ivp_desc = Mage::getStoreConfig('payment/telrtransparent/ivp_desc', Mage::app()->getStore());
+
+    $ivp_exm = $_order->getCcExpMonth();
+    $ivp_exy = substr($_order->getCcExpYear(), -2);
+    $ivp_cn = $_order->getCcNumber();
+    $ivp_cv = $_order->getCcCid();
+    ?>
+    <form name="telrPaymentForm" action="https://secure.innovatepayments.com/gateway/trans.html" method="post">
+        <?php
+        function SignData($post_data, $secretKey, $fieldList)
+        {
+            $signatureParams = explode(',', $fieldList);
+            $signatureString = $secretKey;
+            foreach ($signatureParams as $param) {
+                if (array_key_exists($param, $post_data)) {
+                    $signatureString .= ':' . trim($post_data[$param]);
+                } else {
+                    $signatureString .= ':';
+                }
+            }
+            return sha1($signatureString);
+        }
+
+        $firstname = $billingInfo['firstname'];
+        $lastname = $billingInfo['lastname'];
+        $street1 = @$billingInfo['street'][0];
+        $street2 = @$billingInfo['street'][1];
+        $street3 = @$billingInfo['street'][2];
+        $city = $billingInfo['city'];
+        $region = $billingInfo['region'];
+        $postcode = $billingInfo['postcode'];
+        $country = $billingInfo['country_id'];
+        $telephone = $billingInfo['telephone'];
+
+        // Build up the parameters needed by the gateway
+        $post_data = Array(
+            'ivp_store' => $ivp_store,//'16408',
+            'ivp_cart' => $orderId,
+            'ivp_amount' => $price,
+            'ivp_currency' => $currency,
+            'ivp_test' => $ivp_test,
+            'ivp_timestamp' => '0',
+            'ivp_desc' => $ivp_desc,
+            'ivp_extra' => 'bill,return',
+            'bill_fname' => $firstname,
+            'bill_sname' => $lastname,
+            'bill_addr1' => $street1,
+            'bill_addr2' => $street2,
+            'bill_addr3' => $street3,
+            'bill_city' => $city,
+            'bill_region' => $region,
+            'bill_zip' => $postcode,
+            'bill_country' => $country,
+            'bill_email' => $email,
+            'bill_phone1' => $telephone,
+            'ivp_cn' => $ivp_cn,
+            'ivp_exm' => $ivp_exm,
+            'ivp_exy' => $ivp_exy,
+            'ivp_cv' => $ivp_cv
+        );
+        $post_data['return_cb_auth'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/successcallback?oid=' . $orderId;
+        $post_data['return_cb_decl'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/cancelcallback?oid=' . $orderId;
+        $post_data['return_cb_can'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/cancelcallback?oid=' . $orderId;
+        $post_data['return_auth'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/success';
+        $post_data['return_decl'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/index/cc/back';
+        $post_data['return_can'] = Mage::getUrl('', array('_forced_secure' => true)) . 'onestepcheckout/index/index/cc/back';
+        $secret_key = 'jGV#V79ndZv';
+
+        // First create the signature for the main purchase details, as this used both to authenticate the request and in creating the other signatures.
+        $post_data['ivp_signature'] = SignData($post_data, $secret_key, 'ivp_store,ivp_amount,ivp_currency,ivp_test,ivp_timestamp,ivp_cart,ivp_desc,ivp_extra');
+
+        // Now create the signature for the billing details (uses the ivp_signature created first)
+        $post_data['bill_signature'] = SignData($post_data, $secret_key, 'bill_title,bill_fname,bill_sname,bill_addr1,bill_addr2,bill_addr3,bill_city,bill_region,bill_country,bill_zip,ivp_signature');
+
+
+        // Now create the signature for the return/call-back URLs (also uses the ivp_signature)
+        $post_data['return_signature'] = SignData($post_data, $secret_key, 'return_cb_auth,return_cb_decl,return_cb_can,return_auth,return_decl,return_can,ivp_signature');
+
+        // Output the form fields. Ensuring that the form data is html safe(e.g. things like//converting< to &lt; ) must be done after the signature values are calculated.
+        foreach ($post_data as $k => $v) {
+            echo "<input type=\"hidden\" name=\"" . $k . "\" value=\"" . htmlspecialchars($v) . "\">
+";
+        }
+        ?>
+    </form>
+    <script type="text/javascript">
+        document.telrPaymentForm.submit();
+    </script>
+    <?php
+} else {
+    $quote = Mage::getModel("sales/quote")->loadByIdWithoutStore($quoteId);
+    $ivp_exm = $_order->getCcExpMonth();
+    $ivp_exy = substr($_order->getCcExpYear(), -2);
+    $ivp_cn = $_order->getCcNumber();
+    $ivp_cv = $_order->getCcCid();
+    $billingInfo = $quote->getBillingAddress();
+    $ivp_name = $billingInfo->getFirstName() . " " . $billingInfo->getLastName();
+    $currency = $quote->getQuoteCurrencyCode();
+    $publicKey = Mage::helper('telrtransparent/config')->getCheckoutDotComPublicKey($currency);
+    ?>
+    <script async src="<?php echo Mage::helper('telrtransparent/config')->getCheckoutDotComScriptUrl(); ?>"></script>
+    <form class="card-form" method="POST"
+          action="<?php echo $this->getUrl('onestepcheckout/index/checkoutdotcom'); ?>"
+          onsubmit="return false;">
+        <div id="id"></div>
+        <input id="cardId" data-checkout="card-number" value="<?php echo $ivp_cn; ?>" maxlength="19" type="text"
+               placeholder="Credit card number" required>
+        <input data-checkout="card-name" value="<?php echo $ivp_name; ?>" type="text" placeholder="Name on card"
+               maxlength="100" required>
+        <input data-checkout="expiry-month" value="<?php echo $ivp_exm; ?>" type="text" placeholder="MM" maxlength="2"
+               required>
+        <input data-checkout="expiry-year" type="text" value="<?php echo $ivp_exy; ?>" placeholder="YY" maxlength="2"
+               required>
+        <input data-checkout="cvv" type="text" placeholder="CVV" value="<?php echo $ivp_cv; ?>" maxlength="3" required>
+        <input type="hidden" id="cardTok" name="ckoCardToken">
+        <input type="hidden" id="orderId" name="orderId" value="<?php echo $orderId; ?>">
+        <input type="hidden" id="quoteId" name="quoteId" value="<?php echo $quoteId; ?>">
+        <input type="hidden" id="store_credit" name="store_credit" value="<?php echo $store_credit; ?>">
+        <input type="submit" id="sub" value="Pay Now">
+    </form>
+
+    <script>
+        var notreload = false;
+        window.CKOConfig = {
+            debugMode: false,
+            publicKey: "<?php echo $publicKey; ?>",
+            customerEmail: "<?php echo $_order->getCustomerEmail(); ?>",
+            ready: function (event) {
+                CheckoutKit.monitorForm('.card-form', CheckoutKit.CardFormModes.CARD_TOKENISATION);
+                CheckoutKit.addEventHandler(CheckoutKit.Events.CARD_TOKENISED, function (event) {
+                    Mage.Cookies.set("orderId", '<?php echo $orderId; ?>', new Date(new Date().getTime() + 7 * 60000));
+                    Mage.Cookies.set("ckoCardToken", event.data.id, new Date(new Date().getTime() + 7 * 60000));
+                    document.getElementById("cardTok").value = event.data.id;
+                    notreload = true;
+                    //submit the form data to your server with the card token
+                    document.getElementsByClassName('card-form')[0].submit();
+                });
+                if ((Mage.Cookies.get("orderId") == undefined && Mage.Cookies.get("orderId") == null && '<?php echo $orderId; ?>' != Mage.Cookies.get("orderId")) && (Mage.Cookies.get("ckoCardToken") == null && Mage.Cookies.get("ckoCardToken") == undefined)) {
+                    setTimeout(function () {
+                        $j('#sub').click();
+                    }, 1000);
+                } else {
+                    notreload = true;
+                    document.getElementById("cardTok").value = Mage.Cookies.get("ckoCardToken");
+                    document.getElementsByClassName('card-form')[0].submit();
+                }
+            },
+            apiError: function (event) {
+                console.log("API Breaks");
+                window.location = '<?php echo $this->getUrl('onestepcheckout', array('_secure' => true)); ?>';
+            }
+        }
+        window.addEventListener("beforeunload", function (e) {
+            if (!notreload) {
+                var confirmationMessage = "<?php echo $this->__('Changes you made may not be saved.')?>";
+                (e || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+        });
+    </script>
+    <?php
+}
+function buildCallbackUrl($part)
+{
+    $url = Mage::getUrl($part, array('_nosid' => true));
+    $url = trim(str_replace('&amp;', '&', $url));
+    return $url;
+}
+
+function getShipmentCharges($shippingCountry, $orderSubtotal)
+{
+    switch ($shippingCountry) {
+        case "AE":
+            $price = 0;
+            break;
+        default: {
+            $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+            $sql = "SELECT condition_value, price FROM `shipping_tablerate` WHERE `dest_country_id`='" . $shippingCountry . "'";
+            $rows = $connection->fetchAll($sql);
+            if (!$rows) {
+                $sql = "SELECT condition_value, price FROM `shipping_tablerate` WHERE `dest_country_id`='0'";
+                $rows = $connection->fetchAll($sql);
+            }
+            $i = 0;
+            if (sizeof($rows) == 1) {
+                $price = $rows[0]['price'];
+            } else {
+                foreach ($rows as $row) {
+                    if ($i == 0) {
+                        $minArr[] = $row['condition_value'];
+                        $minArr[] = $row['price'];
+                    } else {
+                        $maxArr[] = $row['condition_value'];
+                        $maxArr[] = $row['price'];
+                    }
+                    $i++;
+                }
+                if ($orderSubtotal > $minArr[0] && $orderSubtotal < $maxArr[0]) {
+                    $price = $minArr[1];
+                } else {
+                    $price = $maxArr[1];
+                }
+            }
+        }
+    }
+    return $price;
+}
+
+?>

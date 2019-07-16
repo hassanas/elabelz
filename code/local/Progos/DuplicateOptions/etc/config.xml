@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_DuplicateOptions>
+      <version>0.1.0</version>
+    </Progos_DuplicateOptions>
+  </modules>
+  <global>
+    <helpers>
+      <duplicateoptions>
+        <class>Progos_DuplicateOptions_Helper</class>
+      </duplicateoptions>
+    </helpers>
+  <blocks>
+    <duplicateoptions>
+    <class>Progos_DuplicateOptions_Block</class>
+    </duplicateoptions>
+  </blocks>
+  <models>
+    <duplicateoptions>
+    <class>Progos_DuplicateOptions_Model</class>
+    <resourceModel>duplicateoptions_mysql4</resourceModel>
+    </duplicateoptions>
+  </models>
+  </global>
+  <admin>
+  <routers>
+    <duplicateoptions>
+      <use>admin</use>
+    <args>
+      <module>Progos_DuplicateOptions</module>
+      <frontName>admin_duplicateoptions</frontName>
+    </args>
+    </duplicateoptions>
+  </routers>
+  </admin>
+
+</config> 

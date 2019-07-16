@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<config>
+	<extendware>
+		<quickaccess>
+			<ewpgrid>
+                <resource>extendware/ewpgrid</resource>
+				<children>
+					<product translate="title" module="ewpgrid">
+						<title>Manage Products</title>
+						<action>adminhtml/catalog_product/</action>
+						<resource>catalog/products</resource>
+						<sort_order>1</sort_order>
+					</product>
+				</children>
+				<title/>
+			</ewpgrid>
+		</quickaccess>
+	</extendware>
+	<menu>
+	    <ewcore translate="title" module="ewpgrid">
+			<title>Extendware</title>
+			<sort_order>89</sort_order>
+			<resource>extendware/ewcore</resource>
+			<class>ewcore-main</class>
+	        <children>
+	            <quickaccess translate="title" module="ewpgrid">
+	                <title>Manage Extensions</title>
+	                <sort_order>1</sort_order>
+	                <resource>extendware/ewpgrid</resource>
+	                <children>
+	                	<ewpgrid translate="title" module="ewpgrid">
+			                <title>Product Grid</title>
+			                <sort_order>53047</sort_order>
+			                <resource>extendware/ewpgrid</resource>
+			                <children>
+			                	<product translate="title" module="ewpgrid">
+									<title>Manage Products</title>
+									<action>adminhtml/catalog_product/</action>
+									<resource>catalog/products</resource>
+									<sort_order>1</sort_order>
+								</product>
+								<configure translate="title" module="ewpgrid">
+									<title>Configure</title>
+									<sort_order>9999999</sort_order>
+									<action>adminhtml/ewpgrid_config/index</action>
+									<resource>extendware/ewpgrid/configure</resource>
+								</configure>
+			                </children>
+			            </ewpgrid>
+	                </children>
+	            </quickaccess>
+	            <userguides translate="title" module="ewpgrid">
+	                <title>User Guides / Help</title>
+	                <sort_order>9</sort_order>
+	                <action>adminhtml/ewpgrid_config/gotoExtendwareUserguides</action>
+	                <resource>extendware/ewcore/redirect/userguide</resource>
+	                <class>ewcore-extendware-userguide</class>
+	            </userguides>
+	            <storelink translate="title" module="ewpgrid">
+		            <title>Improve Your Store</title>
+		            <sort_order>9999</sort_order>
+		            <action>adminhtml/ewpgrid_config/gotoExtendware</action>
+		            <resource>extendware/ewcore/redirect/extendware</resource>
+		            <class>ewcore-extendware-link</class>
+		        </storelink>
+	        </children>
+	    </ewcore>
+	</menu>
+	<acl>
+		<resources>
+            <admin>
+                <children>
+                    <extendware translate="title" module="ewpgrid">
+                    	<title>Extendware</title>
+                    	<sort_order>0</sort_order>
+                        <children>
+                        	<ewpgrid translate="title" module="ewpgrid">
+                        		<title>Product Grid</title>
+                        		<children>
+                        			<settings translate="title">
+                        				<title>Settings</title>
+                        				<children>
+				                            <main translate="title">
+				                                <title>Main</title>
+				                                <children>
+					                                <ewpgrid translate="title">
+						                                <title>General</title>
+						                            </ewpgrid>
+					                            </children>
+				                            </main>
+			                            </children>
+			            			</settings>
+			            		</children>
+			            	</ewpgrid>
+                        </children>
+                    </extendware>
+                </children>
+            </admin>
+        </resources>
+	</acl>
+</config>

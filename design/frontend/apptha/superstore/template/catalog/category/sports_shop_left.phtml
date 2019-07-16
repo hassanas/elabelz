@@ -1,0 +1,64 @@
+<?php   
+// $identifier = "block-for-cat-banner-".$this->getCurrentCategory()->getId();
+$identifier = "sports-shop-top-banner";
+$active = Mage::getModel('cms/block')->load($identifier)->getIsActive();
+if ($active == 1){?>
+
+<div class="category_banner">
+    <div class="catalog_banner_top tb_one three_line">   
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($identifier)->toHtml() ?>     
+      <?php //echo Mage::getModel('cms/block')->load($identifier)->toHtml() ?>  
+    </div>
+</div>
+<?php }else{?>
+
+
+<?php $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>
+<?php 
+//Mage::getBaseDir('media').DS."catalog/category/".
+	if($this->getCurrentCategory()->getFeaturedCategory()=='1'):
+			$_imageUrl = $this->getCurrentCategory()->getFeaturedCategoryImage();
+	?>
+<?php if($_imageUrl):?>
+<div class="category_banner">
+    <div class="catalog_banner_top tb_one three_line">        
+        <img src="<?php echo $mediaUrl."catalog/category/".$this->getCurrentCategory()->getFeaturedCategoryImage(); ?>" alt="<?php echo $this->htmlEscape($this->getCurrentCategory()->getName()) ?>" class="cat_banner_img" /></a>
+       
+        <h2 class="tb_title">
+			<?php 
+				$expl = explode(' - ',$this->htmlEscape($this->getCurrentCategory()->getName()));
+				if (count($expl)>1) {
+					$vb .= '';
+					foreach ($expl as $v) { 
+						$vb .= $this->__(trim($v))." - ";
+					}
+					$vb = rtrim($vb, ' - ');
+					echo $vb;
+				} else { 
+					echo $this->__($this->htmlEscape($this->getCurrentCategory()->getName()));
+				}
+			?>
+			<?php ?>
+		</h2>
+        <div class="cta_buttons">
+		<?php 
+		$currentCategory = $this->getCurrentCategory()->getId();
+		$cat = Mage::getModel('catalog/category')->load($currentCategory);/*Returns comma separated ids*/
+		$subcats = $cat->getChildren();
+			foreach(explode(',',$subcats) as $subCatid):
+			$_category = Mage::getModel('catalog/category')->load($subCatid);
+			  if($_category->getIsActive() && $_category->getFeaturedCategory()=='1'):
+			    $caturl     = $_category->getURL();
+			    $catname     = $_category->getName();?>
+
+            <a href="<?php echo $caturl;?>" target="_top" title="Vests">
+                <span class="button"><?php echo  $this->__($catname)?></span>
+            </a>
+<?php endif; ?>
+            <?php endforeach;?>
+        </div>
+    </div>
+</div>
+<?php endif;?>
+ <?php endif; ?>
+ <?php }?>

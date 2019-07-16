@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <image_search translate="label" module="imagesearch">
+            <label>Image Search</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>302</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <image_search_settings translate="label">
+                    <label>Image search API Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable or Disable Image search</comment>
+                        </enabled>
+                        <app_key translate="label">
+                            <label>App Keys</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </app_key>
+                        <access_key translate="label">
+                            <label>Access Key</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </access_key>
+                        <secret_key translate="label">
+                            <label>Secret Key</label>
+                            <frontend_type>password</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </secret_key>
+                        <timeout translate="label">
+                            <label>Time Out</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>add time in seconds</comment>
+                        </timeout>
+                    </fields>
+                </image_search_settings>
+            </groups>
+        </image_search>
+    </sections>
+</config>

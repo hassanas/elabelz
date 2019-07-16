@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <products_updator translate="title" module="productsupdater">
+                                        <title>Products Updator Section</title>
+                                        <sort_order>201</sort_order>
+                                    </products_updator>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <productsupdater translate="title" module="productsupdater">
+                                <title>ProductsUpdater</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <productsupdaterbackend translate="title">
+                                        <title>Product Updator</title>
+                                    </productsupdaterbackend>
+                                </children>
+                            </productsupdater>
+                        </children>
+                    </catalog>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <menu>
+        <catalog>
+            <children>
+                <progos>
+                    <title>Progos</title>
+                    <sort_order>1</sort_order>
+                    <children>
+                        <productsupdater module="productsupdater">
+                            <title>Products Updater</title>
+                            <sort_order>1</sort_order>
+                            <children>
+                                <productsupdaterbackend module="productsupdater">
+                                    <title>Attribute Updater</title>
+                                    <sort_order>0</sort_order>
+                                    <action>adminhtml/productsupdaterbackend</action>
+                                </productsupdaterbackend>
+                            </children>
+                        </productsupdater>
+                    </children>
+                </progos>
+            </children>
+        </catalog>
+    </menu>
+</config>

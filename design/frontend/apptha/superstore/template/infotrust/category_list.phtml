@@ -1,0 +1,48 @@
+<?php
+require_once 'common.phtml';
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+$request = Mage::app()->getRequest();
+$pathinfo = $request->getPathInfo();
+if (strpos($pathinfo, "brand/index/view/") !== false) {
+    $brand_id = $request->getParam("id");
+    $brand = Mage::getModel('shopbybrand/brand')->load($brand_id);
+    $pageTitle = trim($brand->getName());
+} else {
+    $categoryObject = Mage::getSingleton('catalog/layer')->getCurrentCategory();
+    $pageTitle = $categoryObject->getName();
+}
+
+
+$user = 'Guest';
+$customerId = '';
+$loggedInStatus = 'Logged Out';
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $user = 'User';
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $customerId = $customer->getId();
+    $loggedInStatus = 'Logged In';
+}
+
+$codeArray = explode('_', $store->getCode());
+$language = '';
+if (!empty($codeArray))
+    $language = strtoupper($codeArray[0]);
+
+?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer = [{
+            'pageType': 'PLP',
+            'pageCategory': '<?php echo $pageTitle; ?>',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+    </script>
+<?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>

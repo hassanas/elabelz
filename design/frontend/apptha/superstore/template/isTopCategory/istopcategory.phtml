@@ -1,0 +1,32 @@
+<?php
+$categoryID = $this->getData('categoryId');//Get Parameter from CMS Static Block.
+$isShowEmptyMessage = $this->getData('isShowEmptyMessage');
+$showEmptyMessage   = $this->getData('showEmptyMessage');
+$categoryCollection = array(); 
+
+/* If Parent Category ID defined then it Filter by Category ID */
+if( $categoryID ):
+    $categoryIdArray = explode(',', $categoryID);//Convert , seperated string into array.
+    $categoryCollection = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('url')
+                ->addAttributeToFilter('is_active','1')
+                ->addAttributeToFilter('is_top',1)
+                ->addAttributeToFilter('parent_id',array('IN' => $categoryIdArray));
+else: //If no Category defined then call this
+    $categoryCollection = Mage::getModel('catalog/category')
+                ->getCollection()
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('url')
+                ->addFieldToFilter('is_top', 1)->addIsActiveFilter(); 
+endif;
+//Create Link of the category
+if(  $categoryCollection->count() > 0 ):
+        foreach( $categoryCollection as $category ):?>
+            <a href="<?php echo $category->getUrl(); ?>"><?php echo $this->__($category->getName()); ?></a>
+<?php   endforeach;
+else:
+    if( $isShowEmptyMessage == "true" ):
+        echo $this->__($showEmptyMessage );
+    endif;
+endif;

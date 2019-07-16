@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_apporders_index>
+        <reference name="menu">
+            <action method="setActive">
+                <menupath>marketplace/restmob</menupath>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="restmob/adminhtml_mobileapporder" name="mobileapporder"/>
+        </reference>
+    </adminhtml_apporders_index>
+</layout>

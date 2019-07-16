@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <catalog>
+            <children>
+                <progos>
+                    <title>Progos</title>
+                    <sort_order>1</sort_order>
+                    <children>
+                        <emapi module="emapi">
+                            <title>App-Filters Cache WarmUp</title>
+                            <sort_order>2</sort_order>
+                            <action>adminhtml/appfilters</action>
+                        </emapi>
+                    </children>
+                </progos>
+            </children>
+        </catalog>
+    </menu>
+</config>

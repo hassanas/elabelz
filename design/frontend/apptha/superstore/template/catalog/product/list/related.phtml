@@ -1,0 +1,130 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php if($this->getItems()->getSize()): ?>
+<div id="related-product-slider" class="block block-related">
+    <div class="block-title">
+        <h2><?php echo $this->__('Shop the look') ?></h2>
+    </div>
+    <div class="block-content">
+        <div class="mini-products-list custom_slider" id="block-related">
+        <?php $increment = 1;?>
+        <?php foreach($this->getItems() as $_item): ?>
+            <?php 
+            $manufacturer = strtolower($_item->getAttributeText('manufacturer'));
+            ?>
+            <div class="item">               
+                <div class="product">
+                    <a href="<?php echo $_item->getProductUrl() ?>" 
+                    title="<?php echo $this->escapeHtml($_item->getName()) ?>" class="product-image">
+                    <img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->resize(227,329) ?>"
+                    alt="<?php echo $this->escapeHtml($_item->getName()) ?>" /></a>
+                    <div class="product-details">
+                        <?php echo $this->getPriceHtml($_item, true, '-related') ?>
+                        <?php if($manufacturer!=""): ?>
+                        <div id="rp-brand">
+                            <a href="<?php echo $_item->getProductUrl() ?>" class="product-link"><?php echo $this->__($manufacturer); ?></a>
+                        </div>
+                        <?php endif; ?>
+                        <div class="product-name no-display"><a class="product-link" href="<?php echo $_item->getProductUrl() ?>"><?php echo $this->escapeHtml($_item->getName()) ?></a></div>
+                    </div>
+                </div>
+            </div>
+            <?php $increment ++;?>
+        <?php endforeach ?>
+        </div>
+        <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+    var htmlLangVal = jQuery("html").data('lang');
+    var detectDirection = false;
+    if(htmlLangVal == "ar"){var detectDirection = true; }else{var detectDirection = false;}
+    
+    $j('#related-product-slider #block-related').slick({
+              infinite: false,
+              slidesToShow: 5,
+              slidesToScroll: 3,
+              dots: true,
+              arrows: true,
+              rtl: detectDirection,
+              responsive: [
+                {
+                  breakpoint: 768,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                  }
+                },
+                {
+                  breakpoint: 359,
+                  settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                  }
+                }
+              ]
+            });
+
+    $$('.related-checkbox').each(function(elem){
+        Event.observe(elem, 'click', addRelatedToProduct)
+    });
+
+    var relatedProductsCheckFlag = false;
+    function selectAllRelated(txt){
+        if (relatedProductsCheckFlag == false) {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = true;
+            });
+            relatedProductsCheckFlag = true;
+            txt.innerHTML="<?php echo $this->__('unselect all') ?>";
+        } else {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = false;
+            });
+            relatedProductsCheckFlag = false;
+            txt.innerHTML="<?php echo $this->__('select all') ?>";
+        }
+        addRelatedToProduct();
+    }
+
+    function addRelatedToProduct(){
+        var checkboxes = $$('.related-checkbox');
+        var values = [];
+        for(var i=0;i<checkboxes.length;i++){
+            if(checkboxes[i].checked) values.push(checkboxes[i].value);
+        }
+        if($('related-products-field')){
+            $('related-products-field').value = values.join(',');
+        }
+    }
+    //]]>
+    </script>
+</div>
+<?php endif ?>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_customer_edit>
+        <reference name="customer_edit_tabs">
+            <block type="progos_agentcomments/adminhtml_customer_edit_view_tabs_reviews"
+                   name="progos_agentcomments_reviews" template="progos/agentcomments/customer/tab/agentreviews.phtml">
+                <block type="progos_agentcomments/adminhtml_customer_edit_view_tabs_reviews_comments"
+                       name="progos_agentcomments_comments"
+                       template="progos/agentcomments/customer/tab/agentreviews/comments.phtml"/>
+            </block>
+            <action method="addTab">
+                <id>agentreviews</id>
+                <block>progos_agentcomments_reviews</block>
+            </action>
+        </reference>
+    </adminhtml_customer_edit>
+</layout>

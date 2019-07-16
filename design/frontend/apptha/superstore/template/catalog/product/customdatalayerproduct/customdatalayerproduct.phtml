@@ -1,0 +1,46 @@
+<?php
+/**
+ * User: Saroop
+ * Date: 04/04/2017
+ *
+ * This Template will be used to add all code to header when at product page at run time js Google Analitics.
+ *
+ * */
+
+$category = '';
+$mageSession = Mage::getSingleton("core/session",  array("name"=>"frontend"));
+if( $categoryPaths = $mageSession->getBreadcrumbProductDatalayer() ) {// Unset Breadcrump if Product Page refresh.
+    $count = 1;
+    $totalCount = count($categoryPaths);
+    foreach ($categoryPaths as $categoryPath):
+        $category .= $categoryPath['label'];
+        if ($count < $totalCount)
+            $category .= '/';
+        $count++;
+    endforeach;
+}
+?>
+<?php   $product = Mage::registry('current_product');
+        $category = addslashes($category);
+        $productName = addslashes($product->getName());
+?>
+<div class="productDataLayer" style="display: none">
+    <!-- Google Analytics -->
+        <script>
+            dataLayer.push({
+                'ecommerce': {
+                    'currencyCode':"<?php echo Mage::app()->getStore()->getCurrentCurrencyCode();?>",
+                    'detail': {
+                        'products': [{
+                            'name': "<?php echo $productName; ?>",
+                            'id': "<?php echo $product->getSku(); ?>",
+                            'price': "<?php echo $product->getPrice(); ?>",
+                            'brand': "<?php echo $product->getAttributeText('manufacturer'); ?>",
+                            'category': "<?php echo $category; ?>",
+                        }]
+                    }
+                }
+            });
+        </script>
+    <!-- Google Analytics -->
+</div>

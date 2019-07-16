@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <bubble translate="label">
+            <label>Bubble Extensions</label>
+            <sort_order>1000</sort_order>
+        </bubble>
+    </tabs>
+    <sections>
+        <bubble_queryfier module="bubble_queryfier">
+            <label>Queryfier</label>
+            <tab>bubble</tab>
+            <sort_order>20</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <suffix_js_css translate="label comment">
+                    <label>Suffix JS/CSS Settings</label>
+                    <sort_order>300</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <dontadd translate="label comment">
+                            <label>Exclud All</label>
+                            <comment><![CDATA[ Above (,) separated files with extension will not be attached]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dontadd>
+                    </fields>
+                    <fields>
+                        <dontadddesktop translate="label comment">
+                            <label>Excluded Only From Desktop</label>
+                            <comment><![CDATA[ Above (,) separated files with extension will not be attached]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>32</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dontadddesktop>
+                    </fields>
+                    <fields>
+                        <dontaddmobile translate="label comment">
+                            <label>Excluded Only From Mobile</label>
+                            <comment><![CDATA[ Above (,) separated files with extension will not be attached]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>33</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dontaddmobile>
+                    </fields>
+                </suffix_js_css>
+            </groups>
+        </bubble_queryfier>
+    </sections>
+</config>

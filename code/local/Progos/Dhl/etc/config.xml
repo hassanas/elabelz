@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Dhl>
+            <version>0.1.0</version>
+        </Progos_Dhl>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <progos_dhl before="Mage_Adminhtml">Progos_Dhl_Adminhtml</progos_dhl>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <models>
+            <dhllabel>
+                <rewrite>
+                    <dhl>Progos_Dhl_Model_Dhl</dhl>
+                </rewrite>
+            </dhllabel>
+        </models>
+    </global>
+</config>

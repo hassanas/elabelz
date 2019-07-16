@@ -1,0 +1,279 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+
+<?php
+$cookie = Mage::getSingleton('core/cookie');
+    if(!$cookie->get("store_new_code")):
+    $store_code = Mage::app()->getStore()->getCode();
+    $cookie->set('store_new_code', $store_code ,time()+86400,'/');
+endif;
+?>
+    <div class="visually_hidden" id="overlay"></div>
+
+    <div dir="ltr" id="wrapper">
+
+        <header id="site_header">
+
+			<div class="labelz_topmenu">
+				<div class="secondary_row">
+                    <ul class="site_options">
+
+                        <?php
+
+                        if (! Mage::helper ( 'marketplace' )->checkMarketplaceKey ()) {
+
+                            $loginId            = Mage::getSingleton ( 'customer/session' )->isLoggedIn ();
+                            $groupId            = Mage::getSingleton ( 'customer/session' )->getCustomerGroupId ();
+                            $getGroupId         = Mage::helper ( 'marketplace' )->getGroupId ();
+                            $customer           = Mage::getSingleton ( "customer/session" )->getCustomer ();
+                            $customer_status    = $customer->getCustomerstatus ();
+                            $fb_page            = Mage::getStoreConfig ( 'marketplace/marketplace/facebook_page' );
+                            $twitter_page       = Mage::getStoreConfig ( 'marketplace/marketplace/twitter_page' );
+
+                        ?>
+
+                        <li>
+                            <div class="closed" data-nm-hover-toggle="data-nm-hover-toggle" id="m_mall_header_title_switch">
+                                <span class="m_mall_menu_title"><?php echo $this->__('Engage'); ?></span>
+                                <ul class="menu_options hoverToggled">
+                                    <li><a href="https://www.facebook.com/<?php echo $fb_page; ?>" title="" target="_blank"><?php echo $this->__('Join us on facebook'); ?></a></li>
+                                    <li><a href="https://www.twitter.com/<?php echo $twitter_page; ?>" title="" target="_blank"><?php echo $this->__('Join us on twitter'); ?></a></li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="closed" data-nm-hover-toggle="data-nm-hover-toggle" id="m_mall_header_title_switch">
+                                <span class="m_mall_menu_title">
+									<?php echo $this->__('Sellers'); ?>
+								</span>
+
+                                <ul class="menu_options hoverToggled">
+
+                                    <?php if ($groupId != $getGroupId && $loginId) { ?>
+
+                                    <li><a href="<?php echo Mage::getUrl('marketplace/general/changebuyer'); ?>" title=""><?php echo $this->__('Become a seller'); ?></a></li>
+
+                                    <?php } else {
+
+                                        if ($groupId != $getGroupId || !$loginId) { ?>
+
+                                        <li><a href="<?php echo Mage::helper('marketplace/url')->getregisterUrl(); ?>" title=""><?php echo $this->__('Register as seller '); ?></a></li>
+
+                                    <?php }
+
+                                    } ?>
+
+                                    <?php if ($groupId == $getGroupId && $loginId && $customer_status == 1) { ?>
+
+                                    <li><a href="<?php echo Mage::helper('marketplace/dashboard')->dashboardUrl(); ?>" title=""><?php echo $this->__('Seller dashboard'); ?></a></li>
+
+                                    <?php
+
+                                    } elseif ($groupId != $getGroupId && !$loginId) {
+
+                                    ?>
+
+                                    <li><a href="<?php echo Mage::helper('marketplace/dashboard')->getregister(); ?>" title=""><?php echo $this->__('Seller login'); ?></a></li>
+
+                                    <?php } else { ?>
+
+                                    <li><a href="<?php echo Mage::getUrl('customer/account'); ?>" title=""><?php echo $this->__('Account Dashboard'); ?></a></li>
+
+                                    <?php } ?>
+
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="closed" data-nm-hover-toggle="data-nm-hover-toggle" id="m_mall_header_title_switch">
+                                <span class="m_mall_menu_title"><?php echo $this->__('Our sellers'); ?></span>
+                                <?php $increment = 0; ?>
+                                <ul class="menu_options hoverToggled">
+
+                                    <?php
+
+                                    $model = Mage::getModel ( 'customer/customer' )->getCollection ()->addAttributeToFilter ( 'customerstatus', 1 );
+
+                                    $id = array ();
+
+                                    if ($model->getSize () > 0) {
+
+                                        foreach ( $model as $_model ) {
+                                            $id [] = $_model ['entity_id'];
+                                        }
+
+                                        $collection = Mage::getModel ( 'marketplace/sellerprofile' )->topSeller ( $id );
+
+                                        foreach ( $collection as $_collection ) {
+
+                                            $seller_id = $_collection ['seller_id'];
+                                            $target_path = 'marketplace/seller/displayseller/id/' . $seller_id;
+                                            $mainUrlRewrite = Mage::getModel ( 'core/url_rewrite' )->load ( $target_path, 'target_path' );
+                                            $getRequestPath = $mainUrlRewrite->getRequestPath ();
+                                            $get_requestPath = Mage::getUrl ( $getRequestPath );
+
+                                            if ($increment < 5 && $_collection ['store_title'] != '') {
+                                    ?>
+                                        <li><a href="<?php echo $get_requestPath; ?>" title="<?php echo $_collection['store_title']; ?>"><?php echo $_collection['store_title']; ?></a></li>
+
+                                    <?php
+                                            }
+
+                                            $increment ++;
+
+                                        }
+
+                                    }
+                                    ?>
+                                        <li><a href="<?php echo Mage::helper('marketplace/url')->getviewallsellerUrl(); ?>"><?php echo $this->__('View All'); ?></a></li>
+
+                                </ul>
+                            </div>
+                        </li>
+
+                        <?php } else { ?>
+
+                        <li><?php echo $this->getChildHtml('welcome') ?> <?php echo $this->getAdditionalHtml() ?></li>
+
+                        <?php } ?>
+
+                        <?php echo $this->getChildHtml('topLinks'); ?>
+
+                    </ul>
+
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('minimall_header_left_block')->toHtml() ?>
+
+                </div>
+			</div>
+
+            <div class="site_width_container">
+
+                <div class="primary_row">
+                <?php if((!$this->helper('customer')->isLoggedIn())) {?>
+                    <a class="download_app_header" href="<?php echo Mage::getUrl('customer/account/login/'); ?>" title="My Account">
+						My Account&nbsp;
+					</a>
+                    <?php } ?>
+					<a href="<?php echo Mage::getBaseUrl(); ?>" id="site_logo" title="ZLABELZ">ZLABELZ</a>
+                    <ul class="customer_options header_minicart_wrrapger">
+                        <li class="closed" data-nm-hover-toggle="data-nm-hover-toggle">
+                            <a href="javascript:void(0)" id="cart_link" title=
+                            "Go to Bag"><i id="cart_count">
+								<?php
+                        $_cartQty = Mage::getSingleton('checkout/cart')->getItemsCount();
+                        echo $_cartQty;
+                        ?>
+                            </i><?php echo $this->__('Shopping bag'); ?></a>
+                            <div class="hoverToggled" id="cart_review_container">
+                             <?php echo $this->getChildHtml('minicart_head');?>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+<div class="smallMobile_banner">
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header-section-block')->toHtml();?>
+</div>
+<div id="header-nav" class="skip-content">
+<?php echo $this->getChildHtml('topMenu')?>
+
+</div>
+
+<?php echo $this->getChildHtml('topContainer'); ?>
+
+<script type="text/javascript">
+document.observe("dom:loaded", function() {
+// Sticky header scroll function
+    var facebookVar= 0;
+Event.observe(window, 'scroll', function() {
+var scrollOffsets = document.viewport.getScrollOffsets();
+    var scrollTop = scrollOffsets.top;
+if(scrollTop){
+     if (scrollTop > 50) {
+     	//$('header').addClassName('f-header');
+     } else {
+     	//$('header').removeClassName('f-header');
+     }
+}
+
+});
+window.onscroll = appthascroll;
+var reviewScroll = 0;
+function appthascroll () {
+var scrollOffsets = document.viewport.getScrollOffsets();
+    var scrollTop = scrollOffsets.top;
+    if(scrollTop == 0){
+    jQuery('header').removeClassName('f-header');
+    }
+
+}
+
+});
+
+jQuery(document).ready(function() {
+var isWindowsPhone = /windows phone/i.test(navigator.userAgent.toLowerCase());
+var ll = jQuery( window ).width();
+if(isWindowsPhone){
+    jQuery("#mp_top_nav li.mp_engage_tab").click(function() {
+        jQuery("#mp_top_nav li.mp_engage_tab ul").toggle();
+        jQuery("#mp_top_nav li.mp_sellers ul").hide();
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+        });
+        jQuery("#mp_top_nav li.mp_sellers").click(function() {
+        jQuery("#mp_top_nav li.mp_sellers ul").toggle();
+        jQuery("#mp_top_nav li.mp_engage_tab ul").hide();
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+        });
+        jQuery("#mp_top_nav li.mp_sellers_tab").click(function() {
+        jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle();
+        jQuery("#mp_top_nav li.mp_sellers ul").hide();
+        jQuery("#mp_top_nav li.mp_engage_tab ul").hide();
+        });
+}else{
+if(ll == 320 || ll == 1000)
+{
+jQuery("#mp_top_nav li.mp_engage_tab").click(function() {
+jQuery("#mp_top_nav li.mp_engage_tab ul").toggle()
+});
+jQuery("#mp_top_nav li.mp_sellers").click(function() {
+jQuery("#mp_top_nav li.mp_sellers ul").toggle()
+});
+jQuery("#mp_top_nav li.mp_sellers_tab").click(function() {
+jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle()
+});
+}
+}
+});
+</script>

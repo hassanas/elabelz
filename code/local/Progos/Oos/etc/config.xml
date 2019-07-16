@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Oos>
+            <version>0.1.0</version>
+        </Progos_Oos>
+    </modules>
+    <global>
+        <models>
+            <oos>
+                <class>Progos_Oos_Model</class>
+            </oos>
+        </models>
+        <helpers>
+            <progos_oos>
+                <class>Progos_Oos_Helper</class>
+            </progos_oos>
+        </helpers>
+        <blocks>
+            <progos_oos>
+                <class>Progos_Oos_Block</class>
+            </progos_oos>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <oos>
+                <use>admin</use>
+                <args>
+                    <module>Progos_Oos</module>
+                    <frontName>admin_oos</frontName>
+                </args>
+            </oos>
+        </routers>
+    </admin>
+</config>

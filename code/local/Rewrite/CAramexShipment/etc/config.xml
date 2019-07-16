@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Rewrite_CAramexShipment>
+            <version>1.0</version>
+        </Rewrite_CAramexShipment>
+    </modules>
+    <admin>
+        <routers>
+            <aramexshipment>
+                <args>
+                    <modules>
+                        <Rewrite_CAramexShipment before="Aramex_Shipment">Rewrite_CAramexShipment</Rewrite_CAramexShipment>
+                    </modules>
+                </args>
+            </aramexshipment>
+        </routers>
+    </admin>
+</config> 

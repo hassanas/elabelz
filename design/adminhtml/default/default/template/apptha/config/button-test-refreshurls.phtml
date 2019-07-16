@@ -1,0 +1,41 @@
+<?php
+/**
+ * Created by Azhar 10-11-2016
+ */
+?>
+<button style="" onclick="javascript:refreshUrls(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
+    <span><?php echo $this->escapeHtml($this->getButtonLabel()) ?></span>
+</button>
+<script type="text/javascript">
+    function refreshUrls() {
+        //alert("url Refresh is working "); return;
+
+        var request = new Ajax.Request('<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/refreshUrls'); ?>', {
+            method: 'get',
+            parameters: {
+               // domain: document.getElementById('zendesk_general_domain').value,
+               // username: document.getElementById('zendesk_general_email').value,
+               // password: document.getElementById('zendesk_general_password').value
+            },
+            onCreate: function() {
+                document.getElementById('refresh-url-results').innerHTML = 'Process is running, it will take some time and do not close the window.';
+                document.getElementById('loading-mask').style.display = "block";
+            },
+            onSuccess: function(transport) {
+                document.getElementById('refresh-url-results').innerHTML = '';
+                document.getElementById('loading-mask').style.display = "none";
+                //alert(transport.responseJSON.msg); 
+                  //  return;
+                if (transport.responseJSON.success == 'true') {                    
+                    var message = '<ul class="messages"><li class="success-msg">Process successfully complete for configurable product images url</li></ul>';
+                    document.getElementById('refresh-url-results').innerHTML = message;
+                } else {
+                    var message = '<ul class="messages"><li class="error-msg">Unable to Process the request, Please try again or contact with technical team </li></ul>';
+                    document.getElementById('refresh-url-results').innerHTML = message;
+                }
+            }
+        });
+    }
+</script>
+<div id="refresh-url-results"></div>
+

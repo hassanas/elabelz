@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_Captcha>
+      <version>0.1.0</version>
+    </Progos_Captcha>
+  </modules>
+  <global>
+    <models>
+      <captcha>
+        <rewrite>
+          <observer>Progos_Captcha_Model_Observer</observer>
+        </rewrite>
+      </captcha>
+    </models>
+  </global>
+</config> 

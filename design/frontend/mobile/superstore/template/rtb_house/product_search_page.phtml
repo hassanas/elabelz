@@ -1,0 +1,27 @@
+<?php
+    /**
+     * User: Saroop
+     * Date: 07/04/2017
+     *
+     * RTB House Code added on Product Search page.
+     *
+     * */
+    $_productCollection = $this->getLoadedProductCollection();
+    $productIds = "";
+    $totalCount = $_productCollection->count();
+    if( $totalCount > 0) {
+        $count = 1;
+        foreach ($_productCollection as $_product) {
+            $productIds .= $_product->getSku();
+
+            if( $count < $totalCount  ){
+                $productIds .=",";
+            }
+            $count++;
+        }
+    }
+
+?>
+<iframe src="//creativecdn.com/tags?id=pr_X6Bd26dydFjQmhr1EINF_listing_<?php echo $productIds;?>" width="1" height="1" scrolling="no" frameBorder="0"
+        style="display: none;">
+</iframe>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <progos_cache_api translate="label">
+            <label>Cache Api</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>2000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <apicache translate="label">
+                    <label>General Settings</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable Cache</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>    
+                        <cache_actions translate="label">
+                            <label>Api For Cache</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>All cachable Apis, separated with Comma</comment>
+                        </cache_actions>
+                        <min_page_limit translate="label">
+                            <label>Minimum Limit For Listing</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </min_page_limit>
+                        <max_page_limit translate="label">
+                            <label>Maximum Limit For Listing</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>600</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </max_page_limit>
+                    </fields>
+                </apicache>
+            </groups>
+        </progos_cache_api>
+    </sections>
+</config>

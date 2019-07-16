@@ -1,0 +1,32 @@
+<?php
+/*
+NOTICE OF LICENSE
+
+This source file is subject to the SafeMageEULA that is bundled with this package in the file LICENSE.txt.
+
+It is also available at this URL: http://www.safemage.com/LICENSE_EULA.txt
+
+Copyright (c)  SafeMage (http://www.safemage.com/)
+*/
+?>
+<?php /* @var $this SafeMage_Extensions_Block_Adminhtml_System_Extension_List */ ?>
+<?php $moduleConfigList = $this->getExtensionList(); ?>
+<ul>
+    <?php foreach ($moduleConfigList as $code => $config): ?>
+        <li class="safemage-item">
+            <div class="ovh">
+                <div class="safemage-row safemage-ext-name">
+                    <?php echo $this->getExtensionName($config, $code) . ' ' . $this->getExtensionVersion($config) ?>
+                </div>
+                <?php if ($this->getExtensionUrl($config)): ?>
+                    <a class="safemage-link" href="<?php echo $this->getExtensionUrl($config) ?>" target="_blank">
+                <?php endif; ?>
+                        <div class="safemage-img safemage-row"><img src="<?php echo $this->getImageUrl($code) ?>"/></div>
+                <?php if ($this->getExtensionUrl($config)): ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div><?php echo $this->getEnableSelectHtml($config, $code) ?></div>
+        </li>
+    <?php endforeach; ?>
+</ul>

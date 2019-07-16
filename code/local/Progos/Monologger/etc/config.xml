@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Monologger>
+            <version>0.1.0</version>
+        </Progos_Monologger>
+    </modules>
+    <global>
+        <helpers>
+            <monologger>
+                <class>Progos_Monologger_Helper</class>
+            </monologger>
+        </helpers>
+        <blocks>
+            <monologger>
+                <class>Progos_Monologger_Block</class>
+            </monologger>
+        </blocks>
+        <models>
+            <monologger>
+                <class>Progos_Monologger_Model</class>
+                <resourceModel>monologger_mysql4</resourceModel>
+            </monologger>
+            <monologger_mysql4>
+                <class>Progos_Monologger_Model_Mysql4</class>
+                <entities>
+                    <monologger>
+                        <table>monologs</table>
+                    </monologger>
+                </entities>
+            </monologger_mysql4>
+        </models>
+        <resources>
+            <monologger_setup>
+                <setup>
+                    <module>Progos_Monologger</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </monologger_setup>
+            <monologger_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </monologger_write>
+            <monologger_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </monologger_read>
+        </resources>
+        <log>
+            <core>
+                <writer_model>Progos_Monologger_Model_Logwriter</writer_model>
+            </core>
+        </log>
+    </global>
+    <admin>
+        <routers>
+            <monologger>
+                <use>admin</use>
+                <args>
+                    <module>Progos_Monologger</module>
+                    <frontName>admin_monologger</frontName>
+                </args>
+            </monologger>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <system>
+                <children>
+                    <monologger module="monologger">
+                        <title>Monologger</title>
+                        <sort_order>100</sort_order>
+                        <children>
+                            <monologger module="monologger">
+                                <title>Manage Monologger</title>
+                                <sort_order>0</sort_order>
+                                <action>admin_monologger/adminhtml_monologger</action>
+                            </monologger>
+                            <configlogger module="monologger">
+                                <title>Monologger Settings</title>
+                                <sort_order>20</sort_order>
+                                <action>adminhtml/system_config/edit/section/dev</action>
+                            </configlogger>
+                        </children>
+                    </monologger>
+                </children>
+            </system>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <monologger translate="title" module="monologger">
+                                    <title>Monologger</title>
+                                    <sort_order>100</sort_order>
+                                    <children>
+                                        <monologger translate="title">
+                                            <title>Manage Monologger</title>
+                                            <sort_order>0</sort_order>
+                                        </monologger>
+                                        <configlogger module="monologger">
+                                            <title>Monologger Settings</title>
+                                            <sort_order>20</sort_order>
+                                        </configlogger>
+                                    </children>
+                                </monologger>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <monologger>
+                    <file>monologger.xml</file>
+                </monologger>
+            </updates>
+        </layout>
+    </adminhtml>
+    <default>
+        <monologger>
+            <handlers>
+                <MySQLHandler>
+                    <active>1</active>
+                    <level>DEBUG</level>
+                    <bubble>true</bubble>
+                </MySQLHandler>
+            </handlers>
+        </monologger>
+    </default>
+    <crontab>
+        <jobs>
+            <monologger_remove_logs>
+                <schedule>
+                    <cron_expr>50 0 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>monologger/cron::removeLogs</model>
+                </run>
+            </monologger_remove_logs>
+        </jobs>
+    </crontab>
+</config> 

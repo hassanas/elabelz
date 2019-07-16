@@ -1,0 +1,198 @@
+<?php if (!Mage::getSingleton('customer/session')->isLoggedIn()){?>
+
+<div id="onestepcheckout_loginbox"  class='op_login_area'>
+	<div class="onestepcheckout-login-form">
+    <h3>
+        <?php echo $this->__('Login') ?>
+    </h3>
+	<p>
+		<?php echo $this->__('Please login with your email address and password') ?>
+	</p>
+
+<?php
+
+$login_url	= $this->getUrl('*/*/login', array('_secure'=>(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on')));
+$http_mode	= (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on');
+if($http_mode)
+	$login_url	= str_replace('http:', 'https:', $login_url);  
+?>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+    <form method="post" id="login-form" action="<?php echo $login_url ?>">
+        <div class="boxcontent form_fields">
+
+			<table>
+				<tr>
+					<td><label>
+							<?php echo $this->__('Email Address') ?>:<span class="required"></span>
+						</label>
+						<div class="data_area">
+							<input type="text" name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" id="email" class="input-text required-entry validate-email-nonarabic" title="<?php echo $this->__('Email Address') ?>" size="30" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+
+					<td><label for="pass">
+							<?php echo $this->__('Password') ?>:<span class="required"></span>
+						</label>
+						<div class="input-box">
+							<input type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" size="30" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="buttons-set">
+
+							<div class="login_submit_loading">
+								<button type="submit" class="button" title="<?php echo $this->__('Login') ?>" name="send" id="send2" onclick="chkCustomer()"><?php echo $this->__('Login') ?></button>
+								<span class="please-wait" id="login-please-wait" style="display:none;">
+									<img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>" class="v-middle" alt=""/>
+								</span>
+								<div class="new_register"></div>
+							</div>
+							<a href="javascript:void(0);" class="f-left onestepcheckout_forgotlink" onclick='open_forgot();'><?php echo $this->__('Forgot Your Password?') ?></a>
+						</div>
+					</td>
+				</tr>
+                <tr>
+                    <td colspan="2">
+                        <?php echo $this->getLayout()->createBlock("sociallogin/buttons")->setTemplate("sociallogin/customer/buttons.phtml")->toHtml(); ?>
+                    </td>
+                </tr>
+			</table>
+			
+        </div>
+
+    </form>
+<?php
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user 			= 'Guest';
+$customerId 	= '';
+$loggedInStatus	= 'Logged Out';
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+	$user 			= 	'User';
+	$customer 		= 	Mage::getSingleton('customer/session')->getCustomer(); 
+    $customerId 	= 	$customer->getId();
+    $loggedInStatus	= 	'Logged In';
+}
+
+$codeArray = explode('_',$store->getCode());
+$language = '';
+if( !empty( $codeArray ) )
+	$language = strtoupper( $codeArray[0] );
+
+$commonDatalayerCode = "
+		'pageType': 'Checkout',
+		'pageCategory':'No Category',
+		'userId':'".$customerId."',
+		'userType':'".$user."',
+		'loggedInStatus':'".$loggedInStatus."',
+		'storeCountry':'".$store->getName()."',
+		'storeLanguage':'".$language."',
+		'currencyCode':'".$currency_code."',
+";
+
+$continuedatalayerguest = "
+	dataLayer.push({
+		".$commonDatalayerCode."
+		'event':'checkoutOption',
+		'ecommerce': {
+			'checkout_option': {
+				'actionField': {
+				'step':1,
+				'option': 'Sign In'
+				}
+			},
+		}
+	});
+";
+?>
+    <script>
+    // checking if customer already exist or not if it does exist redirect it to registration page
+     function chkCustomer(){
+		
+      	var email = document.getElementById('email').value;
+	    var password = document.getElementById('pass').value;
+       	
+		jQuery.ajax({
+		url: "<?php echo $this->getUrl('onestepcheckout/customerexist/customerchk', array('_secure'=>true)) ?>",
+		type: "POST",
+		data: { email: email, 
+			  password: password },
+		beforeSend: function () {
+			
+             jQuery('.new_register').html("");
+            },
+		success: function(result) {
+			result = JSON.parse(result);
+			if(result.status == true){
+			  jQuery(".new_register").html("<div class='loader'></div>");
+			   <?php echo $continuedatalayerguest; ?>
+			  jQuery('#login-form').submit();
+			}
+			else if(result.status == false && result.message != "switch"){
+				jQuery(".new_register").html("<p><?php echo $this->__('The password you entered is Incorrect, please try again') ?></p>");
+			}
+			else if(result.status == false && result.message == "switch"){
+				// jQuery('#login-form').prepend('<div id="form-errs" class="validation-advice error-msg"><?php echo $this->__("The email address is not registered with any account with us, would you like to continue to register or try again.") ?></div>');
+				var ch_reg_email = jQuery("#email").val();
+				jQuery("#ch_guest_email").val(ch_reg_email);
+				jQuery.confirm({
+		            title: "<?php echo $this->__("Information") ?>",
+		            confirmButtonClass: 'btn-info',
+		            // content: '<?php echo $this->__("The email address is not registered with this store, would you like to switch the account or continue to register for current store also.") ?>',
+		            content: '<?php echo $this->__("The email address is not registered with this store, please switch to your registered store.<br>Note: It will clear your shopping cart") ?>',
+					// confirmButton: "Register",
+					// cancelButton: "Switch Store",
+					confirmButton: "<?php echo $this->__("Switch Store") ?>",
+					cancel: function(){
+
+						// jQuery(".checkout_login_container").hide();
+						// var ch_guest_email = jQuery("#ch_guest_email").val();
+						// ch_guest_email = jQuery.trim(ch_guest_email);
+						// jQuery("#billing\\:email").val(ch_guest_email);   
+						// jQuery(".step_one_email span").html(ch_guest_email);
+						// jQuery("#scroll").show();
+						// var proReviewBlock = $j('.order_review_login #checkout-review').html();
+						// $j('.one_step2_helper_review').html('<div id="checkout-review" class="onestepcheckout_block">'+proReviewBlock+'</div>');
+						// $j('.order_review_login #checkout-review').remove('');
+						// jQuery("input[name='billing[register_account]']:last").trigger("click");
+				    },
+				    confirm: function() {
+				    	store = "<?php echo Mage::getBaseUrl() ?>";
+				    	store = store.split("/");
+				    	store.pop();
+				    	store.pop();
+				    	store = store.join("/");
+				        window.location.href = store + "/" + result.switch_to + "/";
+				    }
+		        });
+				// jQuery('.new_register').html('<p><?php echo $this->__("The email address is not registered with any account with us, would you like to continue to register or try again.") ?></p>');
+			}
+
+		}
+			});
+      }
+
+      function registerCustomer(){
+      	           jQuery(".checkout_login_container").hide();
+                    var ch_register_email = jQuery("#email").val()
+                    jQuery('.validate-email').val(ch_register_email);              
+                    jQuery("#scroll").show();
+                    jQuery("#scroll .isGuestCheckoutAllowed li#register input").trigger( "click" );
+                    
+      }
+    </script>
+    <script type="text/javascript">
+    //<![CDATA[
+        var loginForm = new VarienForm('login-form', true);
+    //]]>
+    </script>
+
+	</div>
+
+</div>
+<?php }?>

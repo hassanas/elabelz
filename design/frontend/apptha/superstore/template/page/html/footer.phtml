@@ -1,0 +1,114 @@
+<?php
+/**
+ * Magento
+ *  
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<footer id="site_footer">
+    <?php echo $this->getChildHtml('newsletter'); ?>
+
+    <div class="gray-bg">
+        <div class="site_width_container">
+            <div class="column_grid footer_contact_no">
+                <div class="column full_width contact_homePage">
+                    <p class="title"><?php echo $this->__("we are dedicated to our customers") ?></p>
+                    <p class="email footerEmailSection">
+                    <span class="callus"><?php echo $this->__("Call us :") .' '?></span>
+                    <span class="phonenumber"><?php echo $this->__(Mage::getStoreConfig('general/store_information/phone'));?>&nbsp;</span>
+                    <span class="email"><?php echo $this->__(Mage::getStoreConfig('trans_email/ident_custom2/email'));?></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer_wrapper">
+        <div class="site_width_container">
+            <div class="custom_row secondary">
+                <div class="footer_top_divider">&nbsp;</div>
+                <div class="column one_fifth"  style="padding-left: 0;">
+                    <p class="title" id="store_language_hide"><?php echo $this->__("Other Countries"); ?></p>
+                    <div class="styled-select">
+                        <?php echo $this->getChildHtml('store_language') ?>
+                    </div>
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('minimall_footer_social_links')->toHtml(); ?>
+                </div>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('minimall_footer_links')->toHtml(); ?>
+
+                <div class="footer_bottom_divider">&nbsp;</div>
+            </div>
+            <div class="custom_row support">
+                <div class="mini_footer_left">
+                    <h3><?php echo $this->__("Payment Methods") ?></h3>
+                    <ul class="payment_methods">
+                        <!-- <li class="paypal"><?php echo $this->__("PayPal") ?></li> -->
+                        <li class="mastercard"><?php echo $this->__("MasterCard") ?></li>
+                        <li class="visa"><?php echo $this->__("Visa") ?></li>
+                        <li class="cash_on_delivery"><?php echo $this->__("Cash On Delivery") ?></li>
+                    </ul>
+                </div>
+                <div class="mini_footer_right copyright"><?php echo $this->__($this->getCopyright()) ?> </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+<script type="text/javascript">
+    <?php if(!empty($_GET['msg'])):?>
+    jQuery.alert({
+        title: "Alert!",
+        content: '<?php echo $_GET["msg"]?>'
+    });
+    <?php endif;?>
+</script>
+<script type="text/javascript" src="//cdn25.vizury.com/ssp/MEA_eLabelz_EN/wpn4976.js" rel="dns-prefetch"> </script>
+<script rel="prefetch" as="script" src="<?php echo $this->getSkinUrl('js/footerscript.js') ?>"></script>
+<script>
+var NEOWIZE_INIT_API_KEY = "41fb525446494ca7961925d6b2e0b7e4";
+!function(){function a(a,b){__nwaq.push([a,b])}void
+0===window.Neowize&&(window.__nwaq=[],
+window.Neowize=window.Neowize||
+{UserEvents:{user_visit:function(){a("v",arguments)},
+user_view_item:function(){a("i",arguments)},added_item_to_cart:
+function(){a("a",arguments)},removed_item_from_cart:
+function(){a("r",arguments)},user_complete_checkout:function(){
+a("c",arguments)}}})}();
+</script>
+<script rel="dns-prefetch" as="script" type="text/javascript" id="shoptimally-src" async="" src="//s3-eu-west-1.amazonaws.com/shoptimally-ire/dist/special/elabelz/nwa.gz.js"></script>
+<script rel="prefetch" as="script" type="text/javascript" src="<?php echo $this->getSkinUrl('js/neowize_widget.js') ?>"></script>
+
+<style>
+    #consumer_rights .hint_container { display:none; }
+    .full_width {
+        width:100%;
+    }
+    .footer_wrapper .form-language a { display:none; }
+    .full_width_image img { display: none; }
+</style>
+
+<script>
+    if ($j('body').hasClass('onestepcheckout-index-index')) {
+        $j('#store_language_hide').hide();
+    }
+</script>

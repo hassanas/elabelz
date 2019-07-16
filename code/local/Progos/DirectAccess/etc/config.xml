@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_DirectAccess>
+            <version>0.0.1</version>
+        </Progos_DirectAccess>
+    </modules>
+    <global>
+        <helpers>
+            <directaccess>
+                <class>Progos_DirectAccess_Helper</class>
+            </directaccess>
+        </helpers>
+        <blocks>
+            <directaccess>
+                <class>Progos_DirectAccess_Block</class>
+            </directaccess>
+        </blocks>
+        <models>
+            <directaccess>
+                <class>Progos_DirectAccess_Model</class>
+            </directaccess>
+        </models>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Progos_DirectAccess before="Mage_Adminhtml">Progos_DirectAccess_Adminhtml</Progos_DirectAccess>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <directaccess>
+                    <file>directaccess.xml</file>
+                </directaccess>
+            </updates>
+        </layout>
+    </adminhtml>
+</config> 

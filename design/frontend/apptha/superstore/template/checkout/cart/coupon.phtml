@@ -1,0 +1,100 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<form id="discount-coupon-form" action="<?php echo $this->getUrl('checkout/cart/couponPost') ?>" method="post">
+    <div class="discount">
+        <div id="messages_product_view">
+        <?php echo $this->getMessagesBlock()->toHtml(); ?>
+        </div>
+        <h2><?php echo $this->__('Promo Code') ?></h2>
+        <div class="discount-form">
+            <label for="coupon_code"><?php echo $this->__('Promo Code') ?></label>
+            <input type="hidden" name="remove" id="remove-coupone" value="0" />
+            <div class="field-wrapper">
+                <input class="input-text" placeholder="<?php $this->__('Please enter your promo code here')?>" type="text" id="coupon_code" name="coupon_code" value="<?php echo $this->escapeHtml($this->getCouponCode()) ?>" />
+                <div class="button-wrapper">
+                    <button type="button" title="<?php echo $this->__('Apply') ?>" data-btn="Apply" class="button2 discountFormSubmit" value="<?php echo $this->__('Apply') ?>">
+                    <span><span><?php echo $this->__('Apply') ?></span></span></button>
+                    <?php if(strlen($this->getCouponCode())): ?>
+                        <button type="button" title="<?php echo $this->__('Cancel') ?>" data-btn="Cancel" class="button2 cancel-coupon discountFormSubmit" value="<?php echo $this->__('Cancel') ?>">
+                        <span><span><?php echo $this->__('Cancel') ?></span></span>
+                        </button>
+                    <?php endif;?>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<?php $c_obj = new Mage_Checkout_Block_Cart(); ?>
+<?php if($c_obj->getContinueShoppingUrl()): ?>
+	<div class="continue_shopping_label">
+		<h4><a href="javascript:;" title="<?php echo Mage::helper('core')->quoteEscape($c_obj->__('Continue Shopping')) ?>" onclick="setLocation('<?php echo Mage::helper('core')->quoteEscape($c_obj->getContinueShoppingUrl()) ?>')">&nbsp;&nbsp; <?php echo $c_obj->__('Continue Shopping') ?></a></h4>
+	</div>
+<?php endif; ?>
+<div class="cart_payment_img">
+	<h3><?php echo $this->__('Payment Methods') ?></h3>
+	<ul class="payment_methods">
+		<!-- <li class="paypal">PayPal</li> -->
+		<li class="mastercard">MasterCard</li>
+		<li class="visa">Visa</li>
+		<li class="cash_on_delivery">Cash On Delivery</li>
+	</ul>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+jQuery( document ).ready(function() {
+    jQuery("#messages_product_view ul.messages").css("display", "block");
+});
+var discountForm = new VarienForm('discount-coupon-form');
+discountForm.submit = function (isRemove) {
+    if (isRemove) {
+        $('coupon_code').removeClassName('required-entry');
+        $('remove-coupone').value = "1";
+    } else {
+        $('coupon_code').addClassName('required-entry');
+        $('remove-coupone').value = "0";
+    }
+    return VarienForm.prototype.submit.bind(discountForm)();
+}
+
+jQuery(".discountFormSubmit").click(function(event) {
+    /* Act on the event */
+    event.preventDefault();
+    getCoponValue = jQuery(this).attr('data-btn');
+    getCouponStatus = jQuery("#coupon_code").val();
+    console.log(getCoponValue,getCouponStatus);
+    if(getCoponValue == "Apply"){  
+        discountForm.submit(false);
+        if(getCouponStatus != "" && getCouponStatus != " "){
+           jQuery(this).attr('disabled','disabled');
+        }
+    } else if(getCoponValue == "Cancel"){
+        discountForm.submit(true);
+        jQuery(this).attr('disabled','disabled');
+    }
+});
+//]]>
+</script>

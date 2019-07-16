@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <progos_cloudfront_settings translate="title" module="progos_cloudfront">
+                                        <title>CloudFront Url Head</title>
+                                    </progos_cloudfront_settings>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <progos_cloudfront_settings translate="title" module="progos_cloudfront">
+                                <title>CloudFront Url Head</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <progos_cloudfront_settings_backend translate="title">
+                                        <title>CloudFront Url Head</title>
+                                    </progos_cloudfront_settings_backend>
+                                </children>
+                            </progos_cloudfront_settings>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

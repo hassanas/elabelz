@@ -1,0 +1,58 @@
+<?php
+    /**
+     * User: Saroop
+     * Date: 07/04/2017
+     *
+     * RTB House Code added on Product view page.
+     *
+     * */
+    //Get Current Category Id
+    $productId = $this->getProduct()->getSku();
+?>
+<iframe src="//creativecdn.com/tags?id=pr_X6Bd26dydFjQmhr1EINF_offer_<?php echo $productId;?>" width="1" height="1" scrolling="no" frameBorder="0"
+        style="display: none;">
+
+</iframe>
+
+<?php 
+    /**
+     * User: Saroop
+     * Date: 18/05/2017
+     * Emarsys Predictor. Run when user is loggedin.
+     * */
+    $customerEmail = "";
+    if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        $customerEmail = $customer->getEmail();
+    }
+
+    $cart = Mage::getSingleton('checkout/session')->getQuote();
+    $cartItem = $cart->getAllVisibleItems();
+    $count = 1;
+    $emarsysString = ''; //Create html.
+    $totalCount = count($cartItem);
+    if( $totalCount > 0 ){
+        foreach ( $cartItem as $item) {
+            //Get Parent Product Sku.
+            $sku = Mage::getResourceModel('catalog/product')->getProductsSku($item->getProductId());
+            $productSku  =  $sku[0]['sku'];
+            $emarsysString .="{item:'".$productSku."', price:".$item->getPrice().",quantity:".$item->getQty()."}";
+            if( $count < $totalCount ){
+                $emarsysString .=",";
+            }
+            $count++;
+        }
+    }
+
+        ?>
+    <script type="text/javascript">
+            <?php if( !empty($customerEmail) ) { ?>
+                        ScarabQueue.push(['setEmail', '<?php echo $customerEmail ; ?>']);
+            <?php } ?>
+            ScarabQueue.push(['view', '<?php echo  $productId; ?>' ]);
+            ScarabQueue.push(['cart', [
+                <?php echo $emarsysString ; ?>
+            ]]);
+
+            ScarabQueue.push(['go']);
+    </script>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_appfilters_index>
+        <reference name="content">
+            <block type="emapi/adminhtml_appfilters" name="appfilters"
+                   template="emapi/appfilters.phtml" output="toHtml"/>
+        </reference>
+    </adminhtml_appfilters_index>
+</layout>

@@ -1,0 +1,54 @@
+<config>
+    <sections>
+        <api>
+            <groups>
+                <ecoprocessor translate="label" module="sales">
+                    <label>New desktop/mobile checkout</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>250</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enableNewCheckout translate="label">
+                            <label>Enable new checkout</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enableNewCheckout>
+                        <numberOfOrders translate="label">
+                            <label>Number of desktop orders to process</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </numberOfOrders>
+                        <enableRetries translate="label">
+                            <label>Enable Retries in Cron</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enableRetries>
+                        <numberRetries translate="label">
+                            <label>Number of retries</label>
+                            <comment>(Default value for retries is 6)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </numberRetries>
+                    </fields>
+                </ecoprocessor>
+            </groups>
+        </api>
+    </sections>
+</config> 

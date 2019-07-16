@@ -1,0 +1,424 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Edit customer address template
+ *
+ * @see Mage_Customer_Block_Address_Edit
+ */
+
+
+?>
+<?php if ($this->getTitle()): ?>
+    <div class="page-title">
+        <h1><?php echo $this->getTitle() ?></h1>
+    </div>
+<?php endif; ?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml()
+/**
+ *  Customer address form
+ */
+?>
+<form action="<?php echo $this->getSaveUrl() ?>" method="post" id="form-validate" class="scaffold-form"
+      enctype="multipart/form-data">
+    <div class="fieldset">
+        <?php echo $this->getBlockHtml('formkey'); ?>
+        <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>"/>
+        <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>"/>
+        <h2 class="legend"><?php
+            /**
+             * Display contact information field
+             * as required field
+             */
+            echo $this->__('Contact Information') ?></h2>
+        <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+        <ul class="form-list">
+            <li class="fields cust_names">
+                <?php echo $this->getNameBlockHtml() ?>
+            </li>
+            <li class="wide cust_company_name">
+                <label for="company"><?php
+                    /**
+                     *  Display company field
+                     */
+                    echo $this->__('Company') ?></label>
+                <div class="input-box">
+                    <input type="text" name="company" id="company" title="<?php echo $this->__('Company') ?>"
+                           value="<?php echo $this->escapeHtml($this->getAddress()->getCompany()) ?>"
+                           class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>"/>
+                </div>
+            </li>
+            <li class="fields cust_tele_fax_no">
+                <div class="field">
+                    <label for="telephone" class="required"><em>*</em><?php
+                        /**
+                         *  Display customer telephone field
+                         */
+                        echo $this->__('Phone number') ?></label>
+                    <div class="input-box country_code_with_phone">
+                        <?php
+                        $phone_r = trim($this->helper('customer/address')->getAttributeValidationClass('telephone'));
+                        $tel_no = $this->escapeHtml($this->getAddress()->getTelephone());
+                        $slices = substr($tel_no, 0, 3);
+                        $slices2 = substr($tel_no, 0, 2);
+                        $slices3 = substr($tel_no, 0, 1);
+                        if ($slices == "971" || $slices == "966" || $slices == "973" || $slices == "974" || $slices == "964" || $slices == "965" || $slices == "968") {
+                            $tel_no_change = substr($tel_no, 3);
+                        } else if ($slices2 == "20" || $slices2 == "44" || $slices2 == "00") {
+                            $tel_no_change = substr($tel_no, 2);
+                        } else if ($slices3 == "1") {
+                            $tel_no_change = substr($tel_no, 1);
+                        } else {
+                            $tel_no_change = str_replace("+", "", $tel_no);
+                        }
+                        $skip = false;
+                        ?>
+                        <select id="country_code" name="country_code" class="required-entry">
+                            <option><?php echo $this->__('Select Country Code'); ?></option>
+                            <option value="971" <?php if ($slices == "971") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UAE'); ?>
+                                <?php if ($locale == "ar_SA") {
+                                    echo "971+";
+                                } else {
+                                    echo "+971";
+                                } ?></option>
+                            <option value="966" <?php if ($slices == "966") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Saudi Arabia'); ?><?php if ($locale == "ar_SA") {
+                                    echo "966+";
+                                } else {
+                                    echo "+966";
+                                } ?></option>
+                            <option value="973" <?php if ($slices == "973") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Bahrain'); ?><?php if ($locale == "ar_SA") {
+                                    echo "973+";
+                                } else {
+                                    echo "+973";
+                                } ?></option>
+                            <option value="20" <?php if ($slices2 == "20") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Egypt'); ?><?php if ($locale == "ar_SA") {
+                                    echo "20+";
+                                } else {
+                                    echo "+20";
+                                } ?></option>
+                            <option value="964" <?php if ($slices == "964") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Iraq'); ?><?php if ($locale == "ar_SA") {
+                                    echo "964+";
+                                } else {
+                                    echo "+964";
+                                } ?></option>
+                            <option value="965" <?php if ($slices == "965") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Kuwait'); ?><?php if ($locale == "ar_SA") {
+                                    echo "965+";
+                                } else {
+                                    echo "+965";
+                                } ?></option>
+                            <option value="968" <?php if ($slices == "968") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Oman'); ?><?php if ($locale == "ar_SA") {
+                                    echo "968+";
+                                } else {
+                                    echo "+968";
+                                } ?></option>
+                            <option value="44" <?php if ($slices2 == "44") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UK'); ?><?php if ($locale == "ar_SA") {
+                                    echo "44+";
+                                } else {
+                                    echo "+44";
+                                } ?></option>
+                            <option value="1" <?php if ($slices3 == "1") {
+                                $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('US'); ?><?php if ($locale == "ar_SA") {
+                                    echo "1+";
+                                } else {
+                                    echo "+1";
+                                } ?></option>
+                            <option value="00" <?php if (!$skip) {
+                                if ($slices2 == "00") { ?> selected="selected" <?php } else { ?> selected="selected" <?php }
+                            } ?>><?php echo $this->__('Other Countries'); ?><?php if ($locale == "ar_SA") {
+                                    echo "+";
+                                } else {
+                                    echo "+";
+                                } ?></option>
+                        </select>
+                        <input type="text" class="input-text required-entry country_code_tel"
+                               value="<?php echo $tel_no_change; ?>" autocomplete="off"
+                               placeholder="<?php echo $this->__('Enter Phone no without country code'); ?>">
+                        <script type="text/javascript">
+                            jQuery(document).ready(function ($) {
+
+                                var country_code = jQuery("#country_code").val();
+                                var changed_country_code = country_code,
+                                    key_country_code = "<?php echo $tel_no_change; ?>";
+
+                                jQuery("#country_code").change(function () {
+                                    changed_country_code = jQuery("#country_code").val();
+                                    changed_country_code = changed_country_code.replace(/^0+/, '');
+
+                                    if (changed_country_code == "") {
+                                        jQuery('.org_phone_no').val(key_country_code);
+                                    }
+                                    else {
+                                        jQuery('.org_phone_no').val(changed_country_code + key_country_code);
+                                    }
+                                });
+
+                                jQuery(".country_code_tel").keyup(function () {
+                                    key_country_code = jQuery(this).val();
+                                    key_country_code = key_country_code.replace(/^0+/, '');
+                                    jQuery(this).val(key_country_code);
+
+                                    if (key_country_code == "") {
+                                        jQuery('.org_phone_no').val(key_country_code);
+                                    }
+                                    else {
+                                        jQuery('.org_phone_no').val(changed_country_code + key_country_code);
+                                    }
+
+                                });
+                            });
+                        </script>
+                        <input type="hidden" name="telephone" value="<?php echo $tel_no; ?>"
+                               title="<?php echo $this->__('Phone number') ?>"
+                               class="org_phone_no <?php if ($phone_r === 'required-entry') {
+                                   if ($locale == "ar_SA") {
+                                       echo ' validate-phone-allow-arabic';
+                                   } else {
+                                       echo ' validate-number2  validate-number';
+                                   }
+                               } ?>" id="telephone" maxlength="20"/>
+                    </div>
+                </div>
+                <?php
+                $fax_r = Mage::getStoreConfig('onestepcheckout/address_form/fax');
+                if ($fax_r !== 'hidden') {
+                    ?>
+                    <div class="field">
+                        <label for="fax"><?php
+                            /**
+                             *  Display customer fax field
+                             */
+                            echo $this->__('Fax') ?></label>
+                        <div class="input-box">
+                            <input type="tel" name="fax" id="fax" title="<?php echo $this->__('Fax') ?>"
+                                   value="<?php echo $this->escapeHtml($this->getAddress()->getFax()) ?>"
+                                   class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>"/>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="clear"></div>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+    <div class="fieldset">
+        <h2 class="legend"><?php echo $this->__('Address') ?></h2>
+        <ul class="form-list">
+            <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+            <li class="wide cust_add_one">
+                <label for="street_1" class="required"><em>*</em><?php
+                    /**
+                     *  Display street address field
+                     */
+                    echo $this->__('Street Address') ?></label>
+                <div class="input-box">
+                    <input type="text" name="street[]"
+                           value="<?php echo $this->escapeHtml($this->getAddress()->getStreet(1)) ?>"
+                           title="<?php echo $this->__('Street Address') ?>" id="street_1"
+                           class="input-text <?php echo $_streetValidationClass ?>"/>
+                </div>
+            </li>
+            <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+            <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                <li class="wide cust_add_two">
+                    <label for="billing:street<?php echo $_i ?>"><?php
+                        echo $this->__('Street Address %s', $_i) ?></label>
+                    <div class="input-box">
+                        <input type="text" name="street[]"
+                               value="<?php echo $this->escapeHtml($this->getAddress()->getStreet($_i)) ?>"
+                               title="<?php echo $this->__('Street Address %s', $_i) ?>"
+                               id="street_<?php echo $_i ?>"
+                               class="input-text <?php echo $_streetValidationClass ?>"/>
+                    </div>
+                </li>
+            <?php endfor; ?>
+
+            <li class="fields cust_state_city">
+                <div class="field">
+                    <label for="city" class="required"><em>*</em><?php
+                        /**
+                         *  Disply city field
+                         */
+                        echo $this->__('City') ?></label>
+                    <div class="input-box">
+                        <input type="text" name="city"
+                               value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>"
+
+                               class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>"
+                               title="<?php echo $this->__('City') ?>" id="city"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="region_id" class="required"><em>*</em><?php
+                        /**
+                         *  Display state or province field
+                         */
+                        echo $this->__('State/Province') ?></label>
+                    <div class="input-box">
+                        <select name="region_id" id="region_id" title="<?php echo $this->__('State/Province') ?>"
+                                class="validate-select" style="display:none;">
+                            <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                        </select>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                            $('region_id').setAttribute('defaultValue', "<?php echo $this->getAddress()->getRegionId() ?>");
+                            //]]>
+                        </script>
+                        <input type="text" id="region" name="region"
+                               value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>"
+                               title="<?php echo $this->__('State/Province') ?>"
+                               class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>"/>
+                    </div>
+                </div>
+            </li>
+            <li class="fields cust_zip_country">
+                <?php $zip_r = Mage::getStoreConfig('onestepcheckout/address_form/zip'); ?>
+                <?php if ($zip_r !== 'hidden') { ?>
+                    <div class="field">
+                        <label for="zip" class="required"><em>*</em><?php
+                            /**
+                             *  Display zip or postal code field
+                             */
+                            echo $this->__('Zip/Postal Code') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="postcode"
+                                   value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>"
+                                   title="<?php echo $this->__('Zip/Postal Code') ?>" id="zip"
+                                   class="input-text validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>"/>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="field">
+                    <label for="country" class="required"><em>*</em><?php
+                        /**
+                         *  Display country field
+                         */
+                        echo $this->__('Country') ?></label>
+                    <div class="input-box">
+                        <?php echo $this->getCountryHtmlSelect() ?>
+                    </div>
+                </div>
+            </li>
+            <?php
+            /**
+             *  Check the customer address vat attribute set as visible
+             *  if so display information like
+             *  vat number
+             */
+            if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+                <li class="wide cust_add_one">
+                    <label for="vat_id"><?php echo $this->__('VAT Number') ?></label>
+                    <div class="input-box">
+                        <input type="text" name="vat_id"
+                               value="<?php echo $this->escapeHtml($this->getAddress()->getVatId()) ?>"
+                               title="<?php echo $this->__('VAT Number') ?>" id="vat_id"
+                               class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>"/>
+                    </div>
+                </li>
+            <?php endif; ?>
+            <li class="default_billing_add <?php
+            /**
+             *  Check the Current address can be set as default for billing
+             */
+            if ($this->canSetAsDefaultBilling()) {
+                echo 'control ';
+            }
+            ?>">
+                <?php
+                /**
+                 *  Check the current address is default billing address
+                 */
+                if ($this->isDefaultBilling()): ?>
+                    <strong><?php echo $this->__('Default Billing Address') ?></strong>
+                <?php elseif ($this->canSetAsDefaultBilling()): ?>
+                    <input type="checkbox" id="primary_billing" name="default_billing" value="1"
+                           title="<?php echo $this->__('Use as My Default Billing Address') ?>" class="checkbox"/><label
+                            for="primary_billing"><span></span>
+                        <?php echo $this->__('Use as my default billing address') ?></label>
+                <?php else: ?>
+                    <input type="hidden" name="default_billing" value="1"/>
+                <?php endif; ?>
+            </li>
+            <li class="default_billing_add <?php
+            /**
+             *  Check the current address can be set as default shipping
+             */
+            if ($this->canSetAsDefaultShipping()) {
+                echo ' control';
+            }
+            ?> ">
+                <?php
+                /**
+                 *  Check the current address is set as default shipping address
+                 *  if it is display as default shipping address
+                 */
+                if ($this->isDefaultShipping()): ?>
+                    <strong><?php echo $this->__('Default Shipping Address') ?></strong>
+                    <?php
+                /**
+                 *  Check there is provision to set as default shipping
+                 *  if it is display option for user like use as my default shipping address
+                 */
+                elseif ($this->canSetAsDefaultShipping()): ?>
+                    <input type="checkbox" id="primary_shipping" name="default_shipping" value="1"
+                           title="<?php echo $this->__('Use as My Default Shipping Address') ?>" class="checkbox"/>
+                    <label for="primary_shipping"><span></span>
+                        <?php echo $this->__('Use as my default shipping address') ?></label>
+                <?php else: ?>
+                    <input type="hidden" name="default_shipping" value="1"/>
+                <?php endif; ?>
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="back-link">
+            <a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>">
+                <small>&laquo;</small>
+                <?php echo $this->__('Back') ?></a></p>
+        <button type="submit" title="<?php echo $this->__('Save Address') ?>" class="button">
+        <span><span><?php echo $this->__('Save Address') ?></span>
+        </span></button>
+    </div>
+</form>
+<script type="text/javascript">
+    //<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+    var regionUpdater = new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+    jQuery(document).ready(function () {
+        jQuery("#country").change(function () {
+            regionUpdater.update();
+        });
+    });
+    //]]>
+</script>

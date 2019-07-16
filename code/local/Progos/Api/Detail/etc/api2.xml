@@ -1,0 +1,38 @@
+<config>
+    <api2>
+        <resource_groups>
+            <api-detail translate="title" module="Progos_Api_Detail">
+                <title>Product Detail Api</title>
+                <sort_order>10</sort_order>
+            </api-detail>
+        </resource_groups>
+        <resources>
+            <productdetail translate="title" module="Progos_Api_Detail">
+                <group>api-detail</group>
+                <model>api-detail/api2_detail</model>
+                <title>Product Detail Api</title>
+                <sort_order>60</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                    <customer>
+                        <retrieve>1</retrieve>
+                    </customer>
+                    <guest>
+                        <retrieve>1</retrieve>
+                    </guest>
+                </privileges>
+                <attributes>
+                </attributes>
+                <routes>
+                    <route>
+                        <route>/product/detail</route>
+                        <action_type>collection</action_type>
+                    </route>
+                </routes>
+                <versions>1</versions>
+            </productdetail>
+        </resources>
+    </api2>
+</config>

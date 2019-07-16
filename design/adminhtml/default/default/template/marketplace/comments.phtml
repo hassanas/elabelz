@@ -1,0 +1,330 @@
+<script type="text/javascript" src="https://use.fontawesome.com/9a887619f1.js"></script>
+<?php
+$orderId = Mage::app()->getRequest()->getParam('order_id');
+$ordersItems = Mage::getModel ( 'marketplace/commission' )->getCollection ()
+        ->addFieldToSelect ( '*' )
+        ->addFieldToFilter ( 'order_id', array ('eq' => $orderId))
+        ->setOrder ( 'created_at', 'DESC' );
+
+
+
+$admin = Mage::getSingleton('admin/session')->getUser();    
+$order = Mage::getModel("sales/order")->load($orderId);
+
+// Mage::helper('core')->validateHash($password, $hash);
+
+if ($order->getAgent() == $admin->getId() OR empty($order->getAgent())):
+?>
+<div id="comments_block">
+    <input type="hidden" id="call_response">
+
+    <strong>CALL RESPONSE</strong>
+    <span class="field-row" style="height: 30px">
+        <div class="f-left">
+            <div class="response-button on" data-value="1">Customer approved all Items</div>
+        </div>
+        <div class="f-right">
+            <div class="response-button on" data-value="2">Customer wants Change</div>
+        </div>
+    </span>
+
+    <span class="field-row" style="margin-top: 10px; height: 35px">
+        <div class="f-left">
+            <div class="response-button off" data-value="3">Wrong Number</div>
+        </div>
+        <div class="f-right">
+            <div class="response-button off" data-value="0">No Answer</div>
+        </div>
+    </span>
+
+    <span class="field-row">
+    <?php   
+        $status = array(
+            "pending"                       => "Pending Confirmation",
+            "holded"                        => "On Hold",
+            "processing"                    => "Processing",
+            "shipped_from_elabelz"          => "Shipped from Elabelz",
+            "successful_delivery_partially" => "Successful Delivery Partially",
+            "failed_delivery"               => "Failed Delivery",
+            "successful_delivery"           => "Successful Delivery",
+            "complete"                      => "Completed Non Refundable",
+            "refunded"                      => "Refunded",
+            "closed"                        => "Closed",
+            "canceled"                      => "Canceled"
+        );
+
+        $result =  "<ul class='order-items-container'><li><strong>ORDER ITEMS</strong></li>";
+        $url = Mage::helper('adminhtml')->getUrl('marketplaceadmin/adminhtml_callcenter/comments/', array('order_id'=>$value));
+        $c = 0;
+        $ttl = count($ordersItems);
+        foreach($ordersItems as $item) {
+
+            $_product = Mage::getModel("catalog/product")->load($item->getProductId());
+            try {
+                $image =  Mage::helper('catalog/image')->init($_product, 'small_image')->resize(75, 75);
+            } catch(Exception $e) {
+                $image =  "";
+            }
+
+            $no_selection = $item->getIsBuyerConfirmation()=='No'?'selected="selected"':'';
+            $yes_selection = $item->getIsBuyerConfirmation()=='Yes'?'selected="selected"':'';
+            $reject_selection = $item->getIsBuyerConfirmation()=='Rejected'?'selected="selected"':'';
+
+            if ($ttl >= 3) {
+                $right = $c % 2;
+                if ($right === 1) {
+                    $doRight = " style='float: right; width: 200px'";
+                } else {
+                    $doRight = " style='width: 200px'";
+                }
+            }
+
+            $el = "item_status_change_".$item->getId();
+            if ($item->getIsBuyerConfirmation() == "Rejected") {
+                $li_class = "rejected";
+            } else {
+                $li_class = "oitem";
+            }
+            
+            $result .=  "<li class='pbox {$li_class}' {$doRight}><img src='{$image}' width='50' height='50' align='left' />
+            <span style='display: block; padding-left: 55px'>{$_product->getName()}</span>";
+            if ($item->getIsBuyerConfirmation() == "Rejected") {
+                // $result .= "<select style='padding: 2px; width: 100px; margin: 0 0 0 5px' id='{$el}' disabled='disabled' onchange='updateItemStatus(\"$el\", \"$el\");'>
+                //     <option value='Rejected' {$reject_selection}>Rejected</option>
+                // </select>";
+                $result .= "<span style='margin-left: 5px'><strong>Item Rejected</strong></span>";
+            } else {
+                $result .= "<select style='padding: 2px; width: 100px; margin: 0 0 0 5px' id='{$el}' onchange='updateItemStatus(\"$el\", \"$el\");'>
+                    <option value='No' {$no_selection}>Pending</option>
+                    <option value='Yes' {$yes_selection}>Confirmed</option>
+                    <option value='Rejected' {$reject_selection}>Rejected</option>
+                </select>";
+                if ($item->getReplacement()) {
+                    $result .= " <label for='item_replace_id_" . $item->getId() . "' style='margin-left: 5px'><input type='checkbox' value='" . $item->getId() . "' class='item-change' id='item_replace_id_" . $item->getId() . "' checked='checked' /> Needs to be replaced</label>";
+                } else {
+                    $result .= " <label for='item_replace_id_" . $item->getId() . "' style='margin-left: 5px; display: none'><input type='checkbox' value='" . $item->getId() . "' class='item-change' id='item_replace_id_" . $item->getId() . "' /> Needs to be replaced</label>";
+                }
+            }
+            $result .= "<div style='clear: both'></div></li>";
+            $c++;
+        }
+        $result .= '</ul>';
+        echo $result;
+    ?>
+    </span>
+    <div style='clear: both'></div>
+    
+    <span class="field-row">
+        <textarea placeholder="Enter Comments ... " rows="2" cols="5" style="height:3em; width:99%;" id="history_comment"></textarea>
+    </span>
+
+    <div class="f-left">
+        <select style="padding: 1px" id="hold_order">
+            <option value=""></option>
+            <option value="1">On Hold Order</option>
+            <option value="0">Unhold Order</option>
+        </select>
+        <!-- <input type="checkbox" id="hold_order" value="1"><label class="normal" for="hold_order"> Hold Order</label> -->
+    </div>
+    <div class="f-right">
+        <button  type="submit" class="scalable " title="<?php echo $this->__('Submit') ?>" name="submit_comment_button" id="submit_comment_button" onclick="submitall()">
+       <span><span><?php echo $this->__('Submit Comment') ?></span></span></button>
+    </div>
+    <div class="clear"></div>
+    <ul class="note-list">
+    <script>
+    jQuery(document).ready(function($) {
+        jQuery('html, body').css({
+            overflow: 'hidden'
+        });
+        jQuery(".marketplaceadmin-adminhtml-callcenter-comments > div.wrapper > div.middle").css({
+            width: "47%"
+        });
+        <?php
+        if (empty($order->getAgent()) OR $order->getAgent() < 1) {
+            $order->setAgent($admin->getId());
+            $order->save();
+            $admin_obj = Mage::getModel('admin/user')->load($admin->getId());
+            $admin_data = $admin_obj->getData();
+            if (empty(trim($admin_obj->getName()))) {
+                $admin_name = $admin_data["username"];
+            } else {
+                $admin_name = $admin_obj->getName();
+            }
+        ?>
+            var html = "<ul class='messages'><li class='success-msg'><ul><li><?php echo $admin_name ?>! This order has been assigned to you.</li></ul></li></ul>";
+            jQuery('#messages').html(html);
+        <?php
+        }
+        ?>
+
+        jQuery("div > div.response-button").click(function(e) {
+            e.preventDefault();
+            selected = $(this).attr("data-value");
+            jQuery("div > div.response-button").css({
+                opacity: "0.2"
+            });
+            jQuery(this).css({
+                opacity: "1.0"
+            });
+
+            $("#call_response").val(selected);
+            if (selected == "1") {
+                // jQuery(".order-items-container").hide();
+                $("li.oitem > select").attr('disabled', true).addClass("dim-it").val("Yes");
+                jQuery("#hold_order").show();
+                $("li.oitem > select + label").hide();
+            } else if (selected == "2") {
+                $("li.oitem > select").attr('disabled', false).removeClass("dim-it").val("");
+                $("#hold_order").val("");
+                jQuery("#hold_order").hide();
+                $("li.oitem > select + label").show();
+            } else {
+                $("li.oitem > select + label").hide();
+                $("#hold_order").val("");
+                jQuery("#hold_order").hide();
+                $("li.oitem > select").attr('disabled', true).addClass("dim-it");
+                // jQuery(".order-items-container").show();
+            }
+        });
+
+    });
+
+     
+    function submitall() {
+        orderId = "<?php echo Mage::app()->getRequest()->getParam('order_id') ?>";
+        comment = document.getElementById("history_comment").value.trim();
+        callResponse = document.getElementById("call_response").value;
+        holdOrder = document.getElementById("hold_order").value;
+        checked = jQuery("li.oitem > select + label > input[type=checkbox]:checked").length;
+        error = false;
+        var url = "<?php echo Mage::helper('adminhtml')->getUrl('marketplaceadmin/adminhtml_callcenter/save', array('_secure'=>true)) ?>";
+        if (callResponse == "") {
+            var html = '<ul class="messages"><li class="error-msg"><ul><li>Please select call response!</li></ul></li></ul>';
+            $('messages').update(html);
+            error = true;
+            // return false;
+        } else if (callResponse == "2") {
+            if (checked <= 0) {
+                var html = '<ul class="messages"><li class="error-msg"><ul><li>Please select item(s) which are need to be replaced!</li></ul></li></ul>';
+                $('messages').update(html);
+                error = true;
+                return false;
+            }
+            if (comment.length < 1) {
+                var html = '<ul class="messages"><li class="error-msg"><ul><li>Please enter proper replacement comments!</li></ul></li></ul>';
+                $('messages').update(html);
+                error = true;
+                return false;
+            }
+        }
+
+        if (error == false) {
+            var replaceItems = jQuery('li.oitem > select + label > input[type=checkbox]:checked').map(function () {
+              return this.value;
+            }).get();
+
+            var html = '';
+            $('messages').update(html);
+            new Ajax.Request(url, {
+                method:'post',
+                parameters: {"orderId":orderId,"replaceItems":replaceItems.toString(),"comment":comment,"callResponse":callResponse,"holdOrder":holdOrder},
+                onComplete:function(request, json) {
+                    if (request.responseText == "cannot hold") {
+                        var html = '<ul class="messages"><li class="error-msg"><ul><li>Cannot hold this order! One or more order items need attention.</li></ul></li></ul>';
+                        $('messages').update(html);
+                    } else {
+                        jQuery("#history_comment").val("");
+                        document.getElementById("history_comment").value = "";
+                        document.getElementById("call_response").value = "";
+                        jQuery("label[for="+jQuery("li.oitem > select + label > input[type=checkbox]:not(checked)").parent().attr("for")+"]").hide();
+                        jQuery("li.oitem > select + label > input[type=checkbox]:checked").show();
+                        jQuery("div > div.response-button").css({
+                            opacity: "1"
+                        });
+                        var html = '<ul class="messages"><li class="success-msg"><ul><li>Action performed successfully</li></ul></li></ul>';
+                        $('messages').update(html);
+                    }
+                }
+            });
+        }
+
+    }
+
+    function updateItemStatus(el)
+    {
+        // var container = jQuery(".main-col-inner + div").attr("id");
+        // var tab = container.substr(0, container.lastIndexOf("_"));
+        var id = el.substr(el.lastIndexOf("_")+1, el.length);
+        var value = document.getElementById(el).value; 
+        var go = false;
+        if (value == "Rejected") {
+            var ask = confirm("You are rejecting this item from Customer .. ! This action will REMOVE this order item.\n\nTHIS ACTION CANNOT BE UNDONE!\n Proceed ... ?")
+            if (ask == true) {
+                go = true;
+            }
+        } else {
+            go = true;
+        }
+
+        var url = "<?php echo $this->getUrl('marketplaceadmin/adminhtml_callcenter/status', array('_secure'=>true)) ?>";
+        if (go == true) {
+            new Ajax.Request(url, 
+            {
+                method:'post',
+                parameters: {"id":id,"value":value},
+                onComplete:function(request, json) {
+                    // jQuery("#"+tab).removeClass("changed");
+                    if (request.responseText == "1") {
+                        var html = '<ul class="messages"><li class="success-msg"><ul><li>Order item status updated successfully.</li></ul></li></ul>';
+                        $('messages').update(html);
+                    } else {
+                        var html = '<ul class="messages"><li class="error-msg"><ul><li>Error updating item status!</li></ul></li></ul>';
+                        $('messages').update(html);
+                    }
+                }
+            });
+        }  
+    }
+    </script>
+
+</div>
+<?php
+else:
+?>
+<div id="comments_block">
+    <span class="field-row">
+        <center>
+            <i class='fa fa-times fa-6 fa-lg' style='color: #C9260A; font-size: 250px'></i>
+        </center>
+    </span>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    jQuery('html, body').css({
+        overflow: 'hidden'
+    });
+    jQuery(".marketplaceadmin-adminhtml-callcenter-comments > div.wrapper > div.middle").css({
+        width: "47%"
+    });
+
+    <?php
+    if ($order->getAgent() != $admin->getId()) {
+        $admin_obj = Mage::getModel('admin/user')->load($order->getAgent());
+        $admin_data = $admin_obj->getData();
+        if (empty(trim($admin_obj->getName()))) {
+            $admin_name = $admin_data["username"];
+        } else {
+            $admin_name = $admin_obj->getName();
+        }
+    ?>
+        var html = "<ul class='messages'><li class='error-msg'><ul><li>You cannot process this order it is already assigned to <?php echo $admin_name ?>!</li></ul></li></ul>";
+        jQuery('#messages').html(html);
+    <?php
+    }
+    ?>
+});
+</script>
+<?php
+endif;
+?>

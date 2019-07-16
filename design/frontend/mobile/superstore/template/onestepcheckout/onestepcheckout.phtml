@@ -1,0 +1,458 @@
+<script type="text/javascript"> var currentLocal = '<?php echo Mage::app()->getLocale()->getLocaleCode(); ?>'; </script>
+<script>
+ var theme_path = '<?php echo Mage::getSingleton('core/design_package')->getSkinBaseUrl(); ?>';
+  theme_path = theme_path.replace('mobile/mobile','mobile/superstore');
+</script>
+<?php
+
+$cc = $this->getRequest()->getParam("cc");
+if (isset($cc) AND $cc === "back"):
+?>
+<script type="text/javascript">
+jQuery.alert({
+    title: "<?php echo $this->__('Oops! Your payment didn\'t go through.'); ?>",
+    content: "<?php echo $this->__('Your credit card payment was declined, please try with another credit card or choose a different payment option to proceed'); ?>",
+  confirmButton: "<?php echo $this->__('Proceed'); ?>"
+});
+</script>
+<?php 
+endif;
+     if (!$this->isCustomerLoggedIn()): 
+          // if user is not login on checkout page
+          $activeLoginForm='block';
+          $activeCheckoutForm = 'none';
+     else:
+          // if the user is login on checkout page
+          $activeLoginForm = 'none';
+          $activeCheckoutForm = 'block';
+     endif;
+?>
+
+<div class="checkout_login_container" style="display:<?php echo $activeLoginForm; ?>">
+     <div class="apptha_onepage_gift-form">
+          <?php
+               if (!Mage::getSingleton('customer/session')->isLoggedIn()){
+                    echo $this->getChildHtml('customer.login');
+                    echo $this->getChildHtml('customer.forgot');
+               }    
+          ?>
+     </div>
+     <div class="checkout_guest_signup">
+          <div class="onestepcheckout-login-popup-contents-login">
+               <div class="onestepcheckout-login-form">
+                    <h3><?php echo $this->__('Checkout as Guest'); ?></h3>
+                    <div class="clear"></div>
+                    <p><?php echo $this->__('Checkout with email address only'); ?></p>
+               </div>
+          </div>
+
+<?php
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user       = 'Guest';
+$customerId   = '';
+$loggedInStatus  = 'Logged Out';
+$userStatus = 'Guest Account';
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+  $user       =   'User';
+  $customer     =   Mage::getSingleton('customer/session')->getCustomer(); 
+    $customerId   =   $customer->getId();
+    $loggedInStatus  =   'Logged In';
+    $userStatus = 'Registered Account';
+}
+
+$codeArray = explode('_',$store->getCode());
+$language = '';
+if( !empty( $codeArray ) )
+  $language = strtoupper( $codeArray[0] );
+
+$cart = Mage::getSingleton('checkout/session')->getQuote();
+$_items = $cart->getAllVisibleItems();
+
+$infotrust = '';
+$totalCount = count($_items);
+$infotrustHelper = Mage::helper('progos_infotrust');
+if( $totalCount > 0 ){
+    foreach ( $_items as $item) {
+        $category = $infotrustHelper->getCategoryPathUsingProductPath($item->getProductId());
+        $category = addslashes($category);
+        //Get Parent Product Sku.
+        $_product = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->addAttributeToSelect('manufacturer')
+                ->addAttributeToSelect('sku')
+                ->addAttributeToFilter('entity_id',$item->getProductId())
+                ->getFirstItem();
+    $productSku  =  $_product->getSku();
+    $brand =  $_product->getAttributeText('manufacturer');
+    $productName = addslashes($item->getName());
+        $infotrust .="{'name':'".$productName."','id':'".$productSku."',
+                 'quantity':'".$item->getQty()."', 'price':'".$item->getPrice()."',
+                 'category':'".$category."','brand':'".$brand."',
+                 'variant':'".$item->getSku()."','dimension5': 'New'
+                }";
+
+        if( $count < $totalCount ){
+            $infotrust .=",";
+        }
+        $count++;
+    }
+}
+
+$commonDatalayerCode = "
+    'pageType': 'Checkout',
+    'pageCategory':'No Category',
+    'userId':'".$customerId."',
+    'userType':'".$user."',
+    'loggedInStatus':'".$loggedInStatus."',
+    'storeCountry':'".$store->getName()."',
+    'storeLanguage':'".$language."',
+    'currencyCode':'".$currency_code."',
+";
+
+$dataLayerOnePush = "
+  dataLayer.push({
+    ".$commonDatalayerCode."
+    'event':'checkoutOption',
+    'ecommerce': {
+      'checkout_option': {
+        'actionField': {
+        'step':1,
+        'option': '".$userStatus."'
+        }
+      },
+    }
+  });
+";
+
+$dataLayerTwoLoad = "
+    dataLayer.push({
+      'event':'checkout',
+      'ecommerce': {
+        'currencyCode':'".$currency_code."',
+        'checkout': {
+          'actionField': {
+            'step':2,
+            'option': 'Use Billing As Shipping Address'
+          },
+          'products': [".$infotrust."]
+        },
+      }
+    });
+";
+
+$dataLayerTwoPush = "
+  dataLayer.push({
+    ".$commonDatalayerCode."
+    'event':'checkoutOption',
+    'ecommerce': {
+      'checkout_option': {
+        'actionField': {
+        'step':2,
+        'option': 'Use Billing As Shipping Address'
+        }
+      },
+    }
+  });
+";
+
+$dataLayerThreeLoad = "
+    dataLayer.push({
+      ".$commonDatalayerCode."
+      'event':'checkout',
+      'ecommerce': {
+        'currencyCode':'".$currency_code."',
+        'checkout': {
+          'actionField': {
+            'step':3,
+            'option': 'COD'
+          },
+          'products': [".$infotrust."]
+        },
+      }
+    });
+";
+
+$shippingDatalayer = "
+  dataLayer.push({
+    ".$commonDatalayerCode."
+    'event':'checkoutOption',
+    'ecommerce': {
+      'checkout_option': {
+        'actionField': {
+        'step':2,
+        'option': 'New Shipping Address'
+        }
+      },
+    }
+  });
+";
+
+?>
+<script>
+dataLayer.push({
+  <?php echo $commonDatalayerCode; ?>
+  'event':'checkout',
+  'ecommerce': {
+    'currencyCode':'<?php echo $currency_code; ?>',
+    'checkout': {
+      'actionField': {
+      'step':1,
+      'option': '<?php echo $userStatus; ?>'
+      },
+      'products': [<?php echo $infotrust; ?>]
+    },
+  }
+});
+
+function loadAndPushRequiredDataLayers(){
+    <?php echo $dataLayerOnePush;
+    echo $dataLayerTwoLoad;
+    echo $dataLayerTwoPush;
+    echo $dataLayerThreeLoad; ?>
+}
+var check = "<?php if( Mage::getSingleton('customer/session')->isLoggedIn() ){echo 'loggedin';}?>"
+if(check == 'loggedin'){
+    loadAndPushRequiredDataLayers();
+}
+
+jQuery(document).ready(function() {
+    jQuery("#shipping\\:same_as_billing").change(function () {
+        if (!this.checked) {
+            dataLayer.push({
+                <?php echo $commonDatalayerCode;?>
+                'event': 'checkoutOption',
+                'ecommerce': {
+                    'checkout': {
+                        'actionField': {
+                            'step': 2,
+                            'option': 'New Shipping Address',
+                        },
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
+
+          <form id="checkout_quick_signup_form" action="" method="post">
+               <table>
+                    <tr>
+                         <td>
+                              <label><?php echo $this->__('Email:') ?><span class="required"></span></label>
+                              <input type="text" name="ch_guest_email" id="ch_guest_email" class="ch_guest_email  required-entry text-input validate-email-nonarabic" title="Email" maxlength="255" />
+                              <div class="emailExist"></div>
+                         </td>
+                    </tr>
+                    <tr>
+                         <td colspan="2" class="allow">
+                        <div class="hiddenvalue"></div>
+                         <input type="submit" name="ch_guest_submit" class="ch_guest_submit" value="<?php echo $this->__('Continue') ?> " /></td>
+                    </tr>
+               </table>
+          </form>
+     </div>
+     <script type="text/javascript">
+          $j(function(){ $j('#checkout_quick_signup_form').submit(function(e){ e.preventDefault(); }); });
+          var vForm = new VarienForm('checkout_quick_signup_form', true);
+          vForm.validator.options.onFormValidate = function(validationPassed, form) {
+               if(validationPassed){
+                    var ch_guest_email = jQuery("#ch_guest_email").val();
+                    ch_guest_email = jQuery.trim(ch_guest_email);
+                    jQuery('#billing\\:email').val(ch_guest_email);              
+
+                    if ($j('.emailExist').length>0 && $j('.emailExist').html()!='') {
+                      jQuery(".checkout_login_container").hide();
+                      jQuery("#scroll").show();
+                    }
+                    checkcustomerexist();
+               }
+          } 
+     </script>
+</div>
+<div id="scroll" style="display: <?php echo $activeCheckoutForm ?>">
+     <div class="page-title">
+          <div class='onepage-page-title'>
+               <?php //echo Mage::getStoreConfig('onestepcheckout/general/title') ?>
+               <h1><?php echo $this->__('Checkout'); ?></h1>
+               <?php
+                   /**
+                    * Check the customer activated in is not equal to 1
+                    * if so display the option to edit cart
+                    */
+                    if ($activateIn != 1): ?>
+               <a class="forget_item" href="<?php echo $this->getUrl('checkout/cart') ?>" title="<?php echo $this->__('Forgot an Item? Edit Your Cart') ?>"> 
+                    <?php echo $this->__('Forgot an Item? Edit Your Cart') ?>
+               </a>
+               <?php endif; ?>
+          </div>
+          <!-- Fill in the fields below to complete your purchase! -->
+          <!-- Title description-->
+          <p class="title-description"> <?php echo Mage::getStoreConfig('onestepcheckout/general/description') ?> </p>
+          <!-- Title description-->
+     </div>
+     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+     <?php
+          $seq_http = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on');
+          $mag_version  = Mage::helper('onestepcheckout')->getMagentoVersion();
+          $mod_version  = Mage::helper('onestepcheckout')->getOPCVersion();
+     ?>
+     <script type="text/javascript">
+      var http_type = '<?php if($seq_http){echo 'https';}else{echo 'http';}?>';
+      var mag_ver = '<?php echo $mag_version;?>';
+      var mod_ver = '<?php echo $mod_version;?>';
+     </script>
+     <script type="text/javascript" src="<?php echo $this->getSkinUrl('js/onestepcheckout.js') ?>"></script>
+     <script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+     <form action="" id="onestepcheckout_orderform">
+          <div class="col3-set onestepcheckout_datafields">
+               <div class="one_step1">
+                    <?php echo $this->getChildHtml('billing.address') ?>
+                    <?php echo $this->getChildHtml('shipping.address') ?>
+               </div>
+               <div class="one_step1">
+                    <?php echo $this->getChildHtml('shipping.method') ?>
+                    <?php echo $this->getChildHtml('payment.method') ?>
+                    <?php if (Mage::getStoreConfig('onestepcheckout/general/comment')) : ?>
+              <div class="op_block_title"> <?php echo $this->helper('sales')->__('Comment') ?> </div>        
+                    <div class="form_fields">
+                         <div class="full">
+                              <div class="data_area" id='comment-block'>
+                                   <textarea name="order-comment" id="order-comment"><?php echo trim(Mage::getSingleton('customer/session')->getOrderCustomerComment()) ?></textarea>
+                              </div>
+                         </div>
+                    </div>
+                    <?php endif; ?>
+              <?php if (Mage::helper('onestepcheckout')->isSubscribeNewAllowed()) : ?>
+                    <p class="newsletter">
+                         <input type="checkbox" id="newsletter-signup" name="newsletter" value="1" title="<?php echo Mage::helper('newsletter')->__('Sign up for our newsletter') ?>" class="checkbox" />
+                         <label for="newsletter-signup">
+                              <?php echo Mage::helper('newsletter')->__('Sign up for our newsletter') ?>
+                         </label>
+                    </p>
+                    <?php endif; ?>
+               </div>
+               <div class="one_step1">
+                    <?php echo $this->getChildHtml('review') ?>
+               </div>
+          </div>
+     </form>
+     <script type="text/javascript">
+          //<![CDATA[
+          var checkout = new COGOPC('onestepcheckout_orderform', {
+               save    : '<?php echo $this->getUrl('onestepcheckout/index/saveOrder', array('_secure'=>$seq_http)) ?>',
+               update  : '<?php echo $this->getUrl('onestepcheckout/index/updateCheckout', array('_secure'=>$seq_http)) ?>',
+               success : '<?php echo $this->getUrl('onestepcheckout/index/success', array('_secure'=>$seq_http)) ?>',
+               failure : '<?php echo $this->getUrl('checkout/cart') ?>'
+          }, "<?php echo $this->__('Please agree to all the terms and conditions.') ?>");
+          document.observe("dom:loaded", function() {
+               var win_triggers = Array();
+            $$('.checkout-agreements .agree a').each(function(item){
+              var obj = {
+                el: $$('.' + item.className),
+                  event: 'click',
+            window: $(item.className + '-window')
+          };
+              win_triggers.push(obj);
+               });
+        opc_window = new COGOPC.Window({triggers: win_triggers});
+          });
+          //]]>
+     </script>
+     <script type="text/javascript">
+          $j(function($) {
+               $j('body').on('click', 'input[name*="payment[method]"]', function() {
+                    checkout.updateWithoutHide({
+                         'review': 1,
+                         'payment-method': 1
+                    });
+                    setTimeout(function() {
+                         checkout.update({
+                              'review': 1
+                              //'payment-method': 1
+                         });
+                    }, 5000);
+               });
+               $j('body').on('click', '#_ch_guest_submit', function() {
+                    $j("html, body").animate({
+                         scrollTop: 0
+                    }, "slow");
+               });
+              jQuery("#coupon-code").on("click",function(){
+                var _this = jQuery(this);
+                  if (jQuery(this).is( ":focus" )) {
+                    $(document).on('keypress', "#coupon-code", function(e) {
+                          if(e.which == 13 || e.which == '13') {
+                              if( _this.val() != '' ){
+                                  $('#coupon-apply').trigger('click');
+                              }
+                              e.preventDefault();
+                              return false;
+                          }
+                    });
+                  }
+              });
+          });
+     </script>
+</div>
+<script>
+var isXhr = null;
+function checkcustomerexistbutton(){
+    if( isXhr != null ) {
+    isXhr.abort();
+    isXhr = null;
+  }
+  jQuery('.allow').html('<input type="submit" name="ch_guest_submit" class="ch_guest_submit" value="<?php echo $this->__("Continue") ?> " onclick="checkcustomerexist()"  />');
+}
+
+function checkcustomerexist() {
+     if (isXhr != null) {
+          isXhr.abort();
+          isXhr = null;
+     }
+     var email = document.getElementById('ch_guest_email').value;
+     email = jQuery.trim(email);
+     isXhr = jQuery.ajax({
+          url: "<?php echo $this->getUrl('onestepcheckout/customerexist/index', array('_secure'=>true)) ?>",
+          type: "POST",
+          data: "email=" + email,
+          beforeSend: function() {
+               jQuery('.allow').html("<div class='loader'><img src='<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>' onerror='this.onerror=null; this.src=\"<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>\"' /></div>");
+          },
+          success: function(result) {
+               result = jQuery.trim(result);
+               jQuery("html, body").animate({
+                    scrollTop: 0
+               }, "slow");
+               if (result === "true") {
+                    jQuery(".emailExist").html("<?php echo $this->__('Email already registered with us, please login to checkout faster. Click &quot;Continue&quot; if you still want to login as a guest.'); ?>");
+                    jQuery('.allow').html('<input type="submit" id="_ch_guest_submit" name="ch_guest_submit" class="ch_guest_submit" onclick="loadAndPushRequiredDataLayers();" value="<?php echo $this->__("Continue") ?> " />');
+                    jQuery('[name="login[username]"]').val(email);
+                    jQuery('[name="login[password]"]').val('');
+                    jQuery('[for="pass"]').trigger('click');
+                    jQuery('[for="pass"]').on('click', function(){
+                        jQuery('#'+jQuery(this).attr('for')).trigger('touchstart focus click');
+                    });
+                    jQuery('.isGuestCheckoutAllowed li#register').hide();
+                    jQuery('[for="billing:guest_account"]').trigger('click')
+                    jQuery(".emailExist").parent().find('.validation-advice').hide();
+               } else if (result === "false") {
+                    jQuery(".emailExist").html("");
+                    jQuery('.allow').html('<input type="submit" name="ch_guest_submit" class="ch_guest_submit" value="<?php echo $this->__("Continue") ?> " />');
+                   loadAndPushRequiredDataLayers();
+                    jQuery('.checkout_login_container').hide();
+                    jQuery("#scroll").show();
+                    // var proReviewBlock = jQuery('.order_review_login #checkout-review').html();
+                    // jQuery('.one_step2_helper_review').html('<div id="checkout-review" class="onestepcheckout_block">'+proReviewBlock+'</div>');
+                    jQuery('[name="billing[email]"]').val(email);
+                    // jQuery('.order_review_login #checkout-review').remove('');
+                    jQuery('.isGuestCheckoutAllowed li#register').show(function() {
+                         jQuery('[for="billing:register_account"]').trigger('click')
+                    });
+               }
+          }
+     });
+}
+</script>

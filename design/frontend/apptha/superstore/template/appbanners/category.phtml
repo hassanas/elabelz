@@ -1,0 +1,17 @@
+<?php 
+	$_category_detail = Mage::registry('current_category');
+	$categoryId = $_category_detail->getId();
+	$params = $this->getRequest()->getParams();
+	$brandIds = $colors = $price = $size = "";
+	if( !empty($params['price']) )
+		$price = $params['price'];
+	if( !empty($params['manufacturer']) )
+		$brandIds = $params['manufacturer'];
+	if( !empty($params['color']) )
+		$colors = $params['color'];
+	if( !empty($params['size']) )
+		$size = $params['size'];
+
+	$url = 'elabelz://category/?cid='.$categoryId.'&manufecturer='.$brandIds.'&color='.$colors.'&price='.$price.'&size='.$size;
+?>
+	<meta name="app-rich-data" content="<?php echo $url ?>" />

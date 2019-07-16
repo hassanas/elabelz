@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Hassan Ali Shahzad
+ * This system file added to provide Time functionality for orders sync
+ * @category   MageWorx
+ * @package    MageWorx_OrdersGrid
+ */
+-->
+<config>
+    <sections>
+        <mageworx_ordersmanagement translate="label" module="mageworx_ordersgrid">
+            <label>Order Management</label>
+            <tab>mageworx</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>600</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <ordersgrid translate="label">
+                    <label>Admin Order Grid</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <fromdatetosync translate="label">
+                            <label>Select (From) Date: </label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>progos_ordersgrid/adminhtml_system_config_date</frontend_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Select and save (first) from where you want to sync orders:</comment>
+                        </fromdatetosync>
+                        <todatetosync translate="label">
+                            <label>Select (To) Date: </label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>progos_ordersgrid/adminhtml_system_config_date</frontend_model>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Select and save (first) the date upto where you want to sync:</comment>
+                        </todatetosync>
+                    </fields>
+                </ordersgrid>
+            </groups>
+        </mageworx_ordersmanagement>
+    </sections>
+</config>

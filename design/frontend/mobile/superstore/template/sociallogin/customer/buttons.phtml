@@ -1,0 +1,159 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2.3
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+/**
+ * Apptha Social login pop-up form template
+ *
+ */
+
+/**
+ * get Current URL
+ */
+$currentUrl = $this->helper('core/url')->getCurrentUrl();
+/**
+ * set session for URLs relink and Link
+ */
+Mage::getSingleton('customer/session')->setLink($currentUrl);
+Mage::getSingleton('core/session')->setReLink($currentUrl);
+
+/**
+ * Check if social login is enabaled or not
+ */
+/**
+ * Check if fb is enabaled or not
+ */
+$fbStatus = Mage::getStoreConfig('sociallogin/facebook/enable_fb');
+/**
+ * Check if twitter is enabaled or not
+ */
+$twitterStatus = Mage::getStoreConfig('sociallogin/twitter/enable_twitter');
+/**
+ * Check if google is enabaled or not
+ */
+$googleStatus = Mage::getStoreConfig('sociallogin/google/enable_google');
+/**
+ * Check if yahoo is enabaled or not
+ */
+$yahooStatus = Mage::getStoreConfig('sociallogin/yahoo/enable_yahoo');
+/**
+ * Check if social login is enabaled or not
+ */
+$enableStatus = Mage::getStoreConfig('sociallogin/general/enable_sociallogin');
+/**
+ * Check if customer logged in or not
+ */
+$loggedIn = $this->helper("customer")->isLoggedIn();
+$facebookappId = Mage::getStoreConfig('sociallogin/facebook/fbapp_id');
+/**
+ * Check if dob is enabaled or not
+ */
+$enableDob = Mage::getStoreConfig('customer/address/dob_show');
+/**
+ * Check if gender is enabaled or not
+ */
+$enableGender = Mage::getStoreConfig('customer/address/gender_show');
+/**
+ * Check if tax is enabaled or not
+ */
+$enableVat = Mage::getStoreConfig('customer/address/taxvat_show');
+/**
+ * Check if captcha is enabaled or not
+ */
+$enableCaptcha = Mage::getStoreConfig('customer/captcha/enable');
+
+$reqClass = 'class="required"';
+$emImport = '<em>*</em>';
+
+if (!$loggedIn && $enableStatus == 1) {
+    ?>
+    <input type="hidden" name="main_hidden" id="main_hidden" value="0"/>
+    <?php if ($fbStatus == 1) { ?>
+        <?php /* Facebook button */ ?>
+        <li id="login" class="sl_clearfix">
+            <a id='facebook_login'
+               title="<?php echo $this->__('Facebook'); ?>"  href="<?php echo htmlspecialchars($this->getFbButtonUrl()); ?>"  > <span
+                        class="f_icon_left icon_left_grid apptha_social_login_sprite"></span>
+            <button type="button" class="fb_login inner_social_grid"
+                    name="send"><?php echo $this->__('Facebook'); ?></button>
+            <span class="f_icon_right apptha_social_login_sprite icon_right_grid apptha_progress_image_facebooklogin"></span><img
+                    id="progress_image_facebooklogin" style="display: none"
+                    src="<?php echo $this->getSkinUrl('sociallogin/images/ajax-loader.gif'); ?>"
+                    alt="loading please wait"/></a>
+        </li>
+    <?php }
+    if ($twitterStatus == 1) { ?>
+        <?php /* Twitter button */ ?>
+        <li class="sl_clearfix">
+            <div onclick="show_hide_socialforms('4');"
+                 id="popup_twitter_email" title="<?php echo $this->__('Twitter'); ?>">
+                <span class="t_icon_left apptha_social_login_sprite icon_left_grid"></span>
+                <button type="submit" class="twitter_login inner_social_grid"
+                        name="send"><?php echo $this->__('Twitter'); ?></button>
+                <span class="t_icon_right apptha_social_login_sprite icon_right_grid"></span></div>
+        </li>
+    <?php }
+    if ($googleStatus == 1) { ?>
+        <?php /* Google button */ ?>
+        <li class="sl_clearfix">
+            <a href="<?php echo Mage::getUrl('sociallogin/index/googlepost/') ?>"
+                 title="<?php echo $this->__('Google+'); ?>">
+                <span class="gplus_icon_left apptha_social_login_sprite icon_left_grid"></span>
+                <button type="button" class="google_login inner_social_grid"
+                        name="send"><?php echo $this->__('Google+'); ?></button>
+                <span class="gplus_icon_right apptha_social_login_sprite icon_right_grid"></span></a>
+        </li>
+    <?php }
+    if ($yahooStatus == 1) { ?>
+        <?php /* Yahoo button */ ?>
+        <li class="sl_clearfix">
+            <div
+                    onclick="yahoopost();"
+                    title="<?php echo $this->__('Yahoo'); ?>"> <span
+                        class="yahoo_icon_left apptha_social_login_sprite icon_left_grid"></span>
+                <button type="submit" class="yahoo_login inner_social_grid" name="send">
+                    <?php echo $this->__('Yahoo'); ?></button>
+                <span class="yahoo_icon_right apptha_social_login_sprite icon_right_grid"></span></div>
+        </li>
+    <?php } ?>
+    <div style="clear: both;"></div>
+
+    <script>
+
+
+
+        function yahoopost() {
+            var fb = $('main_hidden').value;
+            if (fb == 1) {
+                javascript:location.href = '<?php echo Mage::getUrl('sociallogin/index/yahoopost?fb=1') ?>';
+            } else {
+                javascript:location.href = '<?php echo Mage::getUrl('sociallogin/index/yahoopost/') ?>';
+            }
+        }
+    </script>
+
+<?php } ?>

@@ -1,0 +1,36 @@
+<layout>
+    
+
+<!--     <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink">
+                <name>messages</name>
+                <path>messages/index/index</path>
+                <label>Messages</label>
+            </action>
+        </reference>
+    </customer_account> -->
+
+    <messages_index_index>
+        <update handle="customer_account" />
+        <reference name="my.account.wrapper">
+            <block type="messages/conversation" name="conversation" template="messages/conversations.phtml">
+            </block>            
+        </reference>
+    </messages_index_index>
+
+    <messages_index_messages>
+        <update handle="customer_account" />
+        <reference name="my.account.wrapper">
+            <block type="messages/messages" name="messages" template="messages/messages.phtml">
+            </block>            
+        </reference>
+    </messages_index_messages>
+
+<!--      <catalog_product_view>
+        <reference name="content">
+             <block type="messages/messages" name="messages_button" template="messages/message_button.phtml" after="product.info.options.wrapper.bottom"/>
+        </reference>
+     </catalog_product_view> -->
+
+</layout>

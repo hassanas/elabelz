@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_Newsletter>
+      <version>1.0</version>
+    </Progos_Newsletter>
+  </modules>
+  <frontend>
+    <routers>
+      <newsletter>
+        <args>
+          <modules>
+            <Progos_Newsletter before="Mage_Newsletter">Progos_Newsletter</Progos_Newsletter>
+          </modules>
+        </args>
+      </newsletter>
+    </routers>
+  </frontend>
+  <global>
+      <models>
+          <newsletter>
+              <rewrite>
+                  <subscriber>Progos_Newsletter_Model_Subscriber</subscriber>
+              </rewrite>
+          </newsletter>
+    </models>
+</global>
+
+</config>

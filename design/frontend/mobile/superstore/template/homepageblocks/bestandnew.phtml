@@ -1,0 +1,333 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+<div class="container">
+<?php
+/**
+ * Tab Links
+ */
+/**
+ *  Initialise empty values for variables like
+ *  class
+ *  compare url
+ *  current date
+ */
+$class = $_compareUrl = $currentDate = '';
+?>
+<div class="best-new-product-tab">
+<ul class="TabNav">
+<li id="defaultTab"><a href="#bestsellingproducts"><?php echo Mage::helper('marketplace')->__('Bestsellers'); ?></a></li>
+<li><a href="#newproducts"><?php echo Mage::helper('marketplace')->__('Latest Products'); ?></a></li>
+</ul>
+</div>
+<?php 
+/**
+ * Best seller products
+ */
+ ?>
+<div class="best-new-product-tab-content">
+<div id="bestsellingproducts">
+ <?php $bestSellingCollection = $this->bestSellerCollection ();
+$categoryCount = count ( $bestSellingCollection );
+/**
+ * Check the category count is greater than or equal to 1
+ */
+if ($categoryCount >= 1) { ?>
+
+<div class="products-grid <?php 
+/**
+ * check the category count is greater than 4
+ * if so display as slider
+ * if not no slider will be displayed
+ */
+if($categoryCount>4){
+echo 'slider-carousel'; 
+} 
+else {
+echo 'no-slider'; 
+} ?>">
+<?php $increment =1; 
+foreach ( $bestSellingCollection as $_bestSellingCollection ) {?>
+<div class="slider <?php if($increment==4) {
+echo 'last';
+} ?>">
+
+<div class="product_image_div">
+                          <?php
+/**
+ * Display product image
+ */
+?>
+ <a href="<?php echo $_bestSellingCollection->getProductUrl() ?>" 
+ title="<?php echo $this->escapeHtml($_bestSellingCollection->getName()) ?>" class="product-image">
+                    <?php $_imgSize = 260; ?>
+                    <img src="<?php echo $this->helper('catalog/image')->init($_bestSellingCollection, 'small_image')->resize($_imgSize); ?>" 
+                    alt="<?php echo $this->stripTags($this->getImageLabel($_bestSellingCollection, 'small_image'), null, true) ?>" />
+</a>
+<h3 class="product-name">
+<a href="<?php echo $_bestSellingCollection->getProductUrl(); ?>">
+                       <?php $prName = $_bestSellingCollection->getName ();
+$lenPrName = strlen ( $_bestSellingCollection->getName () );
+$subPrName = substr ( $prName, 0, 26 );
+if ($lenPrName >= 26) {
+$prNameFix = $subPrName . "...";
+} else {
+$prNameFix = $prName;
+}
+echo $prNameFix;?>
+                    </a>
+</h3>
+<div class="products_gridview_page">
+<div class="price-box">
+<span class="regular-price"> 
+<span class="price">
+<?php
+/**
+ * Display Product Price
+ */
+$newPrice = $_bestSellingCollection->getPrice ();
+$newSplPrice = $_bestSellingCollection->getSpecialPrice ();
+$newDealExpireDate = $_bestSellingCollection->getspecial_to_date ();
+/**
+ * check the new special price is not empty
+ * and new deal expire price date is not equal to empty
+ * and new deal expire date is greater than or equal to current date
+ * if so then display new special price
+ * else just display the new price
+ */
+if (! empty ( $newSplPrice ) && ($newDealExpireDate != '') && ($newDealExpireDate >= $currentDate)) {
+echo Mage::helper ( 'core' )->currency ( $newSplPrice, true, false );
+} else {
+echo Mage::helper ( 'core' )->currency ( $newPrice, true, false );
+}
+?>
+                                   </span>
+                               </span>
+</div>
+</div>
+<?php
+/**
+ * Display Add to cart,
+ * add to wishlist 
+ * and compare
+ */
+?>
+ <div class="actions">
+<ul class="add-to-links">
+<li>
+<a href="<?php echo $this->helper('wishlist')->getAddUrl($_bestSellingCollection) ?>"
+title="<?php echo $this->__('Add to Wishlist') ?>"
+class="link-wishlist <?php echo $class; ?>">
+<?php echo $this->__('Add to Wishlist') ?>
+</a>
+</li>
+<li>
+<span class="separator">|</span> 
+
+<a href="<?php 
+echo Mage::helper('catalog/product_compare')->getAddUrl($_bestSellingCollection);
+?>" class="link-compare" title="<?php echo $this->__('Add to Compare') ?>">
+
+<?php echo $this->__('Add to Compare') ?>
+</a>
+</li>
+</ul>               
+                       <?php 
+                       /**
+                        * Check the product is saleable
+                        * if so then display the option add to cart
+                        * else show out of stock message
+                        */
+                       if($_bestSellingCollection->isSaleable()){ ?>
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" 
+                        onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($_bestSellingCollection) ?>')">
+<span><span><?php echo $this->__('Add to Cart') ?></span></span>
+</button>
+                    <?php } 
+                    else {?>
+                        <p class="availability out-of-stock">
+<span>
+<?php echo $this->__('Out of stock') ?></span>
+</p>
+                   <?php } ?></div>                  
+                    <?php
+/**
+ * Check product is set as new or not
+*/
+?>
+<?php echo $this->helper('marketplace/marketplace')->getLabel($_bestSellingCollection);  ?>
+                     </div></div>
+<?php $increment++; 
+} ?>
+</div>
+<?php } 
+else {
+echo $this->__("No bestselling product[s] available to show");
+}?>
+</div>
+
+<div id="newproducts">
+<?php $newProducts = $this->getNewproduct ();
+$newCount = count ( $newProducts );
+if ($newCount >= 1) {?>
+
+<div class="products-grid <?php if($newCount>4){
+echo 'slider-carousel'; 
+} 
+else {
+echo 'no-slider'; 
+} ?>">
+<?php $increment =1;  
+foreach ( $newProducts as $new ) {?>
+                             <div class="slider <?php if($increment==4) {
+                             echo 'last';
+                             } ?>"> 
+
+<?php $newproduct = $this->helper ( 'catalog/image' )->init ( $new, 'small_image' )->constrainOnly ( TRUE )->keepAspectRatio ( FALSE )->keepFrame ( FALSE )->resize ( 226, 226 );?>  
+                            <?php
+/**
+ * Display New Products of this seller
+ */
+?>    
+<div class="product_image_div">
+<a href="<?php echo $new->getProductUrl() ?>" 
+title="<?php echo $this->escapeHtml($new->getName()) ?>" class="product-image">
+                    <?php $_imgSize = 260; ?>
+                    <img src="<?php echo $this->helper('catalog/image')->init($new, 'small_image')->resize($_imgSize); 
+                    ?>" alt="<?php echo $this->stripTags($this->getImageLabel($new, 'small_image'), null, true) ?>" />
+</a>
+<div class="products-grid-details">
+<h2 class="product-name">
+<a href="<?php echo $new->getProductUrl(); ?>">
+<?php
+/**
+ * Display the prodcut name fully if it not exceed more than 26 characters
+ * else display part of the product name
+ */
+$newProductName = $new->getName ();
+$newLengthProductName = strlen ( $new->getName () );
+$newSubProductName = substr ( $newProductName, 0, 26 );
+if ($newLengthProductName >= 26) {
+$newProductNameFix = $newSubProductName . "...";
+} else {
+$newProductNameFix = $newProductName;
+}
+echo $newProductNameFix;
+?>
+
+                                        </a>
+</h2>
+
+
+                                </div>
+                        <div class="products_gridview_page">
+<div class="price-box">
+<span class="regular-price"> <span class="price">
+
+                                                <?php
+/**
+ * Display Product Price
+ */
+$newPrice = $new->getPrice ();
+$newSplPrice = $new->getSpecialPrice ();
+$newDealExpireDate = $new->getspecial_to_date ();
+/**
+ * Checking mew special price has some values
+ * and new deal expiration date is not equal to the empty value
+ * and date of new deal expiration date is greater than or equal to the current date
+ * if so show the new special price
+ * else display the new price value only
+ */
+if (! empty ( $newSplPrice ) && ($newDealExpireDate != '') && ($newDealExpireDate >= $currentDate)) {
+
+echo Mage::helper ( 'core' )->currency ( $newSplPrice, true, false );
+} else {
+echo Mage::helper ( 'core' )->currency ( $newPrice, true, false );
+}
+?>
+                                            </span></span>
+</div>
+</div>        
+                                
+</div>
+<?php
+/**
+ * Display Add to cart option, 
+ * add to wishlist option
+ * and compare option
+ */
+?>
+                             <div class="actions">
+<ul class="add-to-links">
+<li><a
+href="<?php echo $this->helper('wishlist')->getAddUrl($new) ?>" title="<?php 
+echo $this->__('Add to Wishlist') ?>" class="link-wishlist <?php
+ echo $class; ?>">
+<?php echo $this->__('Add to Wishlist') ?></a></li>
+<li><span class="separator">|</span> <a href="<?php 
+echo Mage::helper('catalog/product_compare')->getAddUrl($new);  ?>" class="link-compare" title="<?php
+ echo $this->__('Add to Compare') ?>">
+<?php echo $this->__('Add to Compare') ?></a></li>
+</ul>
+                       <?php 
+                       /**
+                        * Confirming the product is available for sale
+                        * if so show add to cart option to the customer
+                        * if not show the message like out of stock
+                        */
+                       if($new->isSaleable()): ?>
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart"
+onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($new) ?>')">
+<span><span><?php echo $this->__('Add to Cart') ?></span></span>
+</button>
+                    <?php else: ?>
+                        <p class="availability out-of-stock">
+<span><?php echo $this->__('Out of stock') ?></span>
+</p>
+                    <?php endif; ?>
+                    </div>
+                    
+                    <?php
+/**
+ * Check product is set as new or not
+ */
+?>
+                    <?php echo $this->helper('marketplace/marketplace')->getLabel($new);  ?>
+                           </div>   
+                        <?php $increment++; 
+} ?>
+             </div>
+          <?php } 
+          else {
+
+echo $this->__("No new product[s] available to show");
+}?> 
+</div>
+</div>
+</div>

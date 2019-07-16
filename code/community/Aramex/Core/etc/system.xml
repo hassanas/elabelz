@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <aramex translate="label">
+            <label>Aramex</label>
+            <sort_order>1</sort_order>
+        </aramex>
+    </tabs>
+    <sections>
+        <aramexsettings translate="label">
+            <label>Aramex Global Settings</label>
+            <tab>aramex</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store> 
+            <groups>
+                <settings translate="label">
+                    <label>Client Information</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <user_name>
+                            <label>Email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 						
+                        </user_name>
+                        <password>
+                            <label>Password</label>
+                            <frontend_type>Password</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 							
+                        </password>
+                        <account_pin>
+                            <label>Account Pin</label>
+                            <frontend_type>text</frontend_type>							
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </account_pin>
+                        <account_number>
+                            <label>Account Number</label>
+                            <frontend_type>text</frontend_type>							
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </account_number>
+                        <account_entity>
+                            <label>Account Entity</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </account_entity>
+                        <account_country_code>
+                            <label>Account Country Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </account_country_code>
+                     
+                        <allowed_cod translate="label">
+                            <label>COD Account</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>102</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<strong><span style="color: red;">Optional</span></strong> account data]]></comment>
+                        </allowed_cod>                                                
+                        <cod_account_number>
+                            <label>COD Account Number</label>
+                            <frontend_type>text</frontend_type>							
+                            <sort_order>103</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 
+                            <comment><![CDATA[<strong><span style="color: red;">Optional</span></strong> account data]]></comment>
+                        </cod_account_number>                                                  
+                         <cod_account_pin>
+                            <label>COD Account Pin</label>
+                            <frontend_type>text</frontend_type>							
+                            <sort_order>104</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>  
+                            <comment><![CDATA[<strong><span style="color: red;">Optional</span></strong> account data]]></comment>
+                         </cod_account_pin>                                               
+                         <cod_account_entity>
+                            <label>COD Account Entity</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 
+                            <comment><![CDATA[<strong><span style="color: red;">Optional</span></strong> account data]]></comment>    
+                        </cod_account_entity>
+                        <cod_account_country_code>
+                            <label>COD Account Country Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>106</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[<strong><span style="color: red;">Optional</span></strong> account data]]></comment>  
+                        </cod_account_country_code>                                               
+                    </fields>             					
+                </settings>
+                <config>
+                    <label>Service Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields> 
+                        <sandbox_flag translate="label">
+                            <label>Test Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_flag>					
+	 
+                        <report_id>
+                            <label>Report ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 						
+                        </report_id>
+							 
+                        <allowed_domestic_methods translate="label">
+                            <label>Allowed Domestic Methods</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <frontend_class>required-entry</frontend_class>
+                            <source_model>aramex/carrier_aramex_source_domesticmethods</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>								
+                            <!--<can_be_empty>0</can_be_empty>-->						
+                            <required>1</required>
+                        </allowed_domestic_methods>
+							 
+							 
+                        <allowed_domestic_additional_services translate="label">
+                            <label>Allowed Domestic Additional Services</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <frontend_class>required-entry</frontend_class>
+                            <source_model>aramex/carrier_aramex_source_domesticAdditionalServices</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>								
+                            <required>1</required>
+                        </allowed_domestic_additional_services>
+							 
+							 
+                        <allowed_international_methods translate="label">
+                            <label>Allowed International Methods</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>aramex/carrier_aramex_source_internationalmethods</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>required-entry</frontend_class>
+                            <required>1</required>							
+                        </allowed_international_methods>
+							 
+                        <allowed_international_additional_services translate="label">
+                            <label>Allowed International Additional Services</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>aramex/carrier_aramex_source_internationalAdditionalServices</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <frontend_class>required-entry</frontend_class>
+                            <required>1</required>							
+                        </allowed_international_additional_services>
+							 
+                    </fields> 
+                </config>
+                <shipperdetail translate="label">
+                    <label>Shipper Details</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <name>
+                            <label>Name</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </name>
+                        <email>
+                            <label>Email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email>
+                        <company>
+                            <label>Company</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </company>
+                        <address>
+                            <label>Address</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </address>
+                        <country>
+                            <label>Country Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </country>
+                        <city>
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </city>
+                        <postalcode>
+                            <label>Postal Code</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </postalcode>
+                        <state>
+                            <label>State</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </state>
+                        <phone>
+                            <label>Phone</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </phone>
+                    </fields>
+                </shipperdetail>
+                <template>
+                    <label>Shipment Email Template</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <shipment_template translate="label">
+                            <label>Aramex Shipment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_template</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_template>
+                        <copy_to translate="label comment">
+                            <label>Shipment Email Copy To</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Comma-separated.</comment>
+                        </copy_to>
+                        <copy_method translate="label">
+                            <label>Shipment Email Copy Method</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_method</source_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </copy_method>
+                    </fields>						
+                </template>
+            </groups>	
+        </aramexsettings>
+    </sections>  
+</config>

@@ -1,0 +1,328 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_item = $this->getItem();?>
+
+<?php $this->setPriceDataObject($_item) ?>
+<tr<?php if (!$this->canDisplayGiftmessage()): ?> class="border"<?php endif; ?>>
+    <td>
+        <?php if ($this->canDisplayContainer()): ?>
+        <div id="<?php echo $this->getHtmlId() ?>" class="item-container">
+        <?php endif; ?>
+        <div class="item-text">
+            <?php echo $this->getColumnHtml($_item, 'name') ?>
+        </div>
+        <?php if ($this->canDisplayContainer()): ?>
+        </div>
+        <?php endif ?>
+    </td>
+    <td class="a-center"><?php echo $_item->getStatus() ?></td>
+
+    <td class="a-center">
+    <?php 
+        $getMarketplaceOrder  = Mage::helper('marketplace')->getMarketplaceOrder($_item->getProductId(),$_item->getOrderId());
+        if ($getMarketplaceOrder->getRefundRequestCustomer() && $getMarketplaceOrder->getItemOrderStatus() != "refunded") {
+            echo "Refund request from Customer <strong style='color: #C01313'>not processed</strong>";
+        } elseif ($getMarketplaceOrder->getRefundRequestCustomer() && $getMarketplaceOrder->getItemOrderStatus() == "refunded") {
+            echo "Refund request from Customer <strong>is processed</strong>";
+        } else {
+            // echo "Refund not requested";
+            echo "N/A";
+        }
+    ?>
+    </td>
+    <td class="a-center">
+    <?php
+        if ($getMarketplaceOrder->getCancelRequestCustomer() && $getMarketplaceOrder->getItemOrderStatus() != "canceled") {
+            echo "Cancel request from Customer <strong style='color: #C01313'>not processed</strong>";
+        } elseif ($getMarketplaceOrder->getCancelRequestCustomer() && $getMarketplaceOrder->getItemOrderStatus() == "canceled") {
+            echo "Cancel request from Customer <strong>is processed</strong>";
+        } else {
+            // echo "Cancel not requested";
+            echo "N/A";
+        }
+    ?>
+    </td>
+    <td class="a-right"><?php echo $this->displayPriceAttribute('original_price') ?></td>
+    <td class="a-right">
+        <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceExclTax()): ?>
+            <span class="price-excl-tax">
+                <?php if ($this->helper('tax')->displaySalesBothPrices()): ?>
+                    <span class="label"><?php echo $this->__('Excl. Tax'); ?>:</span>
+                <?php endif; ?>
+
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales', $_item->getStoreId())): ?>
+                    <?php
+                    echo $this->displayPrices(
+                        $_item->getBasePrice()+$_item->getBaseWeeeTaxAppliedAmount()+$_item->getBaseWeeeTaxDisposition(),
+                        $_item->getPrice()+$_item->getWeeeTaxAppliedAmount()+$_item->getWeeeTaxDisposition()
+                    );
+                    ?>
+                <?php else: ?>
+                    <?php echo $this->displayPrices($_item->getBasePrice(), $_item->getPrice()) ?>
+                <?php endif; ?>
+
+
+                <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                    <br />
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount'], $tax['amount']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount'], $tax['amount']); ?></small></span>
+                        <?php endforeach; ?>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount'], $tax['amount']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php endif; ?>
+
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <br />
+                        <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br />
+                        <?php
+                        echo $this->displayPrices(
+                            $_item->getBasePrice()+$_item->getBaseWeeeTaxAppliedAmount()+$_item->getBaseWeeeTaxDisposition(),
+                            $_item->getPrice()+$_item->getWeeeTaxAppliedAmount()+$_item->getWeeeTaxDisposition()
+                        );
+                        ?>
+                        </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+            <br />
+        <?php endif; ?>
+        <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceInclTax()): ?>
+            <span class="price-incl-tax">
+                <?php if ($this->helper('tax')->displaySalesBothPrices()): ?>
+                    <span class="label"><?php echo $this->__('Incl. Tax'); ?>:</span>
+                <?php endif; ?>
+                <?php $_incl = $this->helper('checkout')->getPriceInclTax($_item); ?>
+                <?php $_baseIncl = $this->helper('checkout')->getBasePriceInclTax($_item); ?>
+
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales', $_item->getStoreId())): ?>
+                    <?php echo $this->displayPrices($_baseIncl + Mage::helper('weee')->getBaseWeeeTaxInclTax($_item), $_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?>
+                <?php else: ?>
+                    <?php echo $this->displayPrices($_baseIncl-$_item->getBaseWeeeTaxDisposition(), $_incl-$_item->getWeeeTaxDisposition()) ?>
+                <?php endif; ?>
+
+                <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                    <br />
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount_incl_tax'], $tax['amount_incl_tax']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount_incl_tax'], $tax['amount_incl_tax']); ?></small></span>
+                        <?php endforeach; ?>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_amount_incl_tax'], $tax['amount_incl_tax']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php endif; ?>
+
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <br />
+                        <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br /> <?php echo $this->displayPrices($_baseIncl + Mage::helper('weee')->getBaseWeeeTaxInclTax($_item) , $_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+
+    </td>
+    <td><?php echo $this->getColumnHtml($_item, 'qty') ?></td>
+
+    <td class="a-right">
+        <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceExclTax()): ?>
+            <span class="price-excl-tax">
+                <?php if ($this->helper('tax')->displaySalesBothPrices()): ?>
+                    <span class="label"><?php echo $this->__('Excl. Tax'); ?>:</span>
+                <?php endif; ?>
+
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales', $_item->getStoreId())): ?>
+                    <?php
+                    echo $this->displayPrices(
+                        $_item->getBaseRowTotal()+$_item->getBaseWeeeTaxAppliedRowAmount()+$_item->getBaseWeeeTaxRowDisposition(),
+                        $_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()
+                    );
+                    ?>
+                <?php else: ?>
+                    <?php echo $this->displayPrices($_item->getBaseRowTotal(), $_item->getRowTotal()) ?>
+                <?php endif; ?>
+
+
+                <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount'], $tax['row_amount']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount'], $tax['row_amount']); ?></small></span>
+                        <?php endforeach; ?>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount'], $tax['row_amount']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php endif; ?>
+
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <br />
+                        <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br />
+                        <?php
+                        echo $this->displayPrices(
+                            $_item->getBaseRowTotal()+$_item->getBaseWeeeTaxAppliedRowAmount()+$_item->getBaseWeeeTaxRowDisposition(),
+                            $_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()
+                        );
+                        ?>
+                        </span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+            <br />
+        <?php endif; ?>
+        <?php if ($this->helper('tax')->displaySalesBothPrices() || $this->helper('tax')->displaySalesPriceInclTax()): ?>
+            <span class="price-incl-tax">
+                <?php if ($this->helper('tax')->displaySalesBothPrices()): ?>
+                    <span class="label"><?php echo $this->__('Incl. Tax'); ?>:</span>
+                <?php endif; ?>
+                <?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
+                <?php $_baseIncl = $this->helper('checkout')->getBaseSubtotalInclTax($_item); ?>
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales', $_item->getStoreId())): ?>
+                    <?php echo $this->displayPrices($_baseIncl + Mage::helper('weee')->getBaseRowWeeeTaxInclTax($_item), $_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
+                <?php else: ?>
+                    <?php echo $this->displayPrices($_baseIncl-$_item->getBaseWeeeTaxRowDisposition(), $_incl-$_item->getWeeeTaxRowDisposition()) ?>
+                <?php endif; ?>
+
+
+                <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+                    <br />
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount_incl_tax'], $tax['row_amount_incl_tax']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount_incl_tax'], $tax['row_amount_incl_tax']); ?></small></span>
+                        <?php endforeach; ?>
+                    <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales', $_item->getStoreId())): ?>
+                        <small>
+                        <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                            <span class="nobr"><?php echo $tax['title']; ?>: <?php echo $this->displayPrices($tax['base_row_amount_incl_tax'], $tax['row_amount_incl_tax']); ?></span>
+                        <?php endforeach; ?>
+                        </small>
+                    <?php endif; ?>
+
+                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales', $_item->getStoreId())): ?>
+                        <br /><span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br /> <?php echo $this->displayPrices($_baseIncl + Mage::helper('weee')->getBaseRowWeeeTaxInclTax($_item),$_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?></span>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+    </td>
+    <td class="a-right"><?php echo $this->displayPriceAttribute('tax_amount') ?></td>
+    <td class="a-right"><?php echo $this->displayTaxPercent($_item) ?></td>
+    <td class="a-right"><?php echo $this->displayPriceAttribute('discount_amount') ?></td>
+    <td class="a-right">
+        <?php echo $this->displayPrices(
+            $_item->getBaseRowTotal() + $_item->getBaseTaxAmount() + $_item->getBaseHiddenTaxAmount() + Mage::helper('weee')->getBaseRowWeeeAmountAfterDiscount($_item) - $_item->getBaseDiscountAmount(),
+            $_item->getRowTotal() + $_item->getTaxAmount() + $_item->getHiddenTaxAmount() + Mage::helper('weee')->getRowWeeeAmountAfterDiscount($_item) - $_item->getDiscountAmount()
+        ); ?>
+    </td>
+    <td class="a-center">
+        <?php
+
+        /*Edited by Humera Batool to get simple product id for sales_flat_order_item grid 09/08/2017*/
+
+        $simple_product = Mage::getModel('sales/order_item')->getCollection();
+        $simple_product->addFieldToFilter('parent_item_id',$_item->getId())
+                       ->addFieldToFilter('product_type','simple')->getFirstItem();
+        
+        foreach($simple_product as $simple):
+         $getProductId = $simple->getProductId();
+        endforeach;
+
+        /*----*/
+
+        $seller_buyer  = Mage::helper('marketplace/vieworder')->seller_and_buyer($getProductId,$_item->getOrderId());
+        $d = "Config.P.ID : " . $_item->getProductId() . "\n";
+        $d = "Simple.P.ID : " . $getProductId . "\n";
+        $d .= "O.ID : " . $_item->getOrderId() . "\n";
+        $d .= "M.I.ID_MP : " . $seller_buyer->getId() . "\n";
+        $ref = $this->getRequest()->getParam("ref");
+        
+        /*---Edited by Humera for orders created by admin or highstreet app---*/
+        if($seller_buyer->getId() == ""):
+            $seller_buyer_id = 0;
+        else:
+            $seller_buyer_id = $seller_buyer->getId();
+        endif;
+        /*------*/
+
+        if ($seller_buyer->getIsSellerConfirmation() == "Yes") {
+            echo "<strong>Accepted</strong>";
+        } elseif ($seller_buyer->getIsSellerConfirmation() == "Rejected") {
+            echo "<strong>Rejected</strong>";
+        } else {
+            echo "<a onclick='javascript:return confirm(\"Accepting this Item on behalf of Seller/Merchant?\");' title='$d' href='" . Mage::helper("adminhtml")->getUrl('marketplaceadmin/adminhtml_orderitems/confirm_seller', array('id' => $seller_buyer_id,'product_id'=>$getProductId, 'path' => "sale_order", 'ref' => $ref, 'order_id' => $_item->getOrderId())) . "'>Accept</a> Or <a onclick='javascript:return confirm(\"Rejecting this Item on behalf of Seller/Merchant? Once the order is Rejected it cannot be reverted back\");' title='$d' href='" . Mage::helper("adminhtml")->getUrl('marketplaceadmin/adminhtml_orderitems/reject_seller', array('id' => $seller_buyer_id,'product_id'=> $getProductId, 'path' => "sale_order", 'ref' => $ref, 'order_id' => $_item->getOrderId())) . "'>Reject</a>";
+        }
+        ?>
+    </td>
+    <td class="a-center last">
+        <?php 
+        if ($seller_buyer->getIsBuyerConfirmation() == "Yes") {
+            echo "<strong>Accepted</strong>";
+        } elseif ($seller_buyer->getIsBuyerConfirmation() == "Rejected") {
+            echo "<strong>Rejected</strong>";
+        } else {
+            echo "<a onclick='javascript:return confirm(\"Accepting this Item on behalf of Customer/Buyer?\");' href='" . Mage::helper("adminhtml")->getUrl('marketplaceadmin/adminhtml_orderitems/confirm_buyer', array('id' => $seller_buyer_id,'product_id'=>$getProductId, 'path' => "sale_order", 'ref' => $ref, 'order_id' => $_item->getOrderId())) . "'>Accept</a> Or <a onclick='javascript:return confirm(\"Rejecting this Item on behalf of Customer/Buyer? Once the order is Rejected it cannot be reverted back\");' href='" . Mage::helper("adminhtml")->getUrl('marketplaceadmin/adminhtml_orderitems/reject_buyer', array('id' => $seller_buyer_id,'product_id'=>$getProductId, 'path' => "sale_order", 'ref' => $ref, 'order_id' => $_item->getOrderId())) . "'>Reject</a>";
+        }
+        ?>
+    </td>
+<!--     <?php $product  = Mage::helper('marketplace/vieworder')->sellerConfirmation($_item->getProductId(),$_item->getOrderId());?>
+        <?php foreach($product as $pro):?>
+                     <td class="a-right"><?php echo $pro->is_seller_confirmation; ?></td>
+                     <td class="a-right last"><?php echo $pro->is_buyer_confirmation;  ?></td>
+        <?php endforeach ?> -->
+</tr>

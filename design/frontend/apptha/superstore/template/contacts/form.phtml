@@ -1,0 +1,182 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+
+$currentUrlVal = Mage::helper ( 'core/url' )->getCurrentUrl ();
+$secureVal = strstr ( $currentUrlVal, "https" );
+$true = true;
+
+if ($secureVal == $true) {
+    $actionUrl =  $this->getUrl ( $this->getFormAction(), array (
+        '_secure' => true
+    ) );
+} else {
+    $actionUrl =  $this->getUrl ( $this->getFormAction() );
+}
+?>
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="page-title">
+    <?php /*?> <h1><span><?php echo Mage::helper('contacts')->__('Contact ') ?></span>
+    <?php echo Mage::helper('contacts')->__('Us') ?></h1><?php */?>
+</div>
+<form action="<?php echo $actionUrl; ?>" id="contactForm" method="post" class="scaffold-form" enctype="multipart/form-data">
+    <div class="fieldset">
+        <h2 class="legend"><?php echo Mage::helper('contacts')->__('Contact Information') ?></h2>
+        <p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
+        <ul class="form-list">
+            <li class="fields">
+                <div class="field">
+                    <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
+                    <div class="input-box">
+                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>"
+                               value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
+                    <div class="input-box">
+                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>"
+                               value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email"  autocapitalize="off" type="email" autocorrect="off" spellcheck="false" />
+                        <p class="email_note"><?php echo $this->__('Please ensure that your email address is correct so that we can respond to your enquiry') ?></p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="fields">
+                <div class="field field_cont_pref">
+                    <label for="contactprefrences" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Contact Preferences') ?></label>
+                    <div class="input-box">
+                        <select name="contact-prefrences" id="contact-prefrences" class="required-entry">
+                            <option value="" selected><?php echo $this->__('Please select...') ?></option>
+                            <option value="<?php echo $this->__('Shipping') ?>"><?php echo $this->__('Shipping') ?></option>
+                            <option value="<?php echo $this->__('Customer Service') ?>"><?php echo $this->__('Customer Service') ?></option>
+                            <option value="<?php echo $this->__('General') ?>"><?php echo $this->__('General') ?></option>
+                            <option value="<?php echo $this->__('Note Sure') ?>"><?php echo $this->__('Note Sure') ?></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field field_location">
+                    <label for="location" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Location (Shipping Address)') ?></label>
+                    <div class="input-box">
+                        <select name="location" id="location" class="required-entry">
+                            <option value="" selected><?php echo $this->__('Please select...') ?></option>
+                            <option value="<?php echo $this->__('UAE') ?>"><?php echo $this->__('UAE') ?></option>
+                            <option value="<?php echo $this->__('Saudi Arabia') ?>"><?php echo $this->__('Saudi Arabia') ?></option>
+                            <option value="<?php echo $this->__('Bahrain') ?>"><?php echo $this->__('Bahrain') ?></option>
+                            <option value="<?php echo $this->__('Qatar') ?>"><?php echo $this->__('Qatar') ?></option>
+                            <option value="<?php echo $this->__('Oman') ?>"><?php echo $this->__('Oman') ?></option>
+                            <option value="<?php echo $this->__('Kuwait') ?>"><?php echo $this->__('Kuwait') ?></option>
+                            <option value="<?php echo $this->__('IRAQ') ?>"><?php echo $this->__('IRAQ') ?></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </li>
+
+            <li class="fields field_query_type">
+                <div class="field">
+                    <label for="querytype" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Query Type') ?></label>
+                    <div class="input-box">
+                        <select name="query-type" id="query-type" class="required-entry">
+                            <option value="" selected><?php echo $this->__('Please select...') ?></option>
+                            <option value="<?php echo $this->__('Late Shipment') ?>"><?php echo $this->__('Late Shipment') ?></option>
+                            <option value="<?php echo $this->__('Item Exchange') ?>"><?php echo $this->__('Item Exchange') ?></option>
+                            <option value="<?php echo $this->__('Item Return') ?>"><?php echo $this->__('Item Return') ?></option>
+                            <option value="<?php echo $this->__('General Query') ?>"><?php echo $this->__('General Query') ?></option>
+                            <option value="<?php echo $this->__('Not Sure') ?>"><?php echo $this->__('Not Sure') ?></option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+
+            <li class="fields field_tel">
+                <label for="telephone"><?php echo Mage::helper('contacts')->__('Telephone') ?></label>
+                <div class="input-box">
+                    <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value=""  type="tel" class="input-text"/>
+                </div>
+            </li>
+            <div class="clear"></div>
+            <li class="wide" style="width:400px;">
+                <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Comment') ?></label>
+                <div class="input-box">
+                    <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text"  rows="3" cols="5" style="height:200px;"></textarea>
+                </div>
+            </li>
+
+            <li class="field field_attach">
+                <label for="attachment"><?php echo Mage::helper('contacts')->__('Upload File (optional)(Recommanded)') ?></label>
+                <div class="input-box">
+                    <input name="MAX_FILE_SIZE" type="hidden" value="2000000" />
+
+                    <div class="base-image">
+                        <div class="cont_file">
+                            <span class="cont_ftitle"><?php echo $this->__('Choose File') ?></span>
+                            <span class="cont_fpath"><?php echo $this->__('No File Selected') ?></span>
+                        </div>
+                        <input name="attachment" id="attachment" class="input-text" type="file" accept=".doc,.docx,.pdf,.jpg,.png" />
+                        <p class="email_note"><?php echo $this->__('Files extension with .doc,.docx,.png,.jpg and .pdf are allowed only') ?></p>
+                    </div>
+
+                </div>
+
+
+
+            </li>
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        <button onclick="contactUs()" type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="button">
+            <span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+    //<![CDATA[
+    var contactForm = new VarienForm('contactForm', true);
+    //]]>
+</script>
+<script>
+  if (window.promotionData !== undefined ) {
+    /* Data layer will push on contact us button click.*/
+      function contactUs(){
+        dataLayer.push({
+          'pageType' : 'Customer Service',
+          'pageCategory': 'No Category',
+          'userId': window.promotionData.userId,
+          'userType': window.promotionData.userType,
+          'loggedInStatus': window.promotionData.loggedInStatus,
+          'storeCountry': window.promotionData.storeCountry,
+          'storeLanguage':window.promotionData.storeLanguage,
+          'currencyCode': window.promotionData.currency_code,
+          'event': 'customEvent',
+          'eventCategory' : 'User Engagement',
+          'eventAction' : 'Micro Conversion',
+          'eventLabel' : 'Contact Form Submission'
+        });
+    }
+  }
+</script>

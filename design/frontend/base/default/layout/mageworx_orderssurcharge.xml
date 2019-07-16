@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * MageWorx
+ * Order Surcharge extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersSurcharge
+ * @copyright  Copyright (c) 2016 MageWorx (http://www.mageworx.com/)
+ */
+-->
+<layout>
+
+    <sales_order_view>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mageworx/orderssurcharge/styles.css</stylesheet></action>
+        </reference>
+        <reference name="order_totals">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="orders_surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="orders_linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+        <reference name="content">
+            <block type="mageworx_orderssurcharge/sales_order_details" name="surcharge.details"
+                   template="mageworx/orderssurcharge/sales/order/details.phtml" after="-"/>
+        </reference>
+    </sales_order_view>
+
+    <sales_order_print>
+        <reference name="order_totals">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="orders_surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="orders_linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+    </sales_order_print>
+
+    <sales_order_invoice>
+        <reference name="invoice_totals">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="orders_surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="orders_linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+    </sales_order_invoice>
+
+    <sales_order_creditmemo>
+        <reference name="creditmemo_totals">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="orders_surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="orders_linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+    </sales_order_creditmemo>
+
+    <mageworx_surcharge_cart_checkout_cart_index>
+        <reference name="checkout.cart">
+            <remove name="coupon" />
+            <remove name="checkout.cart.coupon" />
+            <action method="addItemRender"><type>virtual</type><block>mageworx_orderssurcharge/checkout_cart_item_renderer</block><template>mageworx/orderssurcharge/checkout/cart/item/renderer/default.phtml</template></action>
+        </reference>
+    </mageworx_surcharge_cart_checkout_cart_index>
+
+    <sales_email_order_items>
+        <reference name="order_totals">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+        <reference name="order_totals_mail">
+            <block type="mageworx_orderssurcharge/sales_order_totals_surcharge" name="surcharge" template="mageworx/orderssurcharge/sales/order/totals/orders_surcharge.phtml" />
+            <block type="mageworx_orderssurcharge/sales_order_totals_linked" name="linked" template="mageworx/orderssurcharge/sales/order/totals/orders_linked.phtml" />
+        </reference>
+    </sales_email_order_items>
+</layout>

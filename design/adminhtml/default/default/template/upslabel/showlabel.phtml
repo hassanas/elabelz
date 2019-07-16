@@ -1,0 +1,118 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * Author Rudyuk Vitalij Anatolievich
+ * Email rvansp@gmail.com
+ * Blog www.cervic.info
+ */
+$order_id = Mage::registry('order_id');
+$shipment_id = Mage::registry('shipment_id');
+$upsl = Mage::registry('upsl');
+$backLink = Mage::registry('backLink');
+$type = Mage::registry('type');
+
+$storeId = null;
+$imOrder = Mage::getModel('sales/order')->load($order_id);
+$shipmentIncrementId = null;
+if($shipment_id) {
+    $imShipment = Mage::getModel('sales/order_shipment')->load($shipment_id);
+    $shipmentIncrementId = $imShipment->getIncrementId();
+}
+
+if (isset($upsl) && count($upsl) > 0) {
+    $isGif = false;
+    $isThermal = false;
+    $isWithoutError = false;
+    foreach ($upsl AS $label) {
+        if ($label->getTypePrint() == 'GIF') {
+            $isGif = true;
+        }
+        if ($label->getTypePrint() != 'GIF' && $label->getTypePrint() != 'link' && $label->getTypePrint() != 'virtual') {
+            $isThermal = true;
+        }
+        if($label->getStatus() == 0){
+            $isWithoutError = true;
+        }
+    }
+    echo '<h1> Order ID ' . $imOrder->getIncrementId() . ($shipmentIncrementId ? ' Shipment ID ' . $shipmentIncrementId : '') . '</h1>
+    <br />
+    <a href="' . $backLink . '"><button type="button" class="scalable back"><span><span><span>' . Mage::helper('adminhtml')->__('Back') . '</span></span></span></button></a>&nbsp;&nbsp;';
+    $shipidnumber = $upsl->getFirstItem()->getShipmentidentificationnumber();
+    if ($isWithoutError) {
+        echo '<a href="' . $this->getUrl('adminhtml/upslabel_upslabel/deletelabel/order_id/' . $order_id . ($shipment_id ? '/shipment_id/' . $shipment_id : '') . '/type/' . $type) . '"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Delete Label') . '</span></span></span></button></a>';
+    }
+    if (file_exists(Mage::getBaseDir('media') . DS . 'upslabel' . DS . 'label' . DS . "HVR" . $shipidnumber . ".html")) {
+        echo '&nbsp;&nbsp;&nbsp;<a href="' . Mage::getBaseUrl('media') . 'upslabel/label/HVR' . $shipidnumber . '.html" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print High Value report') . '</span></span></span></button></a>';
+    }
+    if (file_exists(Mage::getBaseDir('media') . DS . 'upslabel' . DS . 'inter_pdf' . DS . $shipidnumber . ".pdf")) {
+        echo '&nbsp;&nbsp;&nbsp;<a href="' . Mage::getBaseUrl('media') . 'upslabel/inter_pdf/' . $shipidnumber . '.pdf" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print International Invoice') . '</span></span></span></button></a>';
+    }
+    if (file_exists(Mage::getBaseDir('media') . DS . 'upslabel' . DS . 'turn_in_page' . DS . $shipidnumber . ".html")) {
+        echo '&nbsp;&nbsp;&nbsp;<a href="' . Mage::getBaseUrl('media') . 'upslabel/turn_in_page/' . $shipidnumber . '.html" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print COD Turn In Page') . '</span></span></span></button></a>';
+    }
+    if($isGif && $isWithoutError){
+        echo '&nbsp;&nbsp;&nbsp;<a href="' . $this->getUrl('adminhtml/upslabel_pdflabels/onepdf/order_id/' . $order_id . ($shipment_id ? '/shipment_id/' . $shipment_id : '') . '/type/' . $type) . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print all PDF') . '</span></span></span></button></a>';
+    }
+    echo '<br />';
+    $printersText = Mage::getStoreConfig('upslabel/printing/printer_name');
+    if(!empty($printersText) && $isThermal === true && Mage::getStoreConfig('upslabel/printing/automatic_printing') == 0) {
+        $printers = explode(",", $printersText);
+        echo '<br />';
+        echo '<label for="thermalPrinterName">'.Mage::helper('adminhtml')->__('Printer name').':</label> <select id="thermalPrinterName">';
+        foreach($printers as $printer){
+            echo '<option value="'.trim($printer).'">'.trim($printer).'</option>';
+        }
+        echo '</select>';
+    }
+    foreach ($upsl AS $label) {
+
+        echo '<hr style="margin: 15px 0;">';
+
+        if($label->getStatus() == 0) {
+
+            if ($label->getTypePrint() == 'GIF') {
+                echo '
+                        <h3 class="label_type_gif">Tracking Number ' . $label->getTrackingnumber() . '</h3>';
+                echo '<a href="' . $this->getUrl('adminhtml/upslabel_pdflabels/onepdf/label_id/' . $label->getId() . '/type/' . $type) . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print PDF') . '</span></span></span></button></a>
+                        &nbsp;&nbsp;&nbsp;<a href="' . $this->getUrl('adminhtml/upslabel_upslabel/print/imname/' . 'label' . $label->getTrackingnumber() . '.gif') . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print Label Gif') . '</span></span></span></button></a>
+                        &nbsp;&nbsp;&nbsp;<a href="' . Mage::getBaseUrl('media') . 'upslabel/label/' . $label->getTrackingnumber() . '.html" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print Html image') . '</span></span></span></button></a>';
+                echo '<br /><br /><a class="link_image" href="' . Mage::getBaseUrl('media') . 'upslabel/label/' . $label->getLabelname() . '" target="_blank"><img src="' . Mage::getBaseUrl('media') . 'upslabel/label/' . $label->getLabelname() . '" style="width: 90%" /></a>';
+            } elseif($label->getTypePrint() == 'link') {
+                echo '
+                <h3 class="label_type_link">Tracking Number ' . $label->getTrackingnumber() . '</h3>
+                <a href="' . $label->getLabelname() . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print') . '</span></span></span></button></a>';
+            } elseif($label->getTypePrint() == 'virtual') {
+                echo '
+                <h3 class="label_type_link">Tracking Number ' . $label->getTrackingnumber() . '</h3>';
+            } else {
+                if(Mage::getStoreConfig('upslabel/printing/automatic_printing') == 1){
+                    echo '
+                    <h3 class="label_type_zpl">Tracking Number ' . $label->getTrackingnumber() . '</h3>
+                    <a href="' . $this->getUrl('adminhtml/upslabel_upslabel/autoprint/label_id/' . $label->getId()) .'" target="_blank"><button type="button" class="scalable "><span><span><span>' . Mage::helper('adminhtml')->__('Print thermal') . '</span></span></span></button></a>
+                    ';
+                } else {
+                    echo '
+                <h3 class="label_type_zpl">Tracking Number ' . $label->getTrackingnumber() . '</h3>
+                <button type="button" class="scalable thermal-print-file" data-file="' . Mage::getBaseUrl('media') . 'upslabel/label/' . $label->getLabelname() . '"><span><span><span>' . Mage::helper('adminhtml')->__('Print thermal') . '</span></span></span></button>
+                ';
+                }
+            }
+        } else {
+            $error = '<h1>Error</h1> <ul>';
+            $error .= '<li>Error Description : ' . $label->getStatustext() . '</li>';
+            $error .= '</ul>';
+            $error .= '<textarea>' . $label->getRequest() . '</textarea>';
+            $error .= '<textarea>' . $label->getResponse() . '</textarea>';
+            echo $error;
+        }
+    }
+} else {
+    echo '<h3 style="color: red;">
+    We are very sorry, but our test UPS account temporary inactive.<br>
+But we guarantee, that extension will work with your UPS account credentials.<br>
+If after purchase you will have problems, we will help you. Please contact our <a href="mailto:shippinglabels@infomodus.com">Support Team</a><br>
+If we will not able to resolve problems, we will return your money.<br>
+If you want to test our extension with your UPS account credentials, please send us request by <a href="mailto:shippinglabels@infomodus.com">email</a>.<br>
+Thank you!
+    </h3>';
+}

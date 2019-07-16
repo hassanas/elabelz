@@ -1,0 +1,47 @@
+<!--Form Tittle-->
+<div class="page-title">
+<h2><?php echo $this->__('Messages') ?></h2>
+</div>
+
+<?php $thread = $_GET['thread'];
+$thread_id =  explode( '/', $thread ) ;
+$threadid = intval($thread_id[0]);?>
+
+<!--Form Information-->
+<?php $messages = $this->loadMessages();
+foreach($messages as $message):
+    echo $message['message'];
+    $message_id = $message['messages_id'];
+?>
+<a href="<?php echo $this->getdelUrl($message_id,$threadid) ?>">Delete</a><br/>
+<?php endforeach; ?>
+
+
+<form id="person-form-validate" method="post" action="<?php echo $this->getActionOfForm($threadid)?>">
+
+<div class="fieldset">
+<ul class="form-list">
+<li class="fields">
+<div class="field name-firstname">
+<label class="required" for="firstname"><em>*</em><?php echo $this->__('Message')?></label>
+<div class="input-box">
+<textarea class="input-text required-entry" maxlength="255" title="Message" value="" name="message" id="message"></textarea>
+</div>
+</div>
+</li>
+
+</ul>
+</div>
+<!--Button & Link-->
+<div class="buttons-set">
+<p class="required">* <?php echo $this->__('Required Fields')?></p>
+<p class="back-link"><a class="back-link" href="<?php echo $this->getBaseUrl();?>"><small>&laquo;</small>Back</a></p>
+<button class="button" title="Submit" type="submit"><span><span><?php echo $this->__('Submit')?></span></span></button>
+</div>
+</form>
+
+<script type="text/javascript">
+//<![CDATA[
+var dataForm = new VarienForm('person-form-validate', true);
+//]]>
+</script>

@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <telrtransparent translate="label comment" module="paygate">
+          <label>Telr Transparent Mode / Checkout.com</label>
+          <frontend_type>text</frontend_type>
+          <sort_order>0</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <fields>
+            <active translate="label">
+              <label>Enabled</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>10</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </active>
+			<sandbox translate="label">
+              <label>Test Mode</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>11</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sandbox>
+            <paymentmethodtouse translate="label">
+              <label>Select Payment Method</label>
+              <frontend_type>select</frontend_type>
+              <source_model>telrtransparent/system_config_source_paymentmethodselection</source_model>
+              <sort_order>12</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </paymentmethodtouse>
+            <title translate="label">
+              <label>Title</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>20</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </title>
+            <order_status translate="label">
+              <label>New Order Status</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_order_status</source_model>
+              <sort_order>50</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </order_status>
+            <allowspecific translate="label">
+              <label>Payment Applicable From</label>
+              <frontend_type>select</frontend_type>
+              <sort_order>61</sort_order>
+              <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </allowspecific>
+            <specificcountry translate="label">
+              <label>Countries Payment Applicable From</label>
+              <frontend_type>multiselect</frontend_type>
+              <sort_order>70</sort_order>
+              <source_model>adminhtml/system_config_source_country</source_model>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends>
+                <allowspecific>1</allowspecific>
+              </depends>
+            </specificcountry>
+			<cctypes translate="label">
+				<label>Credit Card Types</label>
+				<frontend_type>multiselect</frontend_type>
+				<source_model>adminhtml/system_config_source_payment_cctype</source_model>
+				<sort_order>75</sort_order>
+				<show_in_default>1</show_in_default>
+				<show_in_website>1</show_in_website>
+				<show_in_store>0</show_in_store>
+			</cctypes>
+            <store_id translate="label">
+              <label>Telr Store Id</label>
+              <frontend_type>text</frontend_type>
+			  <sort_order>97</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </store_id>
+			<ivp_desc translate="label">
+              <label>Transaction Description</label>
+              <frontend_type>text</frontend_type>
+			  <sort_order>99</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </ivp_desc>
+			<secret_key translate="label">
+              <label>Telr Secret Key</label>
+              <frontend_type>text</frontend_type>
+			  <sort_order>99</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </secret_key>
+			<sort_order translate="label">
+              <label>Sort Order</label>
+              <frontend_type>text</frontend_type>
+			  <sort_order>100</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sort_order>
+            <appMethodDescription translate="label">
+              <label>Description for Mobile App</label>
+              <frontend_type>textarea</frontend_type>
+              <comment>
+                Additional text displayed on the payment method selection
+                <![CDATA[
+              <pre>
+
+        * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                              <label><b>Settings For Checkout.com</b></label>
+        * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+              </pre>
+                            ]]></comment>
+              <sort_order>110</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </appMethodDescription>
+            <sandboxscriptsource translate="label">
+              <label>Sand Box Script URL</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>111</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </sandboxscriptsource>
+            <sandboxapiurl translate="label">
+              <label>Sand Box API URL</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>112</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </sandboxapiurl>
+            <sandboxpublickeyaed translate="label">
+              <label>Sand Box Public Key For (AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>113</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </sandboxpublickeyaed>
+            <sandboxprivatekeyaed translate="label">
+              <label>Sand Box Private Key For (AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>114</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </sandboxprivatekeyaed>
+            <sandboxpublickeynonaed translate="label">
+              <label>Sand Box Public Key For (Other then AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>115</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+           </sandboxpublickeynonaed>
+           <sandboxprivatekeynonaed translate="label">
+              <label>Sand Box Private Key (Other then AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>116</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+          </sandboxprivatekeynonaed>
+
+            <livescriptsource translate="label">
+              <label>Live Script URL</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>117</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </livescriptsource>
+            <liveapiurl translate="label">
+              <label>Live API URL</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>118</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </liveapiurl>
+            <livepublickeyaed translate="label">
+              <label>Live Public Key For (AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>119</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </livepublickeyaed>
+            <liveprivatekeyaed translate="label">
+              <label>Live Private Key For (AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>120</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </liveprivatekeyaed>
+            <livepublickeynonaed translate="label">
+              <label>Live Public Key For (Other then AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>120</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </livepublickeynonaed>
+            <liveprivatekeynonaed translate="label">
+              <label>Live Private Key For (Other then AED Currency)</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>122</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </liveprivatekeynonaed>
+          </fields>
+        </telrtransparent>
+      </groups>
+    </payment>
+  </sections>
+</config>

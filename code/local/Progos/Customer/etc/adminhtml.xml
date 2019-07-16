@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <customeruniversalpassword translate="title" module="progos_customer">
+                                        <title>Customer Universal Password Section</title>
+                                        <sort_order>0</sort_order>
+                                    </customeruniversalpassword>
+                                    <customerdashboardorderstatus translate="title" module="progos_customer">
+                                        <title>Customer Order Status( Dashboard )</title>
+                                        <sort_order>0</sort_order>
+                                    </customerdashboardorderstatus>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

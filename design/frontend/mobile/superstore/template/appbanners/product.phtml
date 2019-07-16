@@ -1,0 +1,62 @@
+<?php 
+    $mobDetect    = Mage::helper('mobiledetect');
+    if ( $mobDetect->isMobile() && !$mobDetect->isTablet() ){
+
+        $_product = Mage::registry('current_product');
+        $_manufacturerId = $_product->getManufacturer();
+        $cid = '';
+        if( $_product->getCategoryId() ){
+            $productCats = $_product->getCategoryIds();
+            $genders = array( "women" , "النساء" , "men" , "الرجال" , "kids" , "الاطفال" );
+            $parentlevelArray = array();
+            $otherlevelArray = array();
+            $categories = Mage::getModel('catalog/category')
+                ->getCollection()
+                ->addAttributeToSelect('entity_id')//2 is actually the first level
+                ->addAttributeToSelect('name')//2 is actually the first level
+                ->addAttributeToFilter('entity_id', array('in' => $productCats))
+                ->addAttributeToFilter('level',2)
+                ->addAttributeToFilter('is_active', 1);
+
+            foreach( $categories as $category ){
+                if( in_array( strtolower($this->__($category->getName())) , $genders ) ){
+                    $parentlevelArray[] = $category->getEntityId();
+                }else{
+                    $otherlevelArray[] = $category->getEntityId();
+                }
+            }
+            $found = false;
+            $lastId = '';
+            foreach( $productCats as $pids ){
+                if( !$found ){
+                    if( in_array($pids, $parentlevelArray) ){
+                        $found = true;
+                    }
+                }else{
+                    if( in_array($pids, $otherlevelArray) ){
+                        break;
+                    }
+                    $lastId = $pids;
+                }
+            }
+            $cid = $lastId;
+        }else{
+            $cid = $_product->getCategoryId();
+        }
+
+        if( $mobDetect->is('iOS') ){
+            $url = 'elabelz://product/?cid='.$cid.'&id='.$_product->getId().'&manufacturer='.$_manufacturerId;
+?>
+            <meta name="apple-itunes-app" content="app-id=1145303714, app-argument=<?php echo $url ?>" />
+            <meta name="app-rich-data" content="<?php echo $url ?>" />
+<?php   } ?>
+
+<?php   if( $mobDetect->is('AndroidOS') ){
+            $_product = Mage::registry('current_product');
+            $_manufacturerId = $_product->getManufacturer();
+            $url = 'elabelz://product/?cid='.$cid.'&id='.$_product->getId().'&manufacturer='.$_manufacturerId;
+?>
+            <meta name="google-play-app" content="app-id=com.progos.elabelz">
+            <meta name="app-rich-data" content="<?php echo $url ?>" />
+<?php   } ?>
+<?php } ?>

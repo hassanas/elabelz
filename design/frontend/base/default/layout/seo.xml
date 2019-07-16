@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mirasvit/seo/mirasvit_seo.css</stylesheet></action>
+        </reference>
+	    <reference name="before_body_end">
+	        <block type="seo/description" name="seodescription" template="seo/description.phtml" after='-'/>
+	    </reference>
+        <reference name="before_body_end">
+            <block type="seo/organizationsnippets" name="organization_snippets" template="seo/organizationsnippets.phtml" after='-'/>
+        </reference>
+    </default>
+    <catalog_category_view>
+        <reference name="content">
+            <block type="seo/richsnippet" name="richsnippet" template="seo/richsnippet.phtml" after='category.products'/>
+        </reference>
+    </catalog_category_view>
+    <amlanding_page_view>
+        <reference name="content">
+            <block type="seo/richsnippet" name="richsnippet" template="seo/richsnippet.phtml" after='product_list'/>
+        </reference>
+    </amlanding_page_view>
+</layout>

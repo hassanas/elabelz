@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_DynamicsERP>
+            <version>1.0.0</version>
+        </Progos_DynamicsERP>
+    </modules>
+</config>

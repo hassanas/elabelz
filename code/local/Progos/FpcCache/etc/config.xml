@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_FpcCache>
+            <version>0.1.0</version>
+        </Progos_FpcCache>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Progos_FpcCache_Adminhtml before="Mage_Adminhtml">Progos_FpcCache_Adminhtml</Progos_FpcCache_Adminhtml>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <helpers>
+            <fpccache>
+                <class>Progos_FpcCache_Helper</class>
+            </fpccache>
+        </helpers>
+        <models>
+            <fpccache>
+                <class>Progos_FpcCache_Model</class>
+            </fpccache>
+            <fpc>
+                <rewrite>
+                    <observer_tags>Progos_FpcCache_Model_Observer_Tags</observer_tags>
+                    <observer>Progos_FpcCache_Model_Rewrite_Observer</observer>
+                </rewrite>
+            </fpc>
+            <cataloginventory>
+                <rewrite>
+                        <observer>Progos_FpcCache_Model_CatalogInventory_Observer</observer>
+                </rewrite>
+            </cataloginventory>
+        </models>
+        <blocks>
+            <fpccache>
+                <class>Progos_FpcCache_Block</class>
+            </fpccache>
+            <shopbybrand>
+                <rewrite>
+                    <adminhtml_brand_grid>Progos_FpcCache_Block_Adminhtml_Brand_Grid</adminhtml_brand_grid>
+                </rewrite>
+            </shopbybrand>
+        </blocks>
+        <cache>
+            <types>
+                <category translate="label,description" module="fpccache">
+                    <label><![CDATA[Category Pages]]></label>
+                    <description><![CDATA[Clear Category Cache]]></description>
+                    <tags><![CDATA[category]]></tags>
+                </category>
+                <product translate="label,description" module="fpccache">
+                    <label><![CDATA[Product Pages]]></label>
+                    <description><![CDATA[Clear Product Cache]]></description>
+                    <tags><![CDATA[product]]></tags>
+                </product>
+                <cms translate="label,description" module="fpccache">
+                    <label><![CDATA[Cms Pages]]></label>
+                    <description><![CDATA[Clear Cms Page Cache]]></description>
+                    <tags><![CDATA[cms]]></tags>
+                </cms>
+                <brand_index translate="label,description" module="fpccache">
+                    <label><![CDATA[Brand Page]]></label>
+                    <description><![CDATA[Clear Brand Page Cache]]></description>
+                    <tags><![CDATA[brand_index]]></tags>
+                </brand_index>
+                <brand_view translate="label,description" module="fpccache">
+                    <label><![CDATA[Brand Collection Page]]></label>
+                    <description><![CDATA[Clear Brand Collection Cache]]></description>
+                    <tags><![CDATA[brand_view]]></tags>
+                </brand_view>
+                <apiproducts translate="label,description" module="fpccache">
+                    <label><![CDATA[Products Controller]]></label>
+                    <description><![CDATA[Clear Products Controller Requests Cache]]></description>
+                    <tags><![CDATA[apiproducts]]></tags>
+                </apiproducts>
+                <apifilters translate="label,description" module="fpccache">
+                    <label><![CDATA[Filters Controller]]></label>
+                    <description><![CDATA[Clear Filters Controller Requests Cache]]></description>
+                    <tags><![CDATA[apifilters]]></tags>
+                </apifilters>
+                <apiautocomplete translate="label,description" module="fpccache">
+                    <label><![CDATA[Products Controller]]></label>
+                    <description><![CDATA[Clear Products Controller Autocomplete Cache]]></description>
+                    <tags><![CDATA[apiautocomplete]]></tags>
+                </apiautocomplete>
+                <apiindex translate="label,description" module="fpccache">
+                    <label><![CDATA[Index Controller]]></label>
+                    <description><![CDATA[Clear Index Controller Requests Cache]]></description>
+                    <tags><![CDATA[apiindex]]></tags>
+                </apiindex>
+                <menu translate="label,description" module="fpccache">
+                    <label><![CDATA[Mega Menu]]></label>
+                    <description><![CDATA[Clear Mega Menu Cache]]></description>
+                    <tags><![CDATA[menu]]></tags>
+                </menu>
+                <apitablerate translate="label,description" module="fpccache">
+                    <label><![CDATA[TableRate Charges]]></label>
+                    <description><![CDATA[Clear Cache For TabelRate Shipping Charges]]></description>
+                    <tags><![CDATA[apitablerate]]></tags>
+                </apitablerate>
+                <productdetailsimpleajax translate="label,description" module="fpccache">
+                    <label><![CDATA[Product Page Composition]]></label>
+                    <description><![CDATA[Clear Product Page Composition Requests Cache]]></description>
+                    <tags><![CDATA[productdetailsimpleajax]]></tags>
+                </productdetailsimpleajax>
+            </types>
+        </cache>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <fpccache>
+                                            <title>Mobile Cache Api</title>
+                                        </fpccache>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <events>
+            <controller_action_predispatch_adminhtml_cache_massRefresh>
+                <observers>
+                    <cache_massRefresh>
+                        <class>fpccache/clean</class>
+                        <type>singleton</type>
+                        <method>controllerActionPredispatchAdminhtmlCacheMassRefresh</method>
+                    </cache_massRefresh>
+                </observers>
+            </controller_action_predispatch_adminhtml_cache_massRefresh>
+        </events>
+        <layout>
+            <updates>
+                <fpccache>
+                    <file>cache.xml</file>
+                </fpccache>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

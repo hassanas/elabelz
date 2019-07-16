@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_UpdateVat>
+            <version>0.1.0</version>
+        </Progos_UpdateVat>
+    </modules>
+    <global>
+        <helpers>
+            <updatevat>
+                <class>Progos_UpdateVat_Helper</class>
+            </updatevat>
+        </helpers>
+        <resources>
+            <updatevat_setup>
+                <setup>
+                    <module>Progos_UpdateVat</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </updatevat_setup>
+            <updatevat_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </updatevat_write>
+            <updatevat_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </updatevat_read>
+        </resources>
+    </global>
+</config> 

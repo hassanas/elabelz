@@ -1,0 +1,122 @@
+<script type="text/javascript">
+//<![CDATA[
+
+var templateJSON 		= <?php echo $this->getTemplateJson(); ?>;
+var typeJSON 			= <?php echo $this->getTypeJSON() ?>;
+var easyPdfVariables 	= <?php echo $this->getJsonVariables(); ?>;
+var editorIds 			= ['order_template','invoice_template','shipment_template','creditmemo_template'];
+var defaultCssUrl 		= '<?php $this->getSkinUrl('ves_advancedpdfprocessor/default.css');?>';
+var vesDefaultLogoUrl	= '<?php echo $this->getLogoUrl();?>';
+var vesDefaultBarcode	= '<?php echo $this->getSkinUrl('ves_advancedpdfprocessor/images/barcode.png')?>';
+var currentTemplate 	= '<?php if($template = $this->getCurrentTemplate()){echo $template->getSku();}?>';
+var vesEditorConfigJSON	= <?php echo $this->getEditorConfigJSON();?>;
+Event.observe(window,'load',function(){
+
+	editorIds.each(function(editorId){
+		var editor = window['wysiwyg'+editorId];
+		editor.getSettingsOld = editor.getSettings;
+		editor.getSettings = function(mode){
+			var settings = editor.getSettingsOld();
+			if(templateValue = $('template_id').value){
+				settings['body_class'] = templateJSON[templateValue].sku;
+				//disable media button tinymce
+				settings['theme_advanced_buttons3'] = 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,advhr,|,ltr,rtl,|,fullscreen';
+			}
+			return settings;
+		}
+		//editor.turnOn();
+	});
+
+ 	// change template when change template selectbox
+	$('template_id').observe('change',function() {
+		var label = this.options[this.selectedIndex].text;
+		var index = this.options[this.selectedIndex].value;
+
+		$$('p#css_note').each(function(note) {
+			(index == '') ? note.update('You do <b>not</b> choose template.') : 
+				note.update('Your classes must be start by <b>.'+templateJSON[index]['sku'] + '</b>. Ex .'+templateJSON[index]['sku'] + ' .your_class');	
+		});
+		
+		editorIds.each(function(elm) {
+			if(index == '') {
+				(tinyMCE.get(elm) === undefined) ? $(elm).value = '' : tinyMCE.get(elm).setContent('');
+			} else {
+				(tinyMCE.get(elm) === undefined) ? $(elm).value = templateJSON[index][elm] : tinyMCE.get(elm).setContent(templateJSON[index][elm]);
+			}
+		});
+		
+
+		editorIds.each(function(editorId){
+			var cssUrls = new Array();
+			var editor = window['wysiwyg'+editorId];
+			editor.config.content_css.split(',').each(function(cssUrl){
+				if(cssUrl.indexOf('ves_advancedpdfprocessor/default.css') != -1){
+					cssUrls.push(cssUrl);
+				}
+			});
+			if($('template_id').value){
+				cssUrls.push(templateJSON[$('template_id').value].css_url);
+			}
+			editor.config.content_css = cssUrls.join(',');
+			if(tinyMCE.get(editorId)){
+				editor.turnOff();
+				editor.turnOn();
+			}
+		});
+	});
+
+
+	//modified for MagentovariablePlugin and Variables
+	// in variables.js
+	
+	MagentovariablePlugin.loadChooser = function(textareaId) {
+		MagentovariablePlugin.textareaId = textareaId;		//set textareId
+        Variables.init(null, 'MagentovariablePlugin.insertVariable');
+        MagentovariablePlugin.openChooser();
+        
+        return;
+    }
+    
+	MagentovariablePlugin.openChooser = function() {
+        Variables.openVariableChooser();
+    }
+    
+	Variables.openVariableChooser = function() {
+        if (Variables.variablesContent == null) {
+            Variables.variablesContent = '<?php echo $this->getVariablesHtml(); ?>';
+	        }
+	        if (Variables.variablesContent) {
+	        	Variables.openDialogWindow(Variables.variablesContent);
+	        	$$('li.doc-type').each(function(item){item.hide();});
+
+				if(!MagentovariablePlugin.editor || !MagentovariablePlugin.editor.id) var id=MagentovariablePlugin.textareaId;	//not exist editor
+				else if(!MagentovariablePlugin.textareaId) var id=MagentovariablePlugin.editor.id;	//not exist textarea
+				//exist ca 2
+				else {
+					if(tinyMCE.get(MagentovariablePlugin.editor.id)) var id=MagentovariablePlugin.textareaId;
+					else if(tinyMCE.get(MagentovariablePlugin.textareaId)) var id=MagentovariablePlugin.editor.id;
+					else if(!tinyMCE.get(MagentovariablePlugin.editor.id) && !tinyMCE.get(MagentovariablePlugin.textareaId)) var id=MagentovariablePlugin.textareaId;
+				}
+
+        		
+	        	if(id == 'invoice_template') var template = 'invoice';
+	        	else if(id == 'shipment_template') var template = 'shipment';
+	        	else if(id == 'creditmemo_template') var template = 'creditmemo';	
+				$$('li.'+template).each(function(item){item.show();});
+	        	
+	        	$$('.control').each(function(item) {
+	        		item.observe('click',function() {
+	        			item.next('.variables-list').toggle();
+	        			if(item.next('.variables-list').getStyle('display') === 'block') item.addClassName('selected');
+	        			else item.removeClassName('selected');
+	        		});
+	        	});
+	        }
+	}
+
+
+//modifield for WysiwygWidget.Widget
+		
+});
+//]]>
+</script>

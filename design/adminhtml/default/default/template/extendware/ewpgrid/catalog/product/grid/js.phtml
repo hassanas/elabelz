@@ -1,0 +1,247 @@
+<?php /* @copyright Extendware 2015 (http://www.extendware.com) */ ?>
+<script type="text/javascript">
+Event.observe(window, 'load', function(){
+    ewpgrid  = new EWPGrid({
+    	editMode: <?php echo json_encode($this->mHelper('config')->getEditMode()); ?>,
+    	columns: <?php echo json_encode($this->getColumnDefinitions()); ?>,
+    	saveEditUrl: '<?php echo $this->getSaveEditUrl(); ?>', 
+    	saveAllEditsUrl: '<?php echo $this->getSaveAllEditsUrl(); ?>',
+    	storeId: <?php echo $this->getStoreId(); ?>, 
+    	calendarImage: '<?php echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif'); ?>'
+    });
+    ewpgrid.rewritePage();
+    
+    LightboxOptions.fileLoadingImage = <?php echo json_encode($this->getSkinUrl('extendware/ewpgrid/images/loading.gif')); ?>;
+    LightboxOptions.fileBottomNavCloseImage = <?php echo json_encode($this->getSkinUrl('extendware/ewpgrid/images/closelabel.png')); ?>;
+    new Lightbox();
+    
+    ewpgridorderer = new EWPGridOrderer({
+    	saveUrl: '<?php echo $this->getSaveColumnOrderingUrl(); ?>',
+    	gridUrl: '<?php echo $this->getUrl('*/*/*'); ?>'
+    });
+    
+    ewpgridconfigdialog = new EWPGridConfigDialog({
+    	title: '<?php echo $this->__('Grid Config'); ?>', 
+    	formId: 'ewpgridconfig_form',
+    	orderer: ewpgridorderer
+    });
+});
+</script>
+<div id="ewpgrid_tooltip" style="position: absolute; z-index: 99999; font-size: 12px; background: #FFFFCC; text-align:left; padding: 5px 10px; border: 1px solid #BBBBBB; display: none;">
+    <?php echo $this->__('Click to edit this cell right on the grid.'); ?>
+</div>
+<?php $selectedAttributeCodes = $this->getSelectedAttributeCodes(); ?>
+<?php $systemReadOnlyColumns = $this->getSystemReadOnlyColumnCodes(); ?>
+<?php $readOnlyColumns = $this->getReadOnlyColumnCodes(); ?>
+<?php $columnWidths = $this->getColumnWidths(); ?>
+<div id="ewpgridconfig_grid" class="grid" style="display: none;">
+	<form id="ewpgridconfig_form" action="<?php echo $this->getSaveUrl(); ?>" method="post">
+		<input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+		<input type="hidden" name="back_url" value="<?php echo $this->getBackUrl(); ?>" />
+		<input type="hidden" name="restore_defaults" id="ewpgrid_restore_defaults" value="0" />
+		<table cellspacing="0" class="actions">
+        <tbody>
+        <tr>
+            <td class="filter-actions a-right">
+            	<button style="" class="scalable" onclick="ewpgridconfigdialog.orderColumns(); alert('<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Please drag and drop the column headings and click the Save Ordering button in order to change the ordering of columns')); ?>'); return false;"><span><?php echo $this->__('Order Columns'); ?></span></button>
+            	<button style="" class="scalable" onclick="ewpgridconfigdialog.restoreDefaults($('ewpgrid_restore_defaults')); return false;"><span><?php echo $this->__('Restore Defaults'); ?></span></button>
+				<button style="" class="scalable save" type="submit" onclick="ewpgridconfigdialog.save(); return false;"><span><?php echo $this->__('Save Config'); ?></span></button>
+            </td>
+        </tr>
+    	</tbody>
+    	</table>
+    	
+    	<div id="productGrid_massaction">
+			<table cellspacing="0" cellpadding="0" class="massaction">
+			<tbody><tr>
+			    <td><span style="font-size: 13px; font-weight: bold"><?php echo $this->__('Settings'); ?></span></td>
+			</tr>
+			</tbody></table>
+		</div>
+		<div class="grid">
+			<div class="hor-scroll">
+		    	<table cellspacing="0" id="productGrid_table" class="data">
+		    		<colgroup><col width="250"><col></colgroup>
+		    		<thead>
+						<tr class="headings">
+							<th><span class="nobr"><?php echo $this->__('Name'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Value'); ?></span></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $cnt = 1; ?>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Edit Mode'); ?> <?php echo $this->getHelpHtml('Single edit mode will save after each edit whereas batch mode allows you to edit many items and save them at once.'); ?></td>
+							<td>
+								<select name="edit_mode" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewpgrid/adminhtml_data_option_editmode')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->getEditMode()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Save Sorting'); ?> <?php echo $this->getHelpHtml('Normally the sorting of the grid is reset if you log out of the admin. Enabling this will ensure it is saved between sessions.'); ?></td>
+							<td>
+								<select name="save_sorting" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewcore/adminhtml_config_data_option_enabledisable')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->saveSorting()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Save Filtering'); ?> <?php echo $this->getHelpHtml('Normally the filtering of the grid is reset if you log out of the admin. Enabling this will ensure it is saved between sessions.'); ?></td>
+							<td>
+								<select name="save_filtering" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewcore/adminhtml_config_data_option_enabledisable')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->saveFiltering()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Product Link'); ?> <?php echo $this->getHelpHtml('This will output a backend / frontend link inside of the product ID cell.'); ?></td>
+							<td>
+								<select name="show_product_link" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewcore/adminhtml_config_data_option_enabledisable')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->showProductLink()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Thumbnail Zooming'); ?> <?php echo $this->getHelpHtml('When zooming is enabled clicking on the product image will bring up a zoom box.'); ?></td>
+							<td>
+								<select name="thumbnail_zooming" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewcore/adminhtml_config_data_option_enabledisable')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->isThumbnailZoomingEnabled()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Thumbnail Size'); ?> <?php echo $this->getHelpHtml('The size in pixels of thumbnail images.'); ?></td>
+							<td>
+								<input type="text" name="thumbnail_size" value="<?php echo $this->mHelper('config')->getThumbnailSize(); ?>" style="width: 99%" class="validate-greater-than-zero"/>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Max Linked Products Displayed'); ?> <?php echo $this->getHelpHtml('If showing upsell, cross-sell, and related products is enabled, then this sets a maximum number of products that should be displayed.'); ?></td>
+							<td>
+								<input  type="text" name="linked_products_count" value="<?php echo $this->mHelper('config')->getLinkedProductsCount(); ?>" style="width: 99%" class="validate-greater-than-zero"/>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Max Categories Displayed'); ?> <?php echo $this->getHelpHtml('If showing categories is enabled, then this sets a maximum number of categories that should be displayed.'); ?></td>
+							<td>
+								<input  type="text" name="categories_count" value="<?php echo $this->mHelper('config')->getLinkedProductsCount(); ?>" style="width: 99%" class="validate-greater-than-zero"/>
+							</td>
+						</tr>
+						<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+							<td><?php echo $this->__('Default Product Count'); ?> <?php echo $this->getHelpHtml('The default number of products to show in the product grid. This is useful if you want to view a higher number of products by default.'); ?></td>
+							<td>
+								<select name="default_product_count" style="width: 99%">
+									<?php $_options = Mage::getSingleton('ewpgrid/adminhtml_config_data_option_recordcount')->toArray(); ?>
+									<?php foreach ($_options as $_key => $_value): ?>
+										<option value="<?php echo $_key; ?>" <?php if ($_key == $this->mHelper('config')->getDefaultProductCount()): ?>selected="selected"<?php endif; ?>><?php echo $_value; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br/>
+    	<div id="productGrid_massaction">
+			<table cellspacing="0" cellpadding="0" class="massaction">
+			<tbody><tr>
+			    <td><span style="font-size: 13px; font-weight: bold"><?php echo $this->__('Special Columns'); ?></span></td>
+			</tr>
+			</tbody></table>
+		</div>
+		<div class="grid">
+			<div class="hor-scroll">
+		    	<table cellspacing="0" id="productGrid_table" class="data">
+		    		<colgroup><col width="40" class="a-center"><col><col><!-- <col width="40" class="a-center"> --><col width="40" class="a-center"></colgroup>
+		    		<thead>
+						<tr class="headings">
+							<th align="center"><span class="nobr"><?php echo $this->__('Show'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Code'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Label'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Width'); ?></span></th>
+							<th style="width: 50px"><span class="nobr"><?php echo $this->__('Read Only'); ?></span></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $cnt = 1; ?>
+						<?php foreach ($this->getSpecialAttributes() as $attribute): ?>
+							<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+								<td align="center"><input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" <?php if (in_array($attribute->getAttributeCode(), $selectedAttributeCodes)): ?>checked="checked"<?php endif; ?> /></td>
+								<td><label for="ew_<?php echo $attribute->getAttributeCode(); ?>"><?php echo $attribute->getAttributeCode(); ?></label></td>
+								<td><label for="ew_<?php echo $attribute->getAttributeCode(); ?>"><?php echo $attribute->getFrontendLabel(); ?></label></td>
+								<td align="center"><input id="ew_width_<?php echo $attribute->getAttributeCode(); ?>" type="text" name="column_width[<?php echo $attribute->getAttributeCode(); ?>]" value="<?php echo (isset($columnWidths[$attribute->getAttributeCode()]) ? $columnWidths[$attribute->getAttributeCode()] : ''); ?>" style="width: 40px" class="validate-greater-than-zero"/></td>
+								<td align="center">
+									<?php if (in_array($attribute->getAttributeCode(), $systemReadOnlyColumns) === false): ?>
+										<input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="read_only_columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" <?php if (in_array($attribute->getAttributeCode(), $readOnlyColumns)): ?>checked="checked"<?php endif; ?> />
+									<?php else: ?>
+										<input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="read_only_columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" checked="checked" disabled="disabled"/>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<br/>
+    	<div id="productGrid_massaction">
+			<table cellspacing="0" cellpadding="0" class="massaction">
+			<tbody><tr>
+			    <td><span style="font-size: 13px; font-weight: bold"><?php echo $this->__('Attribute Columns'); ?></span></td>
+			</tr>
+			</tbody></table>
+		</div>
+		<div class="grid">
+			<div class="hor-scroll">
+		    	<table cellspacing="0" id="productGrid_table" class="data">
+		    		<colgroup><col width="40" class="a-center"><col><col><!-- <col width="40" class="a-center"> --><col width="40" class="a-center"></colgroup>
+		    		<thead>
+						<tr class="headings">
+							<th align="center"><span class="nobr"><?php echo $this->__('Show'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Code'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Label'); ?></span></th>
+							<th><span class="nobr"><?php echo $this->__('Width'); ?></span></th>
+							<th style="width: 50px"><span class="nobr"><?php echo $this->__('Read Only'); ?></span></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $cnt = 1; ?>
+						<?php foreach ($this->getSupportedAttributes() as $attribute): ?>
+							<tr class="<?php echo (!(++$cnt % 2) ? 'even' : 'odd'); ?>">
+								<td align="center"><input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" <?php if (in_array($attribute->getAttributeCode(), $selectedAttributeCodes)): ?>checked="checked"<?php endif; ?> /></td>
+								<td><label for="ew_<?php echo $attribute->getAttributeCode(); ?>"><?php echo $attribute->getAttributeCode(); ?></label></td>
+								<td><label for="ew_<?php echo $attribute->getAttributeCode(); ?>"><?php echo $attribute->getFrontendLabel(); ?></label></td>
+								<td align="center"><input id="ew_width_<?php echo $attribute->getAttributeCode(); ?>" type="text" name="column_width[<?php echo $attribute->getAttributeCode(); ?>]" value="<?php echo (isset($columnWidths[$attribute->getAttributeCode()]) ? $columnWidths[$attribute->getAttributeCode()] : ''); ?>" style="width: 40px" class="validate-greater-than-zero"/></td>
+								<td align="center">
+									<?php if (in_array($attribute->getAttributeCode(), $systemReadOnlyColumns) === false): ?>
+										<input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="read_only_columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" <?php if (in_array($attribute->getAttributeCode(), $readOnlyColumns)): ?>checked="checked"<?php endif; ?> />
+									<?php else: ?>
+										<input id="ew_<?php echo $attribute->getAttributeCode(); ?>" type="checkbox" name="read_only_columns[<?php echo $attribute->getAttributeCode(); ?>]" value="1" checked="checked" disabled="disabled"/>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</div>

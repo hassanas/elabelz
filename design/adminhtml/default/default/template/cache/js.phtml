@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    function clearCategoryCache(url, useAjax, categoryId) {
+            if (!categoryId) {
+                alert("Select category from the left category tree.");
+            } else {
+                clearCache(url, {"id":categoryId});
+            }
+    }
+    
+    function clearProductCache(url, useAjax) {
+        clearCache(url);
+    }
+    
+    function clearBrandCache(url, useAjax) {
+        clearCache(url);
+            
+    }
+    
+    function CCache(url, useAjax) {
+        clearCache(url);
+    }
+    function clearCache(url, params) {
+
+        if (!params) {
+            params = {};
+        }
+        if (!params.form_key) {
+            params.form_key = FORM_KEY;
+        }
+
+
+        new Ajax.Request(url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true' ), {
+            parameters:  params,
+            evalScripts: true,
+            onSuccess: function(transport) {
+                var html = "<ul class='messages'><li class='success-msg'><ul><li>" + transport.responseText + " </li></ul></li></ul>";
+                $('messages').update(html);
+                window.location.reload();
+            }
+        });
+    }
+//]]>
+</script>

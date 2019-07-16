@@ -1,0 +1,60 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_MageShop
+ * @version     1.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+/**
+ * Home page template
+ */
+?>
+<?php
+/**
+ * Quick link block
+ */
+?>
+
+<div id="content" class="mobile_home_page_blocks">
+    <div class="site_width_container">
+        <div id="template_home">
+            <h1 class="hidden">Zlabelz</h1>
+            <section class="top_features">
+                <div class="site_width_container"> 
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('mobile_home_top_feature_category_block')->toHtml() ?> 
+                
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('mobile_bottom_feature_category_block')->toHtml() ?> 
+               </div>
+            </section>
+
+            <section>
+               <div class="homePageMiddleCats">
+                   <?php echo $this->getLayout()->createBlock('page/html_topmenu')->setTemplate('page/html/topmenu/customcategories.phtml')->tohtml(); ?>
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('mobile_bottom_feature_apps_features')->toHtml() ?> 
+               </div>
+            </section>
+            
+        </div>
+    </div>
+</div>

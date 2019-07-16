@@ -1,0 +1,30 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function updateUrlKey() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                alert( transport.responseText );
+                location.reload();
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+<p class="note">
+    <span>
+        Update Product Url Key.<br>
+    </span>
+    <?php
+    if( file_exists(Mage::getBaseDir('media').DS.'var'.DS.'urlkey_dry.csv') ){ ?>
+        <a href="<?php echo Mage::getBaseUrl('media').DS.'var'.DS.'urlkey_dry.csv' ?>" target="_blank">Download Dry Run Results.</a>
+    <?php } ?>
+    <br/>
+    <?php
+    if( file_exists(Mage::getBaseDir('media').DS.'var'.DS.'urlkey.csv') ){ ?>
+        <a href="<?php echo Mage::getBaseUrl('media').DS.'var'.DS.'urlkey.csv' ?>" target="_blank">Download Original Results.</a>
+    <?php } ?>
+</p>

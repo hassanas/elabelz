@@ -1,0 +1,120 @@
+<?php /* @var $this Progos_Page_Block_Page_Html_Header */ ?>
+<?php
+$storeCategories = $this->categoryTree();
+$genders = array( "WOMEN" , "MEN" , "KIDS" ); 
+$arabicGender = array( "WOMEN" => "النساء" , "MEN" => "الرجال" , "KIDS"=> "الاطفال" );
+$storeId = Mage::app()->getStore()->getId();
+?>
+<script>
+    var checkUserSession = {
+        isLoggedIn: '<?php echo $this->helper('customer')->isLoggedIn() ?>',
+        <?php if($this->helper('customer')->isLoggedIn()){ ?>
+        links: [
+            {
+                label: '<?php echo $this->__('Dashboard'); ?>',
+                link: '<?php echo Mage::getUrl('customer/account'); ?>',
+            },
+            {
+                label: '<?php echo $this->__('Logout'); ?>',
+                link: '<?php echo Mage::getUrl('customer/account/logout'); ?>',
+            },
+        ]
+        <?php }else{ ?>
+        links: [
+            {
+                label: '<?php echo $this->__('Login'); ?>',
+                link: '<?php echo Mage::getUrl('customer/account/login'); ?>',
+            }
+        ]
+        <?php } ?>
+    }
+</script>
+<a href="#navigation" data-type="close" data-parent=".wrapper" data-remove-to-parent="slide-in-on-top-open" class="site--breadcrumb">
+    <span></span>
+    <span></span>
+    <span></span>
+</a>
+<div id="navigation" class="slide-in-on-top">
+    <!-- Dynamic the Main Tab as per gender Start -->
+    <div class="overflow">
+        <div class="main-cat clearfix">
+            <ul>
+                <?php 
+                    $genderCount = 1;
+                    foreach( $genders as $gender ){ ?>
+                        <li class="<?php echo (($genderCount == 1 )?'active':'') ?>">
+                            <a onclick="topMenuTrigger('<?php echo $gender; ?>')" href="#grand-parent-<?php echo $genderCount ; ?>" data-hide="#grand-parent-<?php echo $genderCount ; ?>"><?php echo $this->__($gender); ?></a>
+                        </li>
+               <?php $genderCount++; 
+                    } ?>
+            </ul>
+        </div>
+        
+        <nav id="nav">
+          <?php 
+                $genderCount = 1;
+                foreach ($genders as $gender){ ?>
+                 <ul id="grand-parent-<?php echo $genderCount;?>" >
+                    <li class="level0">
+                        <a onclick="topMenuTrigger('<?php echo $gender; ?>')" href="<?php echo Mage::getBaseUrl() .strtolower($gender);?>/" >
+                            <span><?php echo $this->__($gender."'s home page"); ?></span>
+                        </a>
+                    </li>
+                    <?php foreach( $storeCategories as $category ){ 
+                            $children = $category->children; 
+                            if( !$children )
+                                $children = $category->children;
+                            if( $category->title == 'New Arrivals' || trim($category->title) == "وصلنا حديثاً" ){
+                                foreach ($children as $child) { 
+                                    if ($child->include_in_menu==false) { continue; }
+                                    if( strtolower($child->title) == strtolower($gender) || $arabicGender[$gender] == $this->__(trim($child->title)) ){
+                                        echo($this->generateParentLevelmobile($child, $category->title,$gender));
+                                    }
+                                }       
+                            }else if( strtolower($category->title) ==  strtolower($gender) || $arabicGender[$gender] == $this->__(trim($category->title)) ){
+                                foreach ($children as $child) { 
+                                    if ($child->include_in_menu==false) { continue; }
+                                    echo($this->generateParentLevelmobile($child,null,$gender));
+                                } 
+                            }else if( strtolower($category->title) == strtolower('Sales') || trim($category->title) =="تخفيضات" ){
+                                foreach ($children as $child) {
+                                    if ($child->include_in_menu==false) { continue; }
+                                    if( strtolower($child->title) == strtolower($gender) || $arabicGender[$gender] == $this->__(trim($child->title)) ){
+                                        echo($this->generateParentLevelmobile($child, $category->title,$gender));
+                                    }
+                                }
+                            }else{
+                                continue;
+                            }
+                          }
+                        ?>
+                        <li class="level0 parent">
+                            <a onclick="topMenuTrigger('<?php echo $gender; ?> | Top Brands')" href="javascript:void(0);"><?php echo $this->__('Top Brands')?></a>
+                           <?php 
+                            $identifier = "mobile-mega-menu-desktop-".strtolower($gender);
+                            echo $this->getLayout()->createBlock('cms/block')->setStoreId($storeId)->setBlockId($identifier)->toHtml();
+                           ?>
+                        </li>
+                        <li class="cat-separator"></li>
+                        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('mobile_footer_links')->toHtml();?>
+                        <?php echo $this->getChildHtml('store_language'); ?>
+                        <div class="mobile-applinks">
+                            <div class="android-app">
+                                <a href="https://play.google.com/store/apps/details?id=com.progos.elabelz" target="_top" rel="follow"><img src="<?php echo $this->getSkinUrl('css/images/gplay-icon.png'); ?>" /></a>
+                            </div>
+                            <div class="ios-app">
+                                <a href="https://itunes.apple.com/us/app/elabelz-fashion-shopping/id1145303714?mt=8" target="_blank" rel="follow"><img src="<?php echo $this->getSkinUrl('css/images/apple-store-icon.png'); ?>" /></a>
+                            </div>
+                        </div>
+
+                        <div class="copyright-text">
+                            &copy; <?php echo date('Y');  ?>
+                            <?php echo $this->__(Mage::getStoreConfig('design/footer/copyright')); ?>
+                        </div>
+                 </ul>
+          <?php $genderCount++; 
+                } ?>
+        </nav>
+    </div>
+    <!-- Dynamic the Main Tab as per gender End -->
+</div>

@@ -1,0 +1,264 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt hi
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+
+$active = Mage::getStoreConfig('marketplace/admin_approval_seller_registration/displayproductpage');
+/**
+ *  Check the admin approval seller registration is equal to 1
+ */
+if ($active == 1) {
+    $productId = Mage::registry('current_product')->getEntityId();
+    /**
+     *  Get the seller id
+     */
+    $sellerId = Mage::registry('current_product')->getSellerId();
+    $customerInfo = Mage::getModel('customer/customer')->load($sellerId);
+    /**
+     *  Get the seller data
+     */
+    //echo     get_class($this);
+    $sellerData = $this->sellerdisplay($sellerId);
+    /**
+     *  Get the seller profile display status
+     */
+    $showProfile = $this->sellerprofiledisplay($sellerId);
+    /**
+     *  Check the seller profile show is enabled
+     */
+    if ($showProfile == 1 || $showProfile == '') {
+        $targetPath = 'marketplace/seller/displayseller/id/' . $sellerId;
+        $mainUrlRewrite = Mage::getModel('core/url_rewrite')->load($targetPath, 'target_path');
+        $getRequestPath = $mainUrlRewrite->getRequestPath();
+        $getRequestPath = Mage::getUrl($getRequestPath);
+        if ($getRequestPath == '') {
+            $getRequestPath = '#';
+        }
+        ?>
+        <div class="linker_seller">
+            <strong><?php echo $this->__('Sold By'); ?></strong>:
+            <a href='<?php echo $getRequestPath; ?>' class="link_seller">
+                <?php
+                if ($sellerData['store_title'] != '') {
+                    echo $sellerData['store_title'];
+                } else {
+                    echo $customerInfo->getName();
+                } ?></a>
+
+
+            <?php
+
+            $displaySeller = Mage::getModel('marketplace/sellerreview')->displayReview($sellerId);
+            $firstStar = $secondStar = $thirdStar = $fourthStar = $fifthStar = $advancedTotal = $ratingbar_color = 0;
+
+            /**
+             * ITERATING ALL RATINGS
+             */
+            $advancedTotal = 0;
+            foreach ($displaySeller as $individualStar) {
+                $advancedTotal = $advancedTotal + 1;
+                /**
+                 *  Check the individual rating is equal to 1
+                 *  if so increment the first star value by 1
+                 */
+                if ($individualStar['rating'] == 1) {
+                    $firstStar = $firstStar + 1;
+                } /**
+                 *  Check the individual rating is equal to 2
+                 *  if so increment the second star value by 1
+                 */
+                elseif ($individualStar['rating'] == 2) {
+                    $secondStar = $secondStar + 1;
+                } /**
+                 *  Check the individual rating is equal to 3
+                 *  if so increment the third star value by 1
+                 */
+                elseif ($individualStar['rating'] == 3) {
+                    $thirdStar = $thirdStar + 1;
+                } /**
+                 *  Check the individual rating is equal to 4
+                 *  if so increment the fourth star value by 1
+                 */
+                elseif ($individualStar['rating'] == 4) {
+                    $fourthStar = $fourthStar + 1;
+                } /**
+                 *  Check the individual rating is equal to 5
+                 *  if so increment the fifth star value by 1
+                 */
+                else {
+                    if ($individualStar['rating'] == 5) {
+                        $fifthStar = $fifthStar + 1;
+                    }
+                }
+            }
+
+            /**
+             *  CALCULATING INDIVIDUAL RATINGS
+             */
+            /**
+             *  Intialising 0 value to variables like
+             *  advanced one
+             *  advanced two
+             *  advanced three
+             *  advanced four
+             *  advanced five
+             */
+            $advancedOne = $advancedTwo = $advancedThree = $advancedFour = $advancedFive = 0;
+            /**
+             *  Check advanced total is greater than or equal to 1
+             */
+            if ($advancedTotal >= 1) {
+                $advancedOne = ($firstStar / $advancedTotal) * 100;
+                $advancedTwo = ($secondStar / $advancedTotal) * 100;
+                $advancedThree = ($thirdStar / $advancedTotal) * 100;
+                $advancedFour = ($fourthStar / $advancedTotal) * 100;
+                $advancedFive = ($fifthStar / $advancedTotal) * 100;
+            }
+
+            $positiveFeedBack = ($advancedFour + $advancedFive) / 2;
+            $totalRatings = $firstStar + $secondStar + $thirdStar + $fourthStar + $fifthStar;
+            /**
+             *  Check the total ratings is not equal to empty
+             *  if so display total ratings
+             */
+            if ($totalRatings != '') {
+                echo round($positiveFeedBack, 1);
+                echo $this->__('% positive feedback. (');
+                echo number_format($totalRatings) . ' ';
+                echo $this->__('ratings )');
+            } else {
+                ?>
+
+                <span class="all_reviews_details_wr">
+        <p class="all_reviews_block1" style="height:0;margin:0;padding:0;"> 
+        <label class="all_review_rating" style="width:0%;"></label>
+        </p>                                                                        
+        </span>
+            <?php } ?>
+            <?php
+            // Modified by adnan on 22nd March 2016
+            Mage::getSingleton('core/session', array('name' => 'frontend'));
+            $is_logged_in = Mage::getSingleton('customer/session')->isLoggedIn();
+            ?>
+            <!--<div <?php if (!$is_logged_in) { ?>data-placement="top" data-toggle="tooltip"<?php } ?> title="<?php echo $is_logged_in ? 'Send message to seller of this product' : 'Please login to send message to seller of this product' ?>" class="sellerMessageDetailPage <?php echo $is_logged_in ? '' : 'ad-login-req' ?>">
+    <a href="<?php echo $is_logged_in ? '#send' : '#ad-login-req' ?>">Message Seller</a>
+    </div> -->
+
+            <?php $_countries = Mage::getResourceModel('directory/country_collection')->loadData()->toOptionArray(false); ?>
+            <?php foreach ($_countries as $_country) { ?>
+                <?php if ($sellerData['country'] == $_country['value']) { ?>
+                    <?php $sellerCountry = $_country['label']; ?>
+                <?php } ?>
+            <?php } ?>
+
+            <!-- 
+ -->            <!-- <p><?php $description = strip_tags($sellerData['description']);
+            $newLengthDescription = strlen($description);
+            $newSubDescription = substr($description, 0, 160);
+            if ($newLengthDescription >= 160) {
+                $newDescriptionFix = $newSubDescription . "...";
+            } else {
+                $newDescriptionFix = $description;
+            }
+            echo $newDescriptionFix; ?>
+            <a href="<?php echo $getRequestPath; ?>">
+            <?php echo $this->__('Read More'); ?></a></p> -->
+            <?php
+            $country = str_replace(" ", "+", $sellerData->getCountry());
+            $state = str_replace(" ", "+", $sellerData->getState());
+//            $url = '//maps.google.com/maps/api/geocode/json?address="' . $state . '"&sensor=false&region="' . $country . '"';
+//            $response = file_get_contents($url);
+//            $response = json_decode($response, true);
+            /**
+             *  initialising latitude and longitude as empty
+             */
+            $lat = $long = '';
+            /**
+             *  Checking latitude is there in the response data
+             *  if so assign the value to a variable
+             */
+//            if (isset($response['results'][0]['geometry']['location']['lat'])) {
+//                $lat = $response['results'][0]['geometry']['location']['lat'];
+//            }
+            /**
+             *  Checking longitude is there in the response data
+             *  if so assign the longitude value to a variable
+             */
+//            if (isset($response['results'][0]['geometry']['location']['lng'])) {
+//                $long = $response['results'][0]['geometry']['location']['lng'];
+//            }
+            /**
+             * Checking latitude is not empty
+             * and longitude is not empty
+             */
+            if (!empty($lat) && !empty($long)) {
+                ?>
+                <address><a href="//maps.google.com/?q=<?php echo $lat; ?>,<?php
+                    echo $long; ?>"> <?php echo $sellerData['state'] . ',' . $sellerCountry; ?></a></address>
+                <script
+                    src="//maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+                </script>
+                <script>
+                    var myCenter = new google.maps.LatLng(<?php echo $lat; ?>,<?php
+                        echo $long;?>);
+
+                    function initialize() {
+                        var mapProp = {
+                            center: myCenter,
+                            zoom: 5,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+
+                        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+                        var marker = new google.maps.Marker({
+                            position: myCenter,
+                        });
+
+                        marker.setMap(map);
+                    }
+
+                    google.maps.event.addDomListener(window, 'load', initialize);
+
+
+                </script>
+            <?php }
+
+            /**
+             * Ends map functionality
+             */
+            ?>
+
+
+            <?php $sellerProducts = $this->sellerproduct($sellerId);
+            $sellerProducts->addFieldToFilter('entity_id', array('neq' => $productId));
+            $sellerProducts->getSelect()->limit(4);
+            ?>
+        </div>
+    <?php } ?>
+<?php } ?>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Rewrite_MSafeMage>
+            <version>1.0</version>
+        </Rewrite_MSafeMage>
+    </modules>
+    <global>
+        <models>
+            <catalog>
+                <rewrite>
+                    <url>Rewrite_MSafeMage_Model_Catalog_Url</url>
+                </rewrite>
+            </catalog>
+        </models>
+    </global>
+</config> 

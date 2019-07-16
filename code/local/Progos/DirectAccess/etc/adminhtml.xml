@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <directaccess translate="title" module="directaccess">
+                                        <title>Order/Invoice Direct Access</title>
+                                        <sort_order>201</sort_order>
+                                    </directaccess>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <sales>
+                        <children>
+                            <directaccess translate="title" module="directaccess">
+                                <title>Order/Invoice Direct Access</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <directaccessbackend translate="title">
+                                        <title>Order/Invoice Direct Access</title>
+                                    </directaccessbackend>
+                                    <quickorderbackend translate="title">
+                                        <title>Quick Order Opener</title>
+                                    </quickorderbackend>
+                                    <automateorderbackend translate="title">
+                                        <title>Order Automate</title>
+                                    </automateorderbackend>
+                                </children>
+                            </directaccess>
+                        </children>
+                    </sales>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <menu>
+        <sales>
+            <children>
+                <directaccess module="directaccess">
+                    <title>Order/Invoice Direct Access</title>
+                    <sort_order>1</sort_order>
+                    <children>
+                        <directaccessbackend module="directaccess">
+                            <title>Invoices</title>
+                            <sort_order>0</sort_order>
+                            <action>adminhtml/directaccessbackend</action>
+                        </directaccessbackend>
+                        <quickorderbackend module="directaccess">
+                            <title>Quick Order Opener</title>
+                            <sort_order>5</sort_order>
+                            <action>adminhtml/quickorderbackend</action>
+                        </quickorderbackend>
+                        <automateorderbackend module="directaccess">
+                            <title>Order Automate</title>
+                            <sort_order>5</sort_order>
+                            <action>adminhtml/automateorderbackend</action>
+                        </automateorderbackend>
+                    </children>
+                </directaccess>
+            </children>
+        </sales>
+    </menu>
+</config>

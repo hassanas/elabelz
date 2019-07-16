@@ -1,0 +1,28 @@
+<!--
+/**
+ * SimpleWeb
+ *
+ * @category    Community
+ * @package     SimpleWeb_EmailPreview
+ * @author		SimpleWeb <support@simpleweb.lv>
+ */
+-->
+<layout>
+	<adminhtml_email_preview_index>
+		<reference name="head">
+			<action method="addJs"><file>simpleweb/emailpreview/vendor/jquery-1.11.2.min.js</file></action>
+			<action method="addJs"><file>simpleweb/emailpreview/vendor/jquery.autogrowtextarea.js</file></action>
+			<action method="addJs"><file>simpleweb/emailpreview/emailpreview.js</file></action>
+			<action method="addCss"><file>simpleweb/emailpreview/emailpreview.css</file></action>
+		</reference>
+		<reference name="content">
+			<block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher" />
+			<block type="simpleweb_emailpreview/adminhtml_email_preview">
+				<action method="setCacheLifetime" />
+			</block>
+		</reference>
+	</adminhtml_email_preview_index>
+	<adminhtml_email_preview_getvariables>
+		<block type="core/template" name="root" template="simpleweb/emailpreview/variable_fieldset.phtml" />
+	</adminhtml_email_preview_getvariables>
+</layout>

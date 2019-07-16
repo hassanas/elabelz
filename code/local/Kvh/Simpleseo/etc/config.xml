@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Kvh_Simpleseo>
+            <version>0.3.0</version>
+        </Kvh_Simpleseo>
+    </modules>
+      
+    <global> 
+	 <models>
+            <simpleseo>
+                <class>Kvh_Simpleseo_Model</class>
+                <resourceModel>simpleseo_mysql4</resourceModel>
+            </simpleseo>
+            <simpleseo_mysql4>
+                <class>Kvh_Simpleseo_Model_Mysql4</class>
+                <entities>
+                    <simpleseo>
+                        <table>simpleseo</table>
+                    </simpleseo>
+                </entities>
+            </simpleseo_mysql4>
+        </models>
+        <resources>
+            <simpleseo_setup>
+                <setup>
+                    <module>Kvh_Simpleseo</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </simpleseo_setup>
+            <simpleseo_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </simpleseo_write>
+            <simpleseo_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </simpleseo_read>
+        </resources>
+	
+	<blocks>
+      <simpleseo>
+        <class>Kvh_Simpleseo_Block</class>
+      </simpleseo> 
+       <catalog>
+            <rewrite> 
+				<product_view>Kvh_Simpleseo_Block_Catalog_Product_View</product_view> 
+				<category_view>Kvh_Simpleseo_Block_Catalog_Category_View</category_view> 
+			</rewrite>
+      </catalog>  
+	  <cms>
+	  	<rewrite> 
+				<page>Kvh_Simpleseo_Block_Cms_Page</page> 
+				 
+			</rewrite>
+	  </cms>
+	  
+    </blocks>     
+	
+	<events>
+            <adminhtml_cms_page_edit_tab_meta_prepare_form>
+                <observers>
+                    <kvh_simpleseo_page_edit_tab_content>
+                        <type>singleton</type>
+                        <class>Kvh_Simpleseo_Model_Observer</class>
+                        <method>addMetaTitle</method>
+                    </kvh_simpleseo_page_edit_tab_content>
+                </observers>
+            </adminhtml_cms_page_edit_tab_meta_prepare_form>
+		  
+		 
+			
+			
+			
+			
+        </events>
+	
+	<rewrite>
+        <fancy_url>
+                  <from><![CDATA[/simpleseo\/(.*)/]]></from>
+                  <to><![CDATA[catalogsearch/result/index/?q=$1]]></to>
+                      <complete>1</complete>
+            </fancy_url>
+        </rewrite>
+    </global> 
+</config>

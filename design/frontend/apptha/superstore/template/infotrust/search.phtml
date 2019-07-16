@@ -1,0 +1,20 @@
+<?php
+require_once 'common.phtml';
+$pageTitle = 'PLP';
+?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer = [{
+            'pageType': '<?php echo $pageTitle; ?>',
+            'pageCategory': 'Product Search Result',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+    </script>
+<?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>

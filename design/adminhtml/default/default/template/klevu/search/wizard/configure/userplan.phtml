@@ -1,0 +1,62 @@
+<?php /** @var Klevu_Search_Block_Adminhtml_Wizard_Configure_Store $this */ ?>
+<?php echo $this->getChildHtml('messages'); ?>
+<?php $getPlans = Mage::helper('klevu_search')->getPlans(); ?>
+<?php $getProductCount = Mage::helper('klevu_search')->getTotalProductCount(); ?>
+
+<div class="kuWizardSteps">
+<ol class="wizard-progress clearfix">
+	<li class="active-step">
+		<span class="step-name"><?php echo $this->__("Register/Login");?></span>
+		<span class="visuallyhidden"><?php echo $this->__("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+	<li class="active-step">
+		<span class="step-name"><?php echo $this->__("Select Plan");?></span>
+		<span class="visuallyhidden"><?php echo $this->__("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+	<li>
+		<span class="step-name"><?php echo $this->__("Configure Store");?></span>
+		<span class="visuallyhidden"><?php echo $this->__("Step");?></span><span class="step-num">&nbsp;</span>
+	</li>
+	<li>
+		<span class="step-name"><?php echo $this->__("Finish & Sync");?></span>
+		<span class="visuallyhidden"><?php echo $this->__("Step");?> </span><span class="step-num">&nbsp;</span>
+	</li>
+</ol>
+</div>
+
+<?php if(!empty($getPlans)) { ?>
+<form id="klevu_search_wizard_configure_store_form" action="<?php echo $this->getFormActionUrl() ?>" method="POST">
+    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+	 <fieldset class="fieldset">
+	<div class="kuSelectPlanHeader">
+	<h2><?php echo $this->__("Start 14-Day risk free trial");?></h2>
+	<h5><?php echo $this->__("No obligation to continue, no credit card required");?></h5>
+	</div>
+		<ul class="form-list kuPlanDetails">
+		<?php foreach($getPlans as $key => $value) { ?>
+		    <li class="kuPlanColumn <?php if($getProductCount > 501 && $value['planName']=="micro") { echo " kuDisableMicro"; } ?>">
+						<div class="kuPlanName">
+						  <div class="kuTooltip">
+							<input type="radio" name="userPlan" <?php if($getProductCount > 501 && $value['planName']=="micro") { ?> disabled="disabled" <?php } ?> value="<?php echo $value['planName'];?>" > 
+							<label><?php echo ucfirst($value['planName']);?></label>
+							<span> <?php if($getProductCount > 501) {
+								echo $this->__("Sorry, you are not eligible to select the Micro (Plan). There are more than 500 records in your store and the Micro plan allows only upto 500 records. You can select any of the other listed plans and start a 14-day free trial.");
+							 } else {
+								echo $this->__("In case the total records or search terms exceed the permitted limit, the account will be moved to the trial version of the applicable tier. A notification will be sent to registered email address."); 
+							} ?><b></b></span>
+							</div>
+						</div>
+						<div class="kuPlanImg">
+							<img src="<?php echo $value['planImageUrl']; ?>"/>
+						</div>
+			</li>
+		<?php } ?>
+		</ul>
+    </fieldset>
+    <div class="button-set">
+        <button type="submit"><span><?php echo $this->__("Next") ?></span></button>
+    </div>
+</form>
+<?php } else { ?>
+	<div class="kuErrorPlanMsg"><?php echo $this->__("We are experiencing some issue fetching details of Klevu plans."); ?></br><?php echo $this->__("Please, write to us at support@klevu.com or try again later."); ?></div>
+<?php } ?>

@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Progos_Bestseller
+ *
+ * @category    Progos
+ * @package     Progos_Bestseller
+ * @author      Touqeer Jalal <touqeer.jalal@progos.org>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+-->
+<config>
+    <modules>
+        <Progos_Bestseller>
+            <version>0.1.0</version>
+        </Progos_Bestseller>
+    </modules>
+    <frontend>
+        <routers>
+            <bestseller>
+                <use>standard</use>
+                <args>
+                    <module>Progos_Bestseller</module>
+                    <frontName>bestseller</frontName>
+                </args>
+            </bestseller>
+        </routers>
+    </frontend>
+    <global>
+        <helpers>
+            <bestseller>
+                <class>Progos_Bestseller_Helper</class>
+            </bestseller>
+        </helpers>
+        <blocks>
+            <bestseller>
+                <class>Progos_Bestseller_Block</class>
+            </bestseller>
+        </blocks>
+        <models>
+            <bestseller>
+                <class>Progos_Bestseller_Model</class>
+                <resourceModel>bestseller_resource</resourceModel>
+            </bestseller>
+            <bestseller_resource>
+                <class>Progos_Bestseller_Model_Resource</class>
+            </bestseller_resource>
+        </models>
+        <resources>
+            <bestseller_setup>
+                <setup>
+                    <module>Progos_Bestseller</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </bestseller_setup>
+            <bestseller_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </bestseller_write>
+            <bestseller_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </bestseller_read>
+        </resources>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <bestseller>
+                                            <title>Store Best Seller option</title>
+                                        </bestseller>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <default>
+        <bestseller>
+            <genneral_setting>
+                <enabled>1</enabled>
+                <jqueryinclude>0</jqueryinclude>
+            </genneral_setting>
+			<configuration_setting>
+				<title>Best Seller Products</title>
+				<product_no>20</product_no>
+				<days_no>30</days_no>
+			</configuration_setting>
+        </bestseller>
+    </default>
+</config> 

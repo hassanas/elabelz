@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * local.xml
+ *
+ * Local layout modifications for our local theme
+ *
+ * @category    design
+ * @package     my_theme_default
+ * @copyright   Copyright (c) 2011 Magebase.
+ */
+-->
+
+<layout version="0.1.0">
+
+<default>
+    <reference name="head">
+    	
+    	<action method="removeItem"><type>skin_css</type><name>css/styles.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/neowize_widget.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>aw_storecredit/css/styles.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/amshopby.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>marketplace/marketplace.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>sociallogin/sociallogin.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>superdeals/styles.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/shopbybrand/default.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/shopbybrand/templates/default/shopbybrand-bootstrap.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/mirasvit/seo/mirasvit_seo.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/madisonisland.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/apptha_banner/style.css</name></action>
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+
+        <!-- removing this file (webtoolkit.base64.js) creating problem with visenze slider -->
+        <action method="removeItem"><type>skin_js</type><name>js/custommenu/webtoolkit.base64.js</name></action>
+
+		<action method="addItem"><type>skin_css</type><name>css/elabelz-extlib-styles.css</name></action>
+		<action method="addItem"><type>skin_css</type><name>css/elabelz-custom-styles.css</name></action>
+
+        <action method="addItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+		<action method="addItem"><type>skin_js</type><name>js/bootstrap.min.js</name></action>
+        <action method="addItem"><type>skin_js</type><name>js/jquery.jcarousel.min.js</name></action>
+        <action method="addItem"><type>skin_js</type><name>js/js.libraries.min.js</name></action>
+        <action method="addItem"><type>skin_js</type><name>js/minimall_menu.js</name></action>
+		<action method="addItem"><type>skin_js</type><name>js/custom_script.js</name></action>
+		<action method="addItem"><type>skin_js</type><name>js/jquery.confirm.min.js</name></action>
+
+        <action method="removeItem"><type>skin_css</type><name>css/infinitescroll/infinitescroll.css</name></action>
+		<block type="core/template" name="infotrust-head" template="infotrust/head.phtml"/>
+        <remove name="optional_zip_countries" />
+     </reference>
+    <reference name="after_body_start">
+        <block type="core/text" name="amps.cdn.v0111">
+            <action method="setText">
+                <text>
+                    <![CDATA[<noscript><iframe
+src="https://www.googletagmanager.com/ns.html?id=GTM-TGJCWB"
+height="0" width="0"
+style="display:none;visibility:hidden"></iframe></noscript>]]>
+                </text>
+            </action>
+        </block>
+    </reference>
+	<reference name="top.links">
+		<remove name="checkout_cart_link" />
+	    <!-- <remove name="wishlist_link" /> -->
+		<action method="removeLinkBlock"><blockName>wishlist_link</blockName></action>
+		<action method="removeLinkByUrl"><url helper="customer/getAccountUrl"/></action>
+
+	    <action method="addLink" translate="label title">
+	        <label>Sell at LABELS</label>
+	        <!-- <url helper="marketplace/url/getregisterUrl" /> -->
+	        <url helper="marketplace/dashboard/getregister" />
+	        <title>Sell at LABELS</title>
+	        <prepare/>
+	        <urlParams/> 
+	        <position>1</position>
+	        <liParams/>
+	        <aParams>class="top-link-seller"</aParams>
+	        <beforeText></beforeText>
+	        <afterText></afterText>
+	    </action>
+
+	</reference>
+
+	<reference name="header">
+         <block type="page/html_header" name="header_custom" template="page/html/header_custom.phtml">
+             <block type="progos_mobilemenu/menu" name="header.nav" template="page/html/header_nav.phtml">
+                <block type="page/switch" name="store_language" as="store_language" template="page/switch/languages.phtml"/>
+            </block>
+        </block>
+    </reference>
+    <reference name="left">
+        <remove name="superdeals_mostviewedproduct_left" />
+        <remove name="superdeals_dealsidebar_left" />
+        <remove name="superdeals_bestsidebar_left" />
+    </reference>
+    <reference name="right">
+        <remove name="superdeals_mostviewedproduct_right" />
+        <remove name="superdeals_bestsidebar_right" />
+        <remove name="superdeals_dealsidebar_right" />
+        <remove name="right.reports.product.viewed" />
+        <remove name="right.reports.product.compared" />
+    </reference>
+
+</default>
+
+<STORE_en_ae>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_ae>
+<STORE_en_sa>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_sa>
+<STORE_en_kw>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_kw>
+<STORE_en_qa>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_qa>
+<STORE_en_bh>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_bh>
+<STORE_en_om>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_om>
+<STORE_en_iq>
+    <reference name="head">
+        <action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style.css</name></action>
+    </reference>
+</STORE_en_iq>
+
+
+<STORE_ar_ae>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_ae>
+<STORE_ar_sa>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_sa>
+<STORE_ar_kw>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_kw>
+<STORE_ar_qa>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_qa>
+<STORE_ar_bh>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_bh>
+<STORE_ar_om>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_om>
+<STORE_ar_lb>
+    <reference name="head">
+    	<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+    	<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+    </reference>
+</STORE_ar_lb>
+<STORE_ar_iq>
+   <reference name="head">
+		<action method="removeItem"><type>skin_css</type><name>css/klevu/klevu-landing-page-style-ar.css</name></action>
+		<action method="addItem"><type>skin_css</type><name>css/style-ar.css</name></action>
+   </reference>
+</STORE_ar_iq>
+
+<customer_logged_in>
+    <reference name="top.links">
+    	<action method="removeLinkByUrl"><url helper="marketplace/dashboard/getregister"/></action>
+    </reference>
+</customer_logged_in>
+
+<!-- <customer_logged_out>
+    <reference name="header">
+    	<remove name="top.links" />
+    </reference>
+</customer_logged_out> -->
+
+<!--
+<< End removing top links
+-->
+
+<catalog_category_view>
+
+	<reference name="head">
+		<block type="core/text" name="lazyInitBlock">
+		    <action method="setText">
+		        <text><![CDATA[<script>window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 900;</script>]]></text>
+		    </action>
+		</block>
+
+		<action method="removeItem"><type>js</type><script>amasty/amshopby/amshopby.js</script></action>
+        <action method="removeItem"><type>js</type><script>amasty/amshopby/jquery.min.js</script></action>
+        <action method="removeItem"><type>js</type><script>amasty/amshopby/jquery-ui.min.js</script></action>
+        <action method="removeItem"><type>js</type><script>amasty/amshopby/jquery.ui.touch-punch.min.js</script></action>
+        <action method="removeItem"><type>js</type><script>amasty/amshopby/amshopby-jquery.js</script></action>
+		
+		<action method="addItem"><type>skin_js</type><name>js/lazysizes.min.js</name></action>
+        <action method="addItem"><type>skin_js</type><name>js/slick1.6.min.js</name></action>
+        <action method="addItem"><type>skin_css</type><name>css/select2.min.css</name></action>
+        <action method="addItem"><type>skin_js</type><name>js/select2.min.js</name></action>
+        <!--
+        Js optimization for home page
+        -->
+        <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+        <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+        <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+        <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+        <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+        <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+        <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+        <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+        <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+        <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+        <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+        <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+        <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+        <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+        <!--
+        Js optimization for home page
+        -->
+	</reference>
+
+	<reference name="root">
+		<block type="catalog/category_view" name="category_banner" as="category_banner" template="catalog/category/category_image.phtml" />
+	</reference>
+	
+	<reference name="breadcrumbs">
+        <block type="catalog/product_list" name="toolbar_only" template="catalog/product/list/toolbar_only.phtml">
+            <block type="catalog/product_list_toolbar" name="product_list_toolbar_only" template="catalog/product/list/toolbar_top.phtml">
+                <block type="page/html_pager" name="product_list_toolbar_pager"/> 
+            </block>    
+            <action method="setToolbarBlockName"><name>product_list_toolbar_only</name></action>
+        </block>            
+    </reference>
+	
+	<reference name="content">
+		<block type="page/html_breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>
+	</reference>
+	<reference name="head">
+        <block type="core/template" name="infotrust-category" template="infotrust/category_list.phtml"/>
+    </reference>
+</catalog_category_view>
+
+<!-- <cms_index_index>
+<reference name="content">
+<block type="core/template" name="categories" template="page/html/topmenu/customcategories.phtml"/>
+</reference>
+</cms_index_index> -->
+
+<customer_account_login translate="label">
+	<reference name="content">
+		<action method="unsetChild"><child>customer_form_login</child></action>
+		<block type="customer/form_login" name="customer_form_login2" template="customer/form/login.phtml" >
+			<block type="customer/form_register" name="customer_form_register2" template="customer/form/mini.register.phtml">
+				<block type="page/html_wrapper" name="customer.form.register.fields.before" as="form_fields_before" />
+			</block>
+        </block>
+    </reference>
+
+<reference name="head">
+	<action method="setTitle" translate="title" module="customer"><title>Login or Create an Account</title></action>
+</reference>
+</customer_account_login>
+
+
+<marketplace_seller_login>
+	<reference name="content">
+		<block type="marketplace/form_register" name="marketplace_form_register">
+			<action method="setTemplate" ifconfig="marketplace/marketplace/activate">
+				<template>marketplace/seller/form/register_new.phtml</template>
+			</action>
+
+			<block type="page/html_wrapper" name="customer.form.register.fields.before"
+				as="form_fields_before" translate="label">
+				<label>Form Fields Before</label>
+			</block>
+		</block>
+	</reference>
+	<reference name="head">
+        <block type="core/template" name="infotrust-login-m" template="infotrust/login.phtml"/>
+    </reference>
+</marketplace_seller_login>
+
+<checkout_cart_index>
+    <remove name="checkout.cart.shipping" />
+    <reference name="content">
+        <remove name="checkout.cart.shipping"/>
+    </reference>
+</checkout_cart_index>
+
+  <customer_account translate="label">
+        <reference name="customer_account_navigation">
+            <action method="removeLinkByName"><name>tags</name></action>
+            <action method="removeLinkByName"><name>wishlist</name></action>
+            <action method="removeLinkByName"><name>OAuth Customer Tokens</name></action>
+            <action method="removeLinkByName"><name>downloadable_products</name></action>
+        </reference>
+    </customer_account>
+
+	<!-- Add here all custom templates as per requirments-->
+	<onestepcheckout_index_success translate="label">
+		<reference name="head">
+			<block type="core/template" name="customheadertemplate" as="customheadertemplate" template="page/html/customtemplates/customheadertemplate.phtml"/>
+		</reference>
+	</onestepcheckout_index_success>
+	<!-- Add here all custom templates as per requirments-->
+
+	<cms_index_index translate="label">
+		<reference name="head">
+            <block type="core/template" name="infotrust-home" template="infotrust/home.phtml"/>
+        </reference>
+        <reference name="left">
+            <remove name="shopbybrand_left" />
+        </reference>
+	</cms_index_index>
+
+	<catalog_category_default translate="label">
+		<reference name="head">
+            <block type="catalog/category_view" name="app-banner-category" as="app-banner-category" template="appbanners/category.phtml"/>
+            <action method="addItem"><type>skin_js</type><name>js/slick1.6.min.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/select2.min.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/select2.min.js</name></action>
+        </reference>
+	</catalog_category_default>
+
+	<catalog_category_layered translate="label">
+		<reference name="head">
+            <block type="catalog/category_view" name="app-banner-category" as="app-banner-category" template="appbanners/category.phtml"/>
+        </reference>
+	</catalog_category_layered>
+
+	<catalogsearch_result_index translate="label">
+		
+		<reference name="head">
+			<block type="core/text" name="lazyInitBlock">
+			    <action method="setText">
+			        <text><![CDATA[<script>window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 900;</script>]]></text>
+			    </action>
+			</block>
+			<action method="addItem"><type>skin_js</type><name>js/lazysizes.min.js</name></action>
+			<block type="core/template" name="infotrust-search" template="infotrust/search.phtml"/>
+		</reference>
+
+	</catalogsearch_result_index>
+
+	<checkout_cart_index translate="label">
+		<reference name="head">
+            <block type="core/template" name="infotrust-cart" template="infotrust/cart.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <!--
+            Js optimization for home page
+            -->
+        </reference>
+	</checkout_cart_index>
+
+	<onestepcheckout_index_index translate="label">
+        <remove name="store_language"/>
+		<reference name="head">
+			<block type="core/template" name="infotrust-checkout" template="infotrust/checkout.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <!--
+            Js optimization for home page
+            -->
+		</reference>
+	</onestepcheckout_index_index>
+
+	<onestepcheckout_index_success translate="label">
+		<reference name="head">
+            <action method="addItem"><type>skin_css</type><name>css/ge_ss_text_arabic.css</name></action>
+            <block type="core/template" name="infotrust-checkout-success" template="infotrust/checkout_success.phtml"/>
+        </reference>
+	</onestepcheckout_index_success>
+
+	<cms_page_view translate="label">
+        <reference name="head">
+            <block type="core/template" name="infotrust-cms" template="infotrust/cms.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lazysizes.min.js</script></action>
+            <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <!--
+            Js optimization for home page
+            -->
+        </reference>
+    </cms_page_view>
+
+    <amlanding_page_view translate="label">
+        <reference name="head">
+            <block type="core/template" name="infotrust-xlandingpage" template="infotrust/xlandingpage.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <!--
+            Js optimization for home page
+            -->
+        </reference>
+    </amlanding_page_view>
+    <onestepcheckout_index_failure>
+        <reference name="head">
+            <block type="core/template" name="infotrust-failure" template="infotrust/failure.phtml"/>
+        </reference>
+    </onestepcheckout_index_failure>
+    <cms_index_noroute>
+        <reference name="head">
+            <block type="progos_infotrust/infotrusterror" name="infotrust-404" template="infotrust/404.phtml"/>
+        </reference>
+    </cms_index_noroute>
+    <cms_index_defaultnoroute>
+        <reference name="head">
+            <block type="progos_infotrust/infotrusterror" name="infotrust-404" template="infotrust/404.phtml"/>
+        </reference>
+    </cms_index_defaultnoroute>
+    <marketplace_seller_dashboard>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/dashboard.phtml"/>
+        </reference>
+    </marketplace_seller_dashboard>
+    <marketplace_product_manage>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/manage_product.phtml"/>
+        </reference>
+    </marketplace_product_manage>
+    <marketplace_order_manage>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/manage_orders.phtml"/>
+        </reference>
+    </marketplace_order_manage>
+    <marketplace_seller_addprofile>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/myprofile.phtml"/>
+        </reference>
+    </marketplace_seller_addprofile>
+    <marketplace_contact_form>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/contact_form.phtml"/>
+        </reference>
+    </marketplace_contact_form>
+    <marketplace_seller_payout>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/seller_payout.phtml"/>
+        </reference>
+    </marketplace_seller_payout>
+
+    <marketplace_seller_transactiondetail>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/transactiondetail.phtml"/>
+        </reference>
+    </marketplace_seller_transactiondetail>
+    <customer_account_index>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/account.phtml"/>
+        </reference>
+    </customer_account_index>
+    <customer_account_edit>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/account_edit.phtml"/>
+        </reference>
+    </customer_account_edit>
+    <customer_address_index>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/address.phtml"/>
+        </reference>
+    </customer_address_index>
+    <customer_address_index>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/address.phtml"/>
+        </reference>
+    </customer_address_index>
+    <sales_order_history>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/purchases.phtml"/>
+        </reference>
+    </sales_order_history>
+    <sales_order_print>
+        <reference name="head">
+        <action method="addItem"><type>skin_js</type><name>js/lib/noconflict.js</name></action>
+        <action method="addItem"><type>js</type><name>jquery/jquery-1.8.3.min.js</name></action>
+        </reference>
+    </sales_order_print>
+    <newsletter_manage_index>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/newsletter.phtml"/>
+        </reference>
+    </newsletter_manage_index>
+    <awrma_customer_rma_list>
+        <reference name="head">
+            <block type="core/template" name="infotrust-dashboard" template="infotrust/rma.phtml"/>
+        </reference>
+    </awrma_customer_rma_list>
+    <cms_index_index translate="label">
+        <reference name="head">
+            <block type="core/template" name="infotrust-home" template="infotrust/home.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lazysizes.min.js</script></action>
+            <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/jquery.scrollTo.min.js</script></action>
+
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <!--
+            Js optimization for home page
+            -->
+        </reference>
+    </cms_index_index>
+    <catalog_product_view>
+        <reference name="after_body_start">
+            <block type="core/template" name="customdatalayerproduct" as="customdatalayerproduct" template="catalog/product/customdatalayerproduct/customdatalayerproduct.phtml"/>
+        </reference>
+        <reference name="head">
+            <block type="core/template" name="infotrust-product" template="infotrust/product.phtml"/>
+            <block type="core/template" name="app-banner-product" as="app-banner-product" template="appbanners/product.phtml"/>
+            <!--
+            Js optimization for home page
+            -->
+            <action method="removeItem"><type>js</type><script>lib/ccard.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/builder.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/dragdrop.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/controls.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/slider.js</script></action>
+            <action method="removeItem"><type>js</type><script>amasty/amlanding/amlanding.js</script></action>
+            <action method="removeItem"><type>js</type><script>mage/captcha.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/timer.js</script></action>
+            <action method="removeItem"><type>js</type><script>scriptaculous/scriptaculous.js</script></action>
+            <action method="removeItem"><type>js</type><script>superdeals/protoshow.js</script></action>
+            <action method="removeItem"><type>js</type><script>apptha_banner/apptha_banner.min.js</script></action>
+            <action method="removeItem"><type>js</type><script>mirasvit/code/email/capture.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/minimall_menu.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.jcarousel.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/bootstrap.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/emarsys/emarsys.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/popupmessages.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/js.libraries.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lib/noconflict.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/message_seller/message_seller_init.js</script></action>
+
+            <action method="removeItem"><type>js</type><script>calendar/calendar-setup.js</script></action>
+            <action method="removeItem"><type>js</type><script>calendar/calendar.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/jquery.basictable.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/lazysizes.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>slick/slick/slick.min.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>jquery-plugins/fancybox/jquery.mousewheel.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>jquery-plugins/cloudzoom/cloudzoom.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>jquery-plugins/fancybox/jquery.mousewheel.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/tabs/myTabz.js</script></action>
+            <action method="removeItem"><type>skin_js</type><script>js/carouselslider/jquery.bxslider.min.js</script></action>
+            <action method="addItem"><type>skin_css</type><name>css/select2.min.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>progos/ajaxaddtocart.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/slick1.6.min.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/select2.min.js</name></action>
+            <!--
+            Js optimization for home page
+            -->
+
+        </reference>
+        <refrence name="product.info">
+            <remove name="marketplace_compareprice" />
+            <remove name="product.info.additional" />
+            <remove name="html_calendar" />
+            <remove name="product.info.upsell" />
+            <remove name="product.info.addto" />
+            <remove name="product.info.sharing" />
+            <remove name="product.clone_prices" />
+            <remove name="marketplace_linkseller" />
+            <remove name="marketplace_customer" />
+            <remove name="product.reviews" />
+        </refrence>
+    </catalog_product_view>
+
+</layout>

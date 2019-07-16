@@ -1,0 +1,68 @@
+<?php
+/**
+ * User: Hassan Ali Shahzad
+ * Date: 30/03/2017
+ * Time: 10:46:13
+ *
+ * This Template will be used to add all code to header at run time like FB js Google Analitics etc
+ *
+ * */
+?>
+<?php
+$order = Mage::getSingleton('sales/order');
+$get_last_real_order_id = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+$order->loadByIncrementId($get_last_real_order_id);
+$_items = $order->getAllVisibleItems();
+?>
+<!-- Google Analytics -->
+<!--<script>
+    // Send transaction data with a pageview if available
+    // when the page loads. Otherwise, use an event when the transaction
+    // data becomes available.
+    dataLayer.push({
+        'ecommerce': {
+            'currencyCode': '<?php echo Mage::app()->getStore()->getCurrentCurrencyCode();?>',
+            'purchase': {
+                'actionField': {
+                    'id': '<?php echo $order->getData("increment_id") ?>',                         // Transaction ID. Required for purchases and refunds.
+                    'affiliation': '<?php echo addslashes(Mage::app()->getStore()->getName()) ?>',
+                    'revenue': '<?php echo $order->getGrandTotal() ?>',                     // Total transaction value (incl. tax and shipping)
+                    'tax': '<?php echo $order->getTaxAmount() ?>',
+                    'shipping': '<?php echo $order->getShippingInclTax() ?>',
+                    'coupon': '<?php echo addslashes($order->getCouponCode()); ?>'
+                },
+                'products': [
+                    <?php
+                    $dl = 0;
+                    foreach ($_items as $item) {
+                        $product = $item->getProduct();
+                        $productPrice = $product->getPrice();
+                        $productQty = $item['qty_ordered'];
+                     ?>
+                    {
+                    'name': '<?php echo $product->getName(); ?>',
+                    'id': '12345',
+                    'price': '<?php echo $product->getPrice(); ?>',
+                    'brand': '<?php echo $product->getManufacturer(); ?>',
+                    'category': 'Apparel',
+                    'variant': '<?php echo $product->getColor(); ?>',
+                    'quantity': <?php echo $item['qty_ordered']?>
+                    }<?php if($dl < count($_items) - 1) echo ",";?>
+                    <?php $dl++;} ?>
+                ]
+            }
+        }
+    });
+</script>-->
+<!-- Google Analytics -->
+
+<!-- Twitetr conversion tracking -->
+<script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
+<script type="text/javascript">
+    twttr.conversion.trackPid('163yb', {tw_sale_amount: <?php echo $order->getGrandTotal() ?>, tw_order_quantity: <?php echo $item['qty_ordered']?> });</script>
+<noscript>
+    <img height="1" width="1" style="display:none;" alt=" " src="https://analytics.twitter.com/i/adsct?txn_id=163yb&p_id=Twitter$tw_sale_amount=AMOUNT_HERE&tw_order_quantity=QUANTITY_HERE" />
+    <img height="1" width="1" style="display:none;" alt=" " src="//t.co/i/adsct?txn_id=163yb&p_id=Twitter$tw_sale_amount=0&tw_order_quantity=0" />
+</noscript>
+
+<!-- Twitetr conversion tracking -->

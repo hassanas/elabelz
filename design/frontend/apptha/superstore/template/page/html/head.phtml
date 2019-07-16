@@ -1,0 +1,395 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>"/>
+<title><?php echo $this->__($this->getTitle()) ?></title>
+<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>"/>
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>"/>
+<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>"/>
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link preconnect="https://rscdn.elabelz.com/" crossorigin />
+<?php echo $this->getCssJsHtml() ?>
+
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<?php
+$fullUrl = Mage::helper('core/url')->getCurrentUrl(); // example base url + product url
+$baseUrl = Mage::helper('core/url')->getHomeUrl(); // exampel base url only
+$rooUrl = Mage::getStoreConfig(Mage_Core_Model_Url::XML_PATH_SECURE_URL);
+
+$actual_link = "";
+if ($fullUrl !== $baseUrl) {
+    $actual_link = explode($baseUrl, $fullUrl);
+    $actual_link = explode("?", $actual_link[1]);
+    $actual_link = $actual_link[0];
+}
+?>
+
+<link rel="alternate" href="<?php echo $rooUrl."en_int/".$actual_link ?>" hreflang="x-default"/>
+<?php
+$allStores = Mage::app()->getStores();
+foreach ($allStores as $_eachStoreId => $val) 
+{
+$_storeCode = Mage::app()->getStore($_eachStoreId)->getCode();
+if ($_storeCode == 'en_int') continue;
+if ($_storeCode == 'en_uk'){ $_storeCode2 = "en_gb"; }
+?>
+<link rel="alternate" href="<?php echo $rooUrl.$_storeCode; ?>/<?php echo $actual_link; ?>" hreflang="<?php if($_storeCode == 'en_uk'){echo str_replace('_','-',$_storeCode2); } else{ echo str_replace('_','-',$_storeCode);} ?>" />
+<?php } ?>
+
+<!--[if lt IE 7]>
+<script type="text/javascript">
+    //<![CDATA[
+      var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+      var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+  //]]>
+  </script>
+  <![endif]-->
+<link rel="manifest" href="/manifest.json">
+<?php
+//cart page
+$request = $this->getRequest();
+$module = $request->getModuleName();
+$controller = $request->getControllerName();
+$action = $request->getActionName();
+if ($module == 'checkout' && $controller == 'cart' && $action == 'index') {
+
+    $cart = Mage::getModel('checkout/cart')->getQuote();
+    $max = 0;
+    $lastItem = null;
+    foreach ($cart->getAllVisibleItems() as $item) {
+        if ($item->getId() > $max) {
+            $max = $item->getId();
+            $lastItem = $item;
+            $aaa = $item->getId();
+        }
+    }
+    if ($lastItem) {
+
+        $_product = $lastItem->getProduct();
+        $xproductsku = $_product->getSku();
+        $xproductname = $_product->getName();
+        $xproductqty = $_product->getQty();
+        ///////////////////////////////////////////////
+        // Modified by Adnan on 30th Aug 16, Morning //
+        ///////////////////////////////////////////////
+        // From $xproductprice = $_product->getPrice();
+        // Above script was printing base price of product and ignore the special price (if exists)
+        $xproductprice = $_product->getFinalPrice();
+        $xproducturl = $_product->getUrl();
+        $xproductid = $_product->getId();
+        $cats = $_product->getCategoryIds();
+        $productCurrency = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+        $product = Mage::getModel('catalog/product')->load($_product->getId());
+
+        echo "<script type='text/javascript'>
+      dataLayer=[ \n";
+        echo "{\n";
+        ?>
+        "sku":"<?php echo $product->getSku(); ?>",
+        "name":"<?php echo addslashes($xproductname); ?>",
+        "quantity":1,
+        "price":'<?php echo $xproductprice; ?>',
+        "categoryId":'<?php echo $cats[count($cats) - 1]; ?>',
+        "currency":"<?php echo $productCurrency; ?>",
+        <?php
+        echo "\n}];</script>";
+    }
+}
+
+//Success page
+if (Mage::app()->getFrontController()->getAction()->getFullActionName() == 'onestepcheckout_index_success' && !(Mage::getStoreConfig('api/ecoprocessor/enableNewCheckout'))) {
+
+    $order = Mage::getSingleton('sales/order');
+    $get_last_real_order_id = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+    $order->loadByIncrementId($get_last_real_order_id);
+    $_items = $order->getAllVisibleItems();
+
+    echo "<script type='text/javascript'>
+    dataLayer=[ \n";
+    $dl = 0;
+    foreach ($_items as $item) {
+
+        $product = $item->getProduct();
+        $productName = $product->getName();
+        $productPrice = $product->getPrice();
+        $productQty = $item['qty_ordered'];
+        $productCurrency = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $cats = $product->getCategoryIds();
+        echo "{\n";
+        ?>
+        "sku":"<?php echo $item->getProduct()->getSku(); ?>",
+        "name":"<?php echo addslashes($productName); ?>",
+        "quantity":'<?php echo $productQty; ?>',
+        "price":'<?php echo $productPrice; ?>',
+        "categoryId":'<?php echo $cats[count($cats) - 1]; ?>',
+        "currency":"<?php echo $productCurrency; ?>",
+        <?php
+        echo "\n}";
+        if ($dl < count($_items) - 1) {
+            echo ",";
+        }
+        $dl++;
+    }
+
+    if ($order->getCustomerIsGuest()) {
+        $billing = $order->getBillingAddress()->getData();
+        $fname = $order->getCustomerName();
+        $email = $order->getCustomerEmail();
+        $phone = $billing["telephone"] ? $billing["telephone"] : "N/A";
+    } else {
+        $customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
+        if ($customer->getId()) {
+            $billing = $order->getBillingAddress()->getData();
+            $phone = $billing["telephone"] ? $billing["telephone"] : "N/A";
+            $fname = $order->getCustomerName();
+            $email = $order->getCustomerEmail();
+        }
+    }
+
+    if (!is_null($email)) {
+        echo ',{';
+        echo '"fname":"' . $fname . '",';
+        echo '"email":"' . $email . '",';
+        echo '"phone":' . $phone . '';
+    }
+
+    echo '}];</script>';
+
+    $order_currency_code = $order->getOrderCurrencyCode();
+    $order_grand_total = $order->getGrandTotal();
+    $order_grand_total_base = $order->getBaseGrandTotal();
+    $price = Mage::helper('directory')->currencyConvert($order_grand_total_base, "AED", "USD");
+
+    ?>
+    <!-- start Arabyads pixel -->
+    <iframe src="https://arabyads.go2cloud.org/aff_l?offer_id=2078&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+        scrolling="no" frameborder="0" width="1" height="1" style="display:none;" rel="dns-prefetch"></iframe>
+    <!-- end Arabyads pixel -->
+
+    <!-- Offer Conversion: Elabelz AE,SA & IQ CPS -->
+    <iframe src="https://www.arabytracking.net/aff_l?offer_id=2078&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+        scrolling="no" frameborder="0" width="1" height="1" style="display:none;" rel="dns-prefetch"></iframe>
+    <!-- // End Offer Conversion -->
+
+    <!-- start Relevant Network pixels -->
+    <img src="https://levantnetwork.go2cloud.org/aff_l?offer_id=467&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+        width="1" height="1" style="display:none;" rel="dns-prefetch" />
+    <!-- end Relevant Network pixels -->
+
+    <!-- start Taboola pixels -->
+    <script type="text/javascript">
+        window._tfa = window._tfa || [];
+        _tfa.push({
+            notify: 'action',
+            currency: 'USD',
+            quantity: '<?php echo $dl ?>',
+            orderid: '<?php echo $get_last_real_order_id ?>',
+            name: 'Sale',
+            revenue: '<?php echo $price ?>'
+        });
+    </script>
+    <script src="//cdn.taboola.com/libtrc/elabelzcom-sc/tfa.js" rel="dns-prefetch"></script>
+    <!-- end Taboola pixels -->
+    
+    <!-- start Tapfiliate pixels -->
+    <script src="//static.tapfiliate.com/tapfiliate.js" rel="dns-prefetch" type="text/javascript" async></script>
+    <script type="text/javascript">
+        window['TapfiliateObject'] = i = 'tap';
+        window[i] = window[i] || function () {
+                (window[i].q = window[i].q || []).push(arguments);
+            };
+
+        tap('create', '3193-5925c3');
+        tap('conversion', '<?php echo $get_last_real_order_id ?>', <?php echo $price ?>);
+    </script>
+    <!-- start Tapfiliate pixels -->
+    <!-- Google Adword Conversion Tracking -->
+    <script>
+    dataLayer.push({'event':'orderConfirmation','orderTotalVal':<?php echo $order_grand_total;?>})
+    </script>
+    <!-- Google Adword Conversion Tracking -->
+    <?php
+}elseif (Mage::app()->getFrontController()->getAction()->getFullActionName() == 'onestepcheckout_index_success' && (Mage::getStoreConfig('api/ecoprocessor/enableNewCheckout'))) {
+    $session = Mage::getSingleton('core/session');
+    $get_last_real_order_id = $session->getLastRealOrderId();
+    $quoteId = $session->getLastQuoteId();
+    $order = Mage::getModel("sales/quote")->loadByIdWithoutStore($quoteId);
+    $_items = $order->getAllVisibleItems();
+
+    echo "<script type='text/javascript'>
+    dataLayer=[ \n";
+    $dl = 0;
+    foreach ($_items as $item) {
+
+        $product = $item->getProduct();
+        $productName = $product->getName();
+        $productPrice = $product->getPrice();
+        $productQty = $item['qty'];
+        $productCurrency = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $cats = $product->getCategoryIds();
+        echo "{\n";
+        ?>
+        "sku":"<?php echo $item->getProduct()->getSku(); ?>",
+        "name":"<?php echo addslashes($productName); ?>",
+        "quantity":'<?php echo $productQty; ?>',
+        "price":'<?php echo $productPrice; ?>',
+        "categoryId":'<?php echo $cats[count($cats) - 1]; ?>',
+        "currency":"<?php echo $productCurrency; ?>",
+        <?php
+        echo "\n}";
+        if ($dl < count($_items) - 1) {
+            echo ",";
+        }
+        $dl++;
+    }
+    $mdlRestmob = Mage::getModel('ecoprocessor/quote_index');
+    $id = $mdlRestmob->getIdByReserveId($orderId);
+    $cronOrder = $mdlRestmob->load($id);
+    $billingInfo = json_decode($cronOrder->getBillingAddress(),true);
+
+    $phone = $billing["telephone"] ? $billing["telephone"] : "N/A";
+    $fname = $billing["firstname"]. ' ' . $billing["lastname"];
+    $email = $billing["email"];
+
+    if (!is_null($email)) {
+        echo ',{';
+        echo '"fname":"' . $fname . '",';
+        echo '"email":"' . $email . '",';
+        echo '"phone":' . $phone . '';
+    }
+
+    echo '}];</script>';
+
+    $order_currency_code = $order->getQuoteCurrencyCode();
+    $order_grand_total = $order->getGrandTotal();
+    $order_grand_total_base = $order->getBaseGrandTotal();
+    $price = Mage::helper('directory')->currencyConvert($order_grand_total_base, "AED", "USD");
+
+    ?>
+    <!-- start Arabyads pixel -->
+    <iframe src="https://arabyads.go2cloud.org/aff_l?offer_id=2078&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+            scrolling="no" frameborder="0" width="1" height="1" style="display:none;" rel="dns-prefetch"></iframe>
+    <!-- end Arabyads pixel -->
+
+    <!-- Offer Conversion: Elabelz AE,SA & IQ CPS -->
+    <iframe src="https://www.arabytracking.net/aff_l?offer_id=2078&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+            scrolling="no" frameborder="0" width="1" height="1" style="display:none;" rel="dns-prefetch"></iframe>
+    <!-- // End Offer Conversion -->
+
+    <!-- start Relevant Network pixels -->
+    <img src="https://levantnetwork.go2cloud.org/aff_l?offer_id=467&adv_sub=<?php echo $get_last_real_order_id ?>&amount=<?php echo $price ?>"
+         width="1" height="1" style="display:none;" rel="dns-prefetch" />
+    <!-- end Relevant Network pixels -->
+
+    <!-- start Taboola pixels -->
+    <script type="text/javascript">
+        window._tfa = window._tfa || [];
+        _tfa.push({
+            notify: 'action',
+            currency: 'USD',
+            quantity: '<?php echo $dl ?>',
+            orderid: '<?php echo $get_last_real_order_id ?>',
+            name: 'Sale',
+            revenue: '<?php echo $price ?>'
+        });
+    </script>
+    <script src="//cdn.taboola.com/libtrc/elabelzcom-sc/tfa.js" rel="dns-prefetch"></script>
+    <!-- end Taboola pixels -->
+
+    <!-- start Tapfiliate pixels -->
+    <script src="//static.tapfiliate.com/tapfiliate.js" rel="dns-prefetch" type="text/javascript" async></script>
+    <script type="text/javascript">
+        window['TapfiliateObject'] = i = 'tap';
+        window[i] = window[i] || function () {
+                (window[i].q = window[i].q || []).push(arguments);
+            };
+
+        tap('create', '3193-5925c3');
+        tap('conversion', '<?php echo $get_last_real_order_id ?>', <?php echo $price ?>);
+    </script>
+    <!-- start Tapfiliate pixels -->
+    <!-- Google Adword Conversion Tracking -->
+    <script>
+        dataLayer.push({'event':'orderConfirmation','orderTotalVal':<?php echo $order_grand_total;?>})
+    </script>
+    <!-- Google Adword Conversion Tracking -->
+    <?php
+}
+?>
+<!-- Data layer setting end-->
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php echo $this->getIncludes() ?>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        var mainheight = jQuery(window).height();
+        var mainwidth = jQuery(window).width();
+        var meta = jQuery("head > meta[name ='viewport']");
+        var agent = navigator.userAgent;
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // some code
+            meta.remove();
+            jQuery("head").append('<meta name="viewport" content="width=device-width, initial-scale=0.6, maximum-scale=0.7, minimum-scale=0.6">');
+        }
+    });
+</script>
+<meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+<script rel="prefetch">
+    var msgTitle = '';
+    var confirmBTN = '<?php echo $this->__('Okay'); ?>';
+    var continueShoppingBTN = '<?php echo $this->__('Continue Shopping'); ?>';
+    var goToCartBTN = '<?php echo $this->__('View Cart'); ?>';
+    $j(window).load(function () {
+        try {
+            var msgType = jQuery(".messages > li").attr("class");
+            if (msgType == 'error-msg') {
+                msgTitle = '<?php echo $this->__('Error'); ?>';
+            } else {
+                var bodyClassCheck = jQuery("body").hasClass('cms-subscribe-scusssfully');
+                if(bodyClassCheck == true){
+                    msgTitle = '<?php echo $this->__('Thanks for subscribing!'); ?>';    
+                }
+                else{
+                    msgTitle = '<?php echo $this->__('Success'); ?>';
+                }
+            }
+            confirmBTN = '<?php echo $this->__('Okay'); ?>';
+            continueShoppingBTN = '<?php echo $this->__('Continue Shopping'); ?>';
+            goToCartBTN = '<?php echo $this->__('View Cart'); ?>';
+        } catch (err) {
+            console.log(err.message);
+        }
+    });
+</script>
+  <script type="text/javascript">
+  <?php $storeID = Mage::app()->getStore()->getStoreId(); ?>
+   window.neo_wize_currency = '<?php echo Mage::app()->getStore($storeID)->getCurrentCurrencyCode(); ?>';
+   window.neo_wize_locale = '<?php echo Mage::app()->getStore($storeID)->getCode(); ?>';
+  </script>

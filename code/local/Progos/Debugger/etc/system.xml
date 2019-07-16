@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <catalog translate="label" module="catalog">
+            <groups>
+                <layered_navigation translate="label" module="catalog">
+                    <fields>
+                        <enable_debug translate="label">
+                            <label>Enable Debug Info For Layered Navigation</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>15</sort_order>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_debug>
+                    </fields>
+                </layered_navigation>
+            </groups>
+        </catalog>
+    </sections>
+</config>

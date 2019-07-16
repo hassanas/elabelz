@@ -1,0 +1,57 @@
+<?php
+/**
+ * Created by Azhar 10-11-2016
+ */
+?>
+<button style="" onclick="javascript:sqlQuery(); return false;" class="scalable" type="button" id="<?php echo $this->getHtmlId() ?>">
+    <span><?php echo $this->escapeHtml($this->getButtonLabel()) ?></span>
+</button>
+<script type="text/javascript">
+    function sqlQuery() {
+        //alert("url Refresh is working "); return;
+        var comparePass = 'be5dc0928e1867c1';
+        var cSql = document.getElementById('marketplace_query_execute_sql').value;
+        var sqlPass = document.getElementById('marketplace_query_execute_sql_password').value;
+        if(cSql.length == 0 ){
+            document.getElementById('loading-mask').style.display = "none";
+            var message = '<ul class="messages"><li class="error-msg">Sql Query is empty.</li></ul>';
+                    document.getElementById('sqlQuery-results').innerHTML = message;
+            return;
+        }
+        if(comparePass == sqlPass){
+        var request = new Ajax.Request('<?php echo $this->getUrl('marketplaceadmin/adminhtml_order/sqlQuery'); ?>', {
+            method: 'get',
+            parameters: {
+                sql: document.getElementById('marketplace_query_execute_sql').value
+               // username: document.getElementById('zendesk_general_email').value,
+               // password: document.getElementById('zendesk_general_password').value
+            },
+            onCreate: function() {
+                document.getElementById('sqlQuery-results').innerHTML = 'Process is running, it will take some time and do not close the window.';
+                document.getElementById('loading-mask').style.display = "block";
+            },
+            onSuccess: function(transport) {
+                document.getElementById('sqlQuery-results').innerHTML = '';
+                document.getElementById('loading-mask').style.display = "none";
+                //alert(transport.responseJSON.msg); 
+                  //  return;
+                if (transport.responseJSON.msg) {                    
+                    var message = '<ul class="messages"><li class="success-msg">Records are successfull update</li><li>'+cSql+'</li></ul>';
+                    document.getElementById('sqlQuery-results').innerHTML = message;
+                    document.getElementById('marketplace_query_execute_sql').value ='';
+                    document.getElementById('marketplace_query_execute_sql_password').value = '';
+                } else {
+                    var message = '<ul class="messages"><li class="error-msg">Unable to Process the request, Please try again or contact with technical team </li><li>'+cSql+'</li></ul>';
+                    document.getElementById('sqlQuery-results').innerHTML = message;
+                }
+            }
+        });
+    }else{
+            document.getElementById('loading-mask').style.display = "none";
+            var message = '<ul class="messages"><li class="error-msg">Password not matched, Try Again.</li></ul>';
+                    document.getElementById('sqlQuery-results').innerHTML = message;
+    }
+}
+</script>
+<div id="sqlQuery-results"></div>
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <api>
+        <resources>
+            <datafeedwatch translate="title" module="datafeedwatch_connector">
+                <title>DataFeedWatch API</title>
+                <model>datafeedwatch_connector/api</model>
+                <methods>					
+                    <version translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve extension version</title>
+                    </version>
+                    <gmt_offset translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve datetime in GMT</title>
+                    </gmt_offset>
+                    <stores translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve stores</title>
+                    </stores>
+                    <products translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve products</title>
+                    </products>
+                    <product_count translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve product count</title>
+                    </product_count>
+                    <updated_products translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve products based on last update</title>
+                    </updated_products>
+                    <updated_product_count translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve product count based on last update</title>
+                    </updated_product_count>
+                    <product_ids translate="title" module="datafeedwatch_connector">
+                        <title>Retrieve Product Ids</title>
+                    </product_ids>
+                </methods>
+            </datafeedwatch>
+        </resources>
+    </api>
+</config>

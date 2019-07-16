@@ -1,0 +1,20 @@
+<config>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow everything</title>
+            </all>
+            <admin>
+                <children>
+                    <catalog translate="title" module="manageimage">
+                        <children>
+                            <manageimageitems module="manageimage">
+                                <title>Manage Duplicate Images</title>
+                            </manageimageitems>
+                        </children>
+                    </catalog >
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

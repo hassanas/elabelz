@@ -1,0 +1,237 @@
+<script type="text/javascript">
+
+	/* Set ecomm_pagetype */
+	window.google_tag_params.ecomm_pagetype = 'cart';
+
+	<?php if ($data = $this->helper('ec/datalayer')->getCouponDiscountPush()): ?> 
+	
+		dataLayer.push(<?php echo  $data ?>);
+	
+	<?php endif ?>
+	
+	var checkoutProducts = [];
+
+	<?php foreach ($this->helper('ec')->getCheckoutProducts() as $product) : ?>
+		
+		checkoutProducts.push(
+		{
+			'id': 			'<?php echo $product->id ?>',
+			'name': 		'<?php echo $product->name ?>',
+			'category': 	'<?php echo $product->category ?>',
+			'brand':		'<?php echo $product->brand ?>',
+			'price': 		'<?php echo $product->price ?>',
+			'quantity': 	'<?php echo $product->quantity ?>',
+			'variant':		'<?php echo $product->variant ?>',
+			'coupon':		'<?php echo $product->coupon ?>'
+		});
+
+		FacebookProducts.push('<?php echo $product->id ?>');
+		
+	<?php endforeach; ?>
+
+	AEC.getSteps = function(selector)
+	{	
+		var find = function()
+		{
+			return document.querySelectorAll('.opc');
+		}
+			
+		var element = find();
+
+		if (element && 1 == element.length)
+		{
+			return element[0].children;
+		}
+
+		return null;
+	};
+
+	AEC.getStep = function(section, steps)
+	{
+		for (i = 0, l = steps.length; i < l; i++)
+		{
+			if (-1 != steps[i].id.indexOf(section))
+			{
+				return {
+					index: i, 
+					step: steps[i]
+				}
+			}
+		}
+
+		return {
+			index: -1,
+			step: null
+		}
+	};
+
+	AEC.trackStepCallbacks = 
+	{
+		checkoutMethod: function(response)
+		{
+			return response.checkoutMethod;
+		},
+		payment: function(response)
+		{
+			return response.paymentMethod;
+		},
+		shippingMethod: function(response)
+		{
+			return response.shippingMethod;
+		}
+	}
+
+	AEC.trackStepOptions = function(step)
+	{
+		var filter = function(content)
+		{
+			return content;
+		}
+		
+		var format = function(content)
+		{
+			 switch(content)
+			 {
+			 	case 'guest': 		return filter('<?php echo __('Checkout as Guest') ?>');
+			 	case 'login_in':	return filter('<?php echo __('Checkout as Logged') ?>');
+			 	case 'register': 	return filter('<?php echo __('Register') ?>');
+			 }
+
+			 return filter(content);
+		}
+
+		jQuery.get(AEC.Const.URL + 'ec/index/options', function(response)
+		{
+			var data = 
+			[
+			 	{
+				 	step: 1,
+				 	option: format(response.checkoutMethod)
+				},
+				{
+				 	step: 2,
+				 	option: ''
+				},
+				{
+				 	step: 3,
+				 	option: ''
+				},
+				{
+				 	step: 4,
+				 	option: format(response.shippingMethod)
+				},
+				{
+				 	step: 5,
+				 	option: format(response.paymentMethod)
+				}
+			];
+
+			for (i = 0, l = data.length; i < l; i++)
+			{
+				if (data[i].step == step && 0 < data[i].option.toString().length)
+				{
+					dataLayer.push(
+					{
+						'event': 'checkoutOption',
+						'ecommerce': 
+						{
+							'checkout_option': 
+							{
+								'actionField': data[i]
+							}
+						}
+					});
+				}
+			}
+			 
+		},'json');
+	};
+
+	/**
+	 * Check if customer is logged in
+	 */
+	var logged = <?php echo @Mage::getSingleton('customer/session')->isLoggedIn() ? 1 : 0 ?>;
+	
+	Checkout.prototype.gotoSection = Checkout.prototype.gotoSection.wrap(function(parentMethod, section, reloadProgressBlock) 
+	{
+		parentMethod(section, reloadProgressBlock);
+
+		var steps = AEC.getSteps(), step = AEC.getStep(section, steps), index = step.index;
+
+		if (-1 !== index)
+		{
+			/**
+			 * Check if customer is logged and shift steps by 1 to align step indexes to missing "Login/Welcome" step
+			 */
+			if (logged)
+			{
+				index += 1;
+			}
+
+			/**
+			 * Push data 
+			 */
+			dataLayer.push(
+			{
+				'event':'checkout',
+				'ecommerce': 
+				{
+					'checkout': 
+					{
+						'actionField': 
+						{
+							'step': ++index
+						},
+						'products': checkoutProducts
+					}
+				}
+			});
+
+			/**
+			 * Track previous step option(s)
+			 */
+			AEC.trackStepOptions(index - 1);
+
+			/**
+			 * Track time 
+			 */
+			AEC.Time.trackContinue(dataLayer, AEC.Const.TIMING_CATEGORY_CHECKOUT_STEP, index, "Step " + index);	
+		}		
+	});
+
+	/**
+	 * Fire first step
+	 */
+	EC.push(function(dataLayer)
+	{
+		dataLayer.push(
+		{
+			'event':'checkout',
+			'ecommerce': 
+			{
+				'checkout': 
+				{
+					'actionField': 
+					{
+						'step': (logged ? 2 : 1)
+					},
+					'products': checkoutProducts
+				}
+			}
+		});
+
+		AEC.trackStepOptions((logged ? 2 : 1)-1);
+	});
+
+	if ("undefined" !== typeof fbq)
+	{
+		fbq("track", "InitiateCheckout", 
+		{
+			content_type: 	'product',
+			content_name: 	'checkout',
+			content_ids:	FacebookProducts,
+			num_items:		FacebookProducts.length,
+			currency: 		'<?php echo Mage::app()->getStore()->getCurrentCurrencyCode() ?>'
+		});
+	}
+</script>

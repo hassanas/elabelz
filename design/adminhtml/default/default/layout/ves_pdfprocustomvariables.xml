@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <customvariable_cp_adminhtml_variables_index>
+        <reference name="content">
+            <block type="pdfprocustomvariables/adminhtml_pdfprocustomvariables" name="pdfprocustomvariables" />
+        </reference>
+    </customvariable_cp_adminhtml_variables_index>
+</layout>

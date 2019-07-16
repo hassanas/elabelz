@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <manageimage_adminhtml_manageimage_index>
+        <reference name="content">
+            <block type="manageimage/adminhtml_manageimage" name="manageimage" />
+        </reference>
+    </manageimage_adminhtml_manageimage_index>
+    
+    <manageimage_adminhtml_manageimage_findproductwithnoimages>
+        <reference name="content">
+            <block type="manageimage/adminhtml_findproductwithnoimages" name="findproductwithnoimages" />
+        </reference>
+    </manageimage_adminhtml_manageimage_findproductwithnoimages>
+    
+    
+</layout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Progos_FeedExport>
+            <version>1.0.0</version>
+        </Progos_FeedExport>
+    </modules>
+    <global>
+        <models>
+            <progos_feedexport>
+                <class>Progos_FeedExport_Model</class>
+            </progos_feedexport>
+            <feedexport>
+                <rewrite>
+                    <system_config_source_attribute>Progos_FeedExport_Model_System_Config_Source_Attribute</system_config_source_attribute>
+                </rewrite>
+            </feedexport>
+
+            <feedexport>
+                <rewrite>
+                    <feed_generator_pattern_product>Progos_FeedExport_Model_Feed_Generator_Pattern_Product</feed_generator_pattern_product>
+                </rewrite>
+            </feedexport>
+        </models>
+        <helpers>
+            <progos_feedexport>
+                <class>Progos_FeedExport_Helper</class>
+            </progos_feedexport>
+            <feedexport>
+                <rewrite>
+                    <html>Progos_FeedExport_Helper_Html</html>
+                </rewrite>
+            </feedexport>
+        </helpers>
+
+    </global>
+</config>

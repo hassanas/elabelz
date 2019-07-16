@@ -1,0 +1,24 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function syncQty() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                console.log( transport );
+                alert( transport.responseText );
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will Run and sync quantity in magento. It only update product based on date. ( Last Execution Date and Current Execution Time. ).
+        <br>
+    </span>
+</p>
+

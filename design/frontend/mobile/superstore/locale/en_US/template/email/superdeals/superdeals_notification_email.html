@@ -1,0 +1,37 @@
+<!--@subject List of deals expiring soon@-->
+{{template config_path="design/email/header"}}
+         <!-- [ middle starts here] -->
+            <tr>
+                <td valign="top">
+                <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;">
+                    <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;">Dear {{var owner_name}},</h1>
+                    <p style="font-size:12px; line-height:16px; margin:0;">
+                        The following deals are ending soon. So, please visit your store to continue with your special deal offers.
+                        <a href="{{store url="deals"}}" style="color:#1E7EC8;"><b>Click here to see the deal page</b></a>
+                    </p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;">
+                    <table  WIDTH="100%"  CELLPADDING="0" border="0" CELLSPACING="0" style="border: 1px solid #BEBCB7; border-width: 0;">
+                        <tr border="0">
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">S.no</td>
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">Product Name</td>
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">Original Price</td>
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">Deal Price</td>
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">Deal Start Date</td>
+                        <td valign="top" style="background:#d8e5ed; border-width: 0; border: 1px solid #CCC; border-right:0; border-bottom: 2px solid #CCC; color: #0A263C; text-align:center; font:bold 13px arial; padding:5px;">Deal End Date</td>                     
+                        </tr>
+                    {{var deal_details}}
+                    </table>
+                    </div>
+                </td>
+            </tr>
+             <!-- [ footer starts here] -->
+            <tr>
+                <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;">
+                <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;"><center><p style="font-size:12px; margin:0;">Thank you !!! Have a nice week end.</p></center></div></td>
+           </tr>
+{{template config_path="design/email/footer"}}

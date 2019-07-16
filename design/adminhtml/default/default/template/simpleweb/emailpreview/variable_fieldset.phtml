@@ -1,0 +1,124 @@
+<?php
+/**
+ * SimpleWeb
+ *
+ * @category    Community
+ * @package     SimpleWeb_EmailPreview
+ * @author		SimpleWeb <support@simpleweb.lv>
+ */
+?>
+<?php
+if (!$this->getVariables())
+{
+	return;
+}
+?>
+<div id="variables_fieldset">
+	<div id="template-info">
+		<div>
+			<?php $templateId = $this->getTemplateId(); ?>
+			<?php if (is_numeric($templateId)): ?>
+				<strong><?php echo $this->__('Template ID: '); ?></strong> <?php echo $this->escapeHtml($templateId); ?>
+			<?php else: ?>
+				<strong><?php echo $this->__('Template: '); ?></strong> <?php echo $this->escapeHtml($templateId); ?>
+			<?php endif; ?>
+		</div>
+		<div>
+			<strong><?php echo $this->__('Subject: '); ?></strong> <?php echo $this->escapeHtml($this->getTitle()); ?>
+		</div>
+	</div>
+	<div class="entry-edit-head">
+		<h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Template Variables'); ?></h4>
+		<div class="form-buttons"></div>
+	</div>
+	<div class="fieldset fieldset-wide" id="block_emailpreview_fields_fieldset">
+		<div class="hor-scroll">
+			<table cellspacing="0" class="form-list">
+				<tbody>
+				<?php foreach($this->getVariables() as $index => $result): ?>
+					<?php $name = $result[0]; ?>
+					<?php $value = $result[1]; ?>
+					<?php $filePath = isset($result[2]) ? $result[2] : false; ?>
+
+					<?php if (is_array($value)): ?>
+						<?php $if = strpos($name, '{{if') !== false; ?>
+						<tr>
+							<td class="label">
+								<label for="block_preview_variable_<?php echo md5($name); ?>"><?php echo $this->escapeHtml($name); ?></label>
+							</td>
+							<td class="value">
+								<select id="block_preview_variable_<?php echo md5($name); ?>" name="variable[<?php echo $this->escapeHtml($name); ?>]">
+									<option value="1">True</option>
+									<option value="0" <?php if (!$value[0]): ?>selected="selected"<?php endif; ?>>False</option>
+								</select>
+							</td>
+						</tr>
+
+						<?php if (isset($value[1]) && !empty($value[1])): ?>
+							<?php foreach($value[1] as $k => $subResult): ?>
+								<?php $subName = $subResult[0]; ?>
+								<?php $val = $subResult[1]; ?>
+								<tr>
+									<td class="label label-nested">
+										<label for="block_preview_variable_<?php echo md5($subName); ?>"><?php echo $this->escapeHtml($subName); ?></label>
+									</td>
+									<td class="value">
+										<textarea id="block_preview_variable_<?php echo md5($subName); ?>" name="variable[<?php echo $this->escapeHtml($subName); ?>]" class="textarea" rows="1" cols="5"><?php echo $this->escapeHtml($val); ?></textarea>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+
+						<?php if (isset($value[2]) && !empty($value[2])): ?>
+							<tr>
+								<td class="label">
+									<label>{{else}}</label>
+								</td>
+								<td class="value">
+								</td>
+							</tr>
+							<?php foreach($value[2] as $k => $subResult): ?>
+								<?php $subName = $subResult[0]; ?>
+								<?php $val = $subResult[1]; ?>
+								<tr>
+									<td class="label label-nested">
+										<label for="block_preview_variable_<?php echo md5($subName); ?>"><?php echo $this->escapeHtml($subName); ?></label>
+									</td>
+									<td class="value">
+										<textarea id="block_preview_variable_<?php echo md5($subName); ?>" name="variable[<?php echo $this->escapeHtml($subName); ?>]" class="textarea" rows="1" cols="5"><?php echo $this->escapeHtml($val); ?></textarea>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+
+						<tr>
+							<td class="label">
+								<label><?php echo $if ? '{{/if}}' : '{{/depend}}'; ?></label>
+							</td>
+							<td class="value">
+							</td>
+						</tr>
+
+					<?php else: ?>
+						<tr>
+							<td class="label">
+								<label for="block_preview_variable_<?php echo md5($name); ?>"><?php echo $this->escapeHtml($name); ?></label>
+							</td>
+							<td class="value">
+								<?php if ($filePath === true): ?>
+									<input type="hidden" name="variable[<?php echo $this->escapeHtml($name); ?>]" value="1">
+									<textarea disabled="disabled" id="block_preview_variable_<?php echo md5($name); ?>"  class="textarea textarea-disabled" rows="1" cols="5"><?php echo $this->escapeHtml($value); ?></textarea>
+								<?php else: ?>
+									<textarea id="block_preview_variable_<?php echo md5($name); ?>" name="variable[<?php echo $this->escapeHtml($name); ?>]" class="textarea <?php if ($filePath === true): ?>textarea-disabled<?php endif; ?>" rows="1" cols="5"><?php echo $this->escapeHtml($value); ?></textarea>
+								<?php endif; ?>
+							</td>
+						</tr>
+					<?php endif; ?>
+
+
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

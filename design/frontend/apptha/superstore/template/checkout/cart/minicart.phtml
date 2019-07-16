@@ -1,0 +1,24 @@
+<?php
+    $_cartQty = $this->getSummaryCount();
+    if(empty($_cartQty)) {
+        $_cartQty = 0;
+    }  
+?>
+<ul id="nm-minicart">
+    <li class="closed" data-nm-hover-toggle="data-nm-hover-toggle">
+        <a href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>" id="nm-cartLink" title=
+        "<?php echo $this->__('Go to Bag')?>">
+            <i id="cart_count">
+                <?php 
+                    $_cartQty = Mage::getSingleton('checkout/cart')->getItemsCount();
+                    echo $_cartQty;
+                ?>
+            </i>
+        </a>
+        <div class="hoverToggled" id="cart_review_container">
+			<div id="header-cart" class="block block-cart skip-content">
+			    <?php echo $this->getChildHtml('minicart_content');?>
+			</div>
+        </div>
+    </li>
+</ul>

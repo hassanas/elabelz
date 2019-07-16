@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Cloudfront>
+            <version>1.0.0</version>
+        </Progos_Cloudfront>
+    </modules>
+    <global>
+        <helpers>
+            <progos_cloudfront>
+                <class>Progos_Cloudfront_Helper</class>
+            </progos_cloudfront>
+        </helpers>
+    </global>
+</config>

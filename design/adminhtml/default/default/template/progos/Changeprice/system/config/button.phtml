@@ -1,0 +1,38 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function check() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                console.log( transport );
+                alert( transport.responseText );
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will run the script and Update the product.
+        <br>
+        <strong><span style="color:red">CSV Log Path are Under media/var/import</span></strong>
+        <br>
+        <strong>change_product_price.csv :</strong> For Dry run results . Every time it append the result. For seperation date is added.
+        <br>
+        <strong>change_product_price_failure.csv :</strong> It shows failure results. For seperation date is added.
+        <br>
+        <strong>change_product_price_success.csv :</strong> It shows successfully updated products.For seperation date is added.
+        <br>
+        <strong><span style="color:red">Logs file are : var/log:</span></strong>
+        <strong>change_product_price.log
+        <br>
+        change_product_price_failure.log
+        <br>
+        change_product_price_success.log</strong>
+    </span>
+</p>
+

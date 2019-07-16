@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Changeprice>
+            <version>0.1.0</version>
+        </Progos_Changeprice>
+    </modules>
+    <global>
+        <models>
+            <changeprice>
+                <class>Progos_Changeprice_Model</class>
+            </changeprice>
+        </models>
+        <helpers>
+            <progos_changeprice>
+                <class>Progos_Changeprice_Helper</class>
+            </progos_changeprice>
+        </helpers>
+        <blocks>
+            <progos_changeprice>
+                <class>Progos_Changeprice_Block</class>
+            </progos_changeprice>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <changeprice>
+                <use>admin</use>
+                <args>
+                    <module>Progos_Changeprice</module>
+                    <frontName>admin_changeprice</frontName>
+                </args>
+            </changeprice>
+        </routers>
+    </admin>
+</config>

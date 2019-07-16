@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <progos_vendorqtyupdate translate="title" module="vendorqtyupdate">
+                                        <title>Vendors Qty Update Section</title>
+                                        <sort_order>302</sort_order>
+                                    </progos_vendorqtyupdate>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

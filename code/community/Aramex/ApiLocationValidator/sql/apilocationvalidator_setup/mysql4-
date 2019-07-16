@@ -1,0 +1,23 @@
+<?php
+$installer = $this;
+$installer->startSetup();
+$sql='CREATE TABLE `'.$installer->getTable('apilocationvalidator/country').'` (
+ `location_id` int(11) NOT NULL AUTO_INCREMENT,
+ `name` varchar(255) NOT NULL,
+ `code` varchar(10) NOT NULL,
+ `iso_code` varchar(20) NOT NULL,
+ `state_required` tinyint(4) NOT NULL,
+ `post_code_required` tinyint(4) NOT NULL,
+ `post_code_regex` varchar(50) NOT NULL,
+ `international_calling_number` int(11) NOT NULL,
+ `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE
+  CURRENT_TIMESTAMP,
+ `create_at` timestamp NOT NULL,
+ PRIMARY KEY (`location_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8';
+$installer->run($sql);
+
+/*insert the data into the table */
+Mage::getModel('apilocationvalidator/api')->fetchCountriesList();
+$installer->endSetup();
+	 

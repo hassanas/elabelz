@@ -1,0 +1,46 @@
+<?php
+//$_categoryId = $this->getCategoryId();
+$mediaurl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+// $_productCollection = Mage::getModel('catalog/category')->load($_categoryId)
+//     ->getProductCollection()
+//     ->addAttributeToSelect('*')
+//     ->addAttributeToFilter('feature', 1)
+//     ->addAttributeToFilter('status', 1)
+//     ->addAttributeToFilter('visibility', 4)
+//     ->setOrder('price', 'ASC');
+
+  //   $_productCollection = Mage::getModel('catalog/product')->getCollection();
+
+		// $_productCollection->addAttributeToSelect('*');
+		// $_productCollection->addAttributeToSelect('featured');
+		//  $_productCollection->addFieldToFilter(array(
+		//  	array('attribute' => 'featured', 'eq' => true),
+		//  ));
+		// $_productCollection->addAttributeToFilter('status', 1);
+	 //    $_productCollection->addAttributeToFilter('visibility', 4);
+	 //    $_productCollection->setOrder('price', 'ASC');
+
+ $_post = $this->getCurrentPost(); 
+ $_product_ids = explode(",",$_post->getProductIds());
+?>
+ 
+<section class="module_grid">
+	<h2 class="bordered_header top_picks" style="border-top: none; position: relative; margin: 32px auto; color: #000; display: block; text-align: center;">
+		<span style="text-transform: uppercase; font-size: 18px; width: 100%; display: block; text-align: center; ;position: static; margin-left: 0px;"><?php echo $this->__('Trending Products') ?></span>
+	</h2>
+	<div class="product_scroller module"><a class="arrow previous" title="Previous" href="javascript:;"><img alt="" src="<?php echo  $mediaurl;?>siteimages/small_arrow_right.png" /></a>
+		<div class="jcarousel">
+			<ul>
+				<?php 
+                foreach($_product_ids as $_product_id):
+                $_product = Mage::getModel('catalog/product')->load($_product_id); 
+                 if($_product):?>
+				    <li> <a title="Baggy Sweatpants" href="<?php echo $_product->getProductUrl() ?>"> <img alt="Baggy Sweatpants" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize('90','130'); ?>" alt="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image')) ?>"  /> <span class="brand"> <?php echo $this->__($this->htmlEscape($_product->getName())); ?></span> <span class="price"> <?php echo $this->getPrice($_product, true) ?> </span> </a> </li>
+			     <?php endif; ?>
+				<?php endforeach ?>
+			</ul>
+		</div>
+		<a class="arrow next image_replacement" title="Next" href="javascript:;"><img alt="" src="<?php echo  $mediaurl;?>siteimages/small_arrow_left.png" /></a>
+	</div>
+	
+</section>

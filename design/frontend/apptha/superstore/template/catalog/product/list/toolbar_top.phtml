@@ -1,0 +1,231 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @see Mage_Catalog_Block_Product_List_Toolbar
+ */
+?>
+<?php
+$request = Mage::app()->getRequest();
+$pathinfo = $request->getPathInfo();
+$brand_page = false;
+if (strpos($pathinfo, "brand/index/view/") !== false || strpos($pathinfo, "brand") !== false) {
+    $brand_id = $request->getParam("id");
+    $brand = Mage::getModel('shopbybrand/brand')->load($brand_id);
+    $brand_name = $brand->getName();
+    $brand_page = true;
+}
+?>
+<?php
+if ($landing = Mage::registry('amlanding_page')) {
+
+    $image = $landing->getData('layout_file');
+    $img_src = str_replace('\\', '/', urldecode(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $image));
+    $attributes = $landing->getData('attributes');
+
+    $attr = unserialize($attributes);
+
+    if (is_file(Mage::getBaseDir('media') . '/' . $image) && !is_dir(Mage::getBaseDir('media') . '/' . $image)) {
+        $storeLocaleCode = Mage::app()->getStore()->getLocaleCode();
+        if ($storeLocaleCode == 'ar_SA') {
+            $title = $landing->getTitle();
+            $titleArray = explode(" ", $title);
+            $temp = "";
+            for ($i = count($titleArray); $i >= 0; $i--) {
+
+                $temp .= $titleArray[$i];
+            }
+            $title = $temp;
+        } else {
+            $title = $landing->getTitle();
+        }
+        ?>
+        <div class="category-banner" id="langing-page-banner">
+            <div class="category_banner">
+                <div class="catalog_banner_top tb_one three_line">
+                    <img class="cat_banner_img" alt="<?php echo $landing->getTitle(); ?>" src="<?php echo $img_src ?>"
+                         style="width:100%;">
+                    <?php if (is_array($attr['featured_links']) && count($attr['featured_links']) > 0){
+                    ?>
+                    <div class="cta_buttons" id="langing-page-banner-button">
+                        <?php
+                        for ($i = 0, $count = count($attr['featured_links']); $i < $count; $i++) {
+                            $category = Mage::getModel('catalog/category')->load($attr['featured_links'][$i]) ?>
+                            <a title="<?php echo $this->__($category->getName()) ?>" target="_top"
+                               href="?cat=<?php echo $category->getId() ?>">
+                                <span class="button"><?php echo $this->__($category->getName()) ?></span>
+                            </a>
+
+                        <?php }
+                        }
+                        ?>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <?php
+
+    }
+}
+if ($this->getCollection()->getSize()):
+    ?>
+
+
+    <div class="toolbar top_toolbar">
+        <div class="row total_items_heading">
+            <div class="col-sm-6 col-xs-6" id="page-title">
+
+                <?php $_helper = $this->helper('catalog/output'); ?>
+                <?php $_category_detail = Mage::registry('current_category'); ?>
+                <?php $_category_detail->getName(); ?>
+                <?php $_category_detail->getId(); ?>
+                <?php Mage::getSingleton('core/session')->setMyValue($_category_detail->getDefaultSortBy()) ?>
+
+                <?php
+                if (Mage::registry('current_category') && $_category_detail->getName()):
+                    $toolbar_top_title = $_category_detail->getName();
+                else:
+                    if ($landing = Mage::registry('amlanding_page')):
+                        $toolbar_top_title = $landing->getMetaTitle();
+                    endif;
+                endif;
+                $catnames = array();
+                $count = 1;
+                foreach ($_category_detail->getParentCategories() as $parent) {
+                    $catnames[$count] = strtolower($parent->getName());
+                    $count++;
+                }
+                ?>
+                <h1>
+                    <?php
+
+                    $d_name = $_helper->categoryAttribute($_category_detail, $_category_detail->getName(), "name");
+
+                    $landing = Mage::registry('amlanding_page');
+
+                    if (isset($landing) && $landing != ''):
+
+                        echo $this->__($landing->getTitle());
+
+                    else:
+
+                        $hVar = "";
+                        $_e = explode('-', $d_name);
+                        if ($brand_page === true):
+                            echo $this->__(trim($brand_name));
+                        else:
+                            if (count($_e) > 1) {
+                                foreach ($_e as $e) {
+                                    $hVar .= $this->__(trim($e)) . ' - ';
+                                }
+                                $hVar = rtrim($hVar, ' - ');
+                                echo $hVar;
+                            } else {
+                                echo $this->__($d_name);
+                            }
+                        endif;
+                    endif;
+                    ?>
+                    <?php $products_count = Mage::getModel('catalog/category')->load($_category_detail->getId())->getProductCount();
+                    ?>
+                    <div class="amount">
+                        <?php
+                        $locale = Mage::app()->getLocale()->getLocaleCode();
+                        if ($locale == "ar_SA"):
+                            ?>
+                            <span class="itmemfound"> <?php echo $this->__("Items found") ?> </span>
+                            <span class="itemcount"> <?php echo $this->__($this->getTotalNum()) ?> </span>
+                            <span class="itmemfound"> <?php echo $this->__("Category") ?> </span>
+                        <?php
+                        else:
+                            ?>
+                            <span class="itemcount"> <?php echo $this->__($this->getTotalNum()) ?> </span>
+                            <span class="itmemfound"> <?php echo $this->__("Items found") ?> </span>
+                        <?php
+                        endif;
+                        ?>
+                    </div>
+
+            </div>
+            <div class="col-xs-4" style="display:none;">
+            </div>
+            <div class="col-sm-6 col-xs-6">
+                <div class="sortby_select">
+                    <span><?php echo $this->__("Sort by") ?></span>
+                    <select onchange="setLocation(this.value)" title="<?php echo $this->__('Sort By') ?>">
+                        <!--- Elablez-1217 (15/03/2017) Code for sort by options written by kashif naddem and humera batool-->
+                        <?php foreach ($this->getAvailableOrders() as $_key => $_order): ?>
+                            <?php if ($_order != 'Price'):
+                                $option_text = $this->__($_order);
+                                if ($option_text == "New") {
+                                    $option_text = __("Newest First");
+                                } elseif ($option_text == "Position") {
+                                    $option_text = __("Recommended");
+                                } elseif ($option_text == "الموصى بع") {
+                                    $option_text = __("الموصى به");
+                                } elseif ($option_text == "السعراقل") {
+                                    $option_text = __("السعر الأقل");
+                                } elseif ($option_text == "السعراعلى") {
+                                    $option_text = __("السعر الأكثر");
+                                }
+                                ?>
+                                <?php if ($brand_page == true): ?>
+                                <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if ($this->isOrderCurrentBrand($_key)): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo $this->__($option_text); ?>
+                                </option>
+                            <?php else: ?>
+                                <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if ($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo $this->__($option_text); ?>
+                                </option>
+                            <?php endif; ?>
+                            <?php else: ?>
+                                <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if ($this->isOrderCurrent($_key) && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo $this->__($_order) . $this->__(' Low to High') ?>
+                                </option>
+                                <option value="<?php echo $this->getOrderUrlSorting($_key, 'desc') ?>"<?php if ($this->isOrderCurrent($_key) && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>>
+                                    <?php echo $this->__($_order) . $this->__(' High to Low'); ?>
+                                </option>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 toolbar_hr">
+                <hr>
+            </div>
+        </div>
+
+    </div>
+<?php
+
+endif ?>

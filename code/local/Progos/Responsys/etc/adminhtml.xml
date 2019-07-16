@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <responsys_settings translate="title" module="progos_responsys">
+                                        <title>Responsys API</title>
+                                    </responsys_settings>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <responsys_settings translate="title" module="progos_responsys">
+                                <title>Responsys API</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <responsys_settings_backend translate="title">
+                                        <title>Responsys API</title>
+                                    </responsys_settings_backend>
+                                </children>
+                            </responsys_settings>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,75 @@
+<?php
+/**
+* Apptha
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the EULA
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://www.apptha.com/LICENSE.txt
+*
+* ==============================================================
+*                 MAGENTO EDITION USAGE NOTICE
+* ==============================================================
+* This package designed for Magento COMMUNITY edition
+* Apptha does not guarantee correct work of this extension
+* on any other Magento edition except Magento COMMUNITY edition.
+* Apptha does not provide extension support in case of
+* incorrect edition usage.
+* ==============================================================
+*
+* @category    Apptha
+* @package     Apptha_Banners
+* @version     0.1.0
+* @author      Apptha Team <developers@contus.in>
+* @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+* @license     http://www.apptha.com/LICENSE.txt
+*
+*/
+
+?>
+<?php if ($this->hasValidSlide()): ?>
+<?php 
+    $slide = $this->getSlides();
+    $banners = $this->getBanners();
+    $random = rand();
+    ?>
+ 
+ <div id="apptha_banner_<?php echo $slide->getId().$random; ?>" class="owl-carousel">
+   <?php foreach($banners as $banner): ?>
+    <div class="item">
+    <?php if ($banner->hasUrl()): ?>
+    <?php echo '<a href="'.$banner->getUrl().'" title="'.$this->escapeHtml($banner->getTitle()).'">';?>
+     <?php endif; ?>
+     <?php echo '<img src="'.$banner->getImageUrl().'" alt="'.$this->escapeHtml($banner->getAltText()).'" />';?>
+     <?php if ($banner->hasUrl()): ?>
+     </a>
+     <?php endif; ?>
+     <?php if ($banner->getHtml()): ?>
+     <div class="html"><?php echo $banner->getHtml() ?></div>
+     <?php endif; ?>
+     </div>
+     <?php endforeach; ?>
+</div>
+
+<script>
+APPTHA(document).ready(function($){
+
+ $("#apptha_banner_<?php echo $slide->getId().$random; ?>").owlCarousel({ 
+      navigation : <?php echo $slide->isPaginationEnabled(); ?>,
+      slideSpeed : <?php echo $slide->getSlideSpeed(); ?>,
+  <?php if($slide->getItemsCount() == 1):?>      
+      singleItem:true,
+      <?php else:?>
+  items : <?php echo (int)$slide->getItemsCount(); ?>,
+  <?php endif;?>
+      transitionStyle : "<?php echo $slide->getSliderEffect(); ?>",
+      autoPlay:<?php echo ($slide->isAutoplayEnabled())?"true":"false"; ?>,
+      responsiveBaseWidth:window
+  });
+
+});
+
+</script>
+<?php endif; ?>

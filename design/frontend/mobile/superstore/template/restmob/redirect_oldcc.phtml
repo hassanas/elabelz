@@ -1,0 +1,106 @@
+<?php
+$_order = new Mage_Sales_Model_Order();
+$orderId = $this->getRequest()->getParam('oid');
+$ivp_cv = $this->getRequest()->getParam('cvv');
+$_order->loadByIncrementId($orderId);
+$price = $_order->getGrandTotal();
+$currency = $_order->getOrderCurrencyCode();
+$allowedCurrencies = array("USD", "AED", "SAR");
+if (!in_array($currency, $allowedCurrencies)) {
+    $price = $_order->getBaseGrandTotal();
+    $price = ceil(Mage::helper('directory')->currencyConvert($price, "AED", "USD"));
+    $currency = "USD";
+}
+$price = number_format($price, 2, '.', '');
+$billing = $_order->getBillingAddress();
+$shipping = $_order->getShippingAddress();
+$email = $_order->getCustomerEmail();
+
+$ivp_store = Mage::getStoreConfig('payment/telrtransparent/store_id', Mage::app()->getStore());
+$ivp_test = Mage::getStoreConfig('payment/telrtransparent/sandbox', Mage::app()->getStore());
+$ivp_desc = Mage::getStoreConfig('payment/telrtransparent/ivp_desc', Mage::app()->getStore());
+
+$order = Mage::getModel('sales/order')->load($orderId);
+$ivp_exm = $_order->getPayment()->getCcExpMonth();
+$ivp_exy = $_order->getPayment()->getCcExpYear();
+$ivp_cn = $_order->getPayment()->getCcNumber();
+?>
+<form name="telrPaymentForm" action="https://secure.innovatepayments.com/gateway/trans.html" method="post">
+    <?php
+    function SignData($post_data, $secretKey, $fieldList)
+    {
+        $signatureParams = explode(',', $fieldList);
+        $signatureString = $secretKey;
+        foreach ($signatureParams as $param) {
+            if (array_key_exists($param, $post_data)) {
+                $signatureString .= ':' . trim($post_data[$param]);
+            } else {
+                $signatureString .= ':';
+            }
+        }
+        return sha1($signatureString);
+    }
+
+    // Build up the parameters needed by the gateway
+    $post_data = Array(
+        'ivp_store' => $ivp_store,//'16408',
+        'ivp_cart' => $orderId,
+        'ivp_amount' => $price,
+        'ivp_currency' => $currency,
+        'ivp_test' => $ivp_test,
+        'ivp_timestamp' => '0',
+        'ivp_desc' => $ivp_desc,
+        'ivp_extra' => 'bill,return',
+        'bill_fname' => $billing->getFirstname(),
+        'bill_sname' => $billing->getLastname(),
+        'bill_addr1' => $billing->getStreet(1),
+        'bill_addr2' => $billing->getStreet(2),
+        'bill_addr3' => $billing->getStreet(3),
+        'bill_city' => $billing->getCity(),
+        'bill_region' => $billing->getRegion(),
+        'bill_zip' => $billing->getPostcode(),
+        'bill_country' => $billing->getCountry(),
+        'bill_email' => $email,
+        'bill_phone1' => $billing->getTelephone(),
+        'ivp_cn' => $ivp_cn,
+        'ivp_exm' => $ivp_exm,
+        'ivp_exy' => $ivp_exy,
+        'ivp_cv' => $ivp_cv
+    );
+    $post_data['return_cb_auth'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/successcallback?oid=' . $_GET['oid'];
+    $post_data['return_cb_decl'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/cancelcallback?oid=' . $_GET['oid'];
+    $post_data['return_cb_can'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/cancelcallback?oid=' . $_GET['oid'];
+    $post_data['return_auth'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/beforeSuccessOldCc?oid=' . $_GET['oid'];
+    $post_data['return_decl'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/beforeCancelOldCc?oid=' . $_GET['oid'];
+    $post_data['return_can'] = Mage::getUrl('', array('_forced_secure' => true)) . 'restmob/CheckoutSoap/beforeCancelOldCc?oid=' . $_GET['oid'];
+    $secret_key = 'jGV#V79ndZv';
+
+    // First create the signature for the main purchase details, as this used both to authenticate the request and in creating the other signatures.
+    $post_data['ivp_signature'] = SignData($post_data, $secret_key, 'ivp_store,ivp_amount,ivp_currency,ivp_test,ivp_timestamp,ivp_cart,ivp_desc,ivp_extra');
+
+    // Now create the signature for the billing details (uses the ivp_signature created first)
+    $post_data['bill_signature'] = SignData($post_data, $secret_key, 'bill_title,bill_fname,bill_sname,bill_addr1,bill_addr2,bill_addr3,bill_city,bill_region,bill_country,bill_zip,ivp_signature');
+
+
+    // Now create the signature for the return/call-back URLs (also uses the ivp_signature)
+    $post_data['return_signature'] = SignData($post_data, $secret_key, 'return_cb_auth,return_cb_decl,return_cb_can,return_auth,return_decl,return_can,ivp_signature');
+
+    // Output the form fields. Ensuring that the form data is html safe(e.g. things like//converting< to &lt; ) must be done after the signature values are calculated.
+    foreach ($post_data as $k => $v) {
+        echo "<input type=\"hidden\" name=\"" . $k . "\" value=\"" . htmlspecialchars($v) . "\">
+";
+    }
+    ?>
+</form>
+<?php
+function buildCallbackUrl($part)
+{
+    $url = Mage::getUrl($part, array('_nosid' => true));
+    $url = trim(str_replace('&amp;', '&', $url));
+    return $url;
+}
+
+?>
+<script type="text/javascript">
+    document.telrPaymentForm.submit();
+</script>

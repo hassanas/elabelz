@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Updateurlkey>
+            <version>0.1.0</version>
+        </Progos_Updateurlkey>
+    </modules>
+    <global>
+        <models>
+            <updateurlkey>
+                <class>Progos_Updateurlkey_Model</class>
+            </updateurlkey>
+        </models>
+        <helpers>
+            <progos_updateurlkey>
+                <class>Progos_Updateurlkey_Helper</class>
+            </progos_updateurlkey>
+        </helpers>
+        <blocks>
+            <progos_updateurlkey>
+                <class>Progos_Updateurlkey_Block</class>
+            </progos_updateurlkey>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <updateurlkey>
+                <use>admin</use>
+                <args>
+                    <module>Progos_Updateurlkey</module>
+                    <frontName>admin_updateurlkey</frontName>
+                </args>
+            </updateurlkey>
+        </routers>
+    </admin>
+</config>

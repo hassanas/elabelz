@@ -1,0 +1,42 @@
+<div class="customPopupHelper"> 
+<div class="block1" style="width:540px;">
+  <div class="column first odd">
+    <div class="itemMenu level1"> <a class="itemMenuName level1" href="<?php echo Mage::getBaseUrl() ?>women-sports-collection"><span><?php echo $this->__('Women') ?></span></a>
+      <div class="itemSubMenu level1">
+        <div class="itemMenu level2"> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>women-clothing-sportswear"><span><?php echo $this->__('Clothing') ?></span></a> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>women-shoes-sports"><span><?php echo $this->__('Shoes') ?></span></a> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>women-bags-sportsbags"><span><?php echo $this->__('Bags') ?></span></a> 
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="column first even">
+    <div class="itemMenu level1"> <a class="itemMenuName level1" href="<?php echo Mage::getBaseUrl() ?>men-sports-collection"><span><?php echo $this->__('Men') ?></span></a>
+      <div class="itemSubMenu level1">
+        <div class="itemMenu level2"> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>men-clothing-sportswear"><span><?php echo $this->__('Clothing') ?></span></a> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>men-shoes-sports"><span><?php echo $this->__('Shoes') ?></span></a> 
+          <a class="itemMenuName level2" href="<?php echo Mage::getBaseUrl() ?>men-bags-sportsbags"><span><?php echo $this->__('Bags') ?></span></a> 
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearBoth">&nbsp;</div>
+</div>
+<div id="sportsshop" class="block2 sportsshop">
+<div class="column one_third">
+	 <a class="banner" title="" href="<?php echo $this->getUrl("reebok") ?>"> 
+   <?php 
+   $locale = Mage::app()->getLocale()->getLocaleCode();
+   ?>
+   <?php if($locale == "ar_SA") { ?>
+   <img alt="" lang="<?php echo $locale; ?>" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>wysiwyg/sportswear_top_arabic_29_12_2016.jpg" /> </a>
+   <?php } else { ?>
+   <img alt="" lang="<?php echo $locale; ?>" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) ?>wysiwyg/sportswear_top_29_12_2016.jpg" /> </a>
+   <?php } ?>
+</div>
+</div>
+</div>
+
+ 

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+  <apilocationvalidator_index_index>   
+    <reference name="root">   
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">   
+      <block type="apilocationvalidator/index" name="apilocationvalidator_index" template="apilocationvalidator/index.phtml"/>   
+    </reference>   
+  </apilocationvalidator_index_index> 
+  
+  <checkout_onepage_index>
+	  <reference name="head">
+        <action method="addItem"><type>skin_js</type><name>aramex/js/jquery-ui.js</name><params/></action>  
+		<action method="addItem"><type>skin_js</type><name>aramex/js/location_validator.js</name><params/></action>
+		  <action method="addCss"><stylesheet>aramex/css/jquery-ui.css</stylesheet></action>
+		  <action method="addCss"><stylesheet>aramex/css/aramex.css</stylesheet></action>
+			<block type="apilocationvalidator/index" name="apilocationvalidator_index" template="apilocationvalidator/js.phtml"/>
+	  </reference>
+	  
+	   <reference name="checkout.onepage.billing">
+			 <action method="setTemplate"><template>apilocationvalidator/checkout/onepage/billing.phtml</template></action> 
+	    </reference>
+		<reference name="checkout.onepage.shipping">
+			 <action method="setTemplate"><template>apilocationvalidator/checkout/onepage/shipping.phtml</template></action> 
+	    </reference>
+  </checkout_onepage_index>
+  
+  
+</layout>   
+	

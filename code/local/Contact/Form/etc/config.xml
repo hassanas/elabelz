@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Contact_Form>
+      <version>0.1.0</version>
+    </Contact_Form>
+  </modules>
+  <frontend>
+    <routers>
+      <form>
+        <use>standard</use>
+          <args>
+            <module>Contact_Form</module>
+            <frontName>form</frontName>
+          </args>
+      </form>
+        <contacts>
+            <args>
+                <modules>
+                    <contact_form before="Mage_Contacts">Contact_Form</contact_form>
+                </modules>
+            </args>
+        </contacts>
+    </routers>
+</frontend>
+<global>
+      <template>
+            <email>
+               <contacts_sender_notification_email_template translate="label">
+                   <label>Contact Sender Notification</label>
+                   <file>contact_sender_notification.html</file>
+                   <type>html</type>
+               </contacts_sender_notification_email_template>
+            </email>
+        </template>
+</global>
+<default>
+        <contacts>
+            <sender_notification>
+                <email_template>contacts_sender_notification_email_template</email_template>
+            </sender_notification>
+        </contacts>
+    </default>
+</config> 

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <dev translate="label" module="monologger">
+            <groups>
+                <monologger translate="label">
+                    <label>Monolog Setting</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <loglevel translate="label">
+                            <label>Log Level</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Progos_Monologger_Model_System_Config_Source_Levels</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </loglevel>
+                        <cleanLog translate="label">
+                            <label>Enable Cleaning Log by cronjob</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cleanLog>
+                        <clean_after_day translate="label">
+                            <label>Clean logs After</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>After number of days</comment>
+                        </clean_after_day>
+                    </fields>
+                </monologger>
+            </groups>
+        </dev>
+    </sections>
+</config>

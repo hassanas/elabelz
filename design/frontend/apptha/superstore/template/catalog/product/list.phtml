@@ -1,0 +1,268 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+  * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_MageShop
+ * @version     1.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/** 
+ * @var $this Mage_Catalog_Block_Product_List 
+ */
+?>
+<?php
+/** 
+ * Load Product Collection
+ */
+
+$_productCollection=$this->getLoadedProductCollection();
+$_helper = $this->helper('catalog/output');
+    //  echo  'ff'.$_productCollection; exit;
+$json_category_obj = Mage::registry("current_category");
+/**
+ * Check the product collection count is not defined already
+ * if so display message like there are no products matching the selection
+ */
+if(!$_productCollection->count()): ?>
+<p class="note-head"><?php echo $this->__('Products Not Found') ?></p>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<style type="text/css" media="screen">
+.col-main{width:100%;float:none;}
+.col-left.sidebar{display:none;}
+</style>
+<?php else: ?>
+	<div class="category-products">
+    <?php
+    /*** Product Collection**/
+    $_collectionSize = $_productCollection->count();
+	/*** Get Count */
+	$_columnCount = $this->getColumnCount(); 
+	?>
+	<?php 
+	/*Datalayer prepare for PLP */
+	$request = Mage::app()->getRequest();
+	$pathinfo = $request->getPathInfo();
+	$store = Mage::app()->getStore();
+	$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();	
+	$user 			= 'Guest';
+	$customerId 	= '';
+	$loggedInStatus	= 'Logged Out';
+	if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+		$user 			= 	'User';
+		$customer 		= 	Mage::getSingleton('customer/session')->getCustomer();
+	    $customerId 	= 	$customer->getId();
+	    $loggedInStatus	= 	'Logged In';
+	}
+
+	$codeArray = explode('_',$store->getCode());
+	$language = '';
+	if( !empty( $codeArray ) )
+		$language = strtoupper( $codeArray[0] );
+
+
+	$i=0; 
+	$position = 1;
+    $category = '';
+    if( strpos($pathinfo, "brand/index/view/") !== false ){
+    	$brand_id = $request->getParam("id");
+	    $brand = Mage::getModel('shopbybrand/brand')->load($brand_id);
+	    $category = trim($brand->getName());
+    }else if( strpos($pathinfo, "/catalogsearch/result/") !== false ){
+    	$category = $this->__("Search results for %s", $this->helper('catalogsearch')->getEscapedQueryText());
+    }else if( $landing = Mage::registry('amlanding_page') ){
+    	$category = $landing->getMetaTitle();
+    }else if ( $json_category_obj) {
+        $cate = $json_category_obj;
+        $pathInStore = $cate->getPathInStore();
+        $pathIds = array_reverse(explode(',', $pathInStore));
+        $categories = $cate->getParentCategories();
+        // add category path breadcrumb
+        $count = 1;
+        $totalCount = count($pathIds);
+        foreach ($pathIds as $categoryId) {
+            if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                $category .= $categories[$categoryId]->getName();
+                if( $count < $totalCount )
+                    $category .= '/';
+                $count++;
+            }
+        }
+    }else{
+    	$category = "No Category";
+    }
+    $impression = "";
+    $category = addslashes($category);
+?>
+<?php $_columnCount = $this->getColumnCount(); ?>
+<ul class="less products-grid--max-<?php echo $_columnCount; ?>-col" id="catalog_listings">
+	<?php $i=0;
+    $jsonArray= array();
+
+	foreach ($_productCollection as $_product): ?>
+	<?php 
+		$productName = addslashes($_product->getName());
+        $manf = $_product->getAttributeText('manufacturer');
+		$impression .="
+			'".$_product->getSku()."':{
+				'name': '".$productName."',
+    			'id': '".$_product->getSku()."',
+    			'price': '".$_product->getPrice()."',
+    			'category': '".$category."',
+    			'brand': '".$manf."',
+    			'variant': '".$_product->getSku()."',
+    			'list':'".$category."',
+    			'position': '".$position."',
+    			'dimension5':'New'
+			},
+		";
+
+		$plpDatalayer = "
+			dataLayer.push({
+				'pageType': 'PLP',
+		        'pageCategory':'No Category',
+		        'userId':'".$customerId."',
+		        'userType':'".$user."',
+		        'loggedInStatus':'".$loggedInStatus."',
+		        'storeCountry':'".$store->getName()."',
+		        'storeLanguage':'".$language."',
+		        'currencyCode':'".$currency_code."',
+		        'event':'productClick',
+		        'ecommerce':{
+		        	'currencyCode':'".$currency_code."',
+		        	'click':{
+		        		'actionField':{'list':'".$category."'},
+		        		'products':[{
+		        			'name': '".$productName."',
+		        			'id': '".$_product->getSku()."',
+		        			'quantity':'".$_product->getQty()."',
+		        			'price': '".$_product->getPrice()."',
+		        			'category': '".$category."',
+		        			'brand': '".$manf."',
+		        			'variant': '".$_product->getSku()."',
+		        			'position': '".$position."',
+		        			'dimension5':'New'
+		        		}]
+		        	}
+		        }
+			});
+		";
+		$position++;
+	?>
+	<li class="listing closed" data-itemid="<?php echo $_product->getSku();?>">
+		<a class="product_listing_link" onclick="<?php echo $plpDatalayer;?>"  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+			
+
+			<?php //echo $_product->getImageUrl();?>
+			<?php $_imgSize = 254; ?>
+			<div class="image_container">
+				<img id="product-collection-image-<?php echo $_product->getId(); ?>" data-src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(227,329);?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="proimg lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+			</div>
+			<?php
+			$prName = $_product->getName();
+			$lenPrName = strlen($_product->getName());
+			//$subPrName = substr($prName, 0, 25); // This will not save way to break string which contain language other than Engilsh. and leave ? mark in the end of string.
+			$subPrName = mb_substr($prName,0,25, "utf-8"); // Save way to break string specially when we have multiple language.
+			if ($lenPrName >= 25) {
+				$prNameFix = $subPrName . "...";
+			} else {
+				$prNameFix = $prName;
+			}
+            $jsonArray[]='
+						{ 
+							"@type": "Product",
+							"sku": "'.$this->__($_helper->productAttribute($_product, $_product->getSku(), 'sku')).'",
+							"image": "'.Mage::helper('catalog/image')->init($_product, 'thumbnail').'",
+							"url": "'.$_product->getUrlInStore().'",
+							"name": "'.$this->__($_helper->productAttribute($_product, $_product->getName(), 'name')).'",
+							"description": "'.$this->__($_helper->productAttribute($_product, $_product->getDescription(), 'description')).'" 
+						}';
+			?>
+			<div class="details_container">
+				<p class="brand">
+
+					<?php if($_product->getAttributeText('manufacturer')=='') { 
+							$brandTitle = mb_substr($prNameFix,0,16, "utf-8"); // Break string into safe so it will not create problem during language translation.
+					?>
+					<?php echo $this->__($brandTitle); ?>...
+					<?php } else { ?>
+					<?php echo $this->__($_product->getAttributeText('manufacturer'));
+				}
+				?>
+			</p>
+			<p class="description"><?php echo $this->__(ucwords($prNameFix)); ?><?php //echo substr($my_product->getDescription(), 0, 25); ?></p>
+			<p class="price">
+				<span>
+					<?php //echo number_format($my_product->getPrice(), 2);  ?>
+					<?php echo $this->getPriceHtml($_product, true) ?>
+				</span>
+			</p>
+		</div>
+	</a>
+</li>
+<?php endforeach ?>
+    <?php
+    if ($json_category_obj):
+// $products = Mage::getModel('catalog/category')->load($json_category_obj->getId())
+//  ->getProductCollection()
+//  ->addAttributeToSelect('*')
+//  ->addAttributeToFilter('status', 1)
+//   ->addAttributeToFilter('type_id', 'configurable');
+// Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($products);
+// $json_all_products = $products->getSize();
+        ?>
+        <script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "ItemList",
+	"itemListOrder": "Unordered",
+	"url": "<?php echo $json_category_obj->getUrl() ?>",
+	"description": "<?php echo $this->getLayout()->getBlock('head')->getDescription(); ?>",
+	"name": "<?php echo $this->getLayout()->getBlock('head')->getTitle(); ?>",
+	"numberOfItems": <?php echo $_productCollection->getSize() ?>,
+	"itemListElement": [
+	<?php echo implode(',',$jsonArray); ?>
+	]
+}
+</script>
+        <?php
+    endif;
+    ?>
+</ul>
+<script>
+	var impressionsOnScroll = {
+		<?php echo $impression;?>
+	};
+</script>
+<div class="toolbar-bottom">
+	<?php //echo $this->getToolbarHtml() ?>
+	<?php echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar-bottom.phtml')->toHtml() ?>
+</div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,48 @@
+<?php
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user           = 'Guest';
+$customerId     = '';
+$loggedInStatus    = 'Logged Out';
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+    $user           =   'User';
+    $customer       =   Mage::getSingleton('customer/session')->getCustomer(); 
+    $customerId     =   $customer->getId();
+    $loggedInStatus    =   'Logged In';
+}
+
+$codeArray = explode('_',$store->getCode());
+$language = '';
+if( !empty( $codeArray ) )
+    $language = strtoupper( $codeArray[0] );
+
+$commonDatalayerCode = "
+        'pageType': 'Checkout',
+        'pageCategory':'No Category',
+        'userId':'".$customerId."',
+        'userType':'".$user."',
+        'loggedInStatus':'".$loggedInStatus."',
+        'storeCountry':'".$store->getName()."',
+        'storeLanguage':'".$language."',
+        'currencyCode':'".$currency_code."',
+";
+
+?>
+<script type="text/javascript">
+    function paymentmethodchange(title){
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                <?php echo $commonDatalayerCode; ?>
+                'event':'checkoutOption',
+                'ecommerce': {
+                    'checkout': {
+                        'actionField': {
+                        'step':3,
+                        'option': title
+                        }
+                    },
+                }
+                });
+    }
+</script>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2016 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<layout version="1.0">
+	<default>
+        <reference name="head">
+            <block type="core/text" name="lazyInitBlock">
+                <action method="setText">
+                    <text><![CDATA[<script>window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 900;</script>]]></text>
+                </action>
+            </block>
+            <action method="addItem"><type>skin_js</type><name>js/lazysizes.min.js</name></action>
+            <action method="addJs"><script>amasty/amlanding/amlanding.js</script></action>
+        </reference>
+    </default>
+   	    
+    <amlanding_page_view>
+
+        <reference name="content">
+            <block type="core/messages" name="global_messages" as="global_messages"/>
+            <block type="core/messages" name="messages" as="messages"/>
+            
+            <block type="core/text_list" name="category.products">
+                <block type="catalog/product_list" name="product_list" template="catalog/product/list.phtml">
+                    <block type="core/text_list" name="product_list.name.after" as="name.after" />
+                    <block type="core/text_list" name="product_list.after" as="after" />
+                    <block type="amlanding/catalog_product_list_toolbar" name="amlanding_product_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                        <block type="amlanding/catalog_pager" name="product_list_toolbar_pager"/>
+                    </block>
+                    <action method="setToolbarBlockName"><name>amlanding_product_list_toolbar</name></action>
+                </block>
+            </block>
+        </reference>
+    </amlanding_page_view>
+    <amlanding_page_view>
+        <update handle="product_list"/>
+    </amlanding_page_view>    
+
+</layout>

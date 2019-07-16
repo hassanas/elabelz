@@ -1,0 +1,115 @@
+
+
+
+<div class="account-login market_place_managethreads" id="market_place_managethreads">
+    <div class="page-title">
+        <h1 class="managethreads_head"><?php echo $this->__('Conversation') ?></h1>
+        <div style="clear:both"></div>
+        <div class="conversation-heading">
+            <div class="ctitle"></div>
+            <div class="ccontributors"></div>
+        </div>
+    </div>
+    <div class="my-account-wrapper">
+        <div class="top_actions" style="display: none">
+
+            <span class="right">
+                
+                <div class="mp_action"><b><?php echo $this->__('Action'); ?> </b>
+                    <select name="multi">
+                        <option name="" value="Select an option"><?php echo $this->__('Select an option'); ?></option>
+                        <option name="delete" value="delete"><?php echo $this->__('Delete'); ?></option>      
+                    </select>
+                    <button type="submit" class="button multi_submit" onclick="document.getElementById('multi_submit').value='1'; " title="<?php echo $this->__('Submit') ?>" name="multi_submit" id="multi_submit" >
+                    <span><span><?php echo $this->__('Submit') ?></span></span></button> 
+                </div>
+
+            </span>   
+        </div>
+        <div class="clear"></div>
+        <div class="thread">
+            <div class="conversation" id="conversation">
+                <?php 
+                $id = $this->getRequest()->getParam("id");
+                $this->updateRead();
+                $lclass = "";
+                $name = "";
+                $time = "";
+                $current_user = Mage::helper("messaging")->getSession()->getCustomerId();
+                $messages = $this->getMessages();
+                if(count($messages)):
+                foreach ($messages["data"] as $message):
+                    if ($current_user == $messages["thread"]["for"]["id"]) {
+                        $name = $messages["thread"]["from"]["name"];
+                        $time = $messages["thread"]["lastseen_from"];                        
+                    } else {
+                        $name = $messages["thread"]["for"]["name"];
+                        $time = $messages["thread"]["lastseen_for"];
+                    }
+                    if ($message["from"]["id"] == $current_user) {
+                        $class = "sender";
+                        $from = "You";
+                        $lclass = "";
+                    } else {
+                        $class = "receiver";
+                        $from = $message["from"]["name"];
+                        $lclass = "right";
+                    }
+                    ?>
+                        <div class='message <?php echo $class ?>'>
+                            <span class="message-title"><?php echo $from ?></span>
+                            <?php 
+                            if ($message["message"]): ?>
+                            <span class="phrase"><?php echo $message["message"] ?></span>
+                            <?php
+                            endif;
+                            if ($message["attachment"]):
+                                echo "<span class='message-attachment'><a href='" . Mage::getUrl("messaging/history/show/id/" . $id . "/file/" . $message["attachment"]["id"]) . "' target='_blank'>&nbsp;</a></span><div style='clear:both'></div>";
+                            endif;
+
+                            if (!$message["attachment"] && empty(trim($message["message"]))):
+                                echo "<span class='empty'>&nbsp;</span>";
+                            endif;
+                            echo "<span class='timestamp'>" . $message["timestamp"] . "</span>";
+                            ?>
+                            
+                        </div>
+
+                    <?php
+                endforeach;
+                endif;
+                ?>
+                <div class='message lastseen <?php echo  $lclass?>'><strong><?php echo $name ?></strong> <?php echo Mage::helper("messaging")->getTime($time) ?></div>
+            </div>
+            <div class="say">
+                <form enctype="multipart/form-data" method="post" action="<?php echo Mage::helper('messaging/url')->getSendMessageUrl($this->getRequest()->getParam("id")); ?>">
+                    <div class="inputs">
+                        <div class="message-input">
+                            <input type="text" name="msg" placeholder="Type your message here">
+                            <div class="attach">
+                                <label for="attachment" class="uploadButton">&nbsp;</label>
+                                <input type="file" name="attachment" id="attachment" />
+                            </div>
+                        </div>
+                        <!-- <input type="file" name="attachments" /> -->
+                        <input type="submit" value="Send">
+                    </div>
+                    <div style="clear: both"></div>
+
+                </form>
+
+
+
+            </div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery(function($) {
+    $(".conversation").scrollTop(function() {
+        return this.scrollHeight + 5;
+    });
+});
+</script>
+

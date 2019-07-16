@@ -1,0 +1,44 @@
+<?php
+require_once 'common.phtml';
+$pageTitle = 'Checkout Process';
+?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer = [{
+            'pageType': '<?php echo $pageTitle; ?>',
+            'pageCategory': 'No Category',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+    </script>
+<?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>
+<?php
+//If Customer is loggedin and redirected to checkout page.
+if (Mage::getSingleton('checkout/session')->getLoggedinCustomerFirstTime()) { ?>
+    <script type="text/javascript">
+        if (window.promotionData !== undefined) {
+            dataLayer.push({
+                'pageType': 'My Account',
+                'pageCategory': 'No Category',
+                'userId': window.promotionData.userId,
+                'userType': window.promotionData.userType,
+                'loggedInStatus': window.promotionData.loggedInStatus,
+                'storeCountry': window.promotionData.storeCountry,
+                'storeLanguage': window.promotionData.storeLanguage,
+                'currencyCode': window.promotionData.currency_code,
+                'event': 'customEvent',
+                'eventCategory': 'User Engagement',
+                'eventAction': 'User Login',
+                'eventLabel': 'Direct Login'
+            });
+        }
+    </script>
+    <?php
+    Mage::getSingleton('checkout/session')->unsLoggedinCustomerFirstTime();
+} ?>

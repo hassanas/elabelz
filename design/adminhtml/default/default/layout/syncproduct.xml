@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <syncproduct_adminhtml_syncproduct_index>
+        <reference name="content">
+            <block type="progos_syncproduct/adminhtml_syncproduct" name="progos_syncproduct" />
+        </reference>
+    </syncproduct_adminhtml_syncproduct_index>
+</layout>

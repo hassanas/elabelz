@@ -1,0 +1,63 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+
+<div id="newsletter_signup_footer">
+  <div class="site_width_container">
+    <p class="title"><?php echo $this->__('subscribe to our newsletter') ?></p>
+    <p><?php echo $this->__("And get 15% off your first purchase! Also, be the first to know about the latest arrivals, exclusive offers and all that's trending this season.") ?></p>
+    <form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletterSubscribe">
+      <div class="newsletter_input_field">
+      <input class="input-radio required-entry validate-email newsletter_signup_email ng-pristine ng-invalid ng-invalid-required ng-valid-email " data-ng-model="newsletterSubscription.email" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="<?php echo $this->__('mail@example.com')?>" name="email" id="newsletter" title="<?php echo $this->__('Sign up for our newsletter') ?>" type="email">
+    </div>
+      <div class="gender_radio">
+      <div class="newsletter_radio">
+      <input required type="radio" id="radio01" name="subscriber_name" value="1" class="input-radio validate-one-required-by-name" checked />
+      <label for="radio01" onclick="newsletter_event_track('Men')" ><span></span><?php echo $this->__('For Men') ?></label>
+      </div>
+        <div class="newsletter_radio">
+         <input required type="radio" id="radio02" name="subscriber_name" value="2" class="input-radio validate-one-required-by-name"/>
+         <label for="radio02" onclick="newsletter_event_track('Women')" ><span></span><?php echo $this->__('For Women') ?></label>
+       </div>
+     </div>
+     <input class="newsletter_female_signup_submit" type="submit" value="<?php echo $this->__('Subscribe') ?>">
+   </form>
+   <script type="text/javascript">
+    //<![CDATA[
+    var newsletterSubscriberFormDetail = new VarienForm('newsletterSubscribe');
+    //]]>
+    </script>
+  </div>
+</div>
+<script>
+  function newsletter_event_track(gender){
+    if (window.promotionData !== undefined ) {
+      sessionStorage.newNewsletter = true;
+      sessionStorage.newsLettergender = gender;
+    }
+  }
+</script>

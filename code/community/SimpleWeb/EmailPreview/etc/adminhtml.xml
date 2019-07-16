@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * SimpleWeb
+ *
+ * @category    Community
+ * @package     SimpleWeb_EmailPreview
+ * @author		SimpleWeb <support@simpleweb.lv>
+ */
+ -->
+<config>
+	<menu>
+		<system>
+			<children>
+				<tools>
+					<children>
+						<email_preview translate="title">
+							<title>Transactional Email Preview</title>
+							<action>adminhtml/email_preview/index</action>
+							<sort_order>10</sort_order>
+						</email_preview>
+					</children>
+				</tools>
+			</children>
+		</system>
+	</menu>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<tools>
+								<children>
+									<email_preview translate="title">
+										<title>Transactional Email Preview</title>
+										<sort_order>10</sort_order>
+									</email_preview>
+								</children>
+							</tools>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

@@ -1,0 +1,137 @@
+<!--  <form id="edit_form_slideshow" method="post" action="<?php echo  $this->getUrl('*/*/save'); ?>">
+
+<select>
+<option value='1'>1</option>
+<option value='1'>2</option>
+</select>
+<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+<a href=" <?php echo  $this->getUrl('*/*/save'); ?>"> Save </a> is true
+</form> -->
+
+   <?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.9.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2016 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */ 
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+<script type="text/javascript" src="<?php echo $this->getJsUrl('prototype/validation.js') ?>"></script>
+</head>
+<?php 
+$_options = Mage::registry('options'); //torque action
+   $_data = Mage::registry('data'); //torque action
+    $_postData = Mage::registry('postData');
+    ?>
+<div class="subcription-form">
+<div class="content-header">
+  <h3><?php echo $this->__('Filter Record')?></h3>
+</div>
+<form method="post" id="ordercountcollection" name="subscription" action="<?php echo Mage::getUrl('marketplaceadmin/adminhtml_ordercount/index');?>">
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<div class="text-field-mp">
+	<label for="product_type"><?php echo $this->__('From Date: ');?><span class="required">*</span></label>
+<?php if($_postData['date_from'] ){$date_from = $_postData['date_from'];}else{$date_from = date('Y-m-d', strtotime('today - 30 days'));}?>
+<input type="text" name="date_from" id="date_from" value="<?php echo  $date_from;  ?>" />
+</div>
+<div class="text-field-mp">
+	<label for="product_type"><?php echo $this->__('To Date: ');?><span class="required">*</span></label>
+	<?php if($_postData['date_to'] ){$date_to = $_postData['date_to'];}else{$date_to = date("Y-m-d");}?>
+
+<input type="text" name="date_to" id="date_to" value="<?php echo  $date_to;  ?>" /> 
+
+</div>
+
+<div class="text-field-mp text-field-shipping">
+	<label for="product_type"><?php echo $this->__('By Shipping Country: ');?><span class="required">*</span></label>
+	<select name="country_id"  >		
+		<?php echo  $_options;?>
+	</select>
+</div>
+
+<div class="subscribe_button_admin">
+<button type="submit" title="Save" type="button" name="subscription_submit" class="scalable save"><span><span><span><?php echo $this->__('Search'); ?></span></span></span></button>
+</div>
+</form>
+
+<script type="text/javascript">
+	  var loginForm = new varienForm('ordercountcollection');
+	</script>
+</div>
+
+<?php 
+  $alpha = array('a', 'b', 'c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+  $order_count_grids = array_chunk($_data, 4, true);
+?>
+
+<?php for ($i=0; $i<count($order_count_grids); $i++) { ?>
+
+<div class="ordercount-grid-container">
+
+  <div class="content-header">
+    <h3><?php echo $this->__('Grid')?> <?php echo $this->__(strtoupper($alpha[$i]));?></h3>
+  </div>
+
+  <?php foreach($order_count_grids[$i] as $k => $v ): ?>
+
+    <div class="ordercount-single">
+      <h4><?php echo $this->__($k); ?></h4>
+      <span><?php echo $v; ?></span>
+    </div>
+
+  <?php endforeach; ?>
+
+</div>
+
+<?php } ?>
+
+<?php //$planId = $this->getRequest()->getParam('id');
+//$collection = Mage::getModel('marketplace/subscriptionplans')->load($planId);?>
+<!-- <div class="content-header">
+<h3><?php echo $this->__(' Grid B')?></h3>
+</div> -->
+<script type="text/javascript">// <![CDATA[
+
+  Calendar.setup({
+  inputField : 'date_from',
+  ifFormat : "%Y-%m-%e",
+  button : 'date_from_trig',
+  align : 'Bl',
+  singleClick : true     
+  });
+Calendar.setup({
+    inputField : 'date_to',
+    ifFormat : "%Y-%m-%e",
+    button : 'date_to_trig',
+    align : 'Bl',
+    singleClick : true
+});
+// ]]></script>
+</body>
+</html>

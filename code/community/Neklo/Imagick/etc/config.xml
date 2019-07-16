@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the NekloEULA that is bundled with this package in the file ICENSE.txt.
+
+It is also available through the world-wide-web at this URL: http://store.neklo.com/LICENSE.txt
+
+Copyright (c)  Neklo (http://store.neklo.com/)
+-->
+<config>
+    <modules>
+        <Neklo_Imagick>
+            <version>1.1.0</version>
+            <build>1724</build>
+        </Neklo_Imagick>
+    </modules>
+    <global>
+        <helpers>
+            <neklo_imagick>
+                <class>Neklo_Imagick_Helper</class>
+            </neklo_imagick>
+        </helpers>
+        <models>
+            <neklo_imagick>
+                <class>Neklo_Imagick_Model</class>
+            </neklo_imagick>
+        </models>
+        <resources>
+            <neklo_imagick_setup>
+                <setup>
+                    <module>Neklo_Imagick</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </neklo_imagick_setup>
+        </resources>
+    </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Neklo_Instagram>
+                    <files>
+                        <default>Neklo_Imagick.csv</default>
+                    </files>
+                </Neklo_Instagram>
+            </modules>
+        </translate>
+        <events>
+            <controller_action_predispatch_adminhtml_system_config_edit>
+                <observers>
+                    <neklo_imagick>
+                        <class>neklo_imagick/observer</class>
+                        <method>checkImagickExtension</method>
+                    </neklo_imagick>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_edit>
+        </events>
+    </adminhtml>
+    <default>
+        <neklo_imagick>
+            <general>
+                <enabled>1</enabled>
+                <resize_mode>1</resize_mode>
+                <quality>100</quality>
+            </general>
+        </neklo_imagick>
+    </default>
+</config>

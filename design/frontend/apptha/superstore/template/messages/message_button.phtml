@@ -1,0 +1,19 @@
+<?php 
+$product_id = Mage::registry('current_product')->getId();
+$product = Mage::getModel('catalog/product')->load($product_id);
+$attributes = $product->getAttributes();
+// get name and value of particular attribute of a product
+foreach ($attributes as $attribute) {    
+	$attributeCode = $attribute->getAttributeCode();
+	$code = 'seller_id';
+	if ($attributeCode == $code) {
+		if (Mage::getSingleton('customer/session')->isLoggedIn() ):
+		     $value = $attribute->getFrontend()->getValue($product);?>
+		     <div class="button">
+			<a href="<?php echo $this->createThread($value);?>">Contact To seller</a>
+			</div>
+		<?php endif; 
+	} 
+}
+?>
+

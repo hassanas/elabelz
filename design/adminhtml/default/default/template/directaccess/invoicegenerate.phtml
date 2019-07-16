@@ -1,0 +1,219 @@
+<style>
+    .table th {width: 70px;}
+    .txt {padding:5px; width: 97%;}
+</style>
+<div class="entry-edit">
+    <!-- Invoice Start-->
+    <div class="" style="width: 50%">
+        <div><input name="form_key" value="LS9O0uYbI3bRCocb" type="hidden"></div>
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Generate Inovices</h4>
+        </div>
+        <fieldset>
+            <table class="table" width="100%" cellpadding="10">
+                <tr>
+                    <th><label for="ec_config_code_head"> Orders#</label></th>
+                    <td><textarea id="invoices_number" class="textarea txt" name="invoices_number"  ></textarea><span style="color:red">Note: Use incremented Id with ',' separated if want to process multipe orders.</span>  </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right"><input type="button" name="invoices_button" value="Generate" id="invoices_button" /></td>
+                </tr>
+            </table>
+            <table class="table" width="100%" cellpadding="10" id="invoice-detail">
+                <thead>
+                    <tr>
+                        <th>Order#</th>
+                        <th>Order status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <!-- Invoice End-->
+    <!-- Destination Invoice Start-->
+    <div class="" style="width: 50%">
+        <div><input name="form_key" value="LS9O0uYbI3bRCocb" type="hidden"></div>
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Generate Destination Inovices</h4>
+        </div>
+        <fieldset>
+            <table class="table" width="100%" cellpadding="10">
+                <tr>
+                    <th><label for="ec_config_code_head"> Orders#</label></th>
+                    <td><textarea id="destination_invoices_number" class="textarea txt" name="destination_invoices_number"  ></textarea><span style="color:red">Note: Use incremented Id with ',' separated if want to process multipe orders.</span>  </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right"><input type="button" name="invoices_button" value="Generate" id="destination_invoices_button" />
+                    <a href="" data-attr="" id="download-invoice" style="display: none" download>Download</a>
+                </tr>
+            </table>
+            <table class="table" width="100%" cellpadding="10" id="destination-invoice-detail">
+                <thead>
+                    <tr>
+                        <th>Order#</th>
+                        <th>Order status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <!-- Destination Invoice End-->
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('#invoices_button').click(function(){
+        var invoices = jQuery('#invoices_number').val();
+        invoicesArray = invoices.split(",");
+        createInvoice( invoicesArray , invoices );
+    });
+
+    jQuery("#invoices_number").keypress(function (e) {
+        if(e.which == 13) {
+            var invoices = jQuery('#invoices_number').val();
+            invoicesArray = invoices.split(",");
+            createInvoice( invoicesArray , invoices );
+        }
+    });
+
+    function createInvoice( invoicesArray , invoices ){
+        if( invoicesArray.length > 50 ){
+            alert( "Please add 50 order number Max." );
+            return false;
+        }else if( invoicesArray.length < 1 || invoices == "" ){
+            alert( "Please add order number. Min 1 order and Max 50 orders." );
+            return false;
+        }else{
+            var i = 0;
+            jQuery('#invoice-detail > tbody:last-child').html('');
+            jQuery("#loading-mask").show();
+            generateInvoice( invoicesArray , i );
+        }
+    }
+
+    function generateInvoice( invoicesArray , i ){
+        var ordernumber = invoicesArray[i].trim();
+        jQuery('#invoice-detail > tbody:last-child').append('<tr class="tr_'+ordernumber+'"><td id="number_'+ordernumber+'">'+ordernumber+'</td><td id="state_'+ordernumber+'">Processing. Please wait.</td></tr>');
+
+        jQuery.ajax({
+            dataType: 'json',
+            data: {order_id:ordernumber},
+            url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/directaccessbackend/generateInvoice"); ?>", 
+            success: function(result){
+                jQuery('#state_'+ordernumber).html(result.msg);
+                i++;
+                if( result.status == true ){
+                    if( typeof(invoicesArray[i]) !== 'undefined' ){
+                        generateInvoice( invoicesArray , i );
+                    }else{
+                        jQuery("#loading-mask").hide();
+                        alert("Process Successfully completed.");
+                    }
+                }else{
+                    jQuery("#loading-mask").hide();
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+
+    jQuery("#destination_invoices_number").keypress(function (e) {
+        if(e.which == 13) {
+            downloadZip();
+        }
+    });
+    function downloadZip(){
+        var invoices = jQuery('#destination_invoices_number').val();
+        jQuery('#download-invoice').hide();
+        jQuery('#download-invoice').attr('href','');
+        jQuery('#download-invoice').attr('data-attr','');
+        invoicesArray = invoices.split(",");
+        if( invoicesArray.length > 50 ){
+            alert( "Please add 50 order number Max." );
+            return false;
+        }else if( invoicesArray.length < 1 || invoices == "" ){
+            alert( "Please add order number. Min 1 order and Max 50 orders." );
+            return false;
+        }else{
+            var i = 0;
+            jQuery('#destination-invoice-detail > tbody:last-child').html('');
+            jQuery("#loading-mask").show();
+
+            var d = new Date();
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var hour = d.getHours();
+            var minute = d.getMinutes();
+            var second = d.getSeconds();
+            var invoice = day+'_'+month+'_'+d.getFullYear()+'_'+hour+'_'+ minute+'_'+second;
+            generateDestinationInvoice( invoicesArray , i , invoice );
+        }
+    }
+    jQuery('#destination_invoices_button').click(function(){
+            downloadZip();
+    });
+
+    function generateDestinationInvoice( invoicesArray , i , invoice ){
+        var ordernumber = invoicesArray[i].trim();
+        jQuery('#destination-invoice-detail > tbody:last-child').append('<tr class="tr_'+ordernumber+'"><td id="number_'+ordernumber+'">'+ordernumber+'</td><td id="state_'+ordernumber+'">Processing. Please wait.</td></tr>');
+
+        jQuery.ajax({
+            dataType: 'json',
+            data: {order_increment_id:ordernumber,folder:invoice},
+            url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/directaccessbackend/generateDestinationInvoice"); ?>", 
+            success: function(result){
+                jQuery('#state_'+ordernumber).html(result.msg);
+                i++;
+                if( result.status == true ){
+                    if( typeof(invoicesArray[i]) !== 'undefined' ){
+                        generateDestinationInvoice( invoicesArray , i , invoice );
+                    }else{
+                        generateZipFile(invoice);
+                    }
+                }else{
+                    jQuery("#loading-mask").hide();
+                    alert(result.msg);
+                }
+            }
+        });
+    }
+
+    function generateZipFile(invoice){
+        jQuery.ajax({
+            dataType: 'json',
+            data: {folder:invoice},
+            url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/directaccessbackend/generateZipFile"); ?>", 
+            success: function(result){
+                if( result.status == true ){
+                        jQuery('#download-invoice').attr('href',result.filepath);
+                        jQuery('#download-invoice').attr('data-attr',result.folder);
+                        jQuery('#download-invoice').show();
+                        jQuery("#loading-mask").hide();
+                }else{
+                    jQuery("#loading-mask").hide();
+                    alert("Some Error Occour during zip file process.");
+                }
+            }
+        });
+    }
+
+    jQuery('#download-invoice').click(function(){
+        var url = jQuery('#download-invoice').attr('href');
+        var name = jQuery('#download-invoice').attr('data-attr');
+        setTimeout(function(){
+            jQuery.ajax({
+                dataType: 'json',
+                data: {url:url,name:name},
+                url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/directaccessbackend/removeZipFile"); ?>", 
+                success: function(result){
+
+                }
+            });
+        },5000);
+    });
+});
+
+</script>

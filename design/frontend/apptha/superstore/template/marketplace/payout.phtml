@@ -1,0 +1,268 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.6
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+
+<div id="errormsg"></div>
+
+<div style="display:inline-block;margin:5px;width:100%; border-bottom:1px solid #ddd; margin-bottom: 10px">
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $sellerData = Mage::getSingleton('customer/session')->getCustomer();
+    $sellerId = $sellerData->getId();
+    //$allowedAmount = $this->availablePayoutAmount($sellerId); Edit by Ali. This function is not giving correct value so used the function created by Azhar
+    $allowedAmount = $this->getPayoutDetail($sellerId);
+             
+            /*-------------------------Edited by Azhar 05-16-2016--------------------------*/         
+        $getPendingAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Pending');
+        $getApproveAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Approve');
+        $getPaidAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Paid');  
+         $getOrderRefundAmount =  Mage::helper('marketplace/marketplace')->getOrderRefundAmount($seller_id);     
+       $getSellerTotalPayoutRequestAmount = $getPendingAmount + $getApproveAmount + $getPaidAmount;
+       $finalRemainingAmount = $allowedAmount['seller_amount'] - $getSellerTotalPayoutRequestAmount;
+       $finalRemainingAmount = $finalRemainingAmount - $getOrderRefundAmount;
+        /*-------------------------------------------------*/
+    
+}
+?>
+    <div style="width:70%; float: left; border-right: 1px solid #ddd" id="seller-payout-request">    
+<div class="page-title">
+    <h1><?php echo $this->__('Payout Request'); ?></h1>
+</div>
+        <div class="my-account-wrapper" style="padding:2px;">
+            
+            <div>
+            <p><?php echo $this->__('Eligible for Payout') ?></p>
+            <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+            <span><?php echo Mage::helper ( 'core' )->currency ( $finalRemainingAmount, true, false );
+            // Edited by Azhar ?></span>
+            
+            </div>
+            
+    <form action="<?php echo $this->payoutSaveUrl(); ?>" method="post"
+          id="payoutsave" class="payoutsave" enctype="multipart/form-data">
+        <div class="fieldset payoutsave_fieldset">
+            <ul class="form-list">
+                <!-- seller id -->
+                <input type="hidden" name="seller_id" id="seller_id"
+                       value="<?php echo $sellerId; ?>"/>
+                <!-- Store Name -->
+                <li class="fields">
+                    <div class="field">
+                        <label for="store_name" class="required">  <?php echo $this->__('Request Amount'); ?>
+                            <em><?php echo $this->__('*'); ?></em>
+                        </label>
+                        <div class="input-box">
+                            <input type="text" name="request_amount" id="request_amount"
+                                   value="<?php echo $finalRemainingAmount; ?>"
+                                   class="input-text required-entry" 
+                                <?php if($finalRemainingAmount <= 0):?>
+                                   readonly="readonly"
+                                <?php endif; ?>
+                                   />
+                        </div>
+                    </div>
+                </li>
+                <?php //if(!$finalRemainingAmount <= 0):?>
+                <li class="fields">
+                    <div>
+                        <button type="submit" class="button"
+                                title="<?php echo $this->__('Place Request') ?>" name="save_payout"
+                                id="save_payout">
+                            <span><span><?php echo $this->__('Place Request') ?></span></span>
+                        </button>
+                    </div>
+                </li>
+                <?php //endif; ?>
+            </ul>
+        </div>
+    </form>
+</div>
+</div>
+    <div style="float: left;padding-left: 25px;width: 30%;height:100px">  
+<div class="page-title">
+    <h1><?php echo $this->__('Seller Profile'); ?></h1>
+</div>
+
+
+   
+<?php
+/* Showing Bank Payment Information */   
+$sellerInformation = Mage::getModel ( 'marketplace/sellerprofile' )->load ( $sellerId, 'seller_id' );
+?>
+<div class="my-account-wrapper" style="padding:2px;">
+    <p><?php echo $this->__('Seller Bank Detail')?></p>
+    <!-- <p style="font-weight:bold;font-size:16px;margin-bottom: 5px;">Bank Transfer/Paypal</p> -->
+    <p><?php  echo $sellerInformation->getBankPayment();?></p>
+</div> 
+</div>
+</div>
+<?php
+/**
+ * Form validation script
+ */
+
+$customer = Mage::getSingleton("customer/session")->getCustomer();
+?>
+
+<div class="page-title sellers_store mp_order_transaction" id="mp_order_transaction"><h1><?php echo $this->__('Payout Request History'); ?></h1>
+    <?php //Display remaining amount and received amount from admin ?>
+    <div class="top_amount">
+        
+        <?php if($getPaidAmount):?>
+            <span class="right_space">
+                <?php echo $this->__('Total Lifetime Amount Received') ?> : <b><?php //echo $totalPaid; ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo Mage::helper ( 'core' )->currency ( $getPaidAmount, true, false ); ?>
+                </b>
+            </span>
+            <br>
+        <?php endif;?>
+         <br>
+        <?php if($getApproveAmount):?>
+            <span class="right_space">
+                 <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo $this->__('Approved by Admin') ?> : <b>
+                <?php
+                    echo Mage::helper ( 'core' )->currency ( $getApproveAmount, true, false ); ?></b>
+            </span>
+        <?php endif;?>
+        <br>
+        <?php if($getPendingAmount):?>
+            <span class="right_space">
+                <?php echo $this->__('Waiting for Admin Approval') ?> : <b>
+              <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+
+                <?php
+                    echo Mage::helper ( 'core' )->currency ( $getPendingAmount, true, false ); ?></b>
+            </span>
+
+        <?php endif;?>
+        <br>
+         <span>
+            <?php echo $this->__('Remaining Amount') ?> :  <b>
+            <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo Mage::helper ( 'core' )->currency ( $finalRemainingAmount, true, false ); ?></b>
+        </span> 
+    </div>
+</div>
+<?php
+// Display transaction history of the seller
+
+$loginId = Mage::getSingleton('customer/session')->isLoggedIn();
+$groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$getGroupId = Mage::helper('marketplace')->getGroupId();
+$customer_status = $customer->getCustomerstatus();
+if ($groupId != $getGroupId  || $customer_status != 1) {
+    return;
+}
+//Get Transaction collection
+$collection = $this->getCollection();
+$count = count($collection);
+?>
+<style>
+    .customer-account #my-orders-table thead th {
+        max-width: 20%;
+        width: 20%;
+        min-width: 20px;
+    }
+    .customer-account #my-orders-table thead th.comments {
+        max-width: 35%;
+        width: 35%;
+        min-width: 30px;
+    }
+    .customer-account #my-orders-table thead th.id, .customer-account #my-orders-table tbody td.id {
+        max-width: 50px;
+        width: 50px;
+        min-width: 30px;
+    }
+</style>
+<?php 
+//Display transaction info
+    if ($count > 0) {
+?>
+<table class="data-table my-orders-table" id="my-orders-table" summary="<?php echo $this->__('Items Ordered') ?>">
+    <thead>
+    <tr>
+        <th class="a-center id"><?php echo $this->__('Id') ?></th>
+        <th class="a-center"><?php echo $this->__('Requested Amount') ?></th>
+        <th class="a-center"><?php echo $this->__('Status') ?></th>
+        <th class="a-center"><?php echo $this->__('Requested on') ?></th>
+        <th class="a-left comments"><?php echo $this->__('Comments from Admin') ?></th>
+        <th class="a-center"><?php echo $this->__('Payment Received') ?></th>
+    </tr>
+    </thead>
+    <?php
+    
+        foreach ($collection as $_collection) {
+            $payout_id = $_collection['id'];
+            $order_id = $_collection['order_id'];
+            $orderModel = Mage::getModel('sales/order')->load($order_id);
+            ?>
+            <tbody>
+            <tr>
+                <td class="a-center id"><?php echo $_collection['id']; ?></td>
+                <td class="a-center">
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo Mage::helper('core')->currency($_collection['request_amount'], true, false); ?></td>
+                <td class="a-center"><?php echo $this->__($_collection['status']); ?></td>
+                <td class="a-center">
+                    <?php echo date('M j, Y', strtotime($_collection['created_at']));?>
+                </td>
+                <td class="a-left"><?php echo $this->__($_collection['admin_comment']); ?></td>
+                <td class="a-center">
+                    <?php
+                    if($_collection['ack'] == 'Yes' && $_collection['status'] == 'Paid') {
+                        $acknowledge_date = $_collection['ack_at'];
+                        echo '<h6>' . $this->__('Acknowledged on') . ' ' . date('M j, Y', strtotime($acknowledge_date)) . '</h6>';
+                    }
+                    elseif ($_collection['ack'] != 'Yes' && $_collection['status'] == 'Paid') { ?>
+                        <a href='<?php echo $this->getAcknowledge($payout_id); ?>'>
+                            <span><span><?php echo $this->__('Acknowledge') ?></span></span></a>
+                        <?php
+                    } else {
+                        echo $this->__('--');
+                    }
+                    ?>
+                </td>
+            </tr>
+        <?php } ?>
+        </tbody>
+        <!--<tfoot><tr><td colspan="6" class="a-center no_product_content"><?php echo $this->__('No Requests to Show'); ?></td></tr></tfoot>-->
+    
+</table>
+<?php } ?>
+<?php //Display pagination
+echo $this->getPagerHtml();
+ ?>

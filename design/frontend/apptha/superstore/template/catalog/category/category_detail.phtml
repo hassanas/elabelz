@@ -1,0 +1,10 @@
+<?php
+
+$category = Mage::getModel('catalog/layer')->getCurrentCategory();
+
+if ($category) {
+    $identifier = 'block-for-cat-' . $category->getId();
+    $block = $this->getLayout()->createBlock('cms/block')->setBlockId($identifier);
+
+    echo $block->toHtml();
+}

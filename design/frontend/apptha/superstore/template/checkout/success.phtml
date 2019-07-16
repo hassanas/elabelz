@@ -1,0 +1,406 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+if (Mage::getStoreConfig('api/ecoprocessor/enableNewCheckout')) {
+    $session = Mage::getSingleton('core/session');
+    $orderId = $session->getLastRealOrderId();
+    $locale = Mage::app()->getLocale()->getLocaleCode(); ?>
+    <div class="page-title">
+        <h1><?php echo $this->__('Your order has been received.') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <div class="pagesuccessblock">
+        <h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+        <div class="newrequestid">
+        </div>
+        <?php if ($orderId): ?>
+            <p><?php echo $this->__('Your order # is:'); ?>
+                &nbsp; <?php echo $orderId; ?></p>
+            <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+        <?php endif; ?>
+        <div class="buttons-set">
+            <button type="button" class="button"
+                    title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>"
+                    onclick="window.location='<?php echo $this->getUrl() ?>'">
+                <span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+        </div>
+
+    </div>
+    <?php
+    } else {
+    ?>
+
+    <?php $locale = Mage::app()->getLocale()->getLocaleCode(); ?>
+    <div class="page-title">
+        <h1><?php echo $this->__('Your order has been received.') ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <div class="pagesuccessblock">
+        <h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+        <div class="newrequestid">
+        </div>
+        <?php $collection = Mage::helper("marketplace/marketplace")->getRequestId($this->getOrderId());
+        foreach ($collection as $col) {
+            $col['sms_verify_code'];
+
+            if ($col['sms_verify_code'] !== 0):?>
+                <input type="hidden" value="<?php echo $col['sms_verify_code'] ?>" id="sms_verify"/>
+                <input type="hidden" value="<?php echo $this->getOrderId() ?>" id="increment_id"/>
+            <?php endif;
+        }
+        ?>
+
+
+
+
+        <?php if ($this->getOrderId()): ?>
+            <!-- sms verification code implementation -->
+            <?php
+            $nexmoActivated = Mage::getStoreConfig('marketplace/nexmo/nexmo_activated');
+            $nexmoStores = Mage::getStoreConfig('marketplace/nexmo/nexmo_stores');
+            $nexmoStores = explode(',', $nexmoStores);
+            $currentStore = Mage::app()->getStore()->getCode();
+            #check nexmo sms module is active or not and check on which store its enabled
+            if ($nexmoActivated == 1 && in_array($currentStore, $nexmoStores)) {
+
+                $orders = Mage::getModel('sales/order')->getCollection();
+                $orders->addFieldToSelect('*');
+                $orders->addFieldToFilter('increment_id', $this->getOrderId());
+                if ($orders) {
+                    foreach ($orders as $order):
+                        $order_id = $order->getEntityId();
+                    endforeach;
+                }
+
+                $order = Mage::getModel('sales/order')->load($order_id);
+
+                $paymentMethodCode = $order->getPayment()->getMethodInstance()->getCode();
+                $is_buyer_confirmation = 'No';
+                if ($paymentMethodCode == 'ccsave' || $paymentMethodCode == 'telrpayments_cc' || $paymentMethodCode == 'telrtransparent') {
+                    $is_buyer_confirmation = 'Yes';
+                    $item_order_status = 'pending_seller';
+                    $data = 0;
+
+                } elseif ($paymentMethodCode == 'cashondelivery' || $paymentMethodCode == 'msp_cashondelivery') {
+
+                    $counter = 0;
+                    $orders = Mage::getModel('sales/order')->getCollection();
+                    $orders->addFieldToSelect('*');
+                    $orders->addFieldToFilter('customer_id', $order->getCustomerId());
+                    foreach ($orders as $ord) {
+                        if ($ord->getStatus() == "complete"):
+                            $counter = $counter + 1;
+                        endif;
+                    }
+                    if ($counter != 0) {
+
+                        $is_buyer_confirmation = 'Yes';
+                        $is_buyer_confirmation_yes = "Accepted";
+                        $item_order_status = 'pending_seller';
+                        $data = 0;
+                    } else {
+
+                        $is_buyer_confirmation = 'No';
+                        $item_order_status = 'pending';
+                    }
+                }
+            } else {
+                $is_buyer_confirmation = 'Yes';
+            }
+
+            ?>
+            <!-- ENd sms code  -->
+            <?php if ($this->getCanViewOrder()) : ?>
+                <p><?php //echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+                <p><?php echo $this->__('Your order # is:'); ?>
+                    &nbsp; <?php echo $this->__(sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+            <?php else : ?>
+                <p><?php echo $this->__('Your order # is:'); ?>
+                    &nbsp; <?php echo $this->__($this->escapeHtml($this->getOrderId())); ?></p>
+            <?php endif; ?>
+            <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+            <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) : ?>
+
+                <p>
+                    <?php echo $this->__('Click') ?> <a href="<?php echo $this->getPrintUrl(); ?>"
+                                                        onclick="this.target=_blank"> <?php echo $this->__('here to print'); ?> </a> <?php echo $this->__('a copy of your order confirmation'); ?>
+                    <?php echo $this->getChildHtml() ?>
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if ($this->getAgreementRefId()): ?>
+            <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId()))) ?></p>
+        <?php endif; ?>
+
+        <?php if ($profiles = $this->getRecurringProfiles()): ?>
+            <p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+            <ul class="disc">
+                <?php foreach ($profiles as $profile): ?>
+                    <?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id'))); ?>
+                    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description'))) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+
+
+        <!--
+    sms form start here
+    -->
+        <div class="container container_new">
+            <div class="order_wrapper">
+                <div class="order_num hidden">
+                    <div class="order-text">Your order (#801201251) is complete!</div>
+                    <div class="order-mail">
+                        You will receive a confirmation via email shortly at
+                        <a href="mailto:abcdefg@yahoo.com"> Abcdefg@progos.org</a>
+                    </div>
+                </div>
+
+
+                <?php if ($is_buyer_confirmation == 'No'): ?>
+                    <div class="order-detail smscode">
+                        <div class="form-detail">
+                            <form id="smsVarificationCodeForm" action="" method="post">
+                                <div class="form-row">
+                                    <div>
+                                        <input type="text" name="tele" value=""
+                                               class="required-entry <?php if ($locale == "ar_SA") {
+                                                   echo "validate-number-for-arabic";
+                                               } else {
+                                                   echo "validate-number";
+                                               } ?> form-data" placeholder="<?php echo $this->__('Enter your code'); ?>"
+                                               id="form-input-telephone_vcode"/>
+                                    </div>
+                                </div>
+                                <div class="padding">
+                                </div>
+                                <button class="sms-buton" type="submit" onclick="verifySms()">
+                                    <span><?php echo $this->__('Confirm'); ?></span>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="order-detail-text">
+                            <p><?php echo $this->__('Check your phone – We just'); ?>
+                                <br> <?php echo $this->__('sent you a top secret code!'); ?></p>
+                            <a href="javascript:;"
+                               class="resendCode"><?php echo $this->__('Didn’t get the code? Click here to resend'); ?></a>
+                        </div>
+                    </div>
+
+                <?php endif; ?>
+
+                <div class="order-detail cellno" style="display: none;">
+                    <div class="timer" style="display: none;"></div>
+                    <div class="form-detail">
+                        <form id="contactNoForm" action="" method="post">
+                            <div class="form-row">
+                                <div>
+                                    <input type="text" name="tele" value=""
+                                           class="required-entry <?php if ($locale == "ar_SA") {
+                                               echo "validate-number-sms-for-arabic";
+                                           } else {
+                                               echo "validate-number-sms";
+                                           } ?> form-data" placeholder="97133232323232" id="form-input-telephone_no"/>
+                                </div>
+                            </div>
+                            <div class="padding">
+                            </div>
+                            <button class="sms-buton" type="submit">
+                                <span><?php echo $this->__('SMS'); ?></span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="order-detail-text">
+                        <p><?php echo $this->__('Just one more thing!'); ?></p>
+                        <span><?php echo $this->__('Please verify your phone number so we can be sure you’re a real person!'); ?></span>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <script>
+            function verifySms() {
+
+                var request_id = document.getElementById('sms_verify').value;
+                var sms_code = document.getElementById('form-input-telephone_vcode').value;
+                if (sms_code == "") {
+                    return;
+                }
+                if (window.promotionData !== undefined) {
+                    secretCodeTrigger(sms_code);
+                }
+                var increment_id = document.getElementById('increment_id').value;
+
+                isXhr = jQuery.ajax({
+                    url: "<?php echo $this->getUrl('marketplace/order/checkVerify', array('_secure' => true)) ?>",
+                    type: "POST",
+                    data: {"request_id": request_id, "sms_code": sms_code, "increment_id": increment_id},
+                    beforeSend: function () {
+                        jQuery('.padding').html("<div class='loader'><img src='<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>' onerror='this.onerror=null; this.src=\"<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>\"' /></div>");
+                    },
+                    success: function (result) {
+                        if (result.indexOf("true") >= 0) {
+                            jQuery(".smscode").html("<?php echo $this->__('Your number is now Verified, click on the link below to continue shopping'); ?>");
+                        }
+
+                        else if (result.indexOf("Cant") >= 0) {
+                            jQuery('.padding').html("<?php echo $this->__('Not Verified'); ?>");
+                        }
+                    }
+                });
+            }
+        </script>
+        <script>
+            function sendSms() {
+                var phnNo = document.getElementById('form-input-telephone_no').value;
+                if (phnNo == "") {
+                    return;
+                }
+                var request_id = document.getElementById('sms_verify').value;
+                var increment_id = document.getElementById('increment_id').value;
+                var url = "";
+                if (request_id == "" || request_id == 0) {
+                    url = "<?php echo $this->getUrl('marketplace/order/sendVerifyNew', array('_secure' => true)) ?>";
+                }
+                else {
+                    url = "<?php echo $this->getUrl('marketplace/order/cancelSend', array('_secure' => true)) ?>";
+                }
+                isXhr = jQuery.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {"phnNo": phnNo, "request_id": request_id, "increment_id": increment_id},
+                    beforeSend: function () {
+                        jQuery('.padding').html("<div class='loader'><img src='<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>' onerror='this.onerror=null; this.src=\"<?php echo $this->getSkinUrl('images/ajax-loader.gif') ?>\"' /></div>");
+                    },
+                    success: function (result) {
+                        if (result.indexOf("Cant") >= 0) {
+                            jQuery('.padding').html("<?php echo $this->__('"+result+"'); ?>");
+                        }
+                        else {
+                            jQuery('.padding').html("<?php echo $this->__('Code Sent'); ?>");
+                            jQuery('.newrequestid').html('<input type="hidden" value="' + result + '" id="sms_verify"/>')
+                        }
+                    }
+                });
+            }
+        </script>
+
+        <script type="text/javascript">
+            //< ![CDATA[
+            $j(function () {
+                $j('#smsVarificationCodeForm, #contactNoForm').submit(function (e) {
+                    e.preventDefault();
+                });
+
+                $j('.resendCode').click(function () {
+                    $j('.cellno .form-detail ').hide();
+                    $j('.smscode').slideUp('fast');
+                    $j('.cellno').slideDown('fast');
+                    $j('#form-input-telephone_no').val('');
+                    var myCounter = new Countdown({
+                        seconds: 30,  // number of seconds to count down
+                        onUpdateStatus: function (sec) {
+                            $j('.cellno .timer ').show();
+                            $j('.cellno .timer ').html('<?php echo $this->__('You have to wait'); ?> ' + sec + ' <?php echo $this->__('before resending message again'); ?>');
+                        }, // callback for each second
+                        onCounterEnd: function () {
+                            $j('.cellno .timer ').hide();
+                            $j('.cellno .form-detail ').show();
+                        } // final action
+                    });
+                    myCounter.start();
+                    $j('.smscode').slideUp('fast');
+                    $j('.cellno').slideDown('fast');
+                    $j('#form-input-telephone_no').val('');
+                });
+
+            });
+            function Countdown(options) {
+                var timer,
+                    instance = this,
+                    seconds = options.seconds || 10,
+                    updateStatus = options.onUpdateStatus || function () {
+                        },
+                    counterEnd = options.onCounterEnd || function () {
+                        };
+
+                function decrementCounter() {
+                    updateStatus(seconds);
+                    if (seconds === 0) {
+                        counterEnd();
+                        instance.stop();
+                    }
+                    seconds--;
+                }
+
+                this.start = function () {
+                    clearInterval(timer);
+                    timer = 0;
+                    seconds = options.seconds;
+                    timer = setInterval(decrementCounter, 1000);
+                };
+
+                this.stop = function () {
+                    clearInterval(timer);
+                };
+            }
+            var codeForm = new VarienForm('smsVarificationCodeForm');
+            var noForm = new VarienForm('contactNoForm');
+
+            noForm.validator.options.onFormValidate = function (validationPassed, form) {
+                if (validationPassed) {
+                    $j('.cellno').slideUp('fast');
+                    $j('.smscode').slideDown('fast');
+                    sendSms();
+
+                }
+            }
+
+            codeForm.validator.options.onFormValidate = function (validationPassed, form) {
+                if (validationPassed) {
+                }
+            }
+            //]]>
+        </script>
+
+
+        <!--
+
+        sms customization ends here
+        -->
+
+
+        <div class="buttons-set">
+            <button type="button" class="button"
+                    title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>"
+                    onclick="window.location='<?php echo $this->getUrl() ?>'">
+                <span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+        </div>
+
+    </div>
+<?php } ?>

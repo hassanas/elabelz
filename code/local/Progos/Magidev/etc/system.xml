@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<config>
+    <sections>
+        <catalog translate="label" module="progos_magidev">
+            <groups>
+                <frontend>
+                    <fields>
+                        <!--<merchandising_show_new_first_frontend translate="label">-->
+                            <!--<label>Merchandising Column Count</label>-->
+                            <!--<comment></comment>-->
+                            <!--<frontend_type>text</frontend_type>-->
+                            <!--<sort_order>400</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>1</show_in_website>-->
+                            <!--<show_in_store>1</show_in_store>-->
+                        <!--</merchandising_show_new_first_frontend>-->
+                        <merchandising_show_new_first_frontend translate="label">
+                            <label>Place New Products</label>
+                            <comment>How to treat new products in showcase</comment>
+							<source_model>progos_magidev/sort_system_config_source_new</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>402</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </merchandising_show_new_first_frontend>
+                    </fields>
+                </frontend>
+            </groups>
+        </catalog>
+    </sections>
+</config>

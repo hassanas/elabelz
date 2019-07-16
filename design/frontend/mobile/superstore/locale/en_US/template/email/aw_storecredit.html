@@ -1,0 +1,52 @@
+{{template config_path="design/email/header"}}
+                    <tr>
+                        <td valign="top">
+                        <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;">
+                            <p>
+                                Dear {{var customer_firstname}}!<br>
+                                Your store credit balance has been updated.
+                            </p>
+
+                            <p>
+                                <b>Your current balance is: {{var store_credit_balance_formatted}}</b>.
+                            </p>
+                            {{if store_credit_balance}}
+                            <p>
+                                Now you can <a href="{{var link_to_landing_page}}">come back</a> and spend your store credit on new order.
+                            </p>
+                            {{/if}}
+                            {{if store_credit_added_by_admin}}
+                            <p>
+                                Administrator of {{var store_name}} changed your balance on <b>{{var store_credit_delta_balance_formatted}}</b>.<br>
+                                Comment by administrator: <b>{{var store_credit_admin_comment}}</b>
+                            </p>
+                            {{/if}}
+                            {{if store_credit_has_creditmemo}}
+                            <p>
+                                You received <b>{{var store_credit_delta_balance_formatted}}</b> due to refund of order <a href="{{var order_url}}">{{var order_increment_id}}</a>.
+                            </p>
+                            {{/if}}
+                            {{if store_credit_product_bought}}
+                            <p>
+                                <b>{{var credit_spent}}</b> of your store credit were spent on order <a href="{{var order_url}}">{{var order_increment_id}}</a>.
+                            </p>
+                            {{/if}}
+                            {{if store_credit_redeemed_from_giftcard}}
+                            <p>
+                                Redeemed gift card: {{var gift_card_code}}. You received <b>{{var store_credit_delta_balance_formatted}}</b>.
+                            </p>
+                            {{/if}}
+                            <p>
+                                To see your current balance and its history - <a href="{{var link_to_customer_storecredit_tab}}">click here</a>.
+                            </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;">
+                        <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:15px;">
+                            <span color="#333333">You received this email because you are subscribed to your store credit balance update. If you want to change your subscription settings click <a href="{{var link_to_customer_storecredit_tab}}">here</a>.</span>
+                            </div>
+                        </td>
+                    </tr>
+{{template config_path="design/email/footer"}}

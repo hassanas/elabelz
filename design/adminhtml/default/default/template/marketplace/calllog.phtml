@@ -1,0 +1,91 @@
+<script type="text/javascript" src="https://use.fontawesome.com/9a887619f1.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    data_morning = "<div title='Morning (08AM-12PM)' class='morning'><center><i class='fa fa-coffee fa-3x' style='color: #16ACED; display: block; cursor: pointer'></i></center></div>";
+    data_afternoon = "<div title='Afternoon (12PM-06PM)' class='afternoon'><center><i class='fa fa-sun-o fa-3x' style='color: #FFA500; display: block; cursor: pointer'></i></center></div>";
+    data_evening = "<div title='Evening (06PM-12AM)' class='evening'><center><i class='fa fa-moon-o fa-3x' style='color: #000000; display: block; cursor: pointer'></i></center></div>";
+    jQuery("#callcenterGrid_table thead tr.filter th:nth-child(6)").html("<div class='calllog' style='margin-top: 4px'>" + data_morning + data_afternoon + data_evening + "</div>");
+});
+function reloadGrid(area, url, msg="", type="success") {
+    if($(area)) {
+        var fields = $(area).select('input', 'select', 'textarea');
+        var data = Form.serializeElements(fields, true);
+        url = url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true');
+        new Ajax.Request(url, {
+            parameters: $H(data),
+            loaderArea: area,
+            onSuccess: function(transport) {
+                try {
+                    if (transport.responseText.isJSON()) {
+                        var response = transport.responseText.evalJSON()
+                        if (response.error) {
+                            alert(response.message);
+                        }
+                        if(response.ajaxExpired && response.ajaxRedirect) {
+                            setLocation(response.ajaxRedirect);
+                        }
+                    } else {
+                        $(area).update(transport.responseText);
+                    }
+                }
+                catch (e) {
+                    $(area).update(transport.responseText);
+                }
+                if (msg.length > 0 && type == "success") {
+                    var html = '<ul class="messages"><li class="success-msg"><ul><li>' + msg + '</li></ul></li></ul>';
+                    $('messages').update(html);
+                } else if (msg.length > 0 && type != "success") {
+                    var html = '<ul class="messages"><li class="error-msg"><ul><li>' + msg + '</li></ul></li></ul>';
+                    $('messages').update(html);
+                }
+                data_morning = "<div title='Morning (08AM-12PM)' class='morning'><center><i class='fa fa-coffee fa-3x' style='color: #16ACED; display: block; cursor: pointer'></i></center></div>";
+                data_afternoon = "<div title='Afternoon (12PM-06PM)' class='afternoon'><center><i class='fa fa-sun-o fa-3x' style='color: #FFA500; display: block; cursor: pointer'></i></center></div>";
+                data_evening = "<div title='Evening (06PM-12AM)' class='evening'><center><i class='fa fa-moon-o fa-3x' style='color: #000000; display: block; cursor: pointer'></i></center></div>";
+                jQuery("#callcenterGrid_table thead tr.filter th:nth-child(6)").html("<div class='calllog' style='margin-top: 4px'>" + data_morning + data_afternoon + data_evening + "</div>");
+            }
+        });
+    }
+}
+
+
+function openPopupForm(url, obj) {
+
+    var container = jQuery(obj).parent().parent().parent().parent().parent().parent().parent().parent().attr("id");
+    var tab = container.substr(0, container.lastIndexOf("_"));
+
+    if (container.indexOf("morning") > 0) {
+        rurl = "<?php echo $this->getUrl('*/*/morning', array('_current' => true)); ?>";
+    }
+    if (container.indexOf("afternoon") > 0) {
+        rurl = "<?php echo $this->getUrl('*/*/afternoon', array('_current' => true)); ?>";
+    }
+    if (container.indexOf("evening") > 0) {
+        rurl = "<?php echo $this->getUrl('*/*/evening', array('_current' => true)); ?>";
+    }
+    if (container.indexOf("threeplus") > 0) {
+        rurl = "<?php echo $this->getUrl('*/*/plus', array('_current' => true)); ?>";
+    }
+    if (container.indexOf("onhold") > 0) {
+        rurl = "<?php echo $this->getUrl('*/*/onhold', array('_current' => true)); ?>";
+    }
+
+    var win = new Window({
+        className:'magento',
+        title:'Comments',
+        url:url,
+        width:500,
+        height:500,
+        minimizable:false,
+        maximizable:false,
+        showEffectOptions: {duration:0.4},
+        hideEffectOptions:{duration:0.4},
+        onClose:function (param, el) {
+            reloadGrid($(container), rurl, "Records reloaded successfully") ;
+        }
+    });
+    win.setZIndex(100);
+    win.showCenter(true);
+}
+
+</script>
+<div class="values"></div>

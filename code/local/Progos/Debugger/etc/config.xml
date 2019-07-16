@@ -1,0 +1,38 @@
+<config>
+    <modules>
+        <Progos_Debugger>
+            <version>0.0.1</version>
+        </Progos_Debugger>
+    </modules>
+    <global>
+        <models>
+            <debugger>
+                <class>Progos_Debugger_Model</class>
+            </debugger>
+        </models>
+        <helpers>
+            <debugger>
+                <class>Progos_Debugger_Helper</class>
+            </debugger>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <progos_debugger>
+                <use>standard</use>
+                <args>
+                    <module>Progos_Debugger</module>
+                    <frontName>debugger</frontName>
+                </args>
+            </progos_debugger>
+        </routers>
+    </frontend>
+    <!-- Temporary added admin switch to this extension to debug layered navigation issue on prod. -->
+    <default>
+        <catalog>
+            <layered_navigation>
+                <enable_debug>0</enable_debug>
+            </layered_navigation>
+        </catalog>
+    </default>
+</config>

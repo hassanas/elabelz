@@ -1,0 +1,318 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+  * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_MageShop
+ * @version     1.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/** 
+ * @var $this Mage_Catalog_Block_Product_List 
+ */
+?>
+<?php 
+/**
+ * Get infromatin through posted values like
+ * id
+ * customer data
+ * vacation mode
+ * vacation status val
+ */
+$id = $this->getRequest()->getParam('id');
+$customerData = Mage::getModel('customer/customer')->load($id);
+$vacationMode = Mage::getModel('marketplace/vacationmode')->load($id,'seller_id');
+$vacationStatusVal = $vacationMode->getVacationStatus();
+/**
+ * display product collection
+ * Get seller page
+ * current data
+ * current url
+ */
+$sellerPage = Mage::getModel('marketplace/sellerprofile')->collectprofile($id);
+$currentDate = Mage::getModel('core/date')->date('Y-m-d');
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+?>
+<div class="market_place_profile">
+   <div class="markeft_place_main_widget">               
+  <?php if ($vacationStatusVal==0){
+      /**
+       * If vation status value is equal to 0
+       * then get the vacation message data
+       */
+  $vacationMessageData = $vacationMode->getVacationMessage();
+  /**
+   * Check the vation message data is not empty
+   * if so then display the vacation message
+   */
+  if (!empty($vacationMessageData)){
+  ?>      
+  <h1><marquee><?php echo $vacationMessageData; ?></marquee></h1> 
+  <?php }
+  } ?>     
+<?php 
+/**
+ * Face book Like Button Script
+ */  ?>
+        <div id="fb-root"></div>           
+        <!--display seller logo-->
+        <div class="mp_profiles_container"> 
+        <div class="seller_store_banner" >
+         <p class="mp_profiles_banner">
+                    <?php //if (strpos($sellerPage->getStoreBanner(), '.')) { ?>
+                        <!-- <img src="<?php echo Mage::getBaseUrl('media') . "marketplace/resized/" . $sellerPage->getStoreBanner(); ?>" alt="store banner" class="market_place_store_img_banner" width="1100" height="232" /> -->                        
+                    <?php// } else { ?>
+                    <!-- <img src="<?php echo $this->getSkinUrl('images/no-banner-image.png'); ?>" alt="store banner" class="market_place_store_img_banner" />  -->
+                   <?php  //} ?>
+                </p> 
+                </div>         
+               <div class="mp_profiles-info-wrapper"> <!-- <p class="mp_profiles_logo">
+                    <?php if (strpos($sellerPage->getStoreLogo(), '.')) { ?>
+                        <img src="<?php echo Mage::getBaseUrl('media') . "marketplace/resized/" . $sellerPage->getStoreLogo(); ?>" alt="store logo" class="market_place_store_img" />                        
+                    <?php } else { ?>
+                      <img src="<?php echo $this->getSkinUrl('images/no-store-logo.png'); ?>" alt="store logo" class="market_place_store_img" />                          
+                        <?php } ?>
+                </p> -->
+                <div class="sellers_store_info">
+                     <div class="contact-wrapper">
+                 <span class="contact-number"><a><?php
+                  echo $sellerPage->getContact();?></a></span>
+                 <span class="contact-mail"><a href="mailto:<?php echo $customerData->getEmail();?>"><?php
+                  echo $customerData->getEmail();?></a></span>
+                 </div>
+                <?php 
+                /**
+                 * Display Seller address information like
+                 * seller store title
+                 * seller store state
+                 * seller store country
+                 */?>                          
+                 <h2><?php echo $this->__($sellerPage->getStoreTitle());?></h2>
+                <address>
+                 <?php echo $sellerPage->getStoreState();?>
+                 <?php echo $sellerPage->getStoreCountry();?>
+                 </address> 
+                 <?php 
+                 /**
+                  * Display Ratings
+                  * if the review count is greater than zero
+                  * then calcualte the ratings average
+                  * and display the ratings average
+                  */
+                 
+                 ?>
+                <!-- <span class="all_review_container_wr"> 
+                                <h3><?php echo $this->__('Average Ratings'); ?></h3> 
+                                <?php $reviewCount = $this->reviewCount($id);?>
+                                 <?php if($reviewCount>0){?>
+                                <span class="all_reviews_details_wr"> 
+                                    <p class="all_reviews_block">                                    
+                                        <?php
+                                        $ratingCollection = $this->averageRatings($id);
+                                        ?>  
+                                        <label class="all_review_rating" style="width:<?php echo round($ratingCollection,1) * 20; ?>%;"></label>                                                           
+                                    </p>                                                                        
+                                </span>
+                                <p class="rating_s"><?php echo round($ratingCollection,1);?><?php
+                                 echo $this->__(' based on ');?><?php
+                                  echo $reviewCount; ?><?php
+                                   echo $this->__(' rating[s]');?></p> 
+                                <?php }
+                                 else { ?>
+                                
+                                <span class="all_reviews_details_wr"> 
+                                    <p class="all_reviews_block"> 
+                                     <label class="all_review_rating" style="width:0%;"></label>
+                                        </p>                                                                        
+                                </span>   
+                                </span> -->      
+                            <?php } ?>
+                </div>
+                  <?php 
+                /**
+                 * Facebook, Twitter, Google Plus, Linked In Page link
+                 */?>
+                 <div class="social-media-wrapper">
+                <?php 
+                /**
+                 * Check the id is not empty of the social sharings like
+                 * linked in
+                 * Facebook
+                 * Twitter
+                 * Google Plus
+                 * if they are not empty display their title with links
+                 */
+                if($sellerPage->getLinkedId() != ''){?>
+                <a href="<?php echo $sellerPage->getLinkedId(); ?>" target="_blank" title="<?php
+                 echo $this->__('LinkedIn') ?>" class="linked-in">&nbsp;</a>
+                <?php } ?> 
+                <?php if($sellerPage->getFacebookId() != ''){?>
+                <a href="<?php echo $sellerPage->getFacebookId(); ?>" target="_blank" title="<?php
+                 echo $this->__('Facebook') ?>" class="facebook">&nbsp;</a>
+                <?php } ?>
+                <?php if($sellerPage->getTwitterId() != ''){?>
+                <a href="<?php echo $sellerPage->getTwitterId();?>" target="_blank" title="<?php
+                 echo $this->__('twitter') ?>" class="twitter">&nbsp;</a>
+                <?php } ?>
+                <?php if($sellerPage->getGoogleId() != ''){?>
+                <a href="<?php echo $sellerPage->getGoogleId();?>" target="_blank" title="<?php
+                 echo $this->__('GooglePlus') ?>" class="gplus">&nbsp;</a>
+                <?php } ?>
+                </div>
+                </div>
+                
+    </div>
+   </div>
+   </div>
+    <div class="clear"></div>
+    <div class="mp_profiles_desc">
+    <p class="mp_profiles_desc"><?php echo $this->__($sellerPage->getDescription()); ?></p>
+    </div>
+ 
+<?php
+/**
+ * Get Customer Details
+ */
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+/**
+ * Get Wishlist
+ */
+$wishListDatas = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($customer);
+/**
+ * Get Item Collection
+ */
+$wishListItemCollection = $wishListDatas->getItemCollection();
+$arrProductIds = array();
+/**
+ * Check the wish list item collection has values
+ */
+if (count($wishListItemCollection)) {
+	foreach ($wishListItemCollection as $item) {
+		$product = $item->getProduct();
+		$arrProductIds[] = $product->getId();
+	}
+}
+
+?>
+<?php
+/** 
+ * Load Product Collection
+ */
+    
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+    //  echo  'ff'.$_productCollection; exit;
+?>
+<?php 
+/**
+ * Check the product collection count is not defined already
+ * if so display message like there are no products matching the selection
+ */
+if(!$_productCollection->count()): ?>
+<p class="note-head"><?php echo $this->__('Products Not Found') ?></p>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<style type="text/css" media="screen">
+.col-main{width:100%;float:none;}
+.col-left.sidebar{display:none;}
+</style>
+<?php else: ?>
+<div class="category-products">
+		
+	<?php 
+	
+	// commented due to the toolbar we are showing at top outside the content in breadcrumbs.phtml
+	// for that we create new template named toolbar_top.phtml and see also local.xml
+	// echo $this->getToolbarHtml(); 
+	
+	?>
+	<?php 
+	/**
+	 * Product Collection
+	 */
+	?>
+	<?php $_collectionSize = $_productCollection->count() ?>
+	<?php 
+/**
+ * Get Count 
+ */
+
+?>
+    <div class="toolbar-bottom">
+		<?php echo $this->getToolbarHtml() ?>
+	</div>
+	<?php $_columnCount = $this->getColumnCount(); ?>
+	<ul class="less products-grid--max-<?php echo $_columnCount; ?>-col" id="catalog_listings">
+		<?php $i=0; 
+        foreach ($_productCollection as $_product): ?>
+		<li class="listing closed">
+			<a class="product_listing_link"  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+				<?php $_imgSize = 254; ?>
+				<div class="image_container">
+					<img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(254,367); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+					<div class="preloader" style="visibility:hidden"></div>
+				</div>
+				<?php
+			   $prName = $_product->getName();
+			   $lenPrName = strlen($_product->getName());
+			   $subPrName = substr($prName, 0, 56);
+			   if ($lenPrName >= 56) {
+				   $prNameFix = $subPrName . "...";
+				} else {
+				   $prNameFix = $prName;
+				}
+				$my_product = Mage::getModel('catalog/product')->load($_product->getId());
+				?>
+				<div class="details_container">
+					<p class="brand">
+					<?php if($_product->getAttributeText('manufacturer')=='') { ?>
+					<?php echo $this->__($prNameFix); ?>
+					<?php } else { ?>
+					<?php echo $this->__($_product->getAttributeText('manufacturer')); 
+					}
+					?>
+					</p>
+					<p class="description"><?php echo $this->__($prNameFix); ?><?php //echo substr($my_product->getDescription(), 0, 25); ?></p>
+					<p class="price">
+						<span>
+						<?php //echo number_format($my_product->getPrice(), 2); ?>
+						<?php echo $this->getPriceHtml($_product, true) ?>
+						</span>
+					</p>
+				</div>
+			
+		</li>
+		<?php endforeach ?>
+	</ul>
+	<div class="toolbar-bottom">
+		<?php //echo $this->getToolbarHtml() ?>
+		<?php //echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar-bottom.phtml')->toHtml() ?>
+	</div>
+</div>
+<?php endif; ?>

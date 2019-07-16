@@ -1,0 +1,42 @@
+<html>
+<head><title>DHL label</title></head>
+<body>
+<?php
+$order_id = $this->getRequest()->getParam('order');
+$refund_id = $this->getRequest()->getParam('shipment_id');
+$order = Mage::getModel('sales/order')->load($order_id);
+$storeId = NULL;
+/*multistore*/
+$storeId = $order->getStoreId();
+/*multistore*/
+if (Mage::getStoreConfig('dhllabel/return/refundaccess', $storeId) == 1) {
+    $collections = Mage::getModel('dhllabel/dhllabel');
+                $colls = $collections->getCollection()->addFieldToFilter('shipment_id', $refund_id)->addFieldToFilter('type', 'refund');
+                $coll = 0;
+                foreach ($colls AS $k => $v) {
+                    $coll = $k;
+                    break;
+                }
+    $collection = Mage::getModel('dhllabel/dhllabel')->load($coll);
+        echo '
+    <style>
+    @media print {
+    br, input, span {
+    display: none;
+    }
+    }
+    .raspechatat_im{display:block !important;margin:0 !important;padding:0 !important;max-height:800px !important;height:100% !important;}
+    </style>
+    <br /><br />
+    <input type="button" value="   Print   " onclick="window.print()">
+        ';
+        echo '
+    <br /><br />
+    <span>Tracking Number ' . $collection['trackingnumber'] . '</span>
+    <br /><br />
+    <br />
+<img class="raspechatat_im" id="raspechatat_im" src="' . Mage::getBaseUrl('media') . 'dhllabel/label/' . $collection['labelname'] . '" />';
+}
+?>
+</body>
+</html>

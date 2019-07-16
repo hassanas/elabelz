@@ -1,0 +1,43 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: vitalij
+ * Date: 08.04.17
+ * Time: 13:53
+ */
+$html = "";
+$order_id = $this->getRequest()->getParam('order_id');
+$shipment_id = $this->getRequest()->getParam('shipment_id');
+$type = $this->getRequest()->getParam('type');
+$collection = Mage::getModel('dhllabel/dhllabel');
+$colls = $collection->getCollection()->addFieldToFilter('order_id', $order_id)->addFieldToFilter('shipment_id', $shipment_id)->addFieldToFilter('type', $type);
+if (count($colls) > 0) {
+    $coll = array();
+    foreach ($colls AS $v) {
+        $coll = $v;
+        if(file_exists(Mage::getBaseDir('media') . '/dhllabel/label/invoice_' . $coll['trackingnumber'] . '.pdf')) {
+            unlink(Mage::getBaseDir('media') . '/dhllabel/label/invoice_' . $coll['trackingnumber'] . '.pdf');
+        }
+        if(file_exists(Mage::getBaseDir('media') . '/dhllabel/label/' . $coll['labelname']) && !is_dir(Mage::getBaseDir('media') . '/dhllabel/label/' . $coll['labelname'])) {
+            unlink(Mage::getBaseDir('media') . '/dhllabel/label/' . $coll['labelname']);
+        }
+        $collection->setId($coll->getId())->delete();
+        $shipm = Mage::getModel('sales/order_shipment')->load($shipment_id);
+        $tracks = $shipm->getAllTracks();
+        foreach ($tracks as $track) {
+            if ($track->getNumber() == $coll['trackingnumber']) {
+                $track->delete();
+            }
+        }
+    }
+}
+$html .= '<br />Removal was successful. Back to <a href="' . $this->getUrl('adminhtml/sales_order/view/order_id/' . $order_id) . '">order</a>.';
+if ($type == 'shipment') {
+    $html .= ' Back to <a href="' . $this->getUrl('adminhtml/sales_order_shipment/view/shipment_id/' . $shipment_id) . '">shipment</a>';
+    $html .= ' or <a href="' . $this->getUrl('adminhtml/dhllabel_dhllabel/intermediate/order_id/' . $order_id . '/shipment_id/' . $shipment_id . '/type/shipment') . '">Create new</a>';
+} else {
+    $html .= ' Back to <a href="' . $this->getUrl('adminhtml/sales_order_creditmemo/view/creditmemo_id/' . $shipment_id) . '">credit memo</a>';
+    $html .= ' or <a href="' . $this->getUrl('adminhtml/dhllabel_dhllabel/intermediate/order_id/' . $order_id . '/shipment_id/' . $shipment_id . '/type/refund') . '">Create new</a>';
+}
+
+echo $html;

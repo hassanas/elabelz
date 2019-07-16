@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+
+/* @var $this Mage_Catalog_Block_Product_View_Media */
+?>
+<?php
+$_product = $this->getProduct();
+$_helper = $this->helper('catalog/output');
+?>
+<div class="product-image product-image-zoom">
+    <div class="product-image-gallery">
+        <img id="image-main" src="<?php echo $this->helper('catalog/image')->init($_product, 'image') ?>" alt="<?php echo $this->__($this->escapeHtml($this->getImageLabel())) ?>" title="<?php echo $this->__($this->escapeHtml($this->getImageLabel())); ?>"/>
+        <?php
+        $i = 0;
+        foreach ($this->getGalleryImages() as $_image):
+            $_imageUrl = $this->helper('catalog/image')
+                ->init($_product, 'image', $_image->getFile())
+                ->keepFrame(false)
+                ->constrainOnly(true)
+                ->resize(1200);
+            ?>
+            <img id="image-<?php echo $i; ?>" class="gallery-image" src="<?php echo $_imageUrl; ?>" data-zoom-image="<?php echo $_imageUrl; ?>"/>
+            <?php
+            $i++;
+        endforeach;
+        ?>
+    </div>
+</div>
+
+<?php if (count($this->getGalleryImages()) > 0): ?>
+    <div class="more-views">
+        <h2><?php echo $this->__('More Views') ?></h2>
+        <ul class="product-image-thumbs">
+            <?php $i = 0;
+            foreach ($this->getGalleryImages() as $_image): ?>
+                <?php
+                if (($filterClass = $this->getGalleryFilterHelper()) && ($filterMethod = $this->getGalleryFilterMethod()) && !Mage::helper($filterClass)->$filterMethod($_product, $_image)):
+                    continue;
+                endif;
+                ?>
+                <li>
+                    <a href="#" onclick="changeImage(<?php echo $i; ?>)" title="<?php echo $this->escapeHtml($_image->getLabel()) ?>">
+                        <img id="thumbnail<?php echo $i; ?>" src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(77); ?>" width="77" height="77" alt="<?php echo $this->__($this->escapeHtml($_image->getLabel())); ?>"/>
+                    </a>
+                    <img style="display:none;" id="thumb<?php echo $i; ?>" src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(370, 315); ?>" alt="<?php echo $this->__($this->escapeHtml($_image->getLabel())); ?>"/>
+                </li>
+                <?php $i++; endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<?php echo $this->getChildHtml('after'); ?>
+<script type="text/javascript">
+    function changeImage(val) {
+        var src = document.getElementById("thumb" + val).src;
+        document.getElementById("image-main").src = src;
+    }
+</script>
+<script type="text/javascript">
+    $mp = jQuery.noConflict();
+    $mp(document).ready(function () {
+        slider = $mp('.product-image-thumbs').bxSlider({
+            infiniteLoop: false,
+            hideControlOnEnd: true,
+            slideWidth: 300,
+            minSlides: 1,
+            maxSlides: 4,
+            moveSlides: 1,
+            slideMargin: 10
+        });
+    });
+</script>

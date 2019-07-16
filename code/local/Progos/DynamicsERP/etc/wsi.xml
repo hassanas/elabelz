@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:typens="urn:{{var wsdl.name}}"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             name="{{var wsdl.name}}"
+             targetNamespace="urn:{{var wsdl.name}}">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:{{var wsdl.name}}">
+            <xsd:complexType name="salesOrderItemEntity">
+                <xsd:sequence>
+                    <xsd:element name="parent_item_id" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="salesOrderEntity">
+                <xsd:sequence>
+                    <xsd:element name="coupon_code" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="protect_code" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="msp_cashondelivery" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="msp_base_cashondelivery" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="msp_base_cashondelivery_incl_tax" type="xsd:string" minOccurs="0" /> 
+                    <xsd:element name="msp_cashondelivery_incl_tax" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+</wsdl:definitions>

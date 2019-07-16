@@ -1,0 +1,114 @@
+<?php
+/**
+ * Progos_CustomOrderFlags
+ *
+ * @category    Progos
+ * @package     Progos_CustomOrderFlags
+ * @author      Touqeer Jalal <touqeer.jalal@progos.org>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progos.org)
+ */
+$order = $this->getOrder();
+$_helper = Mage::helper('customorderflags');
+$oosStatusModel = Mage::getModel('customorderflags/source_oos')->toOptionArray();
+$prefCourierModel = Mage::getModel('customorderflags/source_prefferedCourier')->toOptionArray();
+$cstFlagModel = Mage::getModel('customorderflags/source_customerFlag')->toOptionArray();
+$upsstatusFlagModel = Mage::getModel('customorderflags/source_upsstatus')->toOptionArray();
+$dhlstatusFlagModel = Mage::getModel('customorderflags/source_dhlstatus')->toOptionArray();
+$aramexstatusFlagModel = Mage::getModel('customorderflags/source_aramexstatus')->toOptionArray();
+?>
+<div class="entry-edit box-left">
+    <div class="entry-edit-head">
+        <h4 class="icon-head"><?php echo $this->__('Order Custom Flags') ?></h4>
+    </div>
+    <div class="fieldset">
+	<div id="div-messages" style="display:none;"><ul class="messages"><li class="success-msg"><ul><li><span id="success-msg-span"></span></li></ul></li></ul></div>
+        <div id="mymodule_custom_block">
+            <table class="form-list" cellspacing="0">
+                <tr>
+                    <td class="label"><label for="oos_status"><?=$_helper->__('OOS Status')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="oos_status" name="oos_status" class="select">
+                            <?php 
+                            foreach($oosStatusModel as $k => $oos){ ?>
+                                <option <?php if($order->getOosStatus() == $k){echo 'selected="selected"';}?> value="<?=$this->getOoStatusActionUrl().'oos/'.$k?>" ><?=$oos?></option>
+                        <?php   } ?>
+                        </select>            
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="pf_courier"><?=$_helper->__('Preffered Courier')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="pf_courier" name="pf_courier" class="select">
+                            <?php 
+                            foreach($prefCourierModel as $k => $pfc){ ?>
+                                <option <?php if($order->getPrefferedCourier() == $k){echo 'selected="selected"';}?> value="<?=$this->getPrefferedCourierActionUrl().'pfc/'.$k?>" ><?=$pfc?></option>
+                        <?php   } ?>
+                        </select>            
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="cs_flag"><?=$_helper->__('Customer Flag')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="cs_flag" name="cs_flag" class="select">
+                            <?php 
+                            foreach($cstFlagModel as $k => $csf){ ?>
+                                <option <?php if($order->getCustomerFlag() == $k){echo 'selected="selected"';}?> value="<?=$this->getCustomerFlagActionUrl().'csf/'.$k?>" ><?=$csf?></option>
+                        <?php   } ?>
+                        </select>            
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="ups_flag"><?=$_helper->__('Ups Status')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="ups_flag" name="upsstatus" class="select">
+                            <?php
+                            foreach($upsstatusFlagModel as $k => $upsf){ ?>
+                                <option <?php if($order->getUpsstatus() == $k){echo 'selected="selected"';}?> value="<?=$this->getUpsstatusFlagActionUrl().'upsstatus/'.$k.'/upsstatus_label/'.$upsf?>" ><?=$upsf?></option>
+                            <?php   } ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="dhl_flag"><?=$_helper->__('Dhl Status')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="dhl_flag" name="dhlstatus" class="select">
+                            <?php
+                            foreach($dhlstatusFlagModel as $k => $dhlf){ ?>
+                                <option <?php if($order->getDhlstatus() == $k){echo 'selected="selected"';}?> value="<?=$this->getDhlstatusFlagActionUrl().'dhlstatus/'.$k.'/dhlstatus_label/'.$dhlf?>" ><?=$dhlf?></option>
+                            <?php   } ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="aramex_flag"><?=$_helper->__('Aramex Status')?></label></td>
+                    <td class="value">
+                        <select onchange="customFlagReq(this.value)" id="aramex_flag" name="aramexstatus" class="select">
+                            <?php
+                            foreach($aramexstatusFlagModel as $k => $aramexf){ ?>
+                                <option <?php if($order->getAramexstatus() == $k){echo 'selected="selected"';}?> value="<?=$this->getAramexstatusFlagActionUrl().'aramexstatus/'.$k.'/aramexstatus_label/'.$aramexf?>" ><?=$aramexf?></option>
+                            <?php   } ?>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+	function customFlagReq(url)
+	{
+		new Ajax.Request(url, {
+                method:'get',
+				onSuccess: function(transport){
+					var response = transport.responseText.evalJSON();
+					var msg = response.msg;
+					$("success-msg-span").innerHTML = msg;
+					$('div-messages').show();
+					setTimeout(function() {
+						$('div-messages').hide()
+					  }, 2000);   
+				   }
+				});
+	}
+</script>

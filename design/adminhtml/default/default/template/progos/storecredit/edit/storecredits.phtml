@@ -1,0 +1,19 @@
+<?php
+/**
+ * Added by Humera Batool for store credit while entering price on admin
+ */
+?>
+<div class="content">
+    <?php if(($this->getStoreCredit()) || ($this->getCustomerStoreCredit())):?>
+        <p><input type="hidden" class="input-text" id="store:credit" value="9" name="store_credit" style="width:200px" /> </p>
+    <?php elseif(!$this->getStoreCredit() && !$this->getCustomerStoreCredit()):?>
+        <p>This Customer does not have store credit available</p>
+    <?php endif;?>
+    <?php if($this->getStoreCredit()): ?>
+        <p><strong><?php echo $this->escapeHtml($this->getStoreCredit()) ?></strong></p>
+    <?php endif; ?>
+    <?php if($this->getCustomerStoreCredit()):?>
+        <p><strong>Customer Total Balance</strong></p>
+        <p><?php echo $this->escapeHtml($this->getCustomerStoreCredit()) ?></p>
+    <?php endif; ?>
+</div>

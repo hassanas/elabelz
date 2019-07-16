@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mirasvit/seositemap/sitemap.css</stylesheet></action>
+        </reference>
+        <reference name="footer_links">
+            <action method="removeLinkByUrl"><url helper="catalog/map/getCategoryUrl" /></action>
+            <action method="addLink" translate="label title" module="seositemap">
+                <label helper="seositemap/data/getSitemapTitle" />
+                <url helper="seositemap/data/getSitemapUrl" /><title>Site Map</title>
+            </action>
+        </reference>
+    </default>
+    <seositemap_index_index>
+        <update handle="page_one_column" />
+        <reference name="content">
+            <block type="seositemap/map" name="map" template="seositemap/map.phtml"/>
+        </reference>
+    </seositemap_index_index>
+</layout>

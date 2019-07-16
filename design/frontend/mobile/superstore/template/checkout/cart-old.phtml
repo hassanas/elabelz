@@ -1,0 +1,149 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @var $this Mage_Checkout_Block_Cart
+ */
+
+?>
+
+<?php $_priceDisplay = ($this->helper('tax')->displayCartBothPrices()) ? 'display-both-prices' : 'display-single-price'; ?>
+<div class="cart <?php echo $_priceDisplay; ?>">
+
+    <div class="page-title title-buttons">
+        <h1><?php echo $this->__('Shopping Bag') ?></h1>
+        <?php if(!$this->hasError()): ?>
+        <ul class="checkout-types top">
+        <?php foreach ($this->getMethods('top_methods') as $method): ?>
+            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+            <li><?php echo $methodHtml; ?></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+    </div>
+	
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php echo $this->getChildHtml('form_before') ?>
+	
+	<div class="row">
+	
+		<div class="col-lg-12">
+	
+			<form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+			
+				<?php echo $this->getBlockHtml('formkey'); ?>
+				
+				<!--<div class="cart_product_container">
+					<div class="cart_single_product">
+						<div class="col-xs-12">
+							<div class="cart_pro_top_row">
+								<div class="col-xs-6 cart_pro_heading">
+									<h2>Sold by <span>zimmerman</span></h2>
+								</div>
+								<div class="col-xs-6 cart_pro_shipping">
+									<div>Estimated Delivery Time: 1-2 working days after order</div>
+								</div>
+								<hr />
+							</div>
+							
+							<div class="cart_pro_middle_row">
+								<div class="col-xs-2 cart_pro_image">
+									<a href="http://localhost:8080/elabels/collaboratively-brand-open-source.html" title="Collaboratively brand open-source" class="product-image">
+										<img src="http://localhost:8080/elabels/media/catalog/product/cache/2/thumbnail/180x/9df78eab33525d08d6e5fb8d27136e95/l/a/layer-114.png" alt="Collaboratively brand open-source">
+									</a>
+								</div>
+								<div class="col-xs-6 cart_pro_details">
+									<ul>
+										<li class="cart_pro_name">
+											<h2><a href="javasctipt:;">Temperley London</a></h2>
+											<span><a href="javasctipt:;">‘Holzer’ dress</a></span>
+										</li>
+										<li class="cart_pro_id">
+											<span>Item ID: 11303890</span>
+										</li>
+										<li class="cart_pro_qtn">
+											<span>Quantity: 1 &nbsp;&nbsp;&nbsp; <a href="javascript:;">Change</a></span>
+										</li>
+										<li class="cart_pro_size">
+											<span>Size: S &nbsp;&nbsp;&nbsp; <a href="javascript:;">Change</a></span>
+										</li>
+										<li class="cart_pro_remove">
+											<a href="javascript:;">Remove Item</a>
+										</li>
+									</ul>
+								</div>
+								<div class="col-xs-4 cart_pro_price">
+									AED 3,650
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+					</div> 
+					<div class="clearfix"></div>
+				</div> -->
+				
+				<?php foreach($this->getItems() as $_item): ?>
+					<?php echo $this->getItemHtml($_item) ?>
+				<?php endforeach ?>
+								
+				<script type="text/javascript">decorateTable('shopping-cart-table')</script>
+				
+			</form>
+	
+		</div>
+	
+	</div>
+    <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
+    <div class="cart-forms">
+        <?php /* Extensions placeholder */ ?>
+        <?php echo $this->getChildHtml('checkout_cart_widget') ?>
+        <?php echo $this->getChildHtml('coupon') ?>
+        <?php echo $this->getChildHtml('checkout.cart.extra') ?>
+        <?php if (!$this->getIsVirtual()): 
+        echo $this->getChildHtml('shipping'); endif; ?>
+    </div>
+    <div class="cart-totals-wrapper">
+        <div class="cart-totals">
+            <?php echo $this->getChildHtml('totals'); ?>
+            <?php if(!$this->hasError()): ?>
+            <ul class="checkout-types bottom">
+            <?php foreach ($this->getMethods('methods') as $method): ?>
+                <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                <li class="method-<?php echo preg_replace("/[^_a-zA-Z0-9-]/", '-', $method); ?>">
+                	<?php echo $methodHtml; ?>
+				</li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php echo $this->getChildHtml('crosssell') ?>
+</div>

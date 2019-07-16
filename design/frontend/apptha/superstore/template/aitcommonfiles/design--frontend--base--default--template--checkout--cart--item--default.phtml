@@ -1,0 +1,1225 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+
+$_item = $this->getItem();
+$_product = $this->getProduct();
+
+$productid = $_product->getId();
+$productCollection = Mage::getModel('catalog/product')->load($productid);
+
+$simpleProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+if( $simpleProduct )
+    $productImage = $simpleProduct;
+else
+    $productImage = $_product;
+
+$product_delivery_terms = $productCollection->getattributeText('product_delivery_terms');
+$sellerId = $productCollection->getSellerId();
+$customerInfo = Mage::getModel('customer/customer')->load($sellerId);
+$collection = Mage::getModel('marketplace/sellerprofile')->load($sellerId, 'seller_id');
+if ($collection['store_title'] != '') {
+    $targetPath = 'marketplace/seller/displayseller/id/' . $sellerId;
+    $mainUrlRewrite = Mage::getModel('core/url_rewrite')->load($targetPath, 'target_path');
+    $getRequestPath = $mainUrlRewrite->getRequestPath();
+    $getRequestPath = Mage::getUrl($getRequestPath);
+}
+
+$isVisibleProduct = $_item->getProduct()->isVisibleInSiteVisibility();
+$canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
+?>
+<tr class="cart_item_heading_row">
+    <td colspan="3">
+
+        <div class="cart_product_container">
+            <div class="cart_single_product">
+                <div class="col-xs-12">
+                    <div class="cart_pro_middle_row">
+                        <div class="col-xs-2 cart_pro_image">
+                            <?php $_p_image = (string)Mage::helper('catalog/image')->init($productImage, 'small_image')->keepFrame(false)->constrainOnly(true)->resize(400); ?>
+                            <?php if ($this->hasProductUrl()): ?>
+                                <a href="<?php echo $this->getProductUrl() ?>"
+                                   title="<?php echo $this->escapeHtml($this->getProductName()) ?>"
+                                   class="product-image">
+                                    <img class="img-responsive"
+                                         src="<?php echo $_p_image; ?>"
+                                         alt="<?php echo $this->escapeHtml($this->getProductName()) ?>"/>
+                                </a>
+                            <?php else: ?>
+                                <img class="img-responsive"
+                                     src="<?php echo $_p_image; ?>"
+                                     alt="<?php echo $this->escapeHtml($this->getProductName()) ?>"/>
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-xs-6 cart_pro_details">
+                            <ul>
+                                <li class="cart_pro_name">
+                                    <h2>
+                                        <?php if ($this->hasProductUrl()): ?>
+                                            <a href="<?php echo $this->getProductUrl() ?>">
+                                                <?php echo $this->escapeHtml($this->getProductName()) ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <?php echo $this->escapeHtml($this->getProductName()) ?>
+                                        <?php endif; ?>
+                                    </h2>
+                                    <span><a href="javasctipt:;"><?php echo $this->getDescription(); ?></a></span>
+                                </li>
+
+                                <li class="cart_pro_id">
+                                    <span><?php echo $this->__('Item ID') ?>
+                                        : <?php echo '00' . $_item->getId() ?></span>
+                                </li>
+
+                                <li class="cart_pro_qtn">
+                                    <div class="qty_label qty_inner_box">
+                                        <?php echo $this->__('Quantity'); ?>: <?php echo $this->getQty() ?>
+                                    </div>
+                                    <div class="quantity_edit_box qty_inner_box">
+                                        <div class="a-center">
+                                            <input name="cart[<?php echo $_item->getId() ?>][qty]"
+                                                   data-cart-item-id="<?php echo $this->jsQuoteEscape($_item->getSku()) ?>"
+                                                   value="<?php echo $this->getQty() ?>" size="4"
+                                                   title="<?php echo $this->__('Qty') ?>" class="input-text qty"
+                                                   maxlength="12" data-identifier-item="<?php echo $_item->getId() ?>"
+                                                   data-identifier-old-qty='<?php echo $this->getQty() ?>'/>
+                                        </div>
+                                    </div>
+                                    <div class="quantity_change_btn qty_inner_box">
+                                        <a href="javascript:;" class="change_qty"><?php echo $this->__('Change'); ?></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                                <li class="cart_pro_size">
+
+                                    <!-- *** -->
+
+                                    <fieldset class="product-options" id="product-options-wrapper"
+                                              style="border:0px; margin:0px; padding:0px; background-color:inherit; ">
+                                        <script type="text/javascript">
+                                            //<![CDATA[
+
+                                            var optionTextCounter = {
+                                                count: function (field, cntfield, maxlimit) {
+                                                    if (field.value.length > maxlimit) {
+                                                        field.value = field.value.substring(0, maxlimit);
+                                                    } else {
+                                                        cntfield.innerHTML = maxlimit - field.value.length;
+                                                    }
+                                                }
+                                            }
+
+                                            Product.Options<?php echo $_item->getId() ?> = Class.create();
+                                            Product.Options<?php echo $_item->getId() ?>.prototype = {
+                                                initialize: function (config) {
+                                                    this.config = config;
+                                                },
+                                                reloadPrice: function () {
+                                                    return '';
+                                                }
+                                            }
+                                            function validateOptionsCallback(elmId, result) {
+                                                var container = $(elmId).up('ul.options-list');
+                                                if (result == 'failed') {
+                                                    container.removeClassName('validation-passed');
+                                                    container.addClassName('validation-failed');
+                                                } else {
+                                                    container.removeClassName('validation-failed');
+                                                    container.addClassName('validation-passed');
+                                                }
+                                            }
+                                            var opConfig<?php echo $_item->getId() ?> = new Product.Options<?php echo $_item->getId() ?>(<?php echo $this->getJsonConfig() ?>);
+                                            //]]>
+
+
+                                            /**************************** CONFIGURABLE PRODUCT **************************/
+                                            Product.Config<?php echo $_item->getId() ?> = Class.create();
+                                            Product.Config<?php echo $_item->getId() ?>.prototype = {
+                                                initialize: function (config) {
+                                                    this.config = config;
+                                                    this.taxConfig = this.config.taxConfig;
+                                                    this.settings = $$('.super-attribute-select-<?php echo $_item->getId() ?>');
+                                                    this.state = new Hash();
+                                                    this.priceTemplate = new Template(this.config.template);
+                                                    this.prices = config.prices;
+
+                                                    this.settings.each(function (element) {
+                                                        Event.observe(element, 'change', this.configure.bind(this))
+                                                    }.bind(this));
+
+                                                    this.aEmelentsToConfig = [];
+                                                    this.iCounter = 0;
+                                                    // fill state
+                                                    this.helperID = 0;
+                                                    this.settings.each(function (element) {
+                                                        var attributeId = element.id.replace(/[a-z]*/, '');
+
+                                                        /**
+                                                         *    MBT custom script start
+                                                         *    Showing the selected value of attributes
+                                                         */
+
+                                                        var splitClass = element.className.split('-');
+                                                        var uniqueID = splitClass.length - 1;
+                                                        var identifier = splitClass[uniqueID];
+                                                        setTimeout(function () {
+                                                            var eachEle = document.querySelector('[data-unique-identifier="' + identifier + '-' + attributeId + '"]');
+                                                            var sLabel = eachEle.options[eachEle.selectedIndex].innerHTML;
+                                                            var sValue = eachEle.options[eachEle.selectedIndex].value;
+                                                            if (sValue != '') {
+                                                                document.getElementById(identifier + '-' + attributeId).innerHTML = sLabel;
+                                                            } else {
+                                                                document.getElementById(identifier + '-' + attributeId).innerHTML = '';
+                                                            }
+                                                        }, 100);
+
+                                                        /**
+                                                         *    MBT custom script end
+                                                         */
+
+                                                        if (attributeId && this.config.attributes[attributeId]) {
+                                                            element.config = this.config.attributes[attributeId];
+                                                            element.attributeId = attributeId;
+                                                            this.state[attributeId] = false;
+                                                        }
+                                                    }.bind(this))
+
+                                                    // Init settings dropdown
+                                                    var childSettings = [];
+                                                    for (var i = this.settings.length - 1; i >= 0; i--) {
+                                                        var prevSetting = this.settings[i - 1] ? this.settings[i - 1] : false;
+                                                        var nextSetting = this.settings[i + 1] ? this.settings[i + 1] : false;
+                                                        if (i == 0) {
+                                                            this.fillSelect(this.settings[i])
+                                                        }
+                                                        else {
+                                                            this.settings[i].disabled = true;
+                                                        }
+                                                        $(this.settings[i]).childSettings = childSettings.clone();
+                                                        $(this.settings[i]).prevSetting = prevSetting;
+                                                        $(this.settings[i]).nextSetting = nextSetting;
+                                                        childSettings.push(this.settings[i]);
+                                                    }
+
+                                                    // try retireve options from url
+                                                    var separatorIndex = window.location.href.indexOf('#');
+                                                    if (separatorIndex != -1) {
+                                                        var paramsStr = window.location.href.substr(separatorIndex + 1);
+                                                        this.values = paramsStr.toQueryParams();
+                                                        this.settings.each(function (element) {
+                                                            var attributeId = element.attributeId;
+                                                            element.value = this.values[attributeId];
+                                                            this.configureElement(element);
+                                                        }.bind(this));
+                                                    }
+
+                                                    if (this.aEmelentsToConfig) {
+                                                        for (var p = 0; p < this.iCounter; p++) {
+                                                            this.configureElement(this.aEmelentsToConfig[p]);
+                                                        }
+                                                    }
+                                                },
+
+                                                configure: function (event) {
+                                                    var element = Event.element(event);
+                                                    this.configureElement(element);
+                                                },
+
+                                                configureElement: function (element) {
+                                                    this.reloadOptionLabels(element);
+
+                                                    if (element.value) {
+                                                        this.state[element.config.id] = element.value;
+                                                        if (element.nextSetting) {
+                                                            element.nextSetting.disabled = false;
+                                                            this.fillSelect(element.nextSetting);
+                                                            this.resetChildren(element.nextSetting);
+                                                        }
+                                                    }
+                                                    else {
+                                                        this.resetChildren(element);
+                                                    }
+                                                    this.reloadPrice();
+                                                    //      Calculator.updatePrice();
+                                                },
+
+                                                reloadOptionLabels: function (element) {
+                                                    var selectedPrice;
+                                                    if (element.options[element.selectedIndex].config) {
+                                                        selectedPrice = parseFloat(element.options[element.selectedIndex].config.price)
+                                                    }
+                                                    else {
+                                                        selectedPrice = 0;
+                                                    }
+                                                    for (var i = 0; i < element.options.length; i++) {
+                                                        if (element.options[i].config) {
+                                                            element.options[i].text = this.getOptionLabel(element.options[i].config, element.options[i].config.price - selectedPrice);
+                                                        }
+                                                    }
+                                                },
+
+                                                resetChildren: function (element) {
+                                                    if (element.childSettings) {
+                                                        for (var i = 0; i < element.childSettings.length; i++) {
+                                                            element.childSettings[i].selectedIndex = 0;
+                                                            element.childSettings[i].disabled = true;
+                                                            if (element.config) {
+                                                                this.state[element.config.id] = false;
+                                                            }
+                                                        }
+                                                    }
+                                                },
+
+
+                                                fillSelect: function (element) {
+                                                    var attributeId = element.id.replace(/[a-z]*/, '');
+                                                    var options = this.getAttributeOptions(attributeId);
+                                                    this.clearSelect(element);
+
+                                                    element.options[0] = new Option(this.config.chooseText, '');
+
+                                                    var prevConfig = false;
+                                                    if (element.prevSetting) {
+                                                        prevConfig = element.prevSetting.options[element.prevSetting.selectedIndex];
+                                                    }
+
+                                                    var bHasSelected = false;
+                                                    if (options) {
+                                                        var index = 1;
+                                                        bHasSelected = false;
+                                                        for (var i = 0; i < options.length; i++) {
+                                                            var allowedProducts = [];
+                                                            if (prevConfig) {
+                                                                for (var j = 0; j < options[i].products.length; j++) {
+                                                                    if (prevConfig.config.allowedProducts
+                                                                        && prevConfig.config.allowedProducts.indexOf(options[i].products[j]) > -1) {
+                                                                        allowedProducts.push(options[i].products[j]);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                allowedProducts = options[i].products.clone();
+                                                            }
+
+                                                            if (allowedProducts.size() > 0) {
+                                                                options[i].allowedProducts = allowedProducts;
+                                                                //                    element.options[index] = new Option(this.getOptionLabel(options[i], options[i].price), options[i].id);
+                                                                element.options[index] = new Option(this.getOptionLabel(options[i], options[i].price), options[i].id, options[i].attr_value); // aitoc code
+
+                                                                if (options[i].attr_value) {
+                                                                    bHasSelected = true;
+                                                                    element.options[index].selected = true;
+                                                                }
+
+                                                                element.options[index].config = options[i];
+                                                                index++;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (bHasSelected) {
+                                                        this.aEmelentsToConfig[this.iCounter] = element;
+                                                        this.iCounter++;
+                                                    }
+
+                                                },
+
+
+                                                getOptionLabel: function (option, price) {
+                                                    var price = parseFloat(price);
+                                                    if (this.taxConfig.includeTax) {
+                                                        var tax = price / (100 + this.taxConfig.defaultTax) * this.taxConfig.defaultTax;
+                                                        var excl = price - tax;
+                                                        var incl = excl * (1 + (this.taxConfig.currentTax / 100));
+                                                    } else {
+                                                        var tax = price * (this.taxConfig.currentTax / 100);
+                                                        var excl = price;
+                                                        var incl = excl + tax;
+                                                    }
+
+                                                    if (this.taxConfig.showIncludeTax || this.taxConfig.showBothPrices) {
+
+                                                        price = incl;
+                                                    } else {
+                                                        price = excl;
+                                                    }
+
+                                                    var str = option.label;
+                                                    if (price) {
+                                                        if (this.taxConfig.showBothPrices) {
+                                                            str += ' ' + this.formatPrice(excl, true) + ' (' + this.formatPrice(price, true) + ' ' + this.taxConfig.inclTaxTitle + ')';
+                                                        } else {
+                                                            str += ' ' + this.formatPrice(price, true);
+                                                        }
+                                                    }
+                                                    return str;
+                                                },
+
+                                                formatPrice: function (price, showSign) {
+                                                    var str = '';
+                                                    price = parseFloat(price);
+                                                    if (showSign) {
+                                                        if (price < 0) {
+                                                            str += '-';
+                                                            price = -price;
+                                                        }
+                                                        else {
+                                                            str += '+';
+                                                        }
+                                                    }
+
+                                                    var roundedPrice = (Math.round(price * 100) / 100).toString();
+
+                                                    if (this.prices && this.prices[roundedPrice]) {
+                                                        str += this.prices[roundedPrice];
+                                                    }
+                                                    else {
+                                                        str += this.priceTemplate.evaluate({price: price.toFixed(2)});
+                                                    }
+                                                    return str;
+                                                },
+
+                                                clearSelect: function (element) {
+                                                    for (var i = element.options.length - 1; i >= 0; i--) {
+                                                        element.remove(i);
+                                                    }
+                                                },
+
+                                                getAttributeOptions: function (attributeId) {
+                                                    if (this.config.attributes[attributeId]) {
+                                                        return this.config.attributes[attributeId].options;
+                                                    }
+                                                },
+
+                                                reloadPrice: function () {
+                                                    return '';
+                                                },
+
+                                                reloadOldPrice: function () {
+                                                    return '';
+                                                }
+                                            }
+
+                                        </script>
+                                        <?php
+
+                                        $_product = $this->getProduct();
+
+                                        switch ($_product->getTypeId()) {
+                                        case 'configurable':
+                                            ?>
+                                            <?php
+                                            $_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+                                            ?>
+                                            <?php if ($_product->isSaleable() && count($_attributes)): ?>
+                                            <?php $i = 0; ?>
+                                            <?php foreach ($_attributes as $_attribute): ?>
+                                            <div class="config_product_attr">
+                                                <div class="config_product_label qty_inner_box">
+                                                    <label>
+                                                        <?php echo $this->__($_attribute->getLabel()); ?>
+                                                        <span class="required">*</span>:&nbsp;
+                                                        <span id="<?php echo $_item->getId() ?>-<?php echo $this->__($_attribute->getAttributeId()); ?>"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="<?php if ($_attribute->decoratedIsLast) { ?>last<?php } ?> config_product_field qty_inner_box">
+                                                    <select data-unique-identifier="<?php echo $_item->getId() ?>-<?php echo $_attribute->getAttributeId() ?>"
+                                                            name="cart[<?php echo $_item->getId() ?>][super_attribute][<?php echo $_attribute->getAttributeId() ?>]"
+                                                            id="attribute<?php echo $_attribute->getAttributeId() ?>"
+                                                            class="super-attribute-select-<?php echo $_item->getId() ?>">
+                                                        <option><?php echo $this->__('Choose an Option...') ?></option>
+                                                        x
+                                                    </select>
+                                                </div>
+                                                <div class="quantity_change_btn qty_inner_box">
+                                                    <a href="javascript:;"
+                                                       class="<?php echo ($i == 0) ? "change_first_attr" : "change_second_attr"; ?>"><?php echo $this->__('Change'); ?></a>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                        <?php $i++;
+                                        endforeach; ?>
+
+                                            <script type="text/javascript">
+                                                var spConfig<?php echo $_item->getId() ?> = new Product.Config<?php echo $_item->getId() ?>(<?php echo $this->getJsonConfig() ?>);
+                                            </script>
+                                        <?php endif;
+                                        ?>
+                                        <?php $_options = Mage::helper('core')->decorateArray($this->getOptions()) ?>
+                                        <?php if ($_options AND count($_options)): ?>
+                                            <dl>
+                                                <?php foreach ($_options as $_option): ?>
+                                                    <?php echo $this->__($this->getOptionHtml($_option)); ?>
+                                                <?php endforeach; ?>
+                                            </dl>
+                                        <?php endif; ?>
+                                        <?php
+
+                                        break;
+
+
+                                        case 'bundle':
+                                        ?>
+                                            <script type="text/javascript">
+
+                                                if (typeof Product == 'undefined') {
+                                                    var Product = {};
+                                                }
+                                                /**************************** BUNDLE PRODUCT **************************/
+                                                Product.Bundle<?php echo $_item->getId() ?> = Class.create();
+                                                Product.Bundle<?php echo $_item->getId() ?>.prototype = {
+                                                    initialize: function (config) {
+                                                        this.config = config;
+                                                        this.cartId = '<?php echo $_item->getId(); ?>';
+                                                        this.reloadPrice();
+                                                    },
+                                                    changeSelection: function (selection) {
+                                                        parts = selection.id.split('-');
+                                                        if (this.config['options'][parts[2]].isMulti) {
+                                                            selected = new Array();
+                                                            if (selection.tagName == 'SELECT') {
+                                                                for (var i = 0; i < selection.options.length; i++) {
+                                                                    if (selection.options[i].selected && selection.options[i].value != '') {
+                                                                        selected.push(selection.options[i].value);
+                                                                    }
+                                                                }
+                                                            } else if (selection.tagName == 'INPUT') {
+                                                                selector = parts[0] + '-' + parts[1] + '-' + parts[2];
+                                                                selections = $$('.' + selector);
+                                                                for (var i = 0; i < selections.length; i++) {
+                                                                    if (selections[i].checked && selections[i].value != '') {
+                                                                        selected.push(selections[i].value);
+                                                                    }
+                                                                }
+                                                            }
+                                                            this.config.selected[parts[2]] = selected;
+                                                        } else {
+                                                            if (selection.value != '') {
+                                                                this.config.selected[parts[2]] = new Array(selection.value);
+                                                            } else {
+                                                                this.config.selected[parts[2]] = new Array();
+                                                            }
+                                                            this.populateQty(parts[2], selection.value);
+                                                        }
+                                                        this.reloadPrice();
+
+                                                    },
+
+                                                    reloadPrice: function () {
+                                                        return '';
+                                                    },
+
+                                                    populateQty: function (optionId, selectionId) {
+                                                        if ((selectionId == '') || (selectionId == 'none')) {
+                                                            this.showQtyInput(optionId, '0', false);
+                                                            return;
+                                                        }
+
+                                                        if (this.config.options[optionId].selections[selectionId].customQty == 1) {
+                                                            this.showQtyInput(optionId, this.config.options[optionId].selections[selectionId].qty, true);
+                                                        }
+                                                        else {
+                                                            this.showQtyInput(optionId, this.config.options[optionId].selections[selectionId].qty, false);
+                                                        }
+                                                    },
+                                                    showQtyInput: function (optionId, value, canEdit) {
+                                                        elem = $$('input[name="cart[' + this.cartId + '][bundle_option_qty][' + optionId + ']"]').first();
+                                                        elem.value = value;
+                                                        elem.disabled = !canEdit;
+                                                        if (canEdit) {
+                                                            elem.removeClassName('qty-disabled');
+                                                        } else {
+                                                            elem.addClassName('qty-disabled');
+                                                        }
+                                                    },
+                                                    changeOptionQty: function (element, event) {
+                                                        var checkQty = true;
+                                                        if (typeof(event) != 'undefined') {
+                                                            if (event.keyCode == 8 || event.keyCode == 46) {
+                                                                checkQty = false;
+                                                            }
+                                                        }
+                                                        if (checkQty && (Number(element.value) == 0 || isNaN(Number(element.value)))) {
+                                                            element.value = 1;
+                                                        }
+                                                        parts = element.id.split('-');
+                                                        optionId = parts[2];
+                                                        if (!this.config['options'][optionId].isMulti) {
+                                                            selectionId = this.config.selected[optionId][0];
+                                                            this.config.options[optionId].selections[selectionId].qty = element.value * 1;
+                                                            this.reloadPrice();
+                                                        }
+                                                    },
+                                                    validationCallback: function (elmId, result) {
+                                                        if (typeof elmId == 'undefined') {
+                                                            return;
+                                                        }
+                                                        var container = $(elmId).up('ul.options-list');
+                                                        if (typeof container != 'undefined') {
+                                                            if (result == 'failed') {
+                                                                container.removeClassName('validation-passed');
+                                                                container.addClassName('validation-failed');
+                                                            } else {
+                                                                container.removeClassName('validation-failed');
+                                                                container.addClassName('validation-passed');
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                bundle<?php echo $_item->getId() ?> = new Product.Bundle<?php echo $_item->getId() ?>(<?php echo $this->getJsonConfig() ?>);
+
+
+                                                document.observe('dom:loaded', function () {
+                                                    $$('input[type=radio][checked=checked], select').reject(function (el) {
+                                                        return (('SELECT' == el.tagName) && el.multiple);  // Unfortunately CSS selector select[multiple!=multple] doesn`t work as expected
+                                                    }).each(function (el) {
+
+                                                        var cart = el.name.match(/cart\[(\d+)\]/);
+                                                        var matches = ('INPUT' == el.tagName) ? el.id.match(/bundle-option-(\d+)-(\d+)/) : el.id.match(/bundle-option-(\d+)/);
+
+                                                        if (cart && matches) {
+                                                            var qtyInput = $$('input[name="cart[' + cart[1] + '][bundle_option_qty][' + matches[1] + ']"]').first();
+
+                                                            if ('SELECT' == el.tagName) {
+                                                                matches[2] = el.value;
+                                                            }
+
+                                                            window['bundle' + cart[1]].config.options[matches[1]].selections[matches[2]].qty = qtyInput.value;
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                        <?php
+
+                                        $_options = Mage::helper('core')->decorateArray($this->getBundleOptions());
+                                        ?>
+                                        <?php if ($_product->isSaleable()): ?>
+                                        <?php if (count($_options)): ?>
+                                            <dl>
+                                                <?php foreach ($_options as $_option): ?>
+                                                    <?php if (!$_option->getSelections()): ?>
+                                                        <?php continue; ?>
+                                                    <?php endif; ?>
+                                                    <?php echo $this->getBundleOptionHtml($_option) ?>
+                                                <?php endforeach; ?>
+                                            </dl>
+                                        <?php else: ?>
+                                            <p><?php echo $this->__('No options of this product are available.') ?></p>
+                                        <?php endif; ?>
+                                        <?php endif;
+                                        ?>
+                                        <?php $_options = Mage::helper('core')->decorateArray($this->getDefaultOptions()) ?>
+                                        <?php if ($_options AND count($_options)): ?>
+                                            <dl>
+                                                <?php foreach ($_options as $_option): ?>
+                                                    <?php echo $this->getDefaultOptionHtml($_option) ?>
+                                                <?php endforeach; ?>
+                                            </dl>
+                                        <?php endif; ?>
+                                        <?php
+                                        break;
+
+                                        default:
+                                        ?>
+                                        <?php $_options = Mage::helper('core')->decorateArray($this->getOptions()) ?>
+                                        <?php if ($_options AND count($_options)): ?>
+                                            <dl>
+                                                <?php foreach ($_options as $_option): ?>
+                                                    <?php echo $this->getOptionHtml($_option) ?>
+                                                <?php endforeach; ?>
+                                            </dl>
+                                        <?php endif; ?>
+                                            <?php
+                                            break;
+                                        }
+
+                                        ?>
+                                    </fieldset>
+
+                                    <!-- FINISH AITOC  -->
+
+                                    <?php if ($messages = $this->getMessages()): ?>
+                                        <?php foreach ($messages as $message): ?>
+                                            <p class="item-msg <?php echo $message['type'] ?>">
+                                                * <?php echo $this->escapeHtml($message['text']) ?></p>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                    <?php $addInfoBlock = $this->getProductAdditionalInformationBlock(); ?>
+                                    <?php if ($addInfoBlock): ?>
+                                        <?php echo $addInfoBlock->setItem($_item)->toHtml() ?>
+                                    <?php endif; ?>
+
+                                    <?php
+                                    /**
+                                     * Product Information Section
+                                     * Display product name
+                                     * sku
+                                     * product options
+                                     */
+                                    ?>
+
+                                </li>
+                                <li class="cart_pro_remove">
+                                    <a onclick="removefromcart<?php echo $_item->getId(); ?>('<?php echo $this->getDeleteUrl() ?>')"
+                                       href="javascript:void(0);" title="<?php echo $this->__('Remove Item') ?>">
+                                        <i class="fa fa-times-circle-o"></i>
+                                        <?php echo $this->__('Remove Item') ?>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-xs-4 cart_pro_price">
+                            <?php $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode(); ?>
+                            <div data-test="" class="product-cart-price"
+                                 data-rwd-label="<?php echo $this->__('Price'); ?>"
+                                 data-rwd-tax-label="<?php echo $this->__('Excl. Tax'); ?>">
+                                <?php if ($canApplyMsrp): ?>
+                                    <div class="a-right"<?php if ($this->helper('tax')->displayCartBothPrices()): ?> colspan="2"<?php endif; ?>>
+										<span class="cart-price">
+										<span class="qty-no price"><?php echo $this->getQty() ?>
+                                            <span>&times;</span></span>
+											<span class="cart-msrp-unit"><?php echo $this->__('See price before order confirmation.'); ?></span>
+                                            <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
+                                            <a id="<?php echo $helpLinkId ?>" href="#"
+                                               class="map-help-link"><?php echo $this->__("What's this?"); ?></a>
+											<script type="text/javascript">
+												Catalog.Map.addHelpLink($('<?php echo $helpLinkId ?>'), "<?php echo Mage::helper('core')->jsQuoteEscape($this->__("What's this?")) ?>");
+											</script>
+										</span>
+                                    </div>
+                                <?php else: ?>
+
+
+                                    <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                        <div class="a-right">
+                                        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                            <div class="cart-tax-total"
+                                            onclick="taxToggle('eunit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+                                        <?php else: ?>
+                                            <div class="cart-price">
+                                            <span class="qty-no price"><?php echo $this->getQty() ?>
+                                                <span>&times;</span></span>
+                                            <?php
+                                            if ($locale == "ar_SA") {
+                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                            } ?>
+                                        <?php endif; ?>
+
+                                        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                            <?php echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice() + $_item->getWeeeTaxAppliedAmount() + $_item->getWeeeTaxDisposition()); ?>
+                                        <?php else: ?>
+                                            <?php echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice()) ?>
+                                        <?php endif; ?>
+
+                                        </div>
+
+
+                                        <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+                                            <div class="cart-tax-info"
+                                                 id="eunit-item-tax-details<?php echo $_item->getId(); ?>"
+                                                 style="display:none;">
+                                                <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee"><?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['amount'], true, true); ?></span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee"><?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['amount'], true, true); ?></span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee"><?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['amount'], true, true); ?></span>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </div>
+
+                                            <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                <div class="cart-tax-total"
+                                                     onclick="taxToggle('eunit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+															<span class="weee"><?php echo Mage::helper('weee')->__('Total'); ?>
+                                                                : <?php echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice() + $_item->getWeeeTaxAppliedAmount() + $_item->getWeeeTaxDisposition()); ?></span>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    </div>
+
+                                <?php endif; ?>
+
+                                <!-- inclusive price starts here -->
+                                <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                    <div>
+                                        <?php $_incl = $this->helper('checkout')->getPriceInclTax($_item); ?>
+                                        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                        <span class="cart-tax-total"
+                                              onclick="taxToggle('unit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+											<?php else: ?>
+                                            <span class="cart-price">
+											<?php
+                                            if ($locale == "ar_SA") {
+                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                            } ?>
+                                            <?php endif; ?>
+                                            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+
+                                                <?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?>
+                                            <?php else: ?>
+
+                                                <?php echo $this->helper('checkout')->formatPrice($_incl - $_item->getWeeeTaxDisposition()) ?>
+                                            <?php endif; ?>
+											</span>
+                                            <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                                                <div class="cart-tax-info"
+                                                     id="unit-item-tax-details<?php echo $_item->getId(); ?>"
+                                                     style="display:none;">
+												<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+
+
+												<?php echo $tax['title']; ?>:
+                                                            <?php
+                                                            if ($locale == "ar_SA") {
+                                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                            } ?>
+                                                            <?php echo Mage::helper('checkout')->formatPrice($tax['amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+
+												<?php echo $tax['title']; ?>:
+                                                            <?php
+                                                            if ($locale == "ar_SA") {
+                                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                            } ?>
+                                                            <?php echo Mage::helper('checkout')->formatPrice($tax['amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php echo $tax['title']; ?>:
+                                                            <?php
+                                                            if ($locale == "ar_SA") {
+                                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                            } ?>
+                                                            <?php echo Mage::helper('checkout')->formatPrice($tax['amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+											</div>
+											<?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <div class="cart-tax-total"
+                                                         onclick="taxToggle('unit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+												<span class="weee">
+												<?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:
+
+                                                    <?php
+                                                    if ($locale == "ar_SA") {
+                                                        echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                    } ?>
+                                                    <?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?>
+												</span>
+											</div>
+                                                <?php endif; ?>
+
+                                            <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+
+
+                                <!--Sub total starts here -->
+                                <?php if (($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()) && !$_item->getNoSubtotal()): ?>
+                                    <div class="a-right 12">
+                                        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                        <span class="cart-tax-total"
+                                              onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+											<?php else: ?>
+                                            <span class="cart-price">
+											<?php endif; ?>
+                                                <?php if ($canApplyMsrp): ?>
+                                                    <span class="cart-msrp-subtotal">
+											--
+											</span>
+                                                <?php else: ?>
+                                                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                        <?php if ($locale == "ar_SA") {
+                                                            echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                        } ?>
+                                                        <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal() + $_item->getWeeeTaxAppliedRowAmount() + $_item->getWeeeTaxRowDisposition()); ?>
+                                                    <?php else: ?>
+                                                        <?php if ($locale == "ar_SA") {
+                                                            echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                        } ?>
+                                                        <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()) ?>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+											</span>
+                                            <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                                                <div class="cart-tax-info"
+                                                     id="esubtotal-item-tax-details<?php echo $_item->getId(); ?>"
+                                                     style="display:none;">
+												<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+											</div>
+											<?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <div class="cart-tax-total"
+                                                         onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+												<span class="weee">
+												<?php echo Mage::helper('weee')->__('Total'); ?>
+                                                    : <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal() + $_item->getWeeeTaxAppliedRowAmount() + $_item->getWeeeTaxRowDisposition()); ?>
+												</span>
+											</div>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()) && !$_item->getNoSubtotal()): ?>
+                                    <div>
+                                        <?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
+                                        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                        <span class="cart-tax-total"
+                                              onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+											<?php else: ?>
+                                            <span class="cart-price">
+											<?php
+                                            if ($locale == "ar_SA") {
+                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                            } ?>
+                                                <?php endif; ?>
+                                                <?php if ($canApplyMsrp): ?>
+                                                    <span class="cart-msrp-subtotal">
+											--
+											</span>
+                                                <?php else: ?>
+                                                    <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                        <?php
+                                                        if ($locale == "ar_SA") {
+                                                            echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                        } ?>
+                                                        <?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
+                                                    <?php else: ?>
+                                                        <?php
+                                                        if ($locale == "ar_SA") {
+                                                            echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                        } ?>
+                                                        <?php echo $this->helper('checkout')->formatPrice($_incl - $_item->getWeeeTaxRowDisposition()) ?>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+											</span>
+                                            <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+                                                <div class="cart-tax-info"
+                                                     id="subtotal-item-tax-details<?php echo $_item->getId(); ?>"
+                                                     style="display:none;">
+												<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php
+                                                if ($locale == "ar_SA") {
+                                                    echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                } ?>
+                                                            <?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php echo $tax['title']; ?>:
+                                                            <?php
+                                                            if ($locale == "ar_SA") {
+                                                                echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                            } ?>
+                                                            <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                                                        <span class="weee">
+												<?php
+                                                if ($locale == "ar_SA") {
+                                                    echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                } ?>
+                                                            <?php echo $tax['title']; ?>
+                                                            : <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'], true, true); ?>
+												</span>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+											</div>
+											<?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                                                    <div class="cart-tax-total"
+                                                         onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+												<span class="weee">
+												<?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:
+                                                    <?php
+                                                    if ($locale == "ar_SA") {
+                                                        echo "<span>" . $this->__($currency_symbol) . "</span>";
+                                                    } ?>
+                                                    <?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
+												</span>
+											</div>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+                                <!-- *** -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+    </td>
+</tr>
+<?php
+$currentCatIds = $productCollection->getCategoryIds();
+$categoryLevelCollection = array();
+$categoryLevelCollection = Mage::getModel('catalog/category')->getCollection()
+    ->addAttributeToSelect('name')//2 is actually the first level
+    ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+    ->addAttributeToFilter('level', 2)
+    ->addAttributeToFilter('is_active', 1);
+$counter_category = $counter_newarrivals = $counter_sales = 0;
+foreach ($categoryLevelCollection as $cat):
+    if ($cat->getName() != "Sales" && $cat->getName() != "Create Your Own" && $cat->getName() != "New Arrivals"):
+        $counter_category = 1;
+        $curen_category_name = $cat->getName();
+    elseif ($cat->getName() == "Create Your Own" || $cat->getName() == "New Arrivals"):
+        $counter_newarrivals = 1;
+    elseif ($cat->getName() == "Sales"):
+        $counter_sales = 1;
+    endif;
+endforeach;
+$path = array();
+$categoryCollection =
+    Mage::getModel('catalog/category')->getCollection()
+        ->addAttributeToSelect('*')//2 is actually the first level
+        ->addAttributeToFilter('entity_id', array('in' => $currentCatIds))
+        ->addAttributeToFilter('is_active', 1)
+        ->addAttributeToSort('level', DESC);
+foreach ($categoryCollection as $cat):
+    $path_cat = $cat->getPath();
+    $ids = explode('/', $path_cat);
+
+    if (isset($ids[2])) {
+        $topParent = Mage::getModel('catalog/category')->setStoreId(Mage::app()->getStore()->getId())->load($ids[2]);
+    } else {
+        $topParent = null;//it means you are in one catalog root.
+    }
+    if ($counter_category == 1):
+        if ($topParent->getName() == $curen_category_name):
+            $pathInStore = $cat->getPathInStore();
+            $pathIds = array_reverse(explode(',', $pathInStore));
+
+            $categories = $cat->getParentCategories();
+
+            // add category path breadcrumb
+            foreach ($pathIds as $categoryId) {
+                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                    $path['category' . $categoryId] = array(
+                        'label' => $categories[$categoryId]->getName(),
+                    );
+                }
+            }
+            break;
+        endif;
+    elseif ($counter_category != 1 && $counter_newarrivals == 1):
+        if ($topParent->getName() == "Create Your Own" || $topParent->getName() == "New Arrivals"):
+            $pathInStore = $cat->getPathInStore();
+            $pathIds = array_reverse(explode(',', $pathInStore));
+
+            $categories = $cat->getParentCategories();
+
+            // add category path breadcrumb
+            foreach ($pathIds as $categoryId) {
+                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                    $path['category' . $categoryId] = array(
+                        'label' => $categories[$categoryId]->getName(),
+                    );
+                }
+            }
+            break;
+        endif;
+    elseif ($counter_category != 1 && $counter_newarrivals != 1 && $counter_sales == 1):
+        if ($topParent->getName() == "Sales"):
+            $pathInStore = $cat->getPathInStore();
+            $pathIds = array_reverse(explode(',', $pathInStore));
+
+            $categories = $cat->getParentCategories();
+            // add category path breadcrumb
+            foreach ($pathIds as $categoryId) {
+                if (isset($categories[$categoryId]) && $categories[$categoryId]->getName()) {
+                    $path['category' . $categoryId] = array(
+                        'label' => $categories[$categoryId]->getName(),
+                    );
+                }
+            }
+            break;
+        endif;
+    endif;
+endforeach;
+
+$categorys = '';
+$pathIncreament = 1;
+$tatol_count = count($path);
+foreach ($path as $pathvalues) {
+    $categorys .= $pathvalues['label'];
+    if ($pathIncreament < $tatol_count) {
+        $categorys .= '/';
+    }
+    $pathIncreament++;
+}
+
+$store = Mage::app()->getStore();
+$currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+$user = 'Guest';
+$customerId = '';
+$loggedInStatus = 'Logged Out';
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $user = 'User';
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $customerId = $customer->getId();
+    $loggedInStatus = 'Logged In';
+}
+
+$codeArray = explode('_', $store->getCode());
+$language = '';
+if (!empty($codeArray))
+    $language = strtoupper($codeArray[0]);
+
+$cart = Mage::getSingleton('checkout/session')->getQuote();
+$_items = $cart->getAllVisibleItems();
+
+$infotrust = '';
+//Get Parent Product Sku.
+$productSku = $_product->getSku();
+$productName = addslashes($productCollection->getName());
+$categorys = addslashes($categorys);
+$brand = $productCollection->getAttributeText('manufacturer');
+if ($_item->getSpecialPrice() && Mage::getStoreConfig('infotrust/infotrust/specialprice') == '1') {
+    $price = Mage::helper('core')->currency($_item->getSpecialPrice(), false, false);
+} else {
+    $price = Mage::helper('core')->currency($_item->getPrice(), false, false);
+}
+
+$infotrust .= "{'name':'" . $productName . "',
+			   'id':'" . $productCollection->getSku() . "',
+               'quantity':'" . $this->getQty() . "',
+               'price':'" . $price . "',
+               'category':'" . $categorys . "',
+               'coupon':'" . $_item->getCouponCode() . "',
+               'brand':'" . $brand . "',
+               'variant':'" . $productSku . "',
+               'dimension5': 'New'
+                }";
+
+$commonDatalayerCode = "
+        'pageType': 'Shopping Cart',
+        'pageCategory':'No Category',
+        'userId':'" . $customerId . "',
+        'userType':'" . $user . "',
+        'loggedInStatus':'" . $loggedInStatus . "',
+        'storeCountry':'" . $store->getName() . "',
+        'storeLanguage':'" . $language . "',
+        'currencyCode':'" . $currency_code . "',
+";
+
+?>
+<?php if ($_item->getId()) { ?>
+    <script type="text/javascript">
+        function removefromcart<?php echo $_item->getId();?>(url) {
+            dataLayer.push({
+                <?php echo $commonDatalayerCode; ?>
+                'event': 'removeFromCart',
+                'currencyCode': '<?php echo $currency_code;?>',
+                'remove': {
+                    'products': [<?php echo $infotrust;?>],
+                }
+            });
+            window.location = url;
+        }
+    </script>
+<?php } ?>
+<script type="text/javascript">
+    if (window.prodata === undefined) {
+        window.prodata = {};
+    }
+    window.prodata['<?php echo $_item->getId(); ?>'] = {
+        name: "<?php echo $productName; ?>",
+        id: "<?php echo $productCollection->getSku() ?>",
+        price: "<?php echo $price ?>",
+        category: "<?php echo $categorys ?>",
+        brand: "<?php echo $brand ?>",
+        variant: "<?php echo $productSku ?>",
+        dimension5: "New",
+        currencyCode: "<?php echo $currency_code ?>",
+        storeLanguage: "<?php echo $language ?>",
+        storeCountry: "<?php echo $store->getName() ?>",
+        loggedInStatus: "<?php echo $loggedInStatus ?>",
+        userType: "<?php echo $user ?>",
+        userId: "<?php echo $customerId ?>",
+        pageCategory: "No Category",
+        pageType: "Shopping Cart",
+        coupon: "<?php echo $_item->getCouponCode()?>"
+    };
+</script>

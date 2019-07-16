@@ -1,0 +1,102 @@
+<?php
+/**
+ * User: Saroop
+ * Date: 07/04/2017
+ *
+ * RTB House Code added on Checkout Success Page
+ *
+ * */
+$order = Mage::getSingleton('sales/order');
+$get_last_real_order_id = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+$order->loadByIncrementId($get_last_real_order_id);
+$_items = $order->getAllVisibleItems();
+$count = 1;
+$productIds = "";
+$emarsysString = ''; //Create html.
+$totalCount = count($_items);
+if( $totalCount > 0 ){
+    foreach ( $_items as $item) {
+        //Get Parent Product Sku.
+        $sku = Mage::getResourceModel('catalog/product')->getProductsSku($item->getProductId());
+        $productIds .=  $sku[0]['sku'];
+        $productSku  =  $sku[0]['sku'];
+
+        $emarsysString .="{item:'".$productSku."', price:".$item->getPrice().",quantity:".$item->getQtyOrdered()."}";
+
+        if( $count < $totalCount ){
+            $productIds .= ",";
+            $emarsysString .=",";
+        }
+        $count++;
+    }
+}
+
+// the price
+$amt = $order->getGrandTotal();
+// Base Currency ('INR')
+$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+// Current Currency ('USD')
+$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+if( $currentCurrencyCode != 'AED' ){
+    // Allowed currencies
+    $allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+    $rates = Mage::getModel('directory/currency')->getCurrencyRates( $baseCurrencyCode, array_values($allowedCurrencies) );
+    // the price converted
+    $amt = $amt / $rates[$currentCurrencyCode];
+}
+?>
+
+<iframe src="//creativecdn.com/tags?id=pr_X6Bd26dydFjQmhr1EINF_orderstatus2_<?php echo $amt ?>_<?php echo $order->getData("increment_id") ?>_<?php echo $productIds;?>&amp;cd=default" width="1"
+        height="1" scrolling="no" frameBorder="0" style="display: none;">
+</iframe>
+
+<?php
+/**
+ * User: Saroop
+ * Date: 18/05/2017
+ * Emarsys Predictor. Run when user is loggedin.
+ * */
+$customerEmail = $order->getCustomerEmail();
+if( Mage::getSingleton('customer/session')->isLoggedIn() ){
+    $customer = Mage::getSingleton('customer/session')->getCustomer(); 
+    $customerEmail = $customer->getEmail();
+}
+    $orderId = $order->getData("increment_id");?>
+<script type="text/javascript">
+    ScarabQueue.push(['setEmail', '<?php echo $customerEmail; ?>']);
+    ScarabQueue.push(['cart', []]);
+    //Use testMode to prevent enqueued data-collection events from being logged
+    //ScarabQueue.push(['testMode']);
+
+    ScarabQueue.push(['purchase', {
+        orderId: '<?php echo $orderId; ?>',
+        items: [
+          <?php echo $emarsysString ; ?>
+        ]
+    }]);
+
+    ScarabQueue.push(['go']);
+</script>
+
+<?php if( $amt >= 1000 ){ ?>
+        <script>
+            var a9 = new Object();
+            a9.clientName="Elabelz_LogicPixel";
+            a9.clientID=733553;
+            a9.eventType="conversion";
+            a9.segmentNumber=3;
+            a9.segmentName="1000aedormore";
+        </script>
+        <script type="text/javascript" src="//a.tribalfusion.com/pixel/tags/Elabelz_LogicPixel/733553/pixel.js"></script>
+<?php }else{ ?>
+    <script>
+            var a9 = new Object();
+            a9.clientName="Elabelz_LogicPixel";
+            a9.clientID=733553;
+            a9.eventType="conversion";
+            a9.segmentNumber=2;
+            a9.segmentName="Lessthan1000aed";
+        </script>
+        <script type="text/javascript" src="//a.tribalfusion.com/pixel/tags/Elabelz_LogicPixel/733553/pixel.js"></script>
+<?php } ?>

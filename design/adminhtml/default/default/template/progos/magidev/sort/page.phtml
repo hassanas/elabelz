@@ -1,0 +1,73 @@
+<?php
+/** @var Progos_Magidev_Block_Sort_Adminhtml_Catalog_Category_Tab_Sort $this */
+
+/** @var Mage_Catalog_Helper_Output $_helper */
+$_helper = $this->helper('catalog/output');
+
+$_products = $this->getProducts();
+$_productCount = count($_products);
+$_columnCount = $this->getColumnCount();
+
+$_page = $this->getPage();
+$_productsPerPage = $this->getProductsPerPage();
+
+?>
+
+<div style="display: none;">
+    <button id="available-sort"
+            onclick="mAvailable.sort(<?php echo $this->getCategoryId() ?>, '<?php echo $this->getAdminUrl("*/sortproduct/save", array()); ?>?isAjax=true','<?php echo $this->getType() ?>'); return false;">
+        <?php echo $this->__('Out of Stock to the End') ?>
+    </button>
+</div>
+
+<div class="pages" id="sort-page-<?php echo $_page ?>">
+    <?php $i = 0 ?>
+    <?php foreach ($_products as $_position => $_product): ?>
+        <?php if ($i++ % $_columnCount == 0): ?>
+            <ul class="products-grid">
+        <?php endif ?>
+
+        <li id="position-<?php echo $i ?>" data-position="<?php echo $_position ?>" class="item<?php if (($i - 1) % $_columnCount == 0 ): ?> first<?php elseif ($i % $_columnCount == 0): ?> last<?php endif; ?>">
+            <div data-stock="<?php echo ($_product->getStockItem() && $_product->getStockItem()->getIsInStock()) ? '1' : '0' ?>"
+                 data-id="<?php echo $_product->getId() ?>"
+                 class="product <?php if ($_product->getStatus() == Mage_Catalog_Model_Product_Status::STATUS_DISABLED): ?>disabled-item<?php endif; ?>"
+                 id="productId-<?php echo $_product->getId() ?>">
+                <img src="<?php echo $this->helper('catalog/image')->init($_product, 'thumbnail')->resize(135); ?>" width="135" height="135"/>
+                <h2 class="product-name">
+                    <span class="proName"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span>
+                    <br/><span><?php echo $this->__('SKU:'); ?></span> <span
+                        class="proSKU <?php echo $_helper->productAttribute($_product, $_product->getSku(), 'sku'); ?>"><?php echo $_helper->productAttribute($_product, $_product->getSku(), 'sku'); ?></span>
+                    <br/><span><?php echo $this->__('Price:'); ?></span> <?php echo Mage::helper('core')->currency($_product->getPrice(), true, false); ?>
+                    <br/><span><?php echo $this->__('Availability:'); ?></span> <?php echo ($_product->getStockItem() && $_product->getStockItem()->getIsInStock()) ? $this->__('In Stock') : $this->__('Out of Stock') ?>
+                    <?php echo $_product->getInStockAndTotal(); ?>
+                </h2>
+                <div class="actions <?php echo $_product->getIndicator() ?>">
+                    <a title="Quick edit Product" class="edit-item" rel="<?php echo $this->getAdminUrl("*/sortproduct/edit", array('id' => $_product->getId())); ?>">
+                        <img src="<?php echo $this->getSkinUrl('images/magidev/sort/tab_edit.png') ?>">
+                    </a>
+                    <a target="_blank" title="Edit Product" href="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/catalog_product/edit", array('id' => $_product->getId())); ?>">
+                        <img src="<?php echo $this->getSkinUrl('images/icon_edit_address.gif') ?>">
+                    </a>
+                    <a class="disable-item" title="Enable/Disable Product" rel="<?php echo $this->getAdminUrl("*/sortproduct/status", array('id' => $_product->getId())); ?>">
+                        <img src="<?php echo $this->getSkinUrl('images/icon-enabled.png') ?>">
+                    </a>
+                    <a class="delete-item" title="Remove from the Category" rel="<?php echo $this->getAdminUrl("*/sortproduct/delete", array('id' => $_product->getId(), 'categoryId' => $this->getCategoryId())); ?>">
+                        <img src="<?php echo $this->getSkinUrl('images/icon_remove_address.gif') ?>">
+                    </a>
+                </div>
+            </div>
+        </li>
+
+        <?php if ($i % $_columnCount == 0 || $i == $_productCount): ?>
+            </ul>
+        <?php endif ?>
+    <?php endforeach ?>
+
+    <div class="pages-label"><?php echo $this->helper('magidev_sort')->__('Page #%s', $_page) ?></div>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var Sort = new Magidev.Sort(<?php echo $this->getCategoryId() ?>, '<?php echo $this->getAdminUrl("*/sortproduct/save", array()) ?>?isAjax=true', '<?php echo $this->getType() ?>');
+    //]]>
+</script>

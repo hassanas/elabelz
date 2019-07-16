@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_OrderStatuses>
+            <version>0.1.1</version>
+        </Progos_OrderStatuses>
+    </modules>
+    <global>
+        <models>
+            <orderstatuses>
+                <class>Progos_OrderStatuses_Model</class>
+                <resourceModel>orderstatuses_resource</resourceModel>
+            </orderstatuses>
+            <orderstatuses_resource>
+                <class>Progos_OrderStatuses_Model_Resource</class>
+            </orderstatuses_resource>
+        </models>
+        <blocks>
+            <orderstatuses>
+                <class>Progos_OrderStatuses_Block</class>
+            </orderstatuses>
+        </blocks>
+        <helpers>
+            <orderstatuses>
+                <class>Progos_OrderStatuses_Helper</class>
+            </orderstatuses>
+        </helpers>
+        <resources>
+            <orderstatuses_setup>
+                <setup>
+                    <module>Progos_OrderStatuses</module>
+                </setup>
+            </orderstatuses_setup>
+        </resources>
+    </global>
+</config>

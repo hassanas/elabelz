@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <menu>
+	 	<seo module="seo">
+	        <title>SEO</title>
+	        <sort_order>71</sort_order>
+	        <children>
+                <seotemplate module="seo">
+                    <title>SEO Templates</title>
+                    <sort_order>100</sort_order>
+                    <action>adminhtml/seo_template/index</action>
+                </seotemplate>
+                <seoredirect module="seo">
+                <title>Redirect</title>
+                <sort_order>300</sort_order>
+                <children>
+                    <seoredirect_management module="seo">
+                        <title>Management</title>
+                        <sort_order>10</sort_order>
+                        <action>adminhtml/seo_redirect/index</action>
+                    </seoredirect_management>
+                    <seoredirect_import module="seo">
+                        <title>Import</title>
+                        <sort_order>20</sort_order>
+                        <action>adminhtml/seo_redirectimport/index</action>
+                    </seoredirect_import>
+    	        </children>
+                </seoredirect>
+                <seorewrites module="seo">
+                        <title>Rewrites Management</title>
+                        <sort_order>500</sort_order>
+                        <action>adminhtml/seo_rewrite/index</action>
+                </seorewrites>
+                <validate module="seo">
+                    <title>Validate Installation</title>
+                    <sort_order>900</sort_order>
+                    <action>adminhtml/mstcore_validator/index/modules/SEO</action>
+                </validate>
+                <seosettings module="seo">
+                    <title>Settings</title>
+                    <sort_order>1000</sort_order>
+                    <action>adminhtml/system_config/edit/section/seo</action>
+                </seosettings>
+        </children>
+	    </seo>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+					<seo translate="title" module="seo">
+                        <title>SEO</title>
+                        <sort_order>60</sort_order>
+                        <children>
+                            <seotemplate module="seo">
+                                <title>SEO Templates</title>
+                                <sort_order>100</sort_order>
+                            </seotemplate>
+                            <seoredirect module="seo">
+                            <title>Redirect</title>
+                            <sort_order>300</sort_order>
+                            <children>
+                                <seoredirect_management module="seo">
+                                    <title>Management</title>
+                                    <sort_order>10</sort_order>
+                                </seoredirect_management>
+                                <seoredirect_import module="seo">
+                                    <title>Import</title>
+                                    <sort_order>20</sort_order>
+                                </seoredirect_import>
+                            </children>
+                            </seoredirect>
+                            <seorewrites>
+                                <title>Rewrites Management</title>
+                                <sort_order>500</sort_order>
+                            </seorewrites>
+                            <seosettings>
+                                <title>Settings</title>
+                                <sort_order>1000</sort_order>
+                            </seosettings>
+                        </children>
+                   	</seo>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <seo translate="title" module="seo">
+                                        <title>SEO</title>
+                                    </seo>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

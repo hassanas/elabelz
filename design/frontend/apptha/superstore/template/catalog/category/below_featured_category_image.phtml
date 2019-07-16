@@ -1,0 +1,17 @@
+<?php
+
+$category_id = Mage::getModel('catalog/layer')->getCurrentCategory()->getId();
+$category = Mage::getModel('catalog/category')->load($category_id);
+$RightSideCatBanner_Config = $category->getRightSideCatBanner();
+$RightSideCatBannerImage_Config = $category->getRightSideCatBannerImage();
+$mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+
+if($RightSideCatBanner_Config=='1'){
+		$_imageUrl = $RightSideCatBannerImage_Config;
+?>
+<?php } ?>
+<?php if($_imageUrl){?>
+<div class="rightside_featured_category_banner">
+   <img src="<?php echo $mediaUrl."catalog/category/".$RightSideCatBannerImage_Config; ?>" alt="<?php echo $this->htmlEscape($this->getCurrentCategory()->getName()) ?>" class="cat_banner_img img-responsive" />
+</div>
+<?php } ?>

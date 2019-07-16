@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Online Shopping in UAE: Dresses, Shoes &amp; Accessories | eLabelz</title>
+	<style type="text/css" media="screen">
+        *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+        html,body,.container{margin:0;padding:0;height:100%;}
+        .container{padding:20px;}
+        .container .container{padding:20px;margin:10px 20px;border:1px solid #000;}
+        .lander-page,.data-table{border-collapse:collapse;border:1px solid #000;height:100%;width:100%;}
+        .lander-page .logo{height:20%;text-align:center;vertical-align:middle;padding:20px;border-bottom:1px solid #000;}
+        .lander-page .logo a,.data-table td a{display:inline-block;}
+        .lander-page .logo a .logo-class{width:auto;height:166px;max-height:120px;max-width:100%;}
+        .lander-page .left,.lander-page .right{background-image:url(images/model-female.png);background-size:cover;
+            background-repeat:no-repeat;background-position:top center;width:22%;}
+            .lander-page .middle{width:40%;}
+            .lander-page .right{background-image:url(images/male_model.png);}
+            .data-table{background:#000;color:#fff;}
+            .data-table td{text-align:left;vertical-align:middle;padding:20px;border-bottom:1px solid #fff;width:33%;}
+            .data-table td[colspan="3"]{width:100%;text-align:center;}
+        .data-table td a img{/*max-height:100%;height:auto;width:auto;*/}
+        .divwidth { width: 100%; margin: auto; }
+        .divwidthlast { width: 27%; margin: auto; }
+        .divwidth a { display: inline; text-align: left; width: 100%; }
+        .flagsimg { float: left; width: 42%; margin-right: 6%; }
+        .flagslinks {float: left; width: 52%;}
+        .flagsimg img { max-width: 100%; width: 100%; float: left;} 
+        .flagslinks img { max-width: 100%; /*width: 100%;*/ float: left; }
+        .data-table td[colspan="3"] .divwidth  { text-align: left !important;}
+            @media (max-width:1000px){
+            .flagsimg { float: none; }
+            .flagsimg { width: 100%; }
+            .flagslinks { float: left;text-align: center;width: 100%;}
+            .flagslinks img { float: none; }
+            .divwidth a { text-align: center; }
+        }
+        
+        @media (max-width:1440px){
+        .data-table td a img{/*max-width:120px;*/}
+        .data-table td[colspan="3"] a img{max-width:170px;}
+        .data-table td[colspan="3"].head img{max-width:220px;}
+    }
+    @media (max-width:992px){
+        .data-table td a img{max-width:100px;}
+        .data-table td[colspan="3"] a img{max-width:150px;}
+        .data-table td[colspan="3"].head img{max-width:200px;}
+    }
+</style>
+</head>
+<body>
+<?php
+require_once('app/Mage.php');
+umask(0);
+Mage::app();
+?>
+	<div class="container">
+		<table width="100%" height="100%" border="0" class="lander-page">
+			<tr>
+				<td class="logo" colspan="3"><a href="http://elabelz.com/">
+					<img src="images/logos.png" class="logo-class" width="341" height="166">
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="left" width="30%">&nbsp;</td>
+			<td class="middle" width="40%">
+				<div class="container">
+					<table width="100%" border="0" class="data-table">
+						<tr>
+							<td colspan="3" class="head"><img title="Choose Your Location" src="images/head-txt.png" alt="Choose Your Location"></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="divwidth">
+									<div class="flagsimg">
+									<?php $url = Mage::helper("page/switch")->getPreviousUrl();
+									echo $url;
+									//$url = substr($url, 5);  
+									$url_ae = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_ae".$url ?>
+										<a href="<?php echo $url_ae ?>"><img src="images/uae_logo.png" alt=""></a>
+									</div>
+									<div class="flagslinks">
+									    <?php $url_aear = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_ae".$url ?>
+										<a href="<?php echo $url_aear ?>"><img src="images/uae_arabic.png" alt=""> </a>
+										<a href="<?php echo $url_ae ?>"><img src="images/uae_english.png" alt=""> </a>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="divwidth">
+								<div class="flagsimg">
+								    <?php $url_bh = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_bh".$url ?>
+									<a href="<?php echo $url_bh ?> "><img src="images/bahrain_logo.png" alt=""></a>
+								</div>
+								<div class="flagslinks">
+								    <?php $url_bhar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_bh".$url ?> 
+									<a href="<?php echo $url_bhar ?>"><img src="images/Bahrine_arabic.png" alt=""> </a>
+									<a href="<?php echo $url_bh ?>"><img src="images/Bahrine_english.png" alt=""> </a>
+								</div>
+								</div>
+							</td>
+							<td>
+							<div class="divwidth">
+								<div class="flagsimg">
+								<?php $url_qa = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_qa".$url ?>
+									<a href="<?php echo $url_qa ?> "><img src="images/egypt_logo.png" alt=""></a>
+								</div>
+								<div class="flagslinks">
+								    <?php $url_qaar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_qa".$url ?> 
+									<a href="<?php echo $url_qaar ?>"><img src="images/egypt_arabic.png" alt=""> </a>
+									<a href="<?php echo $url_qa ?>"><img src="images/egypt_english.png" alt=""> </a>
+								</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							<div class="divwidth">
+								<div class="flagsimg">
+								    <?php $url_om = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_om".$url ?>
+									<a href="<?php echo $url_om  ?> "><img src="images/oman_logo.png" alt=""></a>
+								</div>
+								<div class="flagslinks">
+								    <?php $url_omar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_om".$url ?>
+									<a href="<?php echo $url_omar ?>"><img src="images/oman_arabic.png" alt=""> </a>
+									<a href="<?php echo $url_om  ?>"><img src="images/oman_english.png" alt=""> </a>
+								</div>
+							</div>
+							</td>
+							<td>
+							<div class="divwidth">
+								<div class="flagsimg">
+								<?php $url_kw = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_kw".$url ?>
+									<a href="<?php echo $url_kw ?>"><img src="images/kuwait_logo.png" alt=""></a>
+								</div>
+								<div class="flagslinks">
+								<?php $url_kwar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_kw".$url ?>
+									<a href="<?php echo $url_kwar ?>"><img src="images/kuwait_arabic.png" alt=""> </a>
+									<a href="<?php echo $url_kw ?>"><img src="images/kuwait_english.png" alt=""> </a>
+								</div>
+								</div>
+							</td>
+							<td>
+							<div class="divwidth">
+								<div class="flagsimg">
+								<?php $url_ir = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_iq".$url ?>
+									<a href="<?php echo $url_ir ?>"><img src="images/iraq_flag.png" alt=""></a>
+								</div>
+								<div class="flagslinks">
+								<?php $url_irar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_iq".$url ?>
+									<a href="<?php echo $url_irar ?>"><img src="images/iraq_arabic.png" alt=""> </a>
+									<a href="<?php echo $url_ir ?>"><img src="images/iraq_english.png" alt=""> </a>
+								</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<tr>
+
+								<td colspan="3">
+								<div class="divwidth divwidthlast">
+									<div class="divwidth">
+										<div class="flagsimg">
+										<?php $url_sa = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."en_sa".$url ?>
+											<a href="<?php echo $url_sa ?>"><img src="images/saudi_logo.png" alt=""></a>
+										</div>
+										<div class="flagslinks">
+										   <?php $url_saar = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )."ar_sa".$url ?>
+											<a href="<?php echo $url_saar ?>"><img src="images/saudi_arabic.png" alt=""> </a>
+											<a href="<?php echo $url_sa ?>"><img src="images/saudi_english.png" alt=""> </a>
+										</div>
+									</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+				<td class="right" width="30%">&nbsp;</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

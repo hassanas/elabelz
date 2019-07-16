@@ -1,0 +1,99 @@
+<!--<p><?php echo $this->__('Do you have a promo code?'); ?></p>-->
+<div id="coupon-discount">
+    <div class="discount onestepcheckout-coupons">
+        <label style="font-weight:bold;"><?php echo $this->__('Enter promo code') ?>:</label>
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+        <div class="discount-form">
+            <input type="hidden" name="process_coupon" id="process_coupon" value="0" />
+            <input type="hidden" name="coupon[remove]" id="coupon-remove" value="0" />
+            <input type="hidden" name="payment-storecredit" id="payment-storecredit" value="1" />
+            <div class="input-box">
+                <input class="input-text" id="coupon-code" name="coupon[code]" value="<?php echo $this->htmlEscape($this->getCouponCode()) ?>" />
+            </div>
+            <div class="buttons-set">
+                <button type="button" title="<?php echo $this->__('Validate') ?>" class="button left apply_coupon" value="<?php echo $this->__('Validate') ?>" id="coupon-apply"><?php echo $this->__('Validate') ?></button>
+				<?php if(strlen($this->getCouponCode())): ?>
+                    <button type="button" title="<?php echo $this->__('Cancel') ?>" class="button left coupon_remove"  value="<?php echo $this->__('Cancel') ?>" id="coupon-cancel"><?php echo $this->__('Cancel') ?></button>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <script type="text/javascript">
+    //<![CDATA[
+	//$j(window).load(function() {
+	$j(document).on('click', '#coupon-apply', function() {
+		$j('#coupon-remove').prop('disabled', false);
+        $j('#process_coupon').prop('disabled', false);
+		 
+		$j("#process_coupon").attr('value', '1');
+		if ($j('#coupon-code').val()=='') {
+            $j('#coupon-code').addClass('validation-failed');
+            return;
+        }
+		$j('#coupon-remove').attr('value', '0');
+        checkout.update({
+            'process_coupon': 1,
+            'review': 1,
+            'payment-storecredit':1
+        });
+		$j('#coupon-remove').prop('disabled', false);
+        $j('#process_coupon').prop('disabled', false);
+	});
+	
+	$j(document).on('click', '#coupon-cancel', function() { 
+	
+	$j('#coupon-remove').prop('disabled', false);
+    $j('#process_coupon').prop('disabled', false);
+		
+		$j('#coupon-remove').attr('value', '1');
+        $j('#process_coupon').attr('value', '1');
+        checkout.update({
+            'process_coupon': 1,
+            'review': 1,
+            'payment-storecredit':1
+        });
+		$j('#coupon-remove').prop('disabled', false);
+        $j('#process_coupon').prop('disabled', false);
+	});
+	
+	
+	
+    /*$('coupon-apply') && $('coupon-apply').observe('click', function(e) {
+		//alert(123);
+   	 	$('process_coupon').value = "1";
+        if (!$('coupon-code').value.length) {
+            $('coupon-code').addClassName('validation-failed');
+            return;
+        }
+        $('coupon-remove').value = "0";
+        checkout.update({
+            'process_coupon': 1,
+            'review': 1
+        });
+    });
+    $('coupon-cancel') && $('coupon-cancel').observe('click', function(e) {
+        $('coupon-remove').value = "1";
+        $('process_coupon').value = "1";
+        checkout.update({
+            'process_coupon': 1,
+            'review': 1
+        });
+    });*/
+	//});
+ /*
+    $('coupon-code').observe('change', function(e) {
+        if (!$(this).value.length) {
+            $('coupon-remove').value = "1";
+        } else {
+            $('coupon-remove').value = "0";
+        }
+        checkout.update({
+            'process_coupon': 1,
+            'review': 1
+        });
+    });
+   */ 
+    //]]>
+    </script>

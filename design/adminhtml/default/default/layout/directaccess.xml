@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_directaccessbackend_index>
+        <reference name="content">
+            <block type="directaccess/adminhtml_directAccessbackend" name="directaccessbackend"
+                   template="directaccess/invoicegenerate.phtml"/>
+        </reference>
+    </adminhtml_directaccessbackend_index>
+    <adminhtml_quickorderbackend_index>
+        <reference name="content">
+            <block type="directaccess/adminhtml_quickorderbackend" name="quickorderbackend"
+                   template="directaccess/quickorder.phtml"/>
+        </reference>
+    </adminhtml_quickorderbackend_index>
+    <adminhtml_automateorderbackend_index>
+        <reference name="content">
+            <block type="directaccess/adminhtml_automateorderbackend" name="automateorderbackend"
+                   template="directaccess/automateorder.phtml"/>
+        </reference>
+    </adminhtml_automateorderbackend_index>
+</layout>

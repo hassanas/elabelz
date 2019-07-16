@@ -1,0 +1,208 @@
+<?php
+/**
+ * Category layered navigation
+ *
+ * @var $this Amasty_Shopby_Block_Catalog_Layer_View
+ */
+?>
+<?php
+// Add debug info to check why blocks can't be shown on prod.
+$isEnabled = Mage::getStoreConfig('catalog/layered_navigation/enable_debug');
+if ($isEnabled):
+    $time = date('l jS \of F Y h:i:s A');
+    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+    $message = 'Can show layered navigation block: '
+        . $this->canShowBlock()
+        . '. Requested URL: ' . $currentUrl
+        . '. At: ' . $time;
+    Mage::log($message, null, 'layered_nav.log');
+endif;
+?>
+<?php if ($this->canShowBlock()):
+    $currentPageUrl = "";
+    $filterArray = array();
+    $brandPage = false;
+    $request = Mage::app()->getRequest();
+    $pathInfo = $request->getPathInfo();
+    $appliedFilters = $this->getLayer()->getState()->getFilters();
+    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+
+    // If we find the brands are coming then We store brand data array in this array variable.
+    if (strpos($pathInfo, 'brand/index/view') !== false || $pathInfo === 'shopby' || $pathInfo === 'brand') {
+        $brandId = (int)$request->getParam('id');
+        $brand = Mage::getModel('shopbybrand/brand')->load($brandId);
+
+        // We get only data from brand object.
+        $brandInformationArray = $brand->getData();
+
+        $brandAttribute = Mage::getModel('catalog/resource_eav_attribute')->load('manufacturer', 'attribute_code');
+        $brandName = $brandAttribute->getSource()->getOptionText($brand->getOptionId());
+
+        $head = $this->getLayout()->getBlock('head');
+        $head->setTitle($brandName);
+
+        $brand = explode('/', $currentUrl);
+
+        $brandPage = true;
+    }
+    ?>
+
+    <?php if ($landing = Mage::registry('amlanding_page')): ?>
+        <?php $pageId = $this->getRequest()->getParam('page_id', null); ?>
+        <?php $page = Mage::getModel('amlanding/page')->load($pageId); ?>
+        <?php $categoryCollection = Mage::getResourceModel('catalog/category_collection')
+            ->addAttributeToFilter('entity_id', array('in' => explode(',', $page->getCategory())))
+            ->addAttributeToSelect(array('is_active', 'name')); ?>
+
+        <dl id="filter_category" class="filter_cat_list">
+            <dd>
+                <div class="title--bar">
+                    <h6><?php echo $this->__('Category'); ?></h6>
+                    <a class="pop-layer" href="#filter_category" data-type="close" data-parent=".wrapper" data-remove-to-parent="pop-layer-category-show"><?php echo $this->__('Close'); ?></a>
+                </div>
+                <ol>
+                    <?php foreach ($categoryCollection as $category): ?>
+                        <?php if ($category->getIsActive()): ?>
+                            <?php $styleAttribute = (isset($noChildrenCategoryId) && $category->getId() == $noChildrenCategoryId) ? 'style="font-weight: 900;"' : '' ?>
+                            <li>
+                            <li>
+                                <?php
+                                $attributes = $page->getConditionsSerialized();
+                                $original_array = unserialize($attributes);
+                                $brand = array();
+                                $i = 0;
+                                $originalArrayConditions = $original_array['conditions'];
+                                if (is_array($originalArrayConditions) || is_object($originalArrayConditions) ) {
+                                    foreach ($originalArrayConditions as $condition):
+                                        if ($condition['attribute'] == 'manufacturer'):
+                                            $attr = Mage::getModel('catalog/resource_eav_attribute')->load(81)->setStoreId(1);
+                                            $brandName = $attr->getSource()->getOptionText($condition['value']);
+                                            $brandName = explode(" ", $brandName);
+                                            $brandName = implode("-", $brandName);
+                                            $brandName = strtolower($brandName);
+                                            $i = $i + 1;
+                                            $brand[$i] = $brandName;
+                                        endif;
+                                    endforeach;
+                                }
+                                $brand = implode("--", $brand);
+
+                                $appliedFilters = Mage::getSingleton('catalog/layer')->getState()->getFilters();
+
+                                if ($appliedFilters):
+                                    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+                                    $currentUrl = explode("/", $currentUrl);
+                                    $attributeFilters = end($currentUrl);
+
+                                    if ($attributeFilters == "" || $attributeFilters == "?dup=true" ):
+                                        array_pop($currentUrl);
+                                        $attributeFilters = end($currentUrl);
+                                    endif;
+
+
+                                    if ($brand):
+                                        $brandUrl = $brand . "--";
+                                    else:
+                                        $brandUrl = "";
+                                    endif;
+
+                                    if (substr($category->getUrl($category), -1) == '/'):
+                                        $childUrl = $category->getUrl($category) . $brandUrl . $attributeFilters;
+                                    else:
+                                        $childUrl = $category->getUrl($category) ."/" .$brandUrl . $attributeFilters;
+                                    endif;
+
+                                else:
+                                    if (substr($category->getUrl($category), -1) == '/'):
+                                        $childUrl = $category->getUrl($category) . $brand;
+                                    else:
+                                        $childUrl = $category->getUrl($category) . "/" . $brand;
+                                    endif;
+                                endif; ?>
+
+                                <?php $path_cat = $category->getPath();
+                                      $category_name = Mage::helper("progos_ccatalog/data")->getParentCategory($path_cat,$category); ?>
+
+                                <a href="<?php echo $childUrl ?>" <?php echo $styleAttribute ?>>
+                                    <?php echo $category_name; ?>
+                                    <span class="count" style="display:none"> (<?php echo $category->getProductCount() ?>)</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ol>
+            </dd>
+        </dl>
+    <?php
+    else:
+        $currentCategory = Mage::registry('current_category');
+    ?>
+    <?php
+    endif;
+    if($brandPage):
+        $currentPageUrl = Mage::getBaseUrl().$brandInformationArray['url_key'];
+    else:
+        if(is_object($currentCategory))
+            $currentPageUrl = $currentCategory->getUrl();
+     endif;
+    ?>
+        <input type="hidden" id="current-page-url" value="<?php echo $currentPageUrl; ?>">
+
+    <div id="site--filter" class="block block-layered-nav<?php if (!$appliedFilters): ?> block-layered-nav--no-filters<?php endif; ?>">
+        <div class="filterBackbtn"> </div>
+        <div class="filterCheckAll"><?php echo $this->__('All') ?></div>
+        <div class="filterClear"><?php echo $this->__('Clear') ?></div>
+
+        <div class="title--bar">
+
+            <h6><?php echo $this->__('Filter'); ?></h6>
+             </div>
+        <div class="selectedTitle" ></div>
+        <div class="block-content toggle-content">
+            <?php if ($this->canShowOptions()): ?>
+                <dl id="narrow-by-list">
+                    <?php foreach ($appliedFilters as $item): ?>
+                        <?php if ($item->getRemoveUrl()) $filterArray[$item->getName()] = $item->getRemoveUrl(); ?>
+                    <?php endforeach; ?>
+
+                    <?php echo $this->getRequestVar(); ?>
+                    <?php $count = 1; ?>
+                    <?php $selectedFilters = array(); ?>
+                    <?php foreach ($this->getFilters() as $filter): ?>
+                        <?php $filterName = $filter->getName(); ?>
+
+                        <dt class="cust_filters <?php echo $filter->getName() ?> filter_options <?php if (in_array($filter->getName(), $selectedFilters)) echo "open"; ?>" name="<?php echo $filter->getName() ?>" data-target="#open_<?php echo $count ?>">
+                            <div class="filterName">
+                            <?php echo $this->__($filterName); ?>
+                            </div>
+                            <?php if (array_key_exists($filterName, $filterArray)): ?>
+                                <a class="clearFil" href="<?php echo $filterArray[$filterName] ?>">
+                                    <?php echo $this->__('Clear') ?>
+                                </a>
+                       <?php endif; ?>
+                        </dt>
+                        <dd id="open_<?php echo $count ?>">
+                            <?php echo $filter->getHtml() ?>
+                        </dd>
+                        <?php $count++; ?>
+                    <?php endforeach; ?>
+                </dl>
+                <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+            <?php endif; ?>
+
+            <?php if ($appliedFilters): ?>
+                <div class="actions FiltersClear_All">
+                    <a href="<?php echo $this->getClearUrl() ?>"> <?php echo $this->__('Clear All') ?></a>
+                </div>
+            <?php endif; ?>
+
+        </div>
+        <div class="FiltersbottomBtns">
+            <button type="button" class="btn btn-small" id="filter-results" ><?php echo $this->__('Apply Filter') ?></button>
+            <a href="javascritp:void(0)" id="doneFiltersbtn" class="doneFiltersbtn btn btn-small"><?php echo $this->__('Done') ?></a>
+            <a id="filtersclosebtn" class="pop-layer filtersclosebtn btn btn-small" href="#site--filter" data-type="close" data-parent=".wrapper" data-remove-to-parent="pop-layer-filter-show"><?php echo $this->__('Close') ?></a>
+        </div>
+        <div class="filtersCloseBtnright"> <i class="fa fa-times" aria-hidden="true"></i> </div>
+    </div>
+
+<?php endif; ?>

@@ -1,0 +1,95 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ Order Place: Email Template
+ */
+?>
+<?php $_order = $this->getOrder() ?>
+<?php if ($_order): ?>
+<?php $locale = Mage::app()->getLocale()->getLocaleCode(); ?>
+<?php if($locale == "ar_SA"){ ?>
+<div style="font-size:12px;line-height:14px;font-family:Tahoma, Arial, 'Segoe UI', sans-serif;padding:20px 35px;box-sizing:border-box;border:1px solid #b4b4b4; border-bottom:0;direction:rtl;">
+<?php } else { ?>
+<div style="font-size:12px;line-height:14px;font-family:Tahoma, Arial, 'Segoe UI', sans-serif;padding:20px 35px;box-sizing:border-box;border:1px solid #b4b4b4; border-bottom:0;">
+<?php } ?>
+<h2 style="margin:0 0 20px; font-size:15px;line-height:17px;"><?php echo $this->__('Order Summary'); ?></h2>
+<table cellspacing="0" cellpadding="5" border="0" width="100%" style="width:100%;">
+    <thead>
+        <tr style="text-align:left;">
+            <th><?php echo $this->__('No.'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Product'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Item Name'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Sku'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Quantity'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Size'); ?></th>
+            <th style="text-align:center"><?php echo $this->__('Price'); ?></th>
+        </tr>
+    </thead>
+    <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+        <?php //adding check for removing canceled items from email templates
+        if($_item->getStatus() !== $this->__("Canceled") ):?>
+    <?php if($_item->getParentItem()) continue; else $i++; ?>
+    <tbody<?php echo $i%2 ? ' bgcolor="#F6F6F6"' : '' ?>>
+        <?php echo $this->getItemHtml($_item) ?>
+    </tbody>
+            <?php endif; ?>
+    <?php endforeach; ?>
+</table>
+</div>
+<?php if($locale == "ar_SA"){ ?>
+<div style="font-size:12px;line-height:14px;font-family:Tahoma, Arial, 'Segoe UI', sans-serif;padding:15px 30px;box-sizing:border-box;border:1px solid #b4b4b4; border-bottom:0;direction:rtl">
+<?php } else { ?>
+<div style="font-size:12px;line-height:14px;font-family:Tahoma, Arial, 'Segoe UI', sans-serif;padding:15px 30px;box-sizing:border-box;border:1px solid #b4b4b4; border-bottom:0;">
+<?php } ?>
+<table cellspacing="0" cellpadding="5" border="0" width="100%" style="width:100%;">
+<tbody>
+<?php echo $this->getChildHtml('order_totals') ?>
+</tbody>
+</table>
+<?php if ($this->helper('giftmessage/message')->isMessagesAvailable('order', $_order, $_order->getStore()) && $_order->getGiftMessageId()): ?>
+    <?php $_giftMessage = $this->helper('giftmessage/message')->getGiftMessage($_order->getGiftMessageId()); ?>
+    <?php if ($_giftMessage): ?>
+<br />
+<table cellspacing="0" cellpadding="5" border="0" width="100%" style="width:100%;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><strong><?php echo $this->__('Gift Message for this Order') ?></strong></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr>
+            <td colspan="4" align="left" style="padding:3px 9px">
+            <strong><?php echo $this->__('From:'); ?></strong> <?php echo $this->escapeHtml($_giftMessage->getSender()) ?>
+            <br /><strong><?php echo $this->__('To:'); ?></strong> <?php echo $this->escapeHtml($_giftMessage->getRecipient()) ?>
+            <br /><strong><?php echo $this->__('Message:'); ?></strong><br /> <?php echo $this->escapeHtml($_giftMessage->getMessage()) ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+    <?php endif; ?>
+<?php endif; ?>
+<?php endif; ?>

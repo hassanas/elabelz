@@ -1,0 +1,46 @@
+<?php 
+	$_product = Mage::registry('current_product');
+	$_manufacturerId = $_product->getManufacturer();
+	$cid = '';
+	if( $_product->getCategoryId() ){
+		$productCats = $_product->getCategoryIds();
+		$genders = array( "women" , "النساء" , "men" , "الرجال" , "kids" , "الاطفال" );
+		$parentlevelArray = array();
+		$otherlevelArray = array();
+		$categories = Mage::getModel('catalog/category')
+            ->getCollection()
+            ->addAttributeToSelect('entity_id')//2 is actually the first level
+            ->addAttributeToSelect('name')//2 is actually the first level
+            ->addAttributeToFilter('entity_id', array('in' => $productCats))
+            ->addAttributeToFilter('level',2)
+            ->addAttributeToFilter('is_active', 1);
+
+        foreach( $categories as $category ){
+        	if( in_array( strtolower($this->__($category->getName())) , $genders ) ){
+        		$parentlevelArray[] = $category->getEntityId();
+        	}else{
+        		$otherlevelArray[] = $category->getEntityId();
+        	}
+        }
+        $found = false;
+        $lastId = '';
+        foreach( $productCats as $pids ){
+        	if( !$found ){
+				if( in_array($pids, $parentlevelArray) ){
+					$found = true;
+				}
+        	}else{
+        		if( in_array($pids, $otherlevelArray) ){
+        			break;
+        		}
+        		$lastId = $pids;
+        	}
+        }
+        $cid = $lastId;
+    }else{
+    	$cid = $_product->getCategoryId();
+    }
+
+	$url = 'elabelz://product/?cid='.$cid.'&id='.$_product->getId().'&manufacturer='.$_manufacturerId;
+?>
+<meta name="app-rich-data" content="<?php echo $url ?>" />

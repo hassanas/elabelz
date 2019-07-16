@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_SaleProductsCategories>
+            <version>1.0.0</version>
+        </Progos_SaleProductsCategories>
+    </modules>
+    <global>
+        <blocks>
+            <saleproductscategories>
+                <class>Progos_SaleProductsCategories_Block</class>
+            </saleproductscategories>
+        </blocks>
+        <helpers>
+            <saleproductscategories>
+                <class>Progos_SaleProductsCategories_Helper</class>
+            </saleproductscategories>
+        </helpers>
+        <models>
+            <saleproductscategories>
+                <class>Progos_SaleProductsCategories_Model</class>
+                <resourceModel>saleproductscategories_mysql4</resourceModel>
+            </saleproductscategories>
+            <saleproductscategories_mysql4>
+                <class>Progos_SaleProductsCategories_Model_Mysql4</class>
+                <entities>
+                    <salecategories>
+                        <table>sale_products_categories</table>
+                    </salecategories>
+                </entities>
+            </saleproductscategories_mysql4>
+        </models>
+        <resources>
+            <saleproductscategories_setup>
+                <setup>
+                    <module>Progos_SaleProductsCategories</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </saleproductscategories_setup>
+            <saleproductscategories_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </saleproductscategories_write>
+            <saleproductscategories_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </saleproductscategories_read>
+        </resources>
+    </global>
+    <admin>
+        <routers>
+            <saleproductscategories>
+                <use>admin</use>
+                <args>
+                    <module>Progos_SaleProductsCategories</module>
+                    <frontName>admin_saleproductscategories</frontName>
+                </args>
+            </saleproductscategories>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <catalog>
+                    <children>
+            <saleproductscategories module="saleproductscategories">
+                <title>SaleProductsCategories</title>
+                <sort_order>100</sort_order>
+                <children>
+                    <onsale module="saleproductscategories">
+                        <title>New Onsale</title>
+                        <sort_order>0</sort_order>
+                        <action>admin_saleproductscategories/adminhtml_onsale/onsale</action>
+                    </onsale>
+                    <expired translate="title">
+                        <title>Sale Expired</title>
+                        <sort_order>10</sort_order>
+                        <action>admin_saleproductscategories/adminhtml_onsale/expired</action>
+                    </expired>
+                </children>
+            </saleproductscategories>
+                    </children>
+            </catalog>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                    <catalog>
+                    <children>
+                        <saleproductscategories translate="title" module="saleproductscategories">
+                            <title>SaleProductsCategories</title>
+                            <sort_order>1000</sort_order>
+                            <children>
+                                <onsale translate="title">
+                                    <title>Manage Onsale</title>
+                                    <sort_order>0</sort_order>
+                                </onsale>
+                                <expired translate="title">
+                                    <title>Sale Expired</title>
+                                    <sort_order>10</sort_order>
+                                </expired>
+                            </children>
+                        </saleproductscategories>
+                    </children>
+                    </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <saleproductscategories>
+                    <file>saleproductscategories.xml</file>
+                </saleproductscategories>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <crontab>
+        <jobs>
+            <saleproductscategories_add_sale_products>
+                <schedule>
+                    <cron_expr></cron_expr>
+                </schedule>
+                <run>
+                    <model>saleproductscategories/cron::addSaleProducts</model>
+                </run>
+            </saleproductscategories_add_sale_products>
+            <saleproductscategories_create_sale_categories>
+                <schedule>
+                    <cron_expr></cron_expr>
+                </schedule>
+                <run>
+                    <model>saleproductscategories/cron::saleCreateCategories</model>
+                </run>
+            </saleproductscategories_create_sale_categories>
+            <saleproductscategories_expired_sale_products>
+                <schedule>
+                    <cron_expr>5 0 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>saleproductscategories/cron::productsSaleExpired</model>
+                </run>
+            </saleproductscategories_expired_sale_products>
+        </jobs>
+    </crontab>
+</config> 

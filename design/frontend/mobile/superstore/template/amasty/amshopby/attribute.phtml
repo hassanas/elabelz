@@ -1,0 +1,205 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2016 Amasty (https://www.amasty.com)
+ * @package Amasty_Shopby
+ */
+?>
+<?php
+/**
+ * @var $this Amasty_Shopby_Block_Catalog_Layer_Filter_Attribute
+ */
+?>
+<?php
+$brandName = '';
+$brandPage = false;
+$request = $this->getRequest();
+
+if ($request->getRouteName() == 'shopbybrand'):
+    $brand = Mage::getModel('shopbybrand/brand')->load($request->getParam("id"));
+    $brandName = $brand->getUrlKey();
+
+    $brandPage = true;
+endif;
+?>
+<ol class="
+<?php if ($this->getCollapsed() && !$this->getHasSelection()): ?>no-display-current<?php endif ?>
+<?php if ($this->getSortFeaturedFirst() && in_array($this->getDisplayType(), array(Amasty_Shopby_Model_Source_Attribute::DT_LABELS_ONLY, Amasty_Shopby_Model_Source_Attribute::DT_IMAGES_AND_LABELS))): ?> sort-featured-first-<?php echo $this->getRequestValue(); endif ?>
+">
+    <?php if ($this->getSortFeaturedFirst()): ?>
+        <input type="hidden" id="field_sort_featured_<?php echo $this->getRequestValue(); ?>" value="default_sort">
+    <?php endif ?>
+
+    <?php
+    foreach ($this->getItemsAsArray() as $item) {
+        $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $eav_attribute_option_value = Mage::getSingleton('core/resource')->getTableName('eav/attribute_option_value');
+        $result=$read->query("SELECT value FROM {$eav_attribute_option_value}  WHERE option_id = {$item['id']} and store_id = 0");
+        $row = $result->fetch();
+        $options_all[] = array('label_eng' => $row['value'],'label' => $item['label'], 'count' => $item['count'], 'rel' => $item['rel'], 'url' => $item['url'], 'default_sort' => $item['default_sort'], 'featured_sort' => $item['featured_sort'], 'css' => $item['css'], 'style' => $item['style']);
+    }
+    foreach ($options_all as $key => $row) {
+        $label_eng[$key] = $row['label_eng'];
+        $label[$key] = $row['label'];
+        $count[$key] = $row['count'];
+        $rel[$key] = $row['rel'];
+        $url[$key] = $row['url'];
+        $default_sort[$key] = $row['default_sort'];
+        $featured_sort[$key] = $row['featured_sort'];
+        $style[$key] = $row['style'];
+        $css[$key] = $row['css'];
+    }
+    array_multisort($label, SORT_ASC, $count, SORT_DESC, $rel, SORT_DESC, $url, SORT_DESC, $default_sort, SORT_DESC, $featured_sort, SORT_DESC, $style, SORT_DESC, $css, $options_all);
+    $counter = 0;
+    switch ($this->getDisplayType()) {
+        case Amasty_Shopby_Model_Source_Attribute::DT_LABELS_ONLY:
+            if ($this->getShowSearch()) {
+                echo '<li rel="search"><input type="text" class="amshopby_attr_search input-text" onkeyup="amshopby_attr_search(this)" /></li>';
+            }
+
+            foreach ($this->getItemsAsArray() as $item) {
+                $options_all[$counter]['url'] = Mage::helper('amshopby/url')->getUrlPrice($options_all[$counter]['url']);
+                echo
+                    '<li' .
+                    (isset($options_all[$counter]['style']) ? $options_all[$counter]['style'] : '') .
+                    (isset($options_all[$counter]['default_sort']) ? ' data-default_sort="' . $options_all[$counter]['default_sort'] . '"' : '') .
+                    (isset($options_all[$counter]['featured_sort']) ? ' data-featured_sort="' . $options_all[$counter]['featured_sort'] . '"' : '') .
+                    'data-text="' . htmlspecialchars($options_all[$counter]['label']) . '"> ' .
+                    '<a class="amsty_filter_field multiselected ' . $options_all[$counter]['css'] . '"' . $options_all[$counter]['rel'] . '>
+                <div><input type="checkbox" name="filter_value" class="filter_check" id="' . $options_all[$counter]['label'] . '" value="' . $options_all[$counter]['label_eng']. '"><label for="' . $options_all[$counter]['label'] . '"><span class="ch_box"></span>';
+                echo $this->__($options_all[$counter]['label']);
+                echo $options_all[$counter]['count'] . '</label></div></a>' . '</li>';
+                $counter = $counter + 1;
+            }
+            break;
+
+        case Amasty_Shopby_Model_Source_Attribute::DT_IMAGES_ONLY:
+            echo '<li>';
+            foreach ($this->getItemsAsArray() as $item) {
+                if (isset($item['image_hover']) && $item['image_hover'] != '') {
+                    echo '<img data-test="asd" src="' . $item['image_hover'] . '" style="display: none;" />';
+                    $onHover = 'onmouseover=this.src="' . $item['image_hover'] . '"';
+                    $onHover .= ' onmouseout=this.src="' . $item['image'] . '"';
+                } else {
+                    $onHover = '';
+                }
+
+                if ($brandPage === true):
+                    $brand = explode("/", $options_all[$counter]['url']);
+                    $brand = end($brand);
+                    if ($brand == "") {
+                        $brand = explode("/", $options_all[$counter]['url']);
+                        array_pop($brand);
+                        $brand = end($brand);
+                    }
+                    $options_all[$counter]['url'] = Mage::getBaseUrl() . $brandName . "--" . $brand;
+                endif;
+
+                $options_all[$counter]['url'] = Mage::helper('amshopby/url')->getUrlPrice($options_all[$counter]['url']);
+                echo '<a ' . $options_all[$counter]['style'] . $options_all[$counter]['rel'] . ' class="e_c_container multiselected ' . $options_all[$counter]['css'] . '">
+            <div class="e_c_field"><input type="checkbox" name="filter_color_value" class="filter_color_check" id="color_' . $options_all[$counter]['label'] . '" value="' . $options_all[$counter]['label_eng']. '"><label for="color_' . $options_all[$counter]['label'] . '"><span class="ch_box"></span>';
+                echo $this->__($options_all[$counter]['label']);
+                echo '</label></div></a>';
+                $counter = $counter + 1;
+            }
+            echo '</li>';
+
+            break;
+
+        case Amasty_Shopby_Model_Source_Attribute::DT_IMAGES_AND_LABELS:
+            if ($this->getShowSearch()) {
+                echo '<li rel="search"><input type="text" class="amshopby_attr_search" onkeyup="amshopby_attr_search(this)" /></li>';
+            }
+            foreach ($this->getItemsAsArray() as $item) {
+                echo '<li ' . $item['style'] .
+                    (isset($item['default_sort']) ? ' data-default_sort="' . $item['default_sort'] . '"' : '') .
+                    (isset($item['featured_sort']) ? ' data-featured_sort="' . $item['featured_sort'] . '"' : '') .
+                    ' data-text="' . htmlspecialchars($item['label']) . '"><a class="' . $item['css'] . '" ' . $item['rel'] . ' href="' . $item['url'] . '">';
+
+                if (isset($item['image_hover']) && $item['image_hover'] != '') {
+                    echo '<img src="' . $item['image_hover'] . '" style="display: none;" />';
+                    $onHover = 'onmouseover=this.src="' . $item['image_hover'] . '"';
+                    $onHover .= ' onmouseout=this.src="' . $item['image'] . '"';
+                } else {
+                    $onHover = '';
+                }
+
+                if (!empty($item['image'])) {
+                    echo '<img src="' . $item['image'] . '" ' . $onHover . ' title="' . $item['label'] . '" alt="' . $item['label'] . '">';
+                }
+                echo $this->__($item['label']) . $item['count'] . '</a>' . '</li>';
+            }
+            break;
+
+        case Amasty_Shopby_Model_Source_Attribute::DT_DROPDOWN:
+            echo '<li><select onchange="if (this.value) setLocation(this.value)" class="amshopby-select amshopby-ajax-select">';
+            echo '<option value="' . $this->getRemoveUrl() . '">&nbsp;</option>';
+            foreach ($this->getItemsAsArray() as $item) {
+                echo '<option ' . $item['css'] . $item['rel'] . ' value="' . $item['url'] . '">' . $this->__($item['label']) . $item['count'] . '</option>';
+            }
+            echo '</select></li>';
+            break;
+
+        case Amasty_Shopby_Model_Source_Attribute::DT_LABELS_IN_2_COLUMNS:
+            $items = $this->getItemsAsArray();
+            $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+            $eav_attribute_option_value = Mage::getSingleton('core/resource')->getTableName('eav/attribute_option_value');
+
+            $size = sizeof($items);
+            $half = ceil($size / 2);
+
+            echo '<li>';
+            echo '<div class="amshopby-column sizes">';
+            $c = 1;
+            for ($i = 0; $i < $size; $i++) {
+                $result=$read->query("SELECT value FROM {$eav_attribute_option_value}  WHERE option_id = {$items[$i]['id']} and store_id = 0");
+                $row = $result->fetch();
+                $c2 = ($i) % 3;
+                if ($c2 == 0) {
+                    echo '</div>';
+                    echo '</li>';
+                    echo '<li>';
+                    echo '<div class="amshopby-column sizes">';
+                }
+
+                $item = $items[$i];
+
+                if ($brandPage === true):
+                    $brand = explode("/", $item['url']);
+                    $brand = end($brand);
+                    if ($brand == "") {
+                        $brand = explode("/", $item['url']);
+                        array_pop($brand);
+                        $brand = end($brand);
+                    }
+                    $item['url'] = Mage::getBaseUrl() . $brandName . "--" . $brand;
+                endif;
+
+                $item['url'] = Mage::helper('amshopby/url')->getUrlPrice($item['url']);
+                echo '<a class="e_s_container multiselected ' . $item['css'] . '" ' . $item['rel'] . ' data-text="' . htmlspecialchars($item['label']) . '">
+                <input type="checkbox" name="filter_size_value" class="filter_size_check" id="size_'. $item['label'].'" value="'. $row['value'].'">
+                <label>' . '<span class="ch_box"></span>' . $item['label'] . '</label></a>';
+                $c++;
+            }
+            echo '</div>';
+            echo '</li>';
+            break;
+    }
+
+    if ($this->getShowLessMore() && in_array($this->getDisplayType(), array(
+            Amasty_Shopby_Model_Source_Attribute::DT_LABELS_ONLY,
+            Amasty_Shopby_Model_Source_Attribute::DT_IMAGES_ONLY,
+            Amasty_Shopby_Model_Source_Attribute::DT_IMAGES_AND_LABELS,
+        ))
+    ) {
+        $total = count($this->getItemsAsArray());
+        $short = $this->getMaxOptions();
+        $add = $total - $short;
+        if ($add > 0) {
+            $text = sprintf($this->__('View %d More'), $add);
+            echo '<li class="amshopby-clearer"><a id="amshopby-more-' . $this->getRequestValue() . '" class="amshopby-more" href="#">' . $text . '</a></li>';
+        }
+        echo '<li class="amshopby-clearer"><a id="amshopby-less-' . $this->getRequestValue() . '" class="amshopby-less" href="#" style="display:none">' . $this->__('Show Less') . '</a></li>';
+    }
+    ?>
+</ol>

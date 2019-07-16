@@ -1,0 +1,55 @@
+<?php
+    $organizationSnippets = $this->getOrganizationSnippets();
+    $isOrganizationSnippets = $organizationSnippets['enable'];
+    $isJson = ($organizationSnippets['json']) ? true : false;
+    if ($isOrganizationSnippets) {
+        $name = ($isJson) ? $this->getName(true) : $this->getName();
+        $telephone = ($isJson) ? $this->getTelephone(true) : $this->getTelephone();
+        $faxNumber = ($isJson) ? $this->getFaxNumber(true) : $this->getFaxNumber();
+        $email = ($isJson) ? $this->getEmail(true) : $this->getEmail();
+        $countryAddress = ($isJson) ? $this->getCountryAddress(true) : $this->getCountryAddress();
+        $addressLocality = ($isJson) ? $this->getAddressLocality(true) : $this->getAddressLocality();
+        $postalCode = ($isJson) ? $this->getPostalCode(true) : $this->getPostalCode();
+        $streetAddress = ($isJson) ? $this->getStreetAddress(true) : $this->getStreetAddress();
+        $postalAddress = ($isJson) ? $this->preparePostalAddress($countryAddress, $addressLocality, $postalCode, $streetAddress) : false;
+        $url = Mage::getBaseUrl();
+        $logo = $this->getLogoUrl();
+    }
+?>
+<?php if ($isOrganizationSnippets && $isJson): ?>
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Organization",
+        <?php echo $name; ?>
+        <?php echo $telephone; ?>
+        <?php echo $faxNumber; ?>
+        <?php echo $email; ?>
+        <?php if($postalAddress): ?>
+            "address": {
+                "@type": "PostalAddress",
+                <?php echo $postalAddress; ?>
+            },
+        <?php endif; ?>
+        "url" : "<?php echo $url; ?>",
+        "logo": "<?php echo $logo; ?>"
+    }
+    </script>
+<?php elseif ($isOrganizationSnippets && !$isJson): ?>
+    <div itemscope itemtype="http://schema.org/Organization">
+        <?php echo $name; ?>
+        <?php echo $telephone; ?>
+        <?php echo $faxNumber; ?>
+        <?php echo $email; ?>
+        <?php if ($countryAddress || $addressLocality || $postalCode || $streetAddress): ?>
+            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                    <?php echo $countryAddress; ?>
+                    <?php echo $addressLocality; ?>
+                    <?php echo $postalCode; ?>
+                    <?php echo $streetAddress; ?>
+            </div>
+        <?php endif; ?>
+        <meta itemprop="url" content="<?php echo $url; ?>"/>
+        <meta itemprop="logo" content="<?php echo $logo; ?>"/>
+<?php endif; ?>
+

@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <customeruniversalpassword translate="label" module="progos_customer">
+            <label>Customer Universal Password</label>
+            <tab>customer</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>0</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <universal_password translate="label">
+                            <label>Universal Password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enter Universal Password</comment>
+                        </universal_password>
+                        <addCustomerStatus translate="label">
+                            <label>Add Customer Status Column</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Add Customer Status Column to the grid</comment>
+                        </addCustomerStatus>
+                    </fields>
+                </general>
+            </groups>
+        </customeruniversalpassword>
+        <customerdashboardorderstatus translate="label" module="progos_customer">
+            <label>Customer Order Status( Dashboard )</label>
+            <tab>customer</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <customer_orders_status translate="label">
+                            <label>Original Order Status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mageworx_ordersgrid/system_config_source_orders_status</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Select Order Status Which will Change( Only Customer Dashboard Side). </comment>
+                        </customer_orders_status>
+                        <customer_orders_status_change translate="label">
+                            <label>Order Status Change To</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>mageworx_ordersgrid/system_config_source_orders_status</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Show order Status Instead of Original Order Status( Only Customer Dashboard Side).</comment>
+                        </customer_orders_status_change>
+                    </fields>
+                </general>
+            </groups>
+        </customerdashboardorderstatus>
+        <customer>
+            <groups>
+                <password>
+                    <fields>
+                        <forgot_password_request_time>
+                            <label>Forgot password request minutes diff</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Customer will be able to request for forgot passowrd after above given limit in minutes is greater than previous request created time</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </forgot_password_request_time>
+                        <change_password_email_identity translate="label">
+                            <label>Change Password Email Sender</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_email_identity</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </change_password_email_identity>
+                        <change_password_token_time>
+                            <label>Change password tokein expire time</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Token will expire in (n) hours</comment>
+                            <validate>validate-digits</validate>
+                            <sort_order>111</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </change_password_token_time>
+                    </fields>
+                </password>
+                <recent_orders>
+                    <label>Recent Orders (Admin)</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>22</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Active by Default</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <open_link_new_tab translate="label">
+                            <label>Open Link In New Tab</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </open_link_new_tab>
+                    </fields>
+                </recent_orders>
+            </groups>
+        </customer>
+    </sections>
+</config>

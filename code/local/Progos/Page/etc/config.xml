@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Page>
+            <version>0.1.0</version>
+        </Progos_Page>
+    </modules>
+    <global>
+        <blocks>
+            <progos_page>
+                <class>Progos_Page_Block</class>
+            </progos_page>
+            <page>
+                <rewrite>
+                    <html_header>Progos_Page_Block_Page_Html_Header</html_header>
+                </rewrite>
+            </page>
+            <page>
+                <rewrite>
+                    <html_head>Progos_Page_Block_Page_Html_Head</html_head>
+                </rewrite>
+            </page>
+        </blocks>
+    </global>
+</config>

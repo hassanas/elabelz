@@ -1,0 +1,778 @@
+<?php
+$logged = $this->isCustomerLoggedIn();
+$has_addr = $this->customerHasAddresses();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+?>
+
+<div class="onestepcheckout_block" id="onestepcheckout_billing_block">
+
+    <?php
+    $agc = Mage::helper('onestepcheckout')->isGuestCheckoutAllowed();
+    if ($agc) {
+        if (!$this->isCustomerLoggedIn()) {
+            ?>
+            <ul class="isGuestCheckoutAllowed">
+                <li class="options">
+                    <input type="radio" name="billing[register_account]" value="0"
+                           title="<?php echo $this->__('Guest') ?>" id="billing:guest_account"
+                           onclick="if(window.billing) billing.setCreateAccount(this.value);" <?php if (!$this->getBillAddress()->getRegisterAccount()): ?> checked="checked"<?php endif; ?>
+                           class="checkbox"/>
+                    <label for="billing:guest_account">
+				<span>
+				</span>
+                        <?php echo $this->__('Guest') ?>
+                    </label>
+                </li>
+
+
+                <li class="options" id="register">
+
+                    <input type="radio" name="billing[register_account]" value="1"
+                           title="<?php echo $this->__('Register') ?>" id="billing:register_account"
+                           onclick="if(window.billing) billing.setCreateAccount(this.value);"<?php if ($this->getBillAddress()->getRegisterAccount()): ?> checked="checked"<?php endif; ?>
+                           class="checkbox"/>
+                    <label for="billing:register_account">
+				<span>
+				</span>
+                        <?php echo $this->__('Register') ?>
+
+                    </label>
+
+                </li>
+
+            </ul>
+            <?php
+        }
+    } else {
+        ?>
+        <input type="hidden" name="billing[register_account]" value="1"/>
+        <?php
+    }
+    ?>
+    <div class="form_fields">
+        <?php if ($has_addr) { ?>
+            <div class="full">
+                <label for="billing_cutomer_address">
+                    <?php echo $this->__('Select a billing address from your address book or enter a new address.') ?>
+                </label>
+                <div class="data_area">
+                    <?php echo $this->getCustomerBillAddr() ?>
+                </div>
+            </div>
+        <?php } ?>
+        <div id="bill_form"<?php if ($has_addr) {
+            echo ' style="display:none;" ';
+        } ?>>
+            <input type="hidden" name="billing[address_id]" id="billing:address_id"
+                   value="<?php echo $this->getBillAddress()->getId() ?>"/>
+            <div class="two_fields">
+                <?php echo $this->getLayout()->createBlock('onestepcheckout/widget_name')->setObject($this->getBillAddress())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?>
+            </div>
+            <div class='clr'></div>
+            <?php
+            $country_r = Mage::getStoreConfig('onestepcheckout/address_form/country');
+            $zip_r = Mage::getStoreConfig('onestepcheckout/address_form/zip');
+            $city_r = Mage::getStoreConfig('onestepcheckout/address_form/city');
+            ?>
+            <?php if ($country_r !== 'hidden' && $city_r !== 'hidden') { ?> 
+            <div class="osc_b_country_city two_fields">
+                <?php if ($country_r !== 'hidden') : ?>
+                <div class="short osc_b_country">
+                    <div>
+                        <label for="billing:country_id"<?php if ($country_r === 'required') {
+                            echo ' class="required" ';
+                        } ?>>
+                            <?php echo $this->__('Country') ?>
+                        </label>
+                        <?php if ($country_r === 'required') {
+                            echo ' <sup>*</sup> ';
+                        } ?>
+                        <div class="data_area">
+                            <div id="currentCountry"></div>
+                            <ul id="countryUl"></ul>
+                            <?php echo $this->getBillingCountriesSelectBox() ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php if ($city_r !== 'hidden') : ?>
+                <div class="short osc_b_city">
+                    <label
+                        for="billing:city"
+                        <?php if ($city_r === 'required') { echo 'class="required"'; } ?>
+                    >
+                        <?php echo $this->__('City') ?>
+                    </label>
+                    <?php if ($city_r === 'required') { echo '<sup>*</sup>'; } ?>
+                    <?php
+                        $class = array();
+                        $class[] = "t1";
+                        if ($locale != "ar_SA") {
+                            $class[] = "validate-alpha-with-spaces";
+                        } elseif ($locale == "ar_SA") {
+                            $class[] = "validate-alpha-with-spaces-arabic";
+                        }
+                        if ($city_r === 'required') {
+                            $class[] = 'required-entry';
+                        }
+                        $class = implode(' ', $class);
+                    ?>
+                    <div class="data_area citySelectionFields">
+                        <input 
+                            type="text" 
+                            name="billing[city]" 
+                            id="billing:city"
+                            title="<?php echo $this->__('City') ?>"
+                            value="<?php echo $this->htmlEscape($this->getBillAddress()->getCity()) ?>"
+                            class="<?php echo $class; ?>" 
+                            maxlength="20"
+                        />
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- code added for preselecting country-->
+            <?php
+            $store = Mage::app()->getStore()->getCode();
+            $store = explode("_", $store);
+            $store_country = strtoupper($store[1]);
+
+            //preselect country to be always from correct configuration value
+            $store_country = Mage::getStoreConfig('onestepcheckout/general/country');
+            ?>
+
+            <input type="hidden" id="new_country" value="<?php echo $store_country ?>"/>
+            <script type="text/javascript">
+                jQuery(document).ready(function () {
+                    var country = document.getElementById("new_country").value;
+                    jQuery("select[name = 'billing[country_id]']").val(country);
+                    jQuery("select[name = 'shipping[country_id]']").val(country);
+                    shipping.setSameAsBilling(true);
+                });
+            </script>
+            <?php
+            }
+                $state_r = Mage::getStoreConfig('onestepcheckout/address_form/state');
+            ?>
+            <?php if ($zip_r !== 'hidden' && $state_r !== 'hidden') { ?>
+            <div class="osc_b_zip_state two_fields">
+                <?php if ($zip_r !== 'hidden') : ?>
+                <div class="short osc_b_zip">
+                    <label 
+                        for="billing:postcode"
+                        <?php if ($zip_r === 'required') { echo 'class="required"'; } ?>
+                    >
+                        <?php echo $this->__('Zip Code') ?>
+                    </label>
+                    <?php if ($zip_r === 'required') { echo '<sup>*</sup>'; } ?>
+                    <?php
+                        $class = array();
+                        $class[] = "t1";
+                        if ($locale != "ar_SA") {
+                            $class[] = "validate-alphanum";
+                        } elseif ($locale == "ar_SA") {
+                            $class[] = "validate-alphanum-arabic";
+                        }
+                        if ($zip_r === 'required') {
+                            $class[] = 'required-entry';
+                        }
+                        $class = implode(' ', $class);
+                    ?>
+                    <div class="data_area">
+                        <input 
+                            type="text" 
+                            title="<?php echo $this->__('Zip/Postal Code') ?>"
+                            name="billing[postcode]"
+                            id="billing:postcode"
+                            value="<?php echo $this->htmlEscape($this->getBillAddress()->getPostcode()) ?>"
+                            class="<?php echo $class; ?>" 
+                            maxlength="20"
+                        />
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php if ($state_r !== 'hidden') : ?>
+                <div class="short osc_b_state">
+                    <label
+                        for="billing:region_id"
+                        <?php if ($state_r === 'required') { echo 'class="required"'; } ?>
+                    >
+                        <?php echo $this->__('State / Province') ?>
+                    </label>
+                    <?php if ($state_r === 'required') { echo '<sup>*</sup>'; } ?>
+                    <div class="data_area">
+                        <select 
+                            id="billing:region_id" 
+                            name="billing[region_id]"
+                            title="<?php echo $this->__('State/Province') ?>"
+                            class="t1_select validate-select <?php if ($state_r === 'required') { echo 'required-entry'; } ?>"
+                            style="display:none;"
+                        >
+                            <option value=""><?php echo $this->__('Select One') ?></option>
+                        </select>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                            $('billing:region_id').setAttribute('defaultValue', "<?php echo $this->getBillAddress()->getRegionId() ?>");
+                            //]]>
+                        </script>
+                        <?php
+                            $class = array();
+                            $class[] = "t1";
+                            if ($locale != "ar_SA") {
+                                $class[] = "validate-alpha-with-spaces";
+                            } elseif ($locale == "ar_SA") {
+                                $class[] = "validate-alpha-with-spaces-arabic";
+                            }
+                            if ($state_r === 'required') {
+                                $class[] = 'required-entry';
+                            }
+                            $class = implode(' ', $class);
+                        ?>
+                        <input 
+                            type="text" 
+                            id="billing:region" 
+                            name="billing[region]"
+                            value="<?php echo $this->htmlEscape($this->getBillAddress()->getRegion()) ?>"
+                            title="<?php echo $this->__('State/Province') ?>"
+                            class="<?php echo $class; ?>" 
+                            maxlength="20" 
+                            style="display:none;"
+                        />
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+            <div class='clr'></div>
+            <?php
+            }
+
+            $ar = Mage::getStoreConfig('onestepcheckout/address_form/address');
+            if ($ar !== 'hidden') :
+                ?>
+                <div class="osc_b_address full">
+                    <label for="billing:street1"<?php if ($ar === 'required') {
+                        echo ' class="required" ';
+                    } ?> >
+                        <?php echo $this->__('Address') ?>
+                    </label>
+                    <?php if ($ar === 'required') {
+                        echo '<sup>*</sup>';
+                    } ?>
+                    <div class="data_area">
+                        <input type="text" title="<?php echo $this->__('Street Address') ?>" name="billing[street][]"
+                               id="billing:street1"
+                               value="<?php echo $this->htmlEscape($this->getBillAddress()->getStreet(1)) ?>"
+                               class="t1 <?php if ($ar === 'required') {
+                                   echo ' required-entry';
+                               } ?>"/>
+                    </div>
+                </div>
+                <?php
+                /*$csl	= $this->helper('customer/address')->getStreetLines();
+                for ($i = 2; $i <= $csl; $i++){
+                ?>
+                <div class="full">
+                    <div class="data_area">
+                        <input type="text" name="billing[street][]" id="billing:street<?php echo $i?>" title="<?php echo $this->__('Street Address %s', $i) ?>" value="<?php echo $this->htmlEscape($this->getBillAddress()->getStreet($i)) ?>" class="t1" />
+                    </div>
+                </div>
+                <?php
+                }*/
+
+            endif;
+            ?>
+            <?php if (!$logged)  : ?>
+                <div class="osc_b_email full">
+                    <label for="billing:email" class="required">
+                        <?php echo $this->__('Email Address') ?>
+                    </label>
+                    <sup>*</sup>
+                    <div class="data_area">
+                        <input type="text" name="billing[email]" id="billing:email"
+                               value="<?php echo $this->htmlEscape($this->getBillAddress()->getEmail()) ?>"
+                               title="<?php echo $this->__('Email Address') ?>"
+                               class="t1 validate-email-nonarabic  required-entry" readonly/>
+                    </div>
+                </div>
+            <?php endif;
+
+            $cr = Mage::getStoreConfig('onestepcheckout/address_form/company');
+            if ($cr !== 'hidden') : ?>
+                <div class="full">
+                    <label for="billing:company" <?php if ($cr === 'required') {
+                        echo 'class="required"';
+                    } ?> >
+                        <?php echo $this->__('Company') ?>
+                    </label>
+                    <?php if ($cr === 'required') {
+                        echo "<sup>*</sup'>";
+                    } ?>
+                    <div class="data_area">
+                        <input type="text" id="billing:company" name="billing[company]"
+                               value="<?php echo $this->htmlEscape($this->getBillAddress()->getCompany()) ?>"
+                               title="<?php echo $this->__('Company') ?>" class="t1 <?php if ($cr === 'required') {
+                            echo ' required-entry';
+                        } ?>"/>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <?php
+            $phone_r = Mage::getStoreConfig('onestepcheckout/address_form/phone');
+            if ($phone_r !== 'hidden') :
+                ?>
+                <div class="clr"></div>
+                <div class="osc_b_phoneandcountry full two_fields clearfix">
+
+                    <?php if ($phone_r !== 'hidden') : ?>
+                        <div class="short country_code_with_phone">
+                            <label for="billing:telephone"<?php if ($phone_r === 'required') {
+                                echo ' class="required" ';
+                            } ?>>
+                                <?php echo $this->__('Phone number') ?>
+                            </label>
+                            <?php if ($phone_r === 'required') {
+                                echo ' <sup>*</sup> ';
+                            } ?>
+                            <div class="data_area">
+                                <?php
+                                $tel_no = $this->htmlEscape($this->getBillAddress()->getTelephone());
+                                $slices = substr($tel_no, 0, 3);
+                                $slices2 = substr($tel_no, 0, 2);
+                                $slices3 = substr($tel_no, 0, 1);
+                                if ($slices == "971" || $slices == "966" || $slices == "973" || $slices == "974" || $slices == "964" || $slices == "965" || $slices == "968") {
+                                    $tel_no_change = substr($tel_no, 3);
+                                } else if ($slices2 == "20" || $slices2 == "44" || $slices2 == "00") {
+                                    $tel_no_change = substr($tel_no, 2);
+                                } else if ($slices3 == "1") {
+                                    $tel_no_change = substr($tel_no, 1);
+                                } else {
+                                    $tel_no_change = str_replace("+", "", $tel_no);
+                                }
+                                $skip = false;
+                                ?>
+                                <select id="country_code" name="country_code" class="width30 required-entry">
+                                    <option value="971" <?php if ($slices == "971") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UAE'); ?>
+                                        <?php if ($locale == "ar_SA") {
+                                            echo "971+";
+                                        } else {
+                                            echo "+971";
+                                        } ?></option>
+                                    <option value="966" <?php if ($slices == "966") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Saudi Arabia'); ?><?php if ($locale == "ar_SA") {
+                                            echo "966+";
+                                        } else {
+                                            echo "+966";
+                                        } ?></option>
+                                    <option value="973" <?php if ($slices == "973") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Bahrain'); ?><?php if ($locale == "ar_SA") {
+                                            echo "973+";
+                                        } else {
+                                            echo "+973";
+                                        } ?></option>
+                                    <option value="20" <?php if ($slices2 == "20") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Egypt'); ?><?php if ($locale == "ar_SA") {
+                                            echo "20+";
+                                        } else {
+                                            echo "+20";
+                                        } ?></option>
+                                    <option value="964" <?php if ($slices == "964") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Iraq'); ?><?php if ($locale == "ar_SA") {
+                                            echo "964+";
+                                        } else {
+                                            echo "+964";
+                                        } ?></option>
+                                    <option value="965" <?php if ($slices == "965") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Kuwait'); ?><?php if ($locale == "ar_SA") {
+                                            echo "965+";
+                                        } else {
+                                            echo "+965";
+                                        } ?></option>
+                                    <option value="968" <?php if ($slices == "968") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Oman'); ?><?php if ($locale == "ar_SA") {
+                                            echo "968+";
+                                        } else {
+                                            echo "+968";
+                                        } ?></option>
+                                    <option value="44" <?php if ($slices2 == "44") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UK'); ?><?php if ($locale == "ar_SA") {
+                                            echo "44+";
+                                        } else {
+                                            echo "+44";
+                                        } ?></option>
+                                    <option value="1" <?php if ($slices3 == "1") {
+                                        $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('US'); ?><?php if ($locale == "ar_SA") {
+                                            echo "1+";
+                                        } else {
+                                            echo "+1";
+                                        } ?></option>
+                                    <option value="00" <?php if (!$skip) {
+                                        if ($slices2 == "00") { ?> selected="selected" <?php } else { ?> selected="selected" <?php }
+                                    } ?>><?php echo $this->__('Other Countries'); ?><?php if ($locale == "ar_SA") {
+                                            echo "+";
+                                        } else {
+                                            echo "+";
+                                        } ?></option>
+                                </select>
+                                <input type="text" name="billing[dummy_telephone]" class="required-entry country_code_tel"
+                                       value="<?php echo $tel_no_change; ?>" autocomplete="off">
+                                <script type="text/javascript">
+                                    jQuery(document).ready(function ($) {
+
+                                        var country_code = jQuery("#country_code").val();
+                                        var changed_country_code = country_code,
+                                            key_country_code = "<?php echo $tel_no_change; ?>";
+
+                                        jQuery("#country_code").change(function () {
+                                            changed_country_code = jQuery("#country_code").val();
+                                            changed_country_code = changed_country_code.replace(/^0+/, '');
+
+                                            var selectVal = jQuery("#country_code").val();
+                                            if (changed_country_code == "") {
+                                                jQuery('.org_phone_no,.org_phone_no_ship').val(key_country_code);
+                                                jQuery('#country_code_tel_ship').val(key_country_code);
+                                                jQuery('#country_code_ship').val(selectVal);
+                                            }
+                                            else {
+                                                jQuery('.org_phone_no,.org_phone_no_ship').val(changed_country_code + key_country_code);
+                                                jQuery('#country_code_tel_ship').val(key_country_code);
+                                                jQuery('#country_code_ship').val(selectVal);
+                                            }
+                                        });
+
+                                        jQuery(".country_code_tel").on('keyup blur',function () {
+                                            key_country_code = jQuery(this).val();
+                                            key_country_code = key_country_code.replace(/^[^1-9]/, '');
+                                            jQuery(this).val(key_country_code);
+                                            var selectVal = jQuery("#country_code").val();
+
+                                            if (key_country_code == "" || changed_country_code == "00") {
+                                                jQuery('.org_phone_no,.org_phone_no_ship').val(key_country_code);
+                                                jQuery('#country_code_tel_ship').val(key_country_code);
+                                                jQuery('#country_code_ship').val(selectVal);
+                                            }
+                                            else {
+                                                jQuery('.org_phone_no,.org_phone_no_ship').val(changed_country_code + key_country_code);
+                                                jQuery('#country_code_tel_ship').val(key_country_code);
+                                                jQuery('#country_code_ship').val(selectVal);
+                                            }
+
+                                        });
+                                    });
+                                </script>
+
+                                <input type="hidden" name="billing[telephone]" value="<?php echo $tel_no; ?>"
+                                       title="<?php echo $this->__('Phone number') ?>"
+                                       class="org_phone_no width70 t1 <?php if ($phone_r === 'required') {
+                                           if ($locale == "ar_SA") {
+                                               echo ' validate-phone-allow-arabic';
+                                           } else {
+                                               echo ' validate-number2  validate-number';
+                                           }
+                                       } ?>" id="billing:telephone" maxlength="20"/>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class='clr'></div>
+            <?php endif ?>
+            <?php
+            $fax_r = Mage::getStoreConfig('onestepcheckout/address_form/fax');
+            if ($fax_r !== 'hidden') :
+                ?>
+                <div lang="two_fields">
+                    <div class="short">
+                        <label for="billing:fax"<?php if ($fax_r === 'required') {
+                            echo ' class="required" ';
+                        } ?>>
+                            <?php echo $this->__('Fax') ?>
+                        </label>
+                        <?php if ($fax_r === 'required') {
+                            echo ' <sup>*</sup> ';
+                        } ?>
+                        <div class="data_area">
+                            <input type="text" name="billing[fax]"
+                                   value="<?php echo $this->htmlEscape($this->getBillAddress()->getFax()) ?>"
+                                   title="<?php echo $this->__('Fax') ?>" class="t1 <?php if ($fax_r === 'required') {
+                                echo ' required-entry ';
+                            } ?>" id="billing:fax"/>
+                        </div>
+                    </div>
+                </div>
+                <div class='clr'></div>
+                <?php
+            endif;
+
+            if (!$logged) :
+
+                $dob = $this->getLayout()->createBlock('onestepcheckout/widget_dob');
+                $gender = $this->getLayout()->createBlock('onestepcheckout/widget_gender');
+                $taxvat = $this->getLayout()->createBlock('onestepcheckout/widget_taxvat');
+
+                if ($dob->isEnabled() || $gender->isEnabled()) { ?>
+                    <div class="two_fields widget_dob_gender">
+                        <?php if ($dob->isEnabled()): ?>
+                            <div class="full">
+                                <?php
+                                echo $dob->setDate($this->getQuote()->getCustomerDob())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml();
+                                ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($gender->isEnabled()): ?>
+                            <div class="full">
+                                <?php
+                                echo $gender->setGender($this->getQuote()->getCustomerGender())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml();
+                                ?>
+                            </div>
+                        <?php endif ?>
+                    </div>
+                    <div class='clr'></div>
+                    <?php
+                }
+
+                if ($taxvat->isEnabled()) { ?>
+                    <div class='full widget_taxvat'>
+                        <?php
+                        echo $taxvat->setTaxvat($this->getQuote()->getCustomerTaxvat())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml();
+                        ?>
+                    </div>
+                    <?php
+                }
+                ?>
+                <div class="two_fields" id="register-customer-password" <?php if ($agc) {
+                    echo ' style="display: none;" ';
+                } ?>>
+                    <div class="short osc_b_pass">
+                        <label for="billing:customer_password" class="required">
+                            <?php echo $this->__('Password') ?>
+                        </label>
+                        <sup>*</sup>
+                        <div class="data_area">
+                            <input type="password" name="billing[customer_password]" id="billing:customer_password"
+                                   title="<?php echo $this->__('Password') ?>"
+                                   class="t1 required-entry validate-password"/>
+                        </div>
+                    </div>
+                    <div class="short osc_b_repass">
+                        <label for="billing:confirm_password" class="required">
+                            <?php echo $this->__('Confirm Password') ?>
+                        </label>
+                        <sup>*</sup>
+                        <div class="data_area">
+                            <input type="password" name="billing[confirm_password]"
+                                   title="<?php echo $this->__('Confirm Password') ?>" id="billing:confirm_password"
+                                   class="t1 required-entry validate-cpassword"/>
+                        </div>
+                    </div>
+                    <div class='clr'></div>
+                </div>
+                <div class='clr'></div>
+                <?php
+            endif;
+            ?>
+            <ul>
+                <?php
+                if ($logged && $has_addr) {
+                    ?>
+                    <li class="options saveInAddBook">
+                        <input type="checkbox" class="checkbox" name="billing[save_in_address_book]"
+                               id="billing:save_in_address_book" value="1"
+                               title="<?php echo $this->__('Save in address book') ?>" <?php if ($this->getBillAddress()->getSaveInAddressBook()) {
+                            echo ' checked="checked" ';
+                        } ?> />
+                        <label for="billing:save_in_address_book"><span></span>
+                            <?php echo $this->__('Save in address book'); ?>
+                        </label>
+                    </li>
+                    <?php
+                } else {
+                    ?>
+                    <li class="no-display">
+                        <input type="hidden" value="1" name="billing[save_in_address_book]"/>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
+        <?php
+        if (Mage::helper('onestepcheckout')->isShippingAddressAllowed() && $this->canShip()) {
+            ?>
+            <input type="hidden" name="billing[use_for_shipping]" id="billing:use_for_shipping"
+                   value="<?php echo ($this->isUseBillingAddressForShipping()) ? '1' : '0'; ?>"/>
+            <?php
+        } else {
+            ?>
+            <input type="hidden" name="billing[use_for_shipping]" value="1"/>
+            <?php
+        }
+        ?>
+    </div>
+
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    var billing = new BillingAddress();
+    RegionUpdater.prototype.setMarkDisplay = function () {
+    };
+    ZipUpdater.prototype._setPostcodeOptional = function () {
+    };
+
+    var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'billing:postcode');
+    //]]>
+
+    var country_selected = jQuery("#billing\\:country_id option:selected");
+
+    jQuery("#currentCountry").text(country_selected.text());
+    var classname = 'flags ' + country_selected.val();
+    var fl = country_selected.val();
+    var style = 'background-image:url(' + theme_path + 'css/images/flags/' + fl.toLowerCase() + '.svg)';
+    jQuery("#currentCountry").attr('style', style);
+    jQuery("#currentCountry").attr('class', classname);
+    jQuery("#countryUl").hide();
+
+    var html = '',
+        flags_path = theme_path + 'css/images/flags/';
+    jQuery("#billing\\:country_id option").each(function (index, el) {
+        var classname = jQuery(this).val();
+        classname = classname.replace(/\s/g, '');
+        var f_img = '';
+        if (classname != '') {
+            f_img = 'style="background-image:url(' + flags_path + classname.toLowerCase() + '.svg)"';
+        }
+        html += '<li class="flags ' + classname + '" ' + f_img + ' title="'+jQuery(this).text()+'">' + jQuery(this).text() + '</li>';
+    });
+    jQuery("#countryUl").html(html);
+    jQuery(document).ready(function () {
+        triggerSelectedCountryonLoadBilling(country_selected);
+    });
+
+    jQuery(document).on("tap", "#currentCountry", showCountryFlagsBox);
+    jQuery(document).on("click", "#currentCountry", showCountryFlagsBox);
+    $('currentCountry').observe('click', showCountryFlagsBox);
+
+
+    function showCountryFlagsBox() {
+        jQuery("#countryUl").show();
+    }
+
+    jQuery("body").not(jQuery("#countryUl")).click(function () {
+        jQuery("#countryUl").hide();
+    })
+
+    function updateReviewOnChange() {
+        if (jQuery('#shipping\\:same_as_billing').is(':checked')) {
+            shipping.syncWithBilling();
+            var myflag = "flags "+jQuery("#billing\\:country_id").val();
+            var text = jQuery("#billing\\:country_id option[value="+jQuery("#billing\\:country_id").val()+"]").text();
+            var flag = 'background-image:url(' + theme_path + 'css/images/flags/' + jQuery("#billing\\:country_id").val().toLowerCase() + '.svg)';
+            jQuery("#currentCountry1").attr('class','');
+            jQuery("#currentCountry1").attr('class',myflag);
+            jQuery("#currentCountry1").text(text);
+            jQuery("#currentCountry1").attr('style', flag);
+        }
+        checkout.update({
+            'review': 1,
+            'payment-method': 1,
+            'payment-storecredit' : 1,
+            'shipping-method': !$('shipping\\:same_as_billing') || $('shipping\\:same_as_billing').checked ? 1 : 0
+        });
+        checkout.update({
+            'payment-method': 1,
+            'payment-storecredit' : 1,
+        });
+    }
+
+    /**
+     * Started, Added for working with country base cities list
+     */
+    (function ($) { // immediate function
+
+        $(function () { // ready function
+
+            $(document).on("click", "#countryUl li", triggerSelectedCountryBilling);
+
+            $(document).on("tab", "#countryUl li", triggerSelectedCountryBilling);
+            $(document).on("click", "#countryUl1 li", triggerSelectedCountryShipping);
+
+            $(document).on("tab", "#countryUl1 li", triggerSelectedCountryShipping);
+
+            $(document).on('click', '.onestep-city-selection', function () {
+                var citySelectVal = $.trim($(this).val());
+                if (citySelectVal != "") {
+                    $('.osc_b_cityandstate .citySelectionFields input[type="text"]').val(citySelectVal);
+                }
+            });
+        });
+    })(jQuery);
+    /**
+     * End here
+     */
+    window.countryCodeArr = {
+        "AE": "971",
+        "SA": "966",
+        "BH": "973",
+        "EG": "20",
+        "IQ": "964",
+        "KW": "965",
+        "OM": "968",
+        "GB": "44",
+        "US": "1"
+    };
+
+    function triggerSelectedCountryBilling() {
+
+        var v = jQuery(this).attr('class');
+
+        v = jQuery.trim(v.replace("flags", "", v));
+        jQuery("#billing\\:country_id option[value="+v+"]").prop('selected', 'selected');
+        billingRegionUpdater.update();
+        if (v in countryCodeArr) {
+            jQuery("#country_code").val(countryCodeArr[v]).change();
+        } else {
+            jQuery("#country_code").val("00").change();
+        }
+
+
+        updateReviewOnChange();
+
+        jQuery("#currentCountry").text(jQuery(this)[0].innerHTML);
+        var classname = jQuery(this).attr("class");
+        var style = jQuery(this).attr("style");
+        jQuery("#currentCountry").attr("class", classname).attr('style', style);
+        jQuery("#countryUl").hide();
+
+    }
+
+    function triggerSelectedCountryonLoadBilling(ele) {
+        var countryCodeArr1 = {
+            "AE": "971",
+            "SA": "966",
+            "BH": "973",
+            "EG": "20",
+            "IQ": "964",
+            "KW": "965",
+            "OM": "968",
+            "GB": "44",
+            "US": "1"
+        };
+        var v = ele.val();
+
+        v = jQuery.trim(v.replace("flags", "", v));
+        jQuery("#billing\\:country_id option[value="+v+"]").prop('selected', 'selected');
+        billingRegionUpdater.update();
+        if (v in countryCodeArr1) {
+            jQuery("#country_code").val(countryCodeArr1[v]).change();
+        } else {
+            jQuery("#country_code").val("00").change();
+        }
+
+
+    }
+
+
+</script>
+
+
+

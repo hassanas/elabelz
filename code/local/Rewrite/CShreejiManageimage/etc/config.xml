@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Rewrite_CShreejiManageimage>
+            <version>1.0</version>
+        </Rewrite_CShreejiManageimage>
+    </modules>
+    <admin>
+        <routers>
+            <manageimage>
+                <args>
+                    <modules>
+                        <rewrite_cshreejimanageimage before="Shreeji_Manageimage">Rewrite_CShreejiManageimage</rewrite_cshreejimanageimage>
+                    </modules>
+                </args>
+            </manageimage>
+        </routers>
+    </admin>
+</config>

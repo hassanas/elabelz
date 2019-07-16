@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_upslabel_upslabel_index>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="upslabel"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_index>
+    <adminhtml_upslabel_upslabel_intermediate>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="intermediate" template="upslabel/intermediate.phtml"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_intermediate>
+    <adminhtml_upslabel_upslabel_showlabel>
+        <reference name="head">
+            <action method="addJs"><script>rsvp-3.1.0.min.js</script></action>
+            <action method="addJs"><script>sha-256.min.js</script></action>
+            <action method="addJs"><script>qz-tray.js</script></action>
+            <action method="addJs"><script>printer.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="showlabel" template="upslabel/showlabel.phtml"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_showlabel>
+    <adminhtml_upslabel_upslabel_print>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="printlabel" template="upslabel/print.phtml"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_print>
+    <adminhtml_upslabel_upslabel_autoprint>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="autoprint" template="upslabel/autoprint.phtml"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_autoprint>
+    <adminhtml_upslabel_upslabel_deletelabel>
+        <reference name="content">
+            <block type="upslabel/adminhtml_upslabel" name="deletelabel" template="upslabel/deletelabel.phtml"/>
+        </reference>
+    </adminhtml_upslabel_upslabel_deletelabel>
+    <adminhtml_sales_order_shipment_new>
+        <!--<update handle="order_items"/>-->
+        <reference name="head">
+            <action method="addJs"><script>infomodusupslabel.js</script></action>
+        </reference>
+        <reference name="content">
+            <reference name="sales_shipment_create">
+                <reference name="form">
+                    <reference name="order_items">
+                        <update handle="order_items"/>
+                        <action method="setTemplate">
+                            <template>upslabel/sales/order/shipment/create/items.phtml</template>
+                        </action>
+                    </reference>
+                </reference>
+            </reference>
+        </reference>
+    </adminhtml_sales_order_shipment_new>
+    <adminhtml_sales_order_creditmemo_new>
+        <reference name="content">
+            <reference name="sales_creditmemo_create">
+                <reference name="form">
+                    <reference name="order_items">
+                        <update handle="order_items"/>
+                        <action method="setTemplate">
+                            <template>upslabel/sales/order/creditmemo/create/items.phtml</template>
+                        </action>
+                    </reference>
+                </reference>
+            </reference>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="order_items">
+            <update handle="order_items"/>
+            <action method="setTemplate">
+                <template>upslabel/sales/order/creditmemo/create/items.phtml</template>
+            </action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
+    <adminhtml_upslabel_pickup_index>
+        <reference name="content">
+            
+            <block type="upslabel/adminhtml_pickup" name="pickup"/>
+        </reference>
+    </adminhtml_upslabel_pickup_index>
+    <adminhtml_upslabel_pickup_new>
+        <reference name="content">
+            <block type="upslabel/adminhtml_pickup_new" name="pickup_new"/>
+        </reference>
+    </adminhtml_upslabel_pickup_new>
+    <adminhtml_upslabel_account_index>
+        <reference name="content">
+            <block type="upslabel/adminhtml_account" name="account"/>
+        </reference>
+    </adminhtml_upslabel_account_index>
+    <adminhtml_upslabel_account_new>
+        <reference name="content">
+            <block type="upslabel/adminhtml_account_new" name="account_new"/>
+        </reference>
+    </adminhtml_upslabel_account_new>
+    <adminhtml_upslabel_lists_index>
+        <reference name="head">
+            <action method="addJs"><script>rsvp-3.1.0.min.js</script></action>
+            <action method="addJs"><script>sha-256.min.js</script></action>
+            <action method="addJs"><script>qz-tray.js</script></action>
+            <action method="addJs"><script>printer.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="upslabel/adminhtml_lists" name="lists"/>
+        </reference>
+    </adminhtml_upslabel_lists_index>
+    <adminhtml_upslabel_lists_new>
+        <reference name="content">
+            <block type="upslabel/adminhtml_lists_new" name="lists_new"/>
+        </reference>
+    </adminhtml_upslabel_lists_new>
+    <adminhtml_upslabel_conformity_index>
+        <reference name="content">
+            
+            <block type="upslabel/adminhtml_conformity" name="conformity"/>
+        </reference>
+    </adminhtml_upslabel_conformity_index>
+    <adminhtml_upslabel_conformity_new>
+        <reference name="content">
+            <block type="upslabel/adminhtml_conformity_new" name="conformity_new"/>
+        </reference>
+    </adminhtml_upslabel_conformity_new>
+    <adminhtml_system_config_edit>
+        <reference name="before_body_end">
+            <block type="adminhtml/template" name="upslabel_upsmethods" template="upslabel/system/config/upsmethods.phtml"></block>
+        </reference>
+    </adminhtml_system_config_edit>
+</layout>

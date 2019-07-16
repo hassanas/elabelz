@@ -1,0 +1,156 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+  * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_MageShop
+ * @version     1.1
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+/** 
+ * @var $this Mage_Catalog_Block_Product_List 
+ */
+?>
+<?php
+/**
+ * Get Customer Details
+ */
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+/**
+ * Get Wishlist
+ */
+$wishListDatas = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($customer);
+/**
+ * Get Item Collection
+ */
+$wishListItemCollection = $wishListDatas->getItemCollection();
+$arrProductIds = array();
+/**
+ * Check the wish list item collection has values
+ */
+if (count($wishListItemCollection)) {
+	foreach ($wishListItemCollection as $item) {
+		$product = $item->getProduct();
+		$arrProductIds[] = $product->getId();
+	}
+}
+
+?>
+<?php
+/** 
+ * Load Product Collection
+ */
+    
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+    //  echo  'ff'.$_productCollection; exit;
+?>
+<?php 
+/**
+ * Check the product collection count is not defined already
+ * if so display message like there are no products matching the selection
+ */
+if(!$_productCollection->count()): ?>
+<p class="note-head"><?php echo $this->__('Products Not Found') ?></p>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<style type="text/css" media="screen">
+.col-main{width:100%;float:none;}
+.col-left.sidebar{display:none;}
+</style>
+<?php else: ?>
+<div class="category-products">
+		
+	<?php 
+	
+	// commented due to the toolbar we are showing at top outside the content in breadcrumbs.phtml
+	// for that we create new template named toolbar_top.phtml and see also local.xml
+	// echo $this->getToolbarHtml(); 
+	
+	?>
+	<?php 
+	/**
+	 * Product Collection
+	 */
+	?>
+	<?php $_collectionSize = $_productCollection->count() ?>
+	<?php 
+/**
+ * Get Count 
+ */
+
+?>
+	<?php $_columnCount = $this->getColumnCount(); ?>
+	<ul class="less products-grid--max-<?php echo $_columnCount; ?>-col" id="catalog_listings">
+		<?php $i=0; 
+        foreach ($_productCollection as $_product): ?>
+		<li class="listing closed">
+			<a class="product_listing_link"  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>">
+				<?php $_imgSize = 254; ?>
+				<div class="image_container">
+					<img id="product-collection-image-<?php echo $_product->getId(); ?>" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(254,367); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+					<div class="preloader" style="visibility:hidden"></div>
+				</div>
+				<?php
+			   $prName = $_product->getName();
+			   $lenPrName = strlen($_product->getName());
+			   $subPrName = substr($prName, 0, 56);
+			   if ($lenPrName >= 56) {
+				   $prNameFix = $subPrName . "...";
+				} else {
+				   $prNameFix = $prName;
+				}
+				$my_product = Mage::getModel('catalog/product')->load($_product->getId());
+				?>
+				<div class="details_container">
+					<p class="brand">
+					<?php if($_product->getAttributeText('manufacturer')=='') { ?>
+					<?php echo $this->__($prNameFix); ?>
+					<?php } else { ?>
+					<?php echo $this->__($_product->getAttributeText('manufacturer'));
+					}
+					?>
+					</p>
+					<p class="description"><?php echo $this->__($prNameFix); ?><?php //echo substr($my_product->getDescription(), 0, 25); ?></p>
+					<p class="price">
+						<span>
+						<?php //echo number_format($my_product->getPrice(), 2);  ?>
+						<?php echo $this->getPriceHtml($_product, true) ?>
+						</span>
+					</p>
+				</div>
+			</a>
+		</li>
+		<?php endforeach ?>
+	</ul>
+	<div class="toolbar-bottom">
+		<?php //echo $this->getToolbarHtml() ?>
+		<?php echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar-bottom.phtml')->toHtml() ?>
+	</div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,35 @@
+<layout version="0.1.0">
+    <ccache_adminhtml_index_index>
+        <reference name="content">
+            <block type="ccache/adminhtml_grid" name="ccache" />
+            <block name="clear.cache"  type="ccache/adminhtml_grid" template="cache/js.phtml" />
+        </reference>
+    </ccache_adminhtml_index_index>
+    <ccache_adminhtml_index_manufacturer>
+        <reference name="content">
+            <block type="ccache/adminhtml_grid" name="ccache" />
+            <block name="clear.cache"  type="ccache/adminhtml_grid" template="cache/js.phtml" />
+        </reference>
+    </ccache_adminhtml_index_manufacturer>
+    <ccache_adminhtml_index_category>
+        <reference name="content">
+            <block type="ccache/adminhtml_grid" name="ccache" />
+            <block name="clear.cache"  type="ccache/adminhtml_grid" template="cache/js.phtml" />
+        </reference>
+    </ccache_adminhtml_index_category>
+    <ccache_adminhtml_index_warmupproduct>
+        <reference name="content">
+            <block type="ccache/adminhtml_product" name="warmup.product" />
+        </reference>
+    </ccache_adminhtml_index_warmupproduct>
+    <ccache_adminhtml_index_warmupcategory>
+        <reference name="content">
+            <block type="ccache/adminhtml_category" name="warmup.category" />
+        </reference>
+    </ccache_adminhtml_index_warmupcategory>
+    <ccache_adminhtml_index_warmupmanufacturer>
+        <reference name="content">
+            <block type="ccache/adminhtml_manufacturer" name="warmup.manufacturer" />
+        </reference>
+    </ccache_adminhtml_index_warmupmanufacturer>
+</layout>

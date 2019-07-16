@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <oos_general translate="title" module="magebuddies_oms">
+                                        <title>Product OOS</title>
+                                    </oos_general>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <oos_general translate="title" module="magebuddies_oms">
+                                <title>Product OOS</title>
+                                <sort_order>1000</sort_order>
+                                <children>
+                                    <productoosbackend translate="title">
+                                        <title>Product OOS</title>
+                                    </productoosbackend>
+                                </children>
+                            </oos_general>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

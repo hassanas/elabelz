@@ -1,0 +1,32 @@
+<!--@subject Congratulations! You are now a registered Seller of {{var logo_alt}} @-->
+<!--@vars
+{"htmlescape var=$customer.name":"Customer Name",
+"var customer.email":"Customer Email",
+"htmlescape var=$customer.password":"Customer Password"}
+@-->
+
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+{{template config_path="design/email/header"}}
+                <!-- [ middle starts here] -->
+                    <tr>
+                        <td valign="top">
+                        <div style="padding:20px 34px; background:#000;box-sizing: border-box; font-size:12px;line-height:14px;color:#fff;">
+<h2 style="font-family:Tahoma, Arial, 'Segoe UI', sans-serif; font-size:16px; line-height:18px; color:#fff;margin:0 0 15px;text-transform:uppercase;">Hurrah! Your registration is successful!</h2>         
+<h3 style="font-family:Tahoma, Arial, 'Segoe UI', sans-serif; font-size:12px; line-height:18px; color:#fff;margin:0 0 15px;text-transform:uppercase;">Dear {{var cname}},</h3>
+            <a style="margin:0 0 10px; text-decoration:none; display:inline-block; color:#fff;">Welcome to {{var logo_alt}}! </a>
+             <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;color:#fff;">To get started just click <a href="{{store url="customer/account/login/"}}" style="color:#1E7EC8;">Login</a> or <a href="{{store url="customer/account/login/"}}" style="color:#1E7EC8;">My Account</a> at the top of home page by entering your relevant e-mail id and password.</p>
+        </div>
+                        <div style="font-size:14px; line-height:16px; font-family:Tahoma, Arial, 'Segoe UI', sans-serif; border:1px solid #b4b4b4; box-sizing:border-box;padding:20px 35px;">
+                            <p style="font-size:12px; line-height:16px; margin:0 0 8px 0;">After logging in to your account, you will be able to access and add/update the following:</p>
+                            <ul style="font-size:12px; line-height:16px; margin:0 0 16px 0; padding:0;">
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash; Add/Edit Profile Information</li>
+                                <li style="list-style:none inside; padding:0 0 0 10px;">&ndash; Add/Manage Products</li>
+                            </ul>
+                            <p style="font-size:12px; line-height:16px; margin:0;">If you have any queries related to your account or issues during log in, get in touch with us either via <a href="mailto:{{config path='trans_email/ident_support/email'}}" style="color:#1E7EC8;">{{config path='trans_email/ident_support/email'}}</a> or give us a call to talk directly with our experts through {{config path='general/store_information/phone'}}.</p>
+                            </div>
+                        </td>
+                    </tr>
+{{template config_path="design/email/footer"}}

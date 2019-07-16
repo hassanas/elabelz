@@ -1,0 +1,9 @@
+<!-- Equity Facebook Pixel for Magento -->
+<script type="text/javascript">
+    Event.observe("checkout-review-submit",'click',function(event){
+        fbq('track','InitiateCheckout',{
+            num_items: <?php echo $this->getCartItemsCount() ?>
+        });
+    })
+</script>
+<!-- Equity Facebook Pixel for Magento -->

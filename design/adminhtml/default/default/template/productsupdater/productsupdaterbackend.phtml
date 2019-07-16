@@ -1,0 +1,49 @@
+<!--
+* @author Hassan Ali shahzad
+* This template is the form which upload csv file for import
+* class Progos_ProductsUpdater_Block_Adminhtml_ProductsUpdaterbackend
+-->
+<div class="content-header">
+    <table cellspacing="0">
+        <tbody>
+        <tr>
+            <td><h3 class="icon-head head-tax-rate-importExport">Update Attributes in English & Arabic Stores</h3></td>
+
+        </tr>
+        <tr>
+            <td>
+                <p>This module is created for update attribute values against two languages English and Arabic.You need
+                    to create csv with first primary column name (id or sku) and and remaining two columns with same
+                    attribute name having values in english and arabic respectively. e.g</p>
+
+                <p>Note: id is preffered to avoid load on system</p>
+                <p>Please add 30 Rows Max in one upload, it will take appox 4-6 mins to process</p>
+
+                <p>id,name,name</p>
+
+                <p>sku,name,name</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="entry-edit">
+    <div class="box-left">
+        <form id="import_attribute_form" action="<?php echo $this->getSaveUrl() ?>" method="post"
+              enctype="multipart/form-data">
+            <div><input name="form_key" value="LS9O0uYbI3bRCocb" type="hidden"></div>
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend">Import CSV File</h4>
+            </div>
+            <fieldset>
+                <legend>Import CSV File</legend>
+                <input name="import_attribute_file" class="input-file required-entry" type="file">
+                <button id="" title="Import Attributes" type="submit" class="scalable "
+                        style=""><span><span><span>Import Attributes</span></span></span></button>
+            </fieldset>
+        </form>
+        <script type="text/javascript">
+            var importForm = new varienForm('import_attribute_form');
+        </script>
+    </div>
+</div>

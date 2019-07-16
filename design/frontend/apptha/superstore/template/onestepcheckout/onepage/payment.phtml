@@ -1,0 +1,86 @@
+<div id="payment-method" class="onestepcheckout_block">
+    <h2 class="op_block_title" id="payment_m">3. <?php echo $this->__('Payment Methods') ?></h2>
+    <script type="text/javascript">
+	//<![CDATA[
+		var payment = new Payment('payment-method');
+		function toggleToolTip(event){
+			if($('payment-tool-tip')){
+				$('payment-tool-tip').setStyle({
+					top: (Event.pointerY(event)-300)+'px',
+					left: (Event.pointerX(event)-200)+'px'
+				});
+				$('payment-tool-tip').toggle();
+			}
+			Event.stop(event);
+		}
+	//]]>
+	</script>
+    <div class="checkout_payment_method_load_container">
+        <div id="checkout-payment-storecredit-load" class="" style="width: auto; height: auto;"></div>
+		<div id="checkout-payment-method-load">
+			<?php echo $this->getChildHtml('methods') ?>
+		</div>
+		<div class="tool-tip" id="payment-tool-tip" style="display:none;">
+			<div class="btn-close"><a href="javascript:;" id="payment-tool-tip-close" title="<?php echo $this->__('Close') ?>"><?php echo $this->__('Close') ?></a></div>
+			<div class="tool-tip-content"><img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>" alt="<?php echo $this->__('Card Verification Number Visual Reference') ?>" title="<?php echo $this->__('Card Verification Number Visual Reference') ?>" /></div>
+		</div>
+
+		<div id="checkout-coupon-discount-load">
+		<?php echo Mage::app()->getLayout()->createBlock('checkout/cart_coupon')->setTemplate('onestepcheckout/onepage/coupon.phtml')->toHtml(); ?>
+	</div>
+    	<div id="checkout-review-submit">    
+        <?php echo $this->getChildHtml('agreements') ?>
+        <div class="buttons-set" id="review-buttons-container">
+        
+<!-- Heard Us -->
+        
+	<?php 
+ 
+ 		/*$hearus_conditions =(Mage::getStoreConfig('onestepcheckout/heardus/enabled'));
+ 		$hearus_values_admin = (Mage::getStoreConfig('onestepcheckout/heardus/output'));
+ 
+	if ($hearus_conditions == 1) : ?> 
+    
+   	<div class="hearedus">
+
+        	<?php 
+					echo $this->__('How did you hear about us?'); 
+					
+			?>
+       <p>      
+           <?php $hearus_values_users =  explode(',',$hearus_values_admin) ?>
+         	  <select>
+				 	 <?php  for($i=0;$i<sizeof($hearus_values_users);$i++){ ?>
+						
+                          <option value="<?php echo $hearus_values_users[$i]; ?>"><?php echo $hearus_values_users[$i]; ?></option>
+					  
+					<?php }?>
+		  </select>
+   	  </p>
+   	  
+    </div>
+       
+    <?php endif; */ ?>   
+     
+<!-- Heard Us -->
+
+       
+        <button type="submit" onClick="javascript:return false;" id="checkout-form-submit" title="<?php echo $this->__('Buy Now') ?>" class="button btn-checkout"><?php echo $this->__('Buy Now') ?></button>
+            <span id="review-please-wait" style="display:none;">
+                <img src="<?php echo $this->getSkinUrl('images/ajax-loader.svg'); ?>" onerror="this.onerror=null; this.src='<?php echo $this->getSkinUrl('images/ajax-loader.gif'); ?>'" alt="<?php echo $this->__('Submitting order information...') ?>" title="<?php echo $this->__('Submitting order information...') ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?>
+            </span>
+        </div>
+    </div>
+	</div>
+	
+	
+    <script type="text/javascript">
+    //<![CDATA[
+        payment.currentMethod = "<?php echo $this->getChild('methods')->getSelectedMethodCode() ?>";
+		
+		if($('payment-tool-tip-close')){
+			Event.observe($('payment-tool-tip-close'), 'click', toggleToolTip);
+		}
+    //]]>
+    </script>
+</div>

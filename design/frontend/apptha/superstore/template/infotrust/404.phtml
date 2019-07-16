@@ -1,0 +1,33 @@
+<?php
+require_once 'common.phtml';
+$pageTitle = '404';
+// get page url and search for product/category availability
+if ($this->isExistProduct()) {
+    $pageTitle = 'PDP';
+} elseif ($this->isExistCategory()) {
+    $pageTitle = 'PLP';
+}
+?>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer = [{
+            'pageType': '<?php echo $pageTitle; ?>',
+            'pageCategory': 'No Category',
+            'userId': '<?php echo $customerId; ?>',
+            'sha256Email': '<?php echo $customerSha256Email; ?>',
+            'md5Email': '<?php echo $customerMd5Email; ?>',
+            'userType': '<?php echo $user; ?>',
+            'loggedInStatus': '<?php echo $loggedInStatus; ?>',
+            'storeCountry': '<?php echo $store->getName(); ?>',
+            'storeLanguage': '<?php echo $language; ?>',
+            'currencyCode': '<?php echo $currency_code; ?>'
+        }];
+
+        dataLayer.push({
+            'event': '404errorPage',
+            'eventCategory': 'User Engagement',
+            'eventAction': 'Page Error',
+            'eventLabel': '404errorPage'
+        });
+    </script>
+<?php echo Mage::getStoreConfig('infotrust/infotrust/script'); ?>

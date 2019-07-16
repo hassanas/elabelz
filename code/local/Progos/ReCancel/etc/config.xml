@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Progos_ReCancel>
+      <version>0.1.0</version>
+    </Progos_ReCancel>
+  </modules>
+  <global>
+    <helpers>
+      <recancel>
+        <class>Progos_ReCancel_Helper</class>
+      </recancel>
+    </helpers>
+    <models>
+      <recancel>
+        <class>Progos_ReCancel_Model</class>
+      </recancel>
+    </models>
+    <events>
+      <adminhtml_widget_container_html_before>
+        <observers>
+          <progos_recancel>
+            <class>recancel/observer</class>
+            <method>addViewButton</method>
+          </progos_recancel>
+        </observers>
+      </adminhtml_widget_container_html_before>
+    </events>
+  </global>
+  <admin>
+    <routers>
+      <adminhtml>
+        <args>
+          <modules>
+            <progos_recancel before="Mage_Adminhtml">Progos_ReCancel_Adminhtml</progos_recancel>
+          </modules>
+        </args>
+      </adminhtml>
+    </routers>
+  </admin>
+</config>

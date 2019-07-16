@@ -1,0 +1,82 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * Author Rudyuk Vitalij Anatolievich
+ * Email rvansp@gmail.com
+ * Blog www.cervic.info
+ */
+$orderId = Mage::registry('order_id');
+$shipmentId = Mage::registry('shipment_id');
+$upsl = Mage::registry('upsl');
+$upsl2 = Mage::registry('upsl2');
+$backLink = Mage::registry('backLink');
+$type = Mage::registry('type');
+$storeId = Mage::registry('storeId');
+$error = Mage::registry('error');
+$error2 = Mage::registry('error2');
+
+$path = Mage::getBaseUrl('media') . 'dhllabel/label/';
+$pathDir = Mage::getBaseDir('media') . '/dhllabel/label/';
+
+if (strlen($error) == 0) {
+    $imOrder = Mage::getModel('sales/order')->load($orderId);
+    $shipmentIncrementId = null;
+    if($shipmentId) {
+        $imShipment = Mage::getModel('sales/order_shipment')->load($shipmentId);
+        $shipmentIncrementId = $imShipment->getIncrementId();
+    }
+    echo '<h1> Order ID ' . $imOrder->getIncrementId() . ($shipmentIncrementId ? ' Shipment ID ' . $shipmentIncrementId : '') . '</h1>
+<br />
+';
+    echo '
+<br />
+<a href="' . $backLink . '"><button type="button" class="scalable back"><span><span><span>' .
+        Mage::helper('adminhtml')->__('Back') . '</span></span></span></button></a><br />';
+    $printersText = Mage::getStoreConfig('dhllabel/printing/printer_name');
+    if(!empty($printersText) && $upsl['type_print'] !== 'pdf' && Mage::getStoreConfig('dhllabel/printing/automatic_printing', $storeId) == 0) {
+        $printers = explode(",", $printersText);
+        echo '<br /><label for="thermalPrinterName">'.Mage::helper('adminhtml')->__('Printer name').':</label> <select id="thermalPrinterName">';
+        foreach($printers as $printer){
+            echo '<option value="'.trim($printer).'">'.trim($printer).'</option>';
+        }
+        echo '</select><br />';
+    }
+    echo '<br />';
+    if ($upsl['type_print'] == "pdf") {
+        echo '<a href="' . $path . 'label_' . $upsl['trackingnumber'] . '.pdf" target="_blank"><button type="button" class="scalable"><span><span><span>' . ($upsl['type'] == 'shipment' ? Mage::helper('adminhtml')->__('Print Shipping Label PDF') : Mage::helper('adminhtml')->__('Print Return Label PDF')) . '</span></span></span></button></a>';
+    } else {
+        if (Mage::getStoreConfig('dhllabel/printing/automatic_printing', $storeId)==1) {
+            echo '<a href="' . $this->getUrl('adminhtml/dhllabel_dhllabel/autoprint/order_id/' . $orderId . ($shipmentId ? '/shipment_id/' . $shipmentId : '') . '/type/' . $type) . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . ($upsl['type'] == 'shipment' ? Mage::helper('adminhtml')->__('Print Shipping Label ' . strtoupper($upsl['type_print'])) : Mage::helper('adminhtml')->__('Print Return Label ' . strtoupper($upsl['type_print']))) . '</span></span></span></button></a>';
+            echo '&nbsp;&nbsp;&nbsp;<a href="' . $this->getUrl('adminhtml/dhllabel_dhllabel/downloadnotgif/order_id/' . $orderId . ($shipmentId ? '/shipment_id/' . $shipmentId : '') . '/type/' . $type) . '" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Download Label') . '</span></span></span></button></a>';
+        } else {
+            echo '<a class="thermal-print-file" data-file="' . Mage::getBaseUrl('media') . 'dhllabel/label/' . $upsl['labelname'] . '" href="#" target="_blank"><button type="button" class="scalable"><span><span><span>' . ($upsl['type'] == 'shipment' ? Mage::helper('adminhtml')->__('Print Shipping Label ' . strtoupper($upsl['type_print'])) : Mage::helper('adminhtml')->__('Print Return Label ' . strtoupper($upsl['type_print']))) . '</span></span></span></button></a>';
+        }
+
+
+    }
+    if (file_exists($pathDir . 'invoice_' . $upsl['trackingnumber'] . '.pdf')) {
+        echo ' &nbsp;&nbsp;<a href="' . $path . 'invoice_' . $upsl['trackingnumber'] . '.pdf" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print International Invoice') . '</span></span></span></button></a>';
+    }
+    if (isset($upsl2) && isset($upsl2['trackingnumber'])) {
+        if (strlen($error2) == 0) {
+            echo '&nbsp;&nbsp;<a href="' . $path . 'label_' . $upsl2['trackingnumber'] . '.pdf" target="_blank"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Print Return Label PDF') . '</span></span></span></button></a><br />';
+
+        }
+    }
+    if (strlen($error2) > 1) {
+        echo "<br /><br /><b>Return label error:</b> " . $error2;
+    }
+
+    echo '<br /><br /><br /><br /><a href="' . $this->getUrl('adminhtml/dhllabel_dhllabel/deletelabel/order_id/' . $orderId . '/shipment_id/' . $shipmentId . '/type/' . $type) . '"><button type="button" class="scalable"><span><span><span>' . Mage::helper('adminhtml')->__('Delete Label') . '</span></span></span></button></a>';
+
+} else {
+    echo "<b>Error:</b> " . $error;
+    /*echo '<h3 style="color: red;">
+    We are very sorry, but our test DHL account temporary inactive.<br>
+But we guarantee, that extension will work with your DHL account credentials.<br>
+If after purchase you will have problems, we will help you. Please contact our <a href="mailto:shippinglabels@infomodus.com">Support Team</a><br>
+If we will not able to resolve problems, we will return your money.<br>
+If you want to test our extension with your DHL account credentials, please send us request by <a href="mailto:shippinglabels@infomodus.com">email</a>.<br>
+Thank you!
+    </h3>';*/
+}

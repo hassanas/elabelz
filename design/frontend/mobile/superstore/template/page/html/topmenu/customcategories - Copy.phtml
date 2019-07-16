@@ -1,0 +1,140 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/** @var Mage_Page_Block_Html_Topmenu_Renderer $this */
+/** @var Varien_Data_Tree_Node $menuTree */
+/** @var string $childrenWrapClass */
+?>
+<nav id="nav">
+<ol class="nav-primary metismenu">
+<?php
+$_helper = Mage::helper('catalog/category');
+$_categories = $_helper->getStoreCategories();
+foreach($_categories as $_category){
+
+$cat = Mage::getModel('catalog/category')->load($_category->getId());
+$subcats = $cat->getChildren(); 
+if($cat->getId()=='5'){// display what is new in between men and women in loop
+                echo '<li class="level0 first level-top parent"><a href="'.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'what-is-new/"><span>'.$this->__("What's New").'</span></a></li>';
+              }
+?>
+<li class="level0 first level-top parent">
+<?php
+// Level 0 Navigation
+if($cat->getIsActive()) {
+echo '<a class="level-top" href="'.$cat->getURL().'" title="'.$this->__($cat->getName()).'" category">'.$this->__("shop")." ".$this->__($cat->getName()).'</a>';
+}
+?>
+<ul class="level0 collapse">
+<?php
+// Level 1 Navigation
+foreach(explode(',',$subcats) as $subCatid)
+{
+  $_category = Mage::getModel('catalog/category')->load($subCatid);
+
+  if($_category->getIsActive()) {
+    $sub_cat = Mage::getModel('catalog/category')->load($_category->getId());
+    $sub_subcats = $sub_cat->getChildren(); ?>
+<li class="level1 first parent">
+<?php
+    if($sub_cat->getIsActive()) {
+              echo '<a class="ar" href="'.$sub_cat->getURL().'" title="'.$this->__($sub_cat->getName()).'"><span class="ar">'.$this->__($sub_cat->getName()).'</span></a>';
+
+if($sub_subcats == true){
+              echo '<ul>';
+            }
+            else{
+              echo '';
+            } ?>
+</li>
+<?php foreach(explode(',',$sub_subcats) as $sub_subCatid)
+  {
+    // Level 2 Navigation
+          $_sub_category = Mage::getModel('catalog/category')->load($sub_subCatid);
+          $sub_subCatid_sub = $_sub_category->getChildren();
+          if($_sub_category->getIsActive()) {
+
+            if($sub_subCatid_sub == true){
+              echo '<li class="level2 first parent">';
+            }
+            else{
+              echo '<li class="level2">';
+            }
+            echo '<a href="'.$_sub_category->getURL().'" title="'.$this->__($_sub_category->getName()).'"><span class="ar">'.$this->__($_sub_category->getName()).'</span></a>'; 
+
+            if($sub_subCatid_sub == true){
+              echo '<ul>';
+            }
+            else{
+              echo '';
+            }
+          // Level 3 Navigation
+               foreach(explode(',',$sub_subCatid_sub) as $sub_subCatid_subCatid)
+                {
+                        $_sub_category_sub = Mage::getModel('catalog/category')->load($sub_subCatid_subCatid);
+                        if($_sub_category_sub->getIsActive()) {
+                            echo '<li class="level3"><a href="'.$_sub_category_sub->getURL().'" title="'.$this->__($_sub_category_sub->getName()).'"><span class="ar">'.$this->__($_sub_category_sub->getName()).'</span></a></li>';
+                        }
+              }
+
+          if($sub_subCatid_sub == true){
+              echo '</ul>';
+            }
+            else{
+              echo '';
+            } ?>
+          </li>
+<?php  }
+}
+if($sub_subcats == true){
+              echo '</ul>';
+            }
+            else{
+              echo '';
+            }
+} ?>
+
+ <?php }
+} ?>
+</ul>
+</li>
+
+
+<li class="level0 first level-top parent">
+<?php
+
+// $_sub_category = Mage::getModel('catalog/category')->load($sub_subCatid);
+
+//           if($_sub_category->getIsActive()) {
+//               echo '<li class="level2"><a href="'.$_sub_category->getURL().'" title="'.$this->__($_sub_category->getName()).'"><span class="ar">'.$this->__($_sub_category->getName()).'</span></a></li>';
+//           }
+?>
+</li>
+<?php }
+?>
+<li class="level0 first level-top parent"><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>sale/"><span><?php echo $this->__('Sale');?></span></a></li>
+</ol>
+</nav>

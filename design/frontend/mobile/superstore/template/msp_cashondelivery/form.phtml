@@ -1,0 +1,68 @@
+<?php
+/**
+ * IDEALIAGroup srl
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to info@idealiagroup.com so we can send you a copy immediately.
+ *
+ * @category   MSP
+ * @package    MSP_CashOnDelivery
+ * @copyright  Copyright (c) 2013 IDEALIAGroup srl (http://www.idealiagroup.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/** @var MSP_CashOnDelivery_Block_Form $this */
+
+$_code = $this->getMethodCode();
+$quote = Mage::getSingleton('checkout/session')->getQuote();
+$_helper = Mage::helper('msp_cashondelivery');
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+$_extraFee = Mage::helper('core')->currency($this->getMethod()->getBaseExtraFee($quote));
+$_extraFeeInclTaxes = Mage::helper('core')->currency($this->getMethod()->getBaseExtraFeeInclTax($quote));
+$_description = $_helper->getCodDescription();
+$_displayBothPrices = $_helper->displayCodBothPrices();
+$_displayInclTax = $_helper->displayCodIncludingTax();
+
+?>
+<fieldset class="form-list">
+    <ul id="payment_form_<?php echo $_code ?>" style="display:none;">
+        <?php if ($_code == 'msp_cashondelivery'): ?>
+            <li>
+                <div class="codFlag" style="display:none;">
+                    <?php if ($locale == "ar_SA") { ?>
+                        <h2><?php echo $this->__('CASH ON DELIVERY') ?></h2>
+                    <?php } ?>
+                    <div><?php echo $this->__('Please make the payment at our physical store address mentioned in the email that we will send to you or contact our customer care centre for help') ?></div>
+                </div>
+            </li>
+        <?php endif; ?>
+
+        <li>
+            <?php echo "<p>".$_description."</p><p>"; ?>
+            <?php if ($_displayBothPrices) : ?>
+                <?php echo $this->__('You will be charged an extra fee of ');
+                echo $this->__('%s', $_extraFeeInclTaxes);
+                echo $this->__(' (');
+                echo $this->__('Incl. Taxes ');
+                echo $this->__('%s', $_extraFee);
+                echo $this->__(')'); ?>
+            <?php elseif ($_displayInclTax) : ?>
+                <?php echo $this->__('You will be charged an extra fee of ');
+                echo $this->__('%s', $_extraFee);
+                echo $this->__(' Incl. Taxes'); ?>
+            <?php else : ?>
+                <?php echo $this->__('You will be charged an extra fee of ');
+                echo $this->__('%s', $_extraFee); ?>
+            <?php endif; ?>
+            <?php echo "</p>"; ?>
+        </li>
+    </ul>
+</fieldset>

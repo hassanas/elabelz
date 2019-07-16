@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+        /**
+        * This Module is created for Desktop and Mobile App search from klevu
+        * @category     Progos
+        * @package      Progos_KlevuSearch
+        * @copyright    Progos TechCopyright (c) 06-09-2017
+        * @author       Hassan Ali Shahzad
+        *
+        */
+-->
+<config>
+    <modules>
+        <Progos_KlevuSearch>
+            <version>0.1.0</version>
+        </Progos_KlevuSearch>
+    </modules>
+    <global>
+        <helpers>
+            <klevusearch>
+                <class>Progos_KlevuSearch_Helper</class>
+            </klevusearch>
+            <klevu_search>
+                <rewrite>
+                    <data>Progos_KlevuSearch_Helper_Klevudata</data>
+                </rewrite>
+            </klevu_search>
+        </helpers>
+        <models>
+            <klevusearch>
+                <class>Progos_KlevuSearch_Model</class>
+                <resourceModel>klevusearch_mysql4</resourceModel>
+            </klevusearch>
+            <klevu_search>
+                <rewrite>
+                    <api_action_idsearch>Progos_KlevuSearch_Model_Api_Action_Idsearch</api_action_idsearch>
+                    <catalogsearch_resource_fulltext_collection>Progos_KlevuSearch_Model_CatalogSearch_Resource_Fulltext_Collection</catalogsearch_resource_fulltext_collection>
+                    <product_sync>Progos_KlevuSearch_Model_Product_Sync</product_sync>
+                    <observer>Progos_KlevuSearch_Model_Observer</observer>
+                </rewrite>
+            </klevu_search>
+        </models>
+    </global>
+</config> 

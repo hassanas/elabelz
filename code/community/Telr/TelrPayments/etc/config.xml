@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category	Telr
+ * @package	Telr_TelrPayments
+ * @copyright	Copyright (c) 2015 Telr (https://telr.com/)
+ */
+-->
+<config>
+  <modules>
+    <Telr_TelrPayments>
+      <version>1.0.0</version>
+    </Telr_TelrPayments>
+  </modules>
+
+  <global>
+    <models>
+      <telrpayments>
+        <class>Telr_TelrPayments_Model</class>
+      </telrpayments>
+    </models>
+    <helpers>
+      <telrpayments>
+        <class>Telr_TelrPayments_Helper</class>
+      </telrpayments>
+    </helpers>
+    <resources>
+      <telrpayments_setup>
+        <setup>
+          <module>Telr_TelrPayments</module>
+        </setup>
+        <connection>
+          <use>core_setup</use>
+        </connection>
+      </telrpayments_setup>
+      <telrpayments_write>
+        <connection>
+          <use>core_write</use>
+        </connection>
+      </telrpayments_write>
+      <telrpayments_read>
+        <connection>
+          <use>core_read</use>
+        </connection>
+      </telrpayments_read>
+    </resources>
+    <blocks>
+      <telrpayments><class>Telr_TelrPayments_Block</class></telrpayments>
+    </blocks>
+    <payment>
+      <url>https://telr.com/</url>
+    </payment>
+  </global>
+
+  <frontend>
+    <secure_url>
+      <telrpayments_processing>/telrpayments/processing</telrpayments_processing>
+    </secure_url>
+    <routers>
+      <telrpayments>
+        <use>standard</use>
+        <args>
+          <module>Telr_TelrPayments</module>
+          <frontName>telrpayments</frontName>
+        </args>
+      </telrpayments>
+    </routers>
+    <layout>
+      <updates>
+        <telrpayments>
+          <file>telrpayments.xml</file>
+        </telrpayments>
+      </updates>
+    </layout>
+  </frontend>
+
+  <default>
+    <payment>
+      <telrpayments_cc>
+        <active>0</active>
+        <model>telrpayments/cc</model>
+        <order_status>1</order_status>
+        <title>Credit Card (Telr)</title>
+        <allowspecific>0</allowspecific>
+        <transaction_testmode>1</transaction_testmode>
+        <order_status>processing</order_status>
+        <payment_action>authorize</payment_action>
+        <tran_desc>Your order from StoreName</tran_desc>
+      </telrpayments_cc>
+    </payment>
+  </default> 
+</config>

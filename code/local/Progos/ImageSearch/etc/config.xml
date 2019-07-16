@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_ImageSearch>
+            <version>0.1.0</version>
+        </Progos_ImageSearch>
+    </modules>
+    <global>
+        <helpers>
+            <imagesearch>
+                <class>Progos_ImageSearch_Helper</class>
+            </imagesearch>
+        </helpers>
+    </global>
+</config> 

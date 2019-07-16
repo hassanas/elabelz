@@ -1,0 +1,92 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * Language switcher template
+ *
+ * @see Mage_Page_Block_Switch
+ */
+$refinedStores = Mage::helper('page/switch')->getStoresList();
+?>
+<?php
+    if(count($this->getStores())>1):
+        $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+		$baseCurrentUrl = explode("?",$currentUrl);
+		$storeCode = $this->getCurrentStoreCode();
+        $storeCodel = strtolower($storeCode);
+		$storeCode = explode("_",$storeCode);
+
+    $switchStoreCodes = Mage::helper('page/switch')->switchStoreCodes($refinedStores);
+    $flags_class = array();
+        
+        if($storeCode['0']=='en'){
+            
+          /**
+          *   (-) is for uk,us case in which if arabic store not found then dont show the 
+          *   language switcher button
+          */
+          if ($switchStoreCodes[$storeCodel]!='-') {
+              $baseCurrentUrl = str_replace($storeCodel, $switchStoreCodes[$storeCodel], $baseCurrentUrl['0']);
+              $storeName =  '<a href='.$baseCurrentUrl.'>العربية <span class="menu-lang-change">'.$this->__("Change").'</span></a>';
+          }
+
+        }else if($storeCode['0']=='ar'){
+
+          $baseCurrentUrl = str_replace($storeCodel,$switchStoreCodes[$storeCodel],$baseCurrentUrl['0']);
+          $storeName = '<a href='.$baseCurrentUrl.'>english <span class="menu-lang-change">'.$this->__("Change").'</span></a>';
+
+        }
+?>
+    <li class="level0 parent countries-list">
+    <a class="collapse-link" href="#select-language">
+     <span class="menu-country-name"><?php echo $this->__("Country"); ?></span>
+     <span class="menu-country-change"><?php echo $this->__("Change"); ?></span>
+    </a>
+        <ul id="select-language">
+            <?php
+                foreach ($refinedStores['allStores'] as $_lang):
+                    $storsflagurl =  explode("___from_store",$_lang['storeUrl']);
+                    $_storsflagurl =  explode("?",$storsflagurl[0]);
+                    if(trim($_storsflagurl[1])==''){
+                        $storsflagurl = $_storsflagurl[0];
+                    }
+                
+                    if($storeCode['0'] == substr($_lang['storeCode'], 0, 2)){
+                        $_selected = ($_lang['storeId'] == $this->getCurrentStoreId()) ? 'selected' : '' 
+            ?>
+            <li class="<?php echo $_selected ?>">
+                <a href="<?php echo (is_array($storsflagurl)) ? $storsflagurl[0] : $storsflagurl; ?>">
+                    <span class="flag-icon flag-icon-<?php echo substr($_lang['storeCode'], 3, 2) ?>"></span>
+                    <?php echo $this->escapeHtml($_lang['storeName']) ?>
+                </a>
+            </li>
+            <?php
+                    }
+                endforeach; 
+            ?>
+        </ul>
+    </li>
+    <li class="level0 alternate-lang"><?php echo $storeName;?></li>
+<?php endif; ?>

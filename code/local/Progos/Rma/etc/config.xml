@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Rma>
+            <version>0.1.0</version>
+        </Progos_Rma>
+    </modules>
+    <global>
+        <helpers>
+            <rma>
+                <class>Progos_Rma_Helper</class>
+            </rma>
+        </helpers>
+        <models>
+            <awrma>
+                <rewrite>
+                    <email_template>Progos_Rma_Model_Email_Template</email_template>
+                </rewrite>
+            </awrma>
+        </models>
+    </global>
+</config> 

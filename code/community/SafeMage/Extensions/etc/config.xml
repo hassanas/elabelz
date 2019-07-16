@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+NOTICE OF LICENSE
+
+This source file is subject to the SafeMageEULA that is bundled with this package in the file LICENSE.txt.
+
+It is also available at this URL: http://www.safemage.com/LICENSE_EULA.txt
+
+Copyright (c)  SafeMage (http://www.safemage.com/)
+-->
+<config>
+    <modules>
+        <SafeMage_Extensions>
+            <version>1.1.2</version>
+        </SafeMage_Extensions>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <safemage_extensions before="Mage_Adminhtml">SafeMage_Extensions_Adminhtml</safemage_extensions>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <blocks>
+            <safemage_extensions>
+                <class>SafeMage_Extensions_Block</class>
+            </safemage_extensions>
+        </blocks>
+        <helpers>
+            <safemage_extensions>
+                <class>SafeMage_Extensions_Helper</class>
+            </safemage_extensions>
+        </helpers>
+        <models>
+            <safemage_extensions>
+                <class>SafeMage_Extensions_Model</class>
+            </safemage_extensions>
+        </models>
+    </global>
+    <adminhtml>
+        <layout>
+            <updates>
+                <safemage_extensions module="SafeMage_Extensions">
+                    <file>safemage/extensions.xml</file>
+                </safemage_extensions>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <SafeMage_Extensions>
+                    <files>
+                        <default>SafeMage_Extensions.csv</default>
+                    </files>
+                </SafeMage_Extensions>
+            </modules>
+        </translate>
+        <events>
+            <admin_system_config_changed_section_safemage_extensions>
+                <observers>
+                    <safemage_extensions>
+                        <class>safemage_extensions/observer</class>
+                        <method>systemConfigSaveAfter</method>
+                    </safemage_extensions>
+                </observers>
+            </admin_system_config_changed_section_safemage_extensions>
+            <controller_action_predispatch_adminhtml_system_config_edit>
+                <observers>
+                    <safemage_extensions>
+                        <class>safemage_extensions/observer</class>
+                        <method>predispatchSystemConfigEdit</method>
+                    </safemage_extensions>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_edit>
+        </events>
+    </adminhtml>
+</config>

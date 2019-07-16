@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <adminhtml_awadvancedreports_setup_edit>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>aw_advancedreports/js/columns.js</name>
+            </action>
+        </reference>
+    </adminhtml_awadvancedreports_setup_edit>
+    <adminhtml_awadvancedreports_product_index>
+        <reference name="head">
+            <action method="addJs">
+                <name>advancedreports/sku.js</name>
+            </action>
+        </reference>
+    </adminhtml_awadvancedreports_product_index>
+    <adminhtml_awadvancedreports_country_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>aw_advancedreports/js/country.js</name>
+            </action>
+        </reference>
+    </adminhtml_awadvancedreports_country_index>
+    <adminhtml_awadvancedreports_stockvssold_index>
+        <reference name="content">
+            <block type="core/template" template="advancedreports/inline-edit.phtml" />
+        </reference>
+    </adminhtml_awadvancedreports_stockvssold_index>
+
+    <adminhtml_awadvancedreports_configurable_index>
+        <reference name="head">
+            <action method="setTitle" translate="title">
+                <title>Comments</title>
+            </action>
+
+        </reference>
+        <remove name="menu" />
+            <remove name="header" />
+            <remove name="footer" />
+            <remove name="notifications" />
+        <reference name="content">
+            <block type="marketplace/adminhtml_notes" name="notes" template="advancedreports/configurable.phtml" />
+        </reference>
+         
+    </adminhtml_awadvancedreports_configurable_index>
+
+</layout>

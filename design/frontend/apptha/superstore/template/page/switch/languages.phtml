@@ -1,0 +1,131 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Language switcher template
+ *
+ * @see Mage_Page_Block_Switch
+ */
+$refinedStores = Mage::helper('page/switch')->getStoresList();
+
+if(count($refinedStores['allStores'])>1): 
+
+?>
+
+	<?php   
+    $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+    $baseCurrentUrl = explode("?",$currentUrl);
+	$storeCode = $this->getCurrentStoreCode();
+	$storeCodel = strtolower($storeCode);
+
+    $storeCode = explode("_", $storeCode);
+
+    $switchStoreCodes = Mage::helper('page/switch')->switchStoreCodes($refinedStores);
+    $flags_class = array();
+
+    if($storeCode['0']=='en') {
+        
+        /**
+        *   (-) is for uk,us case in which if arabic store not found then dont show the 
+        *   language switcher button
+        */
+        if ($switchStoreCodes[$storeCodel]!='-') {
+            $baseCurrentUrl = str_replace($storeCodel, $switchStoreCodes[$storeCodel], $baseCurrentUrl['0']);
+            $stroeName =  '<a href='.$baseCurrentUrl.'>العربية</a>';
+        }
+        $allStores = $refinedStores['en'];
+
+    }else if($storeCode['0']=='ar'){
+
+        $baseCurrentUrl = str_replace($storeCodel,$switchStoreCodes[$storeCodel],$baseCurrentUrl['0']);
+        $stroeName = '<a href='.$baseCurrentUrl.'>english</a>';
+        $allStores = $refinedStores['ar'];
+
+    }
+
+    foreach ($allStores as $_store) {
+        $storeCodeExt = explode("_", $_store['storeCode']);
+        $flags_class[$storeCodeExt[1]] = $_store['storeName'];
+    }
+
+    ?>
+<div class="form-language">
+    <?php
+    $storeCode = Mage::app()->getStore()->getCode();
+    $storeCode = explode("_",$storeCode);
+?>
+    <ul class="lang-menu"><li>
+    <a class="lang-menu-anchor flag <?php echo strtoupper($storeCode[1]); ?>"><?php
+    $store = Mage::app()->getStore();
+    echo $name = $store->getName();
+    ?></a>
+    <?php $storeSelectField = '<select id="select-language" title="'.$this->__('Your Language').'" onchange="window.location.href=this.value">'; ?>
+    <ul id="select-language" title="<?php echo $this->__('Your Language') ?>">
+    <?php foreach ($refinedStores['allStores'] as $_lang):
+
+            $storsflagurl =  explode("___from_store",$_lang['storeUrl']);
+            $_storsflagurl =  explode("?",$storsflagurl[0]);
+            if(trim($_storsflagurl[1])==''){
+                $storsflagurl = $_storsflagurl[0];
+            }
+    ?>
+    <?php $class = array_search($this->escapeHtml($_lang['storeName']), $flags_class);
+
+    	if($storeCode['0'] == substr($_lang['storeCode'], 0, 2)){ ?>
+            <?php $_selected = ($_lang['storeId'] == $this->getCurrentStoreId()) ? 'selected' : '' ?>
+            <li class="flag <?php echo $class; ?> <?php echo $_selected ?>" title="<?php echo $this->escapeHtml($_lang['storeName']) ?>" value="<?php echo (is_array($storsflagurl)) ? $storsflagurl[0] : $storsflagurl; ?>">
+            <a href="<?php echo (is_array($storsflagurl)) ? $storsflagurl[0] : $storsflagurl; ?>"><?php echo $this->escapeHtml($_lang['storeName']) ?></a>
+            </li>
+            <?php
+            $storeSelectField .= '<option '.$_selected.' value="';
+            $storeSelectField .= (is_array($storsflagurl)) ? $storsflagurl[0] : $storsflagurl;
+            $storeSelectField .= '">'.$this->escapeHtml($_lang['storeName']).'</option>';
+            }
+            ?>
+
+    <?php
+        endforeach;
+        $storeSelectField .= '</select>';
+    ?>
+    </ul>
+
+    </li>
+    </ul>
+    <?php echo $storeSelectField; ?>
+
+    <?php echo  $stroeName;?>
+</div>
+<?php endif; ?>
+
+<script>
+
+if ($j('body').hasClass('onestepcheckout-index-index')) {
+	$j('#select-language').off('click');
+	$j('#select-language .arrow').hide();
+}
+// });
+</script>

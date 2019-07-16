@@ -1,0 +1,211 @@
+<?php
+/**
+ * Bulk product upload option for seller
+ */
+?>
+<?php
+if (Mage::getStoreConfig('marketplace/product/bulk_upload') == 1){ ?>
+<div class="bulk_order_options">
+    <h3>
+        <?php echo Mage::helper('marketplace')->__('Bulk Product Upload'); ?>
+    </h3>
+    <?php
+    /**
+     * Bulk product upload form
+     */
+    ?>
+    <form name="bulk-product-upload-form" id="bulk-product-upload-form" class="bulk-product-upload-form"
+          onsubmit="return bulkProductUploadValidate(this);"
+          method="post" action="<?php echo $this->getBulkUploadUrl(); ?>" enctype="multipart/form-data">
+        <label for="bulk-product-upload-csv-file" class="required"><?php echo Mage::helper('marketplace')
+                                                                                  ->__('Upload CSV File'); ?></label>
+        <div class="input-box">
+
+
+            <div id="file">
+                <span class="ftitle"><?php echo $this->__('Choose File') ?></span>
+                <span class="fpath"><?php echo $this->__('No File Selected') ?></span>
+            </div>
+
+
+            <input
+                    type="file" class="required-file bulk-product-upload-file"
+                    id="bulk-product-upload-csv-file" name="bulk-product-upload-csv-file"
+                    accept=".csv"/>
+        </div>
+        <label for="bulk-product-upload-image-file"><?php echo Mage::helper('marketplace')
+                                                                   ->__('Upload Image File'); ?></label>
+        <div class="input-box">
+
+
+            <div id="file2">
+                <span class="ftitle2"><?php echo $this->__('Choose File') ?></span>
+                <span class="fpath2"><?php echo $this->__('No File Selected') ?></span>
+            </div>
+
+
+            <input
+                    type="file" class="bulk-product-upload-file"
+                    id="bulk-product-upload-image-file" name="bulk-product-upload-image-file"
+                    accept=".zip"/>
+            <div>
+                <small><?php echo Mage::helper('marketplace')->__('Upload .zip format'); ?></small>
+            </div>
+        </div>
+        <button type="submit" class="button"
+                title="<?php echo Mage::helper('marketplace')->__('Upload') ?>" name="bulk-upload-submit"
+                id="bulk-upload-submit">
+            <span><span><?php echo Mage::helper('marketplace')->__('Upload') ?></span></span>
+        </button>
+
+
+        <?php
+
+        /**
+         *  Initilize product types from admin
+         */
+        $selectedType = Mage::helper('marketplace')->getSelectedPrdouctType();
+        /**
+         *  Assigning product types to array variale
+         */
+        $selectedProductType = explode(",", $selectedType);
+        /**
+         * Check configurable is exist in the selected product type array
+         * and selected type is not equal to empty
+         */
+        if (in_array("configurable", $selectedProductType) && $selectedType != '') {
+
+            $entityType = Mage::getModel('catalog/product')->getResource()->getTypeId();
+            $attributeSetCollection =
+                Mage::getResourceModel('eav/entity_attribute_set_collection')->setEntityTypeFilter($entityType)
+                    ->setOrder('attribute_set_id', 'asc');
+            ?>
+
+            <h4><a href="javascript:void(0)"
+                   onclick="showConfigurablePorductAttributeList();"><?php echo Mage::helper('marketplace')
+                                                                                    ->__('Click and refer the list of attributes for Importing the Configurable Product')
+                                                                                . '.'; ?></a></h4>
+            <div id="configurable_product_attributes_list" class="configurable_product_attributes_list"
+                 style="display: none;">
+                <?php
+                $configAttributeFlag = 0;
+                foreach ($attributeSetCollection as $attributeSet) {
+                    $configAttributeFlag = 1;
+                    /**
+                     * Get attribute set name
+                     */
+                    $attributeSetName = $attributeSet->getAttributeSetName();
+                    /**
+                     * Get attribute set id
+                     */
+                    $attributeSetId = $attributeSet->getAttributeSetId();
+                    ?>
+                    <?php
+                    /**
+                     * Get Product Details
+                     */
+                    $product = Mage::getSingleton("catalog/product")
+                                   ->setTypeId('configurable')
+                                   ->setAttributeSetId($attributeSetId);
+                    /**
+                     * Get attributes of the product
+                     */
+                    $attributes = $product->getTypeInstance(true)->getSetAttributes($product);
+                    ?>
+                    <div class="sample_data_for_configurable_product">
+                        <b class="attribute_heading"><?php echo Mage::helper('marketplace')->__('Attribute Set for')
+                                                                . ' "' . $attributeSetName . '" :'; ?></b>
+                        <ul>
+                            <?php
+                            $attributeFlag = 0;
+                            foreach ($attributes as $attribute) {
+                                /**
+                                 * Checking attribute is configurable
+                                 * and attribute is visible
+                                 * and attribute uses source
+                                 * and atribute is set as global
+                                 *
+                                 */
+                                if (($attribute->getIsConfigurable()) && ($attribute->getIsVisible())
+                                    && ($attribute->usesSource())
+                                    && ($attribute->getIsGlobal()
+                                        == Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL)
+                                ) {
+                                    /**
+                                     * Assigning attribute code in variable
+                                     */
+                                    $attributeCodeValueForDisplay = $this->__('Attribute Code');
+                                    /**
+                                     * Check attribute name is not equal to 'setbanner'
+                                     * and attribute name is not equal to 'default_country'
+                                     * and attribute name is not equal to 'seller_shipping_option'
+                                     * if so setting attribute flag as 1
+                                     */
+                                    if ($attribute->getName() != 'setbanner'
+                                        && $attribute->getName() != 'default_country'
+                                        && $attribute->getName() != 'seller_shipping_option'
+                                    ) {
+                                        $attributeFlag = 1;
+                                        ?>
+                                        <li><b><?php echo $attributeCodeValueForDisplay . ' : '; ?></b><br/>
+                                            <?php echo $attribute->getAttributeCode(); ?><br/>
+                                            <b><?php echo $this->__('Options') . ' : '; ?></b>
+                                            <?php
+                                            $attributeDetails = Mage::getSingleton("eav/config")
+                                                                    ->getAttribute("catalog_product",
+                                                                        $attribute->getAttributeCode());
+                                            $options = $attributeDetails->getSource()->getAllOptions(false);
+                                            foreach ($options as $option) {
+                                                echo '<br/>' . $option["label"] . '';
+                                            }
+                                            /**
+                                             * Check options count is less than 1
+                                             * if so display 'no option available' message
+                                             */
+                                            if (count($options) < 1) {
+                                                ?>
+                                                <?php echo '<br/>' . $this->__('No option available for') . ' "'
+                                                           . $attribute->getName() . '".'; ?>
+                                            <?php } ?>
+                                            <input type="hidden" name="configurable_attribute[]"
+                                                   value="<?php echo $attribute->getAttributeCode(); ?>">
+                                        </li>
+                                        <?php
+                                    }
+                                }
+                            }
+                            /**
+                             * Check attribute flag is equal to zero
+                             * if so display 'no confugurable attribute available for' message
+                             */
+                            if ($attributeFlag == 0){ ?>
+                            <li><?php echo Mage::helper('marketplace')->__('No configurable attribute available for')
+                                           . ' "' . $attributeSetName . '".'; ?>
+
+                            </li>
+                        </ul>
+
+                        <?php
+                        } ?>
+                    </div>
+                    <?php
+                }
+                ?>
+
+                <?php
+                /**
+                 * Checking config attribute flag is equal to zero
+                 * if so display 'no attribute set available' message
+                 */
+                if ($configAttributeFlag == 0) { ?>
+                    <div>
+                        <?php echo Mage::helper('marketplace')->__('No attribute set available for configurable product') . '.'; ?>
+                    </div>
+                <?php }
+                ?>
+            </div>
+            <?php
+        } ?>
+    </form>
+</div>
+<?php } ?>

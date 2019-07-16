@@ -1,0 +1,43 @@
+<?php $cookie = Mage::getSingleton('core/cookie');?>
+<?php if($cookie->get("store_new_code")):
+   $store_value = $cookie->get("store_new_code");
+   $url = Mage::helper("page/switch")->getPreviousUrl();
+   Mage::app()->getResponse()
+    ->setRedirect(Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB, true ).$store_value.$url, 302)
+    ->sendResponse();
+?>
+<?php else:?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Online Shopping: Dresses, Shoes & Accessories | eLabelz</title>
+    <meta name="description" content="The Coolest Fashion Online Mall for Men, Women and Kids. Shop for Dresses, Shoes, Bags &amp; Accessories with Free Next Day Shipping 14 Days Exchange Policy">
+    <meta id="viewportmeta" name=viewport content="width=device-width, initial-scale=1">
+</head>
+<body>
+<?php
+$mobDetect = Mage::helper('mobiledetect');
+if( $mobDetect->isMobile() && $mobDetect->is('UCWeb') && !$mobDetect->isTablet() ){
+?>
+<style type="text/css" media="screen">
+    body{background-image:url("<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ); ?>images/mobile-portrait-bg.jpg");background-size:cover;background-position:center center;background-repeat:no-repeat;height:100%;}
+</style>
+<h1 style="padding:20px;background:#1b384a;color:#fff;font-size:12px;">To Display website correctly please disable "Speed Mode" by clicking list icon &nbsp;<img src="<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ); ?>images/list.jpg" width="30" height="30" alt="">&nbsp; and then click &nbsp;<img src="<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ); ?>images/speed-mode.jpg" width="30" height="30" alt="">&nbsp; to disable Speed Mode Or follow this tutorial &nbsp;<a href="#gotoimg"> Click Here </a>&nbsp; Or &nbsp;<a href="<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true ); ?>images/uc_browser_speed_mode_disable.mp4">&nbsp; Watch this video </a>. Thanks</h1>
+
+<?php
+}
+?>
+<?php endif ?>
+<?php
+$mobDetect = Mage::helper('mobiledetect');
+if( $mobDetect->isMobile() && $mobDetect->is('UCWeb') && !$mobDetect->isTablet() ){
+?>
+<a id="gotoimg"></a>
+<img src="<?php echo Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB, true )?>images/uc_browser_speed_mode_disable.jpg" width="220" alt="">
+<?php
+}
+?>
+</body>
+</html>

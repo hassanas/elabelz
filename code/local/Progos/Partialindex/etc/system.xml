@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <progos_partialindex translate="label">
+            <label>Partial Index</label>
+            <tab>catalog</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>710</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <index translate="label">
+                    <label>Partial Indexer</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <isActive translate="label">
+                            <label>Enable Partial Index Cron</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </isActive>
+                        <priceindexer translate="label">
+                            <label>Enable Price Indexer</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </priceindexer>
+                        <schedule_index translate="label">
+                            <label>Partial Index schedule</label>
+                            <comment><![CDATA[
+<pre>
+* * * * *
+| | | | |
+| | | | +---- Day of the Week   (range: 1-7, 1 standing for Monday)
+| | | +------ Month of the Year (range: 1-12)
+| | +-------- Day of the Month  (range: 1-31)
+| +---------- Hour              (range: 0-23)
++------------ Minute            (range: 0-59)
+Example: 0 0 * * * Daily at midnight
+</pre>
+                            ]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-crontab</validate>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <isActive>1</isActive>
+                            </depends>
+                        </schedule_index>
+                        <maxProductReindexed translate="label">
+                            <label>Max Product to Partial Reindex</label>
+                            <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </maxProductReindexed>
+                        <setOrder translate="label">
+                            <label>Index Products in Ascending Order?</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </setOrder>
+                        <clearProductCache translate="label">
+                            <label>Clear Product Cache After Indexer Completed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearProductCache>
+                        <clearCategoryCache translate="label">
+                            <label>Clear Category Cache After Indexer Completed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearCategoryCache>
+                        <clearBrandCache translate="label">
+                            <label>Clear Brand Pages Cache After Indexer Completed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearBrandCache>
+                        <clearMobileProductCache translate="label">
+                            <label>Clear Mobile Product Pages Cache After Indexer Completed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearMobileProductCache>
+                        <clearMobileCategoryCache translate="label">
+                            <label>Clear Mobile Category Pages Cache After Indexer Completed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearMobileCategoryCache>
+                        <clearConfigurableIds translate="label">
+                            <label>Clear Configurable Ids</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearConfigurableIds>
+                        <logIds translate="label">
+                            <label>Log Product Ids</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </logIds>
+                        <disable_process translate="label">
+                            <label>Disable Index Process Table</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </disable_process>
+                        <disable_index translate="label">
+                            <label>Disable Log In Index_Event Table</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>350</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </disable_index>
+                        <enableProductFlatIndexer translate="label">
+                            <label>Enable Flat Product Partial Indexing</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enableProductFlatIndexer>
+                    </fields>
+                </index>    
+                <timepriceindex translate="label">
+                    <label>Partial Indexer Time Manager</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>          
+                        <enableTimeRange translate="label">
+                            <label>Enable Time Range For Partial Indexing</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enableTimeRange>
+                        <setFromTime translate="label">
+                            <label>Select From Time</label>
+                            <source_model>partialindex/adminhtml_system_config_source_time</source_model>   
+                            <frontend_type>select</frontend_type>                         
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </setFromTime>
+                        <setToTime translate="label">
+                            <label>Select To Time</label>
+                            <source_model>partialindex/adminhtml_system_config_source_time</source_model>   
+                            <frontend_type>select</frontend_type>                         
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </setToTime>
+                        <maxProductToReindexInTime translate="label">
+                            <label>Max. Product Reindex Using Partail Indexer in Time Range</label>
+			    <comment>(0 to no limit)</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>95</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </maxProductToReindexInTime>
+                    </fields>
+                </timepriceindex>
+                <order translate="label">
+                    <label>Cache Cleaning After Order Placed</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields> 
+                        <clearProductCache translate="label">
+                            <label>Clear Product Cache After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearProductCache>
+                        <clearCategoryCache translate="label">
+                            <label>Clear Category Cache After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearCategoryCache>
+                        <clearBrandCache translate="label">
+                            <label>Clear Brand Pages Cache After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearBrandCache>         
+                        <clearMobileProductCache translate="label">
+                            <label>Clear Mobile Product Pages After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearMobileProductCache>
+                        <clearMobileCategoryCache translate="label">
+                            <label>Clear Mobile Category Pages After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearMobileCategoryCache>
+                        <clearMobileFiltersCache translate="label">
+                            <label>Clear Mobile Filters Layered Nav After Order Placed</label>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </clearMobileFiltersCache>
+                    </fields>
+                </order>
+            </groups>
+        </progos_partialindex>
+    </sections>
+</config>

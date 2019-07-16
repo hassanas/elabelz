@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+* @category   Shreeji
+* @package    Shreeji_Manageimage
+* @author     ModuleCreator
+* @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+-->
+<config>
+    <modules>
+        <Shreeji_Manageimage>
+            <version>0.1.0</version>
+        </Shreeji_Manageimage>
+    </modules>
+    <admin>
+        <routers>
+            <manageimage>
+                <use>admin</use>
+                <args>
+                    <module>Shreeji_Manageimage</module>
+                    <frontName>manageimage</frontName>
+                </args>
+            </manageimage>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <catalog module="manageimage">				
+                <children>
+                    <manageimageitems module="manageimage">
+                        <title>Manage Duplicate Images</title>
+                        <sort_order>5</sort_order>
+                        <action>manageimage/adminhtml_manageimage</action>
+                    </manageimageitems>
+                    <noimages module="manageimage">
+                        <title>Products With No Base Images</title>
+                        <sort_order>6</sort_order>
+                        <action>manageimage/adminhtml_manageimage/findproductwithnoimages</action>
+                    </noimages>
+                </children>
+            </catalog>
+        </menu>
+        <layout>
+            <updates>
+                <manageimage>
+                    <file>manageimage.xml</file>
+                </manageimage>
+            </updates>
+        </layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <manageimage>
+                <class>Shreeji_Manageimage_Model</class>
+                <resourceModel>manageimage_mysql4</resourceModel>
+            </manageimage>
+            <manageimage_mysql4>
+                <class>Shreeji_Manageimage_Model_Mysql4</class>
+                <entities>
+                    <manageimage>
+                        <table>manageimage</table>
+                    </manageimage>
+                </entities>
+            </manageimage_mysql4>
+        </models>
+        <resources>
+            <manageimage_setup>
+                <setup>
+                    <module>Shreeji_Manageimage</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </manageimage_setup>
+            <manageimage_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </manageimage_write>
+            <manageimage_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </manageimage_read>
+        </resources>
+        <blocks>
+            <manageimage>
+                <class>Shreeji_Manageimage_Block</class>
+            </manageimage>
+        </blocks>
+        <helpers>
+            <manageimage>
+                <class>Shreeji_Manageimage_Helper</class>
+            </manageimage>
+        </helpers>
+        <events>
+            <catalog_product_delete_before>
+                <observers>
+                    <delete_duplicate_Image>
+                        <class>Shreeji_Manageimage_Model_Observer</class>
+                        <method>deleteDuplicateImage</method>
+                    </delete_duplicate_Image>
+                </observers>
+            </catalog_product_delete_before>
+        </events>
+    </global>
+</config>

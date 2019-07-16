@@ -1,0 +1,229 @@
+<!-- <div class="category-banner">
+    <div class="category_banner">
+        <div class="catalog_banner_top tb_one three_line">   
+        <p style="width: 1000px; max-height: 530px; overflow: hidden;"><img alt="" src="http://ae.elabelz.com/media/wysiwyg/women-1.jpg"></p>
+        <h1 style="font-size: 4.3em; position: absolute; right: 140px; top: 30%; font-family: 'Gotham Bold'; color: #fff; cursor: pointer;">Women</h1>
+        </div>
+    </div>
+</div> -->
+
+<?php
+$identifier = "sports-shop-top-banner";
+$active = Mage::getModel('cms/block')->load($identifier)->getIsActive();
+if ($active == 1){?>
+<div class="category_banner">
+    <div class="catalog_banner_top tb_one three_line">   
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($identifier)->toHtml() ?>
+    </div>
+</div>
+<?php
+}
+?>
+                
+
+<div class="col-left sidebar col-left-first">
+
+    <div class="block block-layered-nav block-layered-nav--no-filters">
+        <div class="block-content toggle-content open">
+            <dl id="narrow-by-list2">
+                <dd class="odd">
+                    <ol>
+                        <li data-toggle="collapse" data-target="#section_1" class="li_collapse ">
+                            <a href="http://ae.elabelz.com/women-shoes">Shoes</a>
+                        </li>
+                        <dd id="section_1" class="collapse even">
+                            <ol style="padding-left:10px">
+                                    <li><a href="">Item</a></li>
+                            </ol>
+                        </dd>
+                    </ol>
+                </dd>
+            </dl>
+            <script type="text/javascript">decorateDataList('narrow-by-list2')</script>
+        </div>
+    </div>
+
+
+<?php 
+
+$_categories = Mage::getModel('catalog/category')->getCategories(2);
+?>
+<?php //$_count = is_array($_categories)?count($_categories):$_categories->getSize(); ?>
+<?php $_count = true; ?>
+<?php if($_count): ?>
+<div class="block block-layered-nav block-layered-nav--no-filters" style="display: none">
+    <div class="block-content toggle-content open">
+        <dl id="narrow-by-list2">
+            <dd>
+                <ol>
+                <?php 
+                $count = 1;
+                $max = sizeof($_categories);
+                foreach ($_categories as $_category): ?>
+                    <?php if($_category->getIsActive()): ?>
+                    <li data-toggle="collapse" data-target="#section_<?php echo $count ?>" class="li_collapse <?php echo $count==$max?'last':'' ?>">
+                        <a href="<?php echo Mage::getUrl('sports-shop') ?>?cat=<?php echo $_category->getId() ?>">
+                            <?php echo $this->__($this->escapeHtml($_category->getName())); ?>
+                        </a>
+                    </li>
+                    
+                        <?php $childrens = $_category->getChildren() ?>
+
+                            <?php if($childrens): //echo  $childrens;?>
+                                <dd id="section_<?php echo $count ?>" class="collapse">
+                                    <ol style="padding-left:10px">
+                                    <?php foreach ($childrens as $_children): ?>
+                                        <?php if($_children->getIsActive()): ?>
+                                            <li>
+                                                <a href="<?php echo Mage::getUrl('what-is-new') ?>?cat=<?php echo $_children->getId() ?>">
+                                                    <?php echo $this->__($this->escapeHtml($_children->getName())) ?>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endforeach ?>
+                                    </ol>
+                                </dd>
+                            <?php endif; ?>
+                    <?php endif; ?>
+                <?php 
+                $count++;
+                endforeach ?>
+                </ol>
+            </dd>
+        </dl>
+        <script type="text/javascript">decorateDataList('narrow-by-list2')</script>
+    </div>
+</div>
+<?php endif; ?>
+
+
+</div>
+
+
+
+
+
+
+    <div class="col-main">
+                                        <style>
+    /*.bestsllerbrand .shopbybrand-title h1,
+    .brand-search .shopbybrand-title h1,
+    .shopbybrand-title h1 {
+        background-color: #FFA500;
+        color:#FFFFFF;
+    }
+    .shopbybrand-list .brands .brandslist .brand-begin-label strong{
+        background-color: #3399CC;
+        color:#FFFFFF;
+    }
+    .shopbybrand-list .charlist a{
+        background-color: #EEEEEE !important;
+        color:#707070 !important;
+    }
+    .shopbybrand-list .brands .brandslist .brand-begin-label{
+        border-bottom: 1px solid #3399CC  !important;
+    }
+    .shopbybrand-list .filterbar #charaters-list ul li.charlist a:hover,
+    .shopbybrand-list .filterbar #charaters-list ul li.isActiveCate a,
+    .shopbybrand-list .filterbar #charaters-list ul li.charlist a.isActiveCate{
+        background-color: #6F6F6F !important;
+        color:#FFFFFF !important;
+    }
+  
+    .shopbybrand-list a{
+        color:#3399CC !important;
+    }
+    .shopbybrand-list a:hover {
+        color:#6F6F6F !important;
+    }
+    @media screen and (min-width:768px) and (max-width: 979px) {
+            .shopbybrand_sidebar .shopbybrand-title h1,
+            .brand-search .shopbybrand-title h1,
+            .bestsllerbrand .shopbybrand-title h1{
+            background-color: #FFA500 !important;
+        }   
+    }*/
+</style>
+
+<!-- 
+    <div class="c_static_block_container c_static_extra_space">
+        <div class="c_img_container"><img alt="" src=
+        "http://ae.elabelz.com/media/wysiwyg/women-2.jpg"></div>
+        <div class="c_static_description">
+            <h2>Just In for women</h2><span>Lorem Ipsum is simply dummy text of
+            the printing and typesetting industry.</span>
+        </div>
+        <div class="c_static_btn">
+            <a href="javascript:;">shop now</a>
+        </div>
+    </div>
+    <div class="c_static_block_container">
+        <div class="c_img_container"><img alt="" src=
+        "http://ae.elabelz.com/media/wysiwyg/women-3.jpg"></div>
+        <div class="c_static_description">
+            <h2>smart spends</h2><span>Our can’t miss shopping list.</span>
+        </div>
+        <div class="c_static_btn">
+            <a href="javascript:;">shop now</a>
+        </div>
+    </div>
+    <div class="c_static_block_container c_static_extra_space">
+        <div class="c_img_container"><img alt="" src=
+        "http://ae.elabelz.com/media/wysiwyg/women-4.jpg"></div>
+        <div class="c_static_description">
+            <h2>BEST SELLER</h2><span>Lorem Ipsum is simply dummy text of the
+            printing and typesetting industry.</span>
+        </div>
+        <div class="c_static_btn">
+            <a href="javascript:;">shop now</a>
+        </div>
+    </div>
+    <div class="c_static_block_container">
+        <div class="c_img_container"><img alt="" src=
+        "http://ae.elabelz.com/media/wysiwyg/women-5.jpg"></div>
+        <div class="c_static_description">
+            <h2>sale</h2><span>Further Reductions upt to 60%</span>
+        </div>
+        <div class="c_static_btn">
+            <a href="javascript:;">shop now</a>
+        </div>
+    </div>
+    <div class="cbig_static_block_container">
+        <div class="c_img_container"><img alt="" src=
+        "http://ae.elabelz.com/media/wysiwyg/women-6.jpg"></div>
+        <div class="c_static_description">
+            <h2>sale</h2><span>Further Reductions upt to 60%</span>
+        </div>
+        <div class="c_static_btn">
+            <a href="javascript:;">shop now</a>
+        </div>
+    </div>
+
+     -->
+
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId("sports-shop")->toHtml() ?>
+
+
+
+<!-- <section class="module_grid asdasdasd" style="display:none">
+    <h2 class="bordered_header top_picks" style="border-top: none; position: relative; margin: 32px auto; color: #000; display: block; text-align: center;"><span style="text-transform: uppercase; font-size: 18px; width: 100%; display: block; text-align: center; ;position: static; margin-left: 0px;">Top Picks</span></h2>
+    <div class="product_scroller module"><a class="arrow previous" title="Previous" href="javascript:;" data-jcarouselcontrol="true"><img alt="" src="http://ae.elabelz.com/media//siteimages/small_arrow_right.png"></a>
+        <div class="jcarousel" data-jcarousel="true">
+            <ul style="left: 0px; top: 0px;">
+                            </ul>
+        </div>
+        <a class="arrow next image_replacement" title="Next" href="javascript:;" data-jcarouselcontrol="true"><img alt="" src="http://ae.elabelz.com/media//siteimages/small_arrow_left.png"></a></div>
+</section> -->
+<!-- 
+<script type="text/javascript">
+jQuery.ias({
+container : '.category-products',
+item: '.products-grid',
+pagination: '.toolbar .pager',
+next: '.next',
+loader: '<img src="http://ae.elabelz.com/skin/frontend/apptha/superstore/images/opc-ajax-loader.gif" />'
+Loading more products, please be patient...'
+});
+</script>
+ -->
+                </div>

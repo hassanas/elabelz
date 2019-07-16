@@ -1,0 +1,333 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.6
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+
+<div id="errormsg"></div>
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $sellerData = Mage::getSingleton('customer/session')->getCustomer();
+    $sellerId = $sellerData->getId();
+    //$allowedAmount = $this->availablePayoutAmount($sellerId); Edit by Ali. This function is not giving correct value so used the function created by Azhar
+    $allowedAmount = $this->getPayoutDetail($sellerId);
+
+    /* -------------------------Edited by Azhar 05-16-2016-------------------------- */
+    $getPendingAmount = Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id, 'Pending');
+    $getApproveAmount = Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id, 'Approve');
+    $getPaidAmount = Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id, 'Paid');
+    $getOrderRefundAmount = Mage::helper('marketplace/marketplace')->getOrderRefundAmount($seller_id);
+    $getSellerTotalPayoutRequestAmount = $getPendingAmount + $getApproveAmount + $getPaidAmount;
+    $finalRemainingAmount = $allowedAmount['seller_amount'] - $getSellerTotalPayoutRequestAmount;
+    $finalRemainingAmount = $finalRemainingAmount - $getOrderRefundAmount;
+    /* ------------------------------------------------- */
+}
+
+/**
+ * Form validation scripta
+ */
+$customer = Mage::getSingleton("customer/session")->getCustomer();
+?>
+<div class="page-title sellers_store mp_order_transaction" id="mp_order_transaction">
+
+
+
+    <div class="transaction-detail">  
+
+        <div class="page-title">
+            <h1><?php echo $this->__('Seller Profile'); ?></h1>
+        </div>
+ 
+
+
+<?php
+/* Showing Bank Payment Information */
+$sellerInformation = Mage::getModel('marketplace/sellerprofile')->load($sellerId, 'seller_id');
+?>
+        <div class="my-account-wrapper" style="padding:2px;">
+            <p><?php echo $this->__('Payout Method'); ?></p>
+            <p style="font-weight:bold;font-size:16px;margin-bottom: 5px;"><?php echo $this->__('Bank Transfer/Paypal'); ?></p>
+            <p><?php echo $sellerInformation->getBankPayment(); ?></p>
+        </div> 
+    </div>
+
+    <div class="top_amount">
+        <h1 class="detail-block"><?php echo $this->__('Transaction Details'); ?></h1>
+
+<?php //Display remaining amount and received amount from admin  ?>
+
+
+        <?php if ($getPaidAmount): ?>
+            <span class="right_space">
+            <?php echo $this->__('Total Lifetime Amount Received') ?> : <b><?php //echo $totalPaid;  ?>
+                    <span><?php if ($locale == "ar_SA") {
+                echo $this->__($currency_symbol);
+            } ?></span>
+                    <?php echo Mage::helper('core')->currency($getPaidAmount, true, false); ?>
+                </b>
+            </span>
+        <?php endif; ?>
+
+        <?php if ($getApproveAmount): ?>
+             <span class="right_space">
+                <?php echo $this->__('Approved by Admin') ?> : <b>
+                    <span><?php if ($locale == "ar_SA") {
+                    echo $this->__($currency_symbol);
+                } ?></span>
+                    <?php echo Mage::helper('core')->currency($getApproveAmount, true, false); ?></b>
+            </span>
+        <?php endif; ?>
+        <?php if ($getPendingAmount): ?>
+            <span class="right_space">
+                <?php echo $this->__('Waiting for Admin Approval') ?> : <b>
+                    <span><?php if ($locale == "ar_SA") {
+                echo $this->__($currency_symbol);
+            } ?></span>
+            <?php echo Mage::helper('core')->currency($getPendingAmount, true, false); ?></b>
+            </span>
+<?php endif; ?>
+        <br>
+        <span>
+                <?php echo $this->__('Remaining Amount') ?> :  <b>
+                <span><?php if ($locale == "ar_SA") {
+                    echo $this->__($currency_symbol);
+                } ?></span>
+<?php echo Mage::helper('core')->currency($finalRemainingAmount, true, false); ?></b>
+        </span> 
+    </div>
+
+
+
+
+
+
+
+</div>
+<?php
+// Display transaction Details of the seller
+
+$loginId = Mage::getSingleton('customer/session')->isLoggedIn();
+$groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+$getGroupId = Mage::helper('marketplace')->getGroupId();
+$customer_status = $customer->getCustomerstatus();
+if ($groupId != $getGroupId || $customer_status != 1) {
+    return;
+}
+//Get Transaction Details collection
+$collection = $this->getCollection();
+$count = count($collection);
+$balance = 0;
+$index = 1;
+$transactionData = array();
+ if ($count > 0) {
+ foreach ($collection as $_collection) {
+        
+        $product_id = $_collection['product_id'];
+        $_product = Mage::getModel('catalog/product')->load($product_id); //Loading order item to show name
+      
+        $transactionData[$index]['transaction'] = $_product->getName() . $this->__(" with order# ") . $_collection['order_id'];
+        $transactionData[$index]['commission'] = Mage::helper('core')->currency($_collection['commission_fee'], true, false);
+        $transactionData[$index]['remaining_amount'] = Mage::helper('core')->currency($_collection['seller_amount'], true, false);
+        $transactionData[$index]['seller_amount'] = $_collection['seller_amount'];
+        $transactionData[$index]['order_status'] = $_collection['order_status'];
+        $transactionData[$index]['item_order_status'] = $_collection['item_order_status'];
+        
+        if($_collection['order_status'] == 'cancel'){
+            $balance +=0;
+            
+        }else{
+            
+        switch ($_collection['item_order_status']) {
+            
+            case 'shipped_from_elabelz':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'failed_delivery':
+                $balance +=0;
+                break;
+            case 'successful_delivery':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'complete':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'processing':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'pending':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'ready':
+                $balance +=$_collection['seller_amount'];
+                break;
+            case 'canceled':
+                $balance +=0;
+                break;
+            case 'refunded':
+                $balance +=0;
+                break;
+            case 'rejected_seller':
+                $balance +=0;
+                break;
+            case 'rejected_customer':
+                $balance +=0;
+                break;
+
+            default:
+     
+        }
+        }
+        
+        $transactionData[$index]['balance'] = Mage::helper('core')->currency($balance, true, false);
+        $transactionData[$index]['fbalance'] = $balance;
+        $transactionData[$index]['dated'] = Mage::helper('core')->formatDate($_collection['created_at'], 'medium', false);
+        
+        $index++;
+              
+ }
+ }
+ 
+ $finalBalance = $transactionData[$index-1]['fbalance'];
+ //echo "<pre>";
+ //print_r($tData);
+?>
+
+
+<div class="page-title">
+    <h1><?php echo $this->__('Transaction History'); ?></h1>
+</div> 
+
+<table class="data-table my-orders-table" id="my-orders-table" summary="<?php echo $this->__('Items Ordered') ?>">
+    <thead>
+        <tr>
+            <th class="a-center"><?php echo $this->__('Transactions') ?></th>
+            <!-- <th class="a-center"><?php echo $this->__('Commission') ?></th> -->
+            <th class="a-center"><?php echo $this->__('Remaining<br/> Amount') ?></th>
+            <th class="a-center"><?php echo $this->__('Order Status') ?></th>
+            <th class="a-center"><?php echo $this->__('Supplier<br/> Sku') ?></th>
+            <th class="a-center"><?php echo $this->__('Item Status') ?></th>
+            <th class="a-center"><?php echo $this->__('Balance') ?></th>
+            <th class="a-center"><?php echo $this->__('Dated') ?></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+            //Display transaction details
+            if ($index > 0) {
+            
+             //for($i=$index;$i>0;$i--)  
+                
+             for($i=1;$i<$index;$i++)   
+             
+             {
+                if($i>1){
+                    
+                if($transactionData[$i-1]['order_status'] == 'cancel'){
+                    $finalBalance +=0;
+            
+                }else{
+            
+                    switch (trim($transactionData[$i-1]['item_order_status'])) {
+
+                        case 'shipped_from_elabelz':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'failed_delivery':
+                            $balance +=0;
+                            break;
+                        case 'successful_delivery':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'complete':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'processing':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'pending':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'ready':
+                            $finalBalance -=$transactionData[$i-1]['seller_amount'];
+                            break;
+                        case 'canceled':
+                            $finalBalance +=0;
+                            break;
+                        case 'refunded':
+                            $finalBalance +=0;
+                            break;
+                        case 'rejected_seller':
+                            $finalBalance +=0;
+                            break;
+                        case 'rejected_customer':
+                            $finalBalance +=0;
+                            break;
+
+                        default:
+
+                    } 
+                }
+                }
+            ?>
+        <tr>
+            <td class="a-center id"><?php echo $transactionData[$i]['transaction'];?></td>
+            <!-- <td class="a-center"><span><?php if ($locale == "ar_SA") {echo $this->__($currency_symbol);} ?></span><?php echo $transactionData[$i]['commission'];?></td> -->
+            <td class="a-center"><span><?php if ($locale == "ar_SA") {echo $this->__($currency_symbol);} ?></span><?php echo $transactionData[$i]['remaining_amount'];?></td>
+            <td class="a-center"><?php echo $this->__($transactionData[$i]['order_status']);?></td>
+            <?php if($_product->getSupplierSku()): ?>
+              <td><?php echo $_product->getSupplierSku(); ?></td>
+            <?php else: ?>
+               <td><?php echo $_product->getSku(); ?></td> 
+            <?php endif ?>
+            <td class="a-center"><?php echo $this->__($transactionData[$i]['item_order_status']);?></td>
+            <td class="a-center"><span><?php if ($locale == "ar_SA") {echo $this->__($currency_symbol);} ?></span><?php echo $finalBalance;?></td>
+            <td class="a-center"><?php echo $transactionData[$i]['dated'];?></td>
+        </tr>
+        
+            <?php
+            
+            }
+           
+            ?>
+            
+        </tbody>
+<?php }  else { ?>
+        <tfoot><tr><td colspan="6" class="a-center no_product_content"><?php echo $this->__('No Requests to Show'); ?></td></tr></tfoot>
+<?php } ?>
+</table>
+
+<?php
+//Display pagination
+echo $this->getPagerHtml();
+?>

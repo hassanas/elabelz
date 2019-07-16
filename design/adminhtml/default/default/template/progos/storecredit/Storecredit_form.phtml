@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    function openStoreCreditPopupForm(){
+        var url = '<?php echo Mage::helper('adminhtml')->getUrl('progos/storecredit/form.phtml/', array());
+            ?>';
+        var win = new Window({
+            className:'magento',
+            title:'Adding StoreCredit',
+            url:url,
+            width:970,
+            height:400,
+            minimizable:false,
+            maximizable:false,
+            showEffectOptions: {duration:0.4},
+            hideEffectOptions:{duration:0.4},
+
+        });
+        win.setZIndex(100);
+        win.showCenter(true);
+    }
+
+</script>

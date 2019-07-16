@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.7
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+-->
+<config>
+   <acl>
+    <resources>
+        <all>
+        <title>Allow Everything</title>
+        </all>
+        <admin>
+            <children>
+                <system>
+                    <children>
+                        <config>
+                            <children>
+                                <marketplace translate="title" module="marketplace">
+                                    <title>marketplace Section</title>
+                                </marketplace>
+                            </children>
+                        </config>
+                    </children>
+                </system>
+                <marketplace module="marketplace">
+                <title>Marketplace</title>               
+                <children>
+                    <overview module="marketplace">
+                        <title>Operational Dashboard</title>
+                        <children>
+                            <manager module="marketplace">
+                                <title>Manager</title>
+                                <children>
+                                    <manager_overview module="marketplace">
+                                        <title>Overview</title>
+                                    </manager_overview>
+                                    <order_count module="marketplace">
+                                        <title>Order Count</title>
+                                    </order_count>
+                                </children>
+                            </manager>
+                            <logistics translate="title" module="marketplace">
+                                <title>Logistics</title>
+                                <children>
+                                    <masterscreesn module="marketplace">
+                                        <title>MasterScreen</title>
+                                    </masterscreesn>
+                                </children>
+                                <title>SupplierScreen</title>
+                                <children>
+                                    <supplierscreen module="marketplace">
+                                        <title>SupplierScreen</title>
+                                    </supplierscreen>
+                                </children>
+                            </logistics>
+                            <call_center module="marketplace">
+                                <title>Call Center</title>
+                            </call_center>
+                            <supplier translate="title" module="marketplace">
+                                <title>Supplier Management</title>
+                                <children>
+                                    <generalsales module="marketplace">
+                                        <title>General Sales</title>
+                                    </generalsales>
+                                    <suppliersales module="marketplace">
+                                        <title>Date Range Supplier Sales</title>
+                                    </suppliersales>
+                                </children>
+                            </supplier>
+                        </children>
+                    </overview>
+                    <manageseller module="marketplace">
+                        <title>Manage Sellers</title>                       
+                    </manageseller>
+                    <order module="marketplace">
+                        <title>Seller Orders</title>                       
+                    </order>
+                    <orders translate="title" module="marketplace">
+                        <title>Orders</title>
+                        <children>
+                            <orderitemsall module="marketplace">
+                                <title>All Orders</title>
+                            </orderitemsall>
+                            <order module="marketplace">
+                                <title>Completed</title>
+                            </order>
+                            <orderitems module="marketplace">
+                                <title>Incomplete</title>
+                            </orderitems>
+                            <orderitemscancel module="marketplace">
+                                <title>Cancelled</title>
+                            </orderitemscancel>
+                        </children>
+                    </orders>
+
+                    <unconfirmed translate="title" module="marketplace">
+                        <title>Unconfirmed</title>
+                        <children>
+                            <unconfirmedfromseller module="marketplace">
+                                <title>Seller</title>
+                            </unconfirmedfromseller>
+                            <unconfirmedfrombuyer module="marketplace">
+                                <title>Customer</title>
+                            </unconfirmedfrombuyer>
+                        </children>
+                    </unconfirmed>
+
+                    <requests translate="title" module="marketplace">
+                        <title>Requests</title>
+                        <children>
+                            <ordersrefundhistory module="marketplace">
+                                <title>Order Refund Requests</title>
+                            </ordersrefundhistory>
+                            <requestsordercancel module="marketplace">
+                                <title>Order Cancel Requests</title>
+                            </requestsordercancel>
+                            <allpayout module="marketplace">
+                                <title>Seller Payout Requests</title>
+                            </allpayout>
+                        </children>
+                    </requests>
+
+                    <commission module="marketplace">
+                        <title>Commission detail</title>                       
+                    </commission> 
+                    <manage_products module="marketplace">
+                        <title>Seller Products</title>                      
+                    </manage_products>
+                    <sellerreview module="marketplace">
+                        <title>Review and Ratings</title>                        
+                    </sellerreview>
+                    <configuration module="marketplace">
+                        <title>Configuration</title>                       
+                    </configuration>
+                </children>
+            </marketplace>
+           </children>
+       </admin>
+   </resources>
+</acl>
+</config>

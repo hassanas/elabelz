@@ -1,0 +1,384 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.2.3
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+?>
+<script type="text/javascript">
+    document.observe("dom:loaded", function() {
+        var selected = document.getElementById("select_filter");
+        var selectedValue = selected.options[selected.selectedIndex].value;
+        if (selectedValue !== 'custom') {
+            // initially hide all containers for tab content  
+            $$('#date_from').invoke('hide');
+            $$('#date_to').invoke('hide');
+        }
+    });
+</script>
+<?php
+
+if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+    $sellerData = Mage::getSingleton('customer/session')->getCustomer();
+    $sellerId = $sellerData->getId();
+    //$allowedAmount = $this->availablePayoutAmount($sellerId); Edit by Ali. This function is not giving correct value so used the function created by Azhar
+        /*-------------------------Edited by Azhar 05-16-2016--------------------------*/    
+        $allowedAmount = Mage::helper('marketplace/marketplace')->getSellerAccountsDetail($sellerId);           
+        $getPendingAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Pending');
+        $getApproveAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Approve');
+        $getPaidAmount =  Mage::helper('marketplace/marketplace')->getSellerTotalPayoutRequestAmount($seller_id,'Paid');  
+        $getOrderRefundAmount =  Mage::helper('marketplace/marketplace')->getOrderRefundAmount($seller_id);     
+        $getSellerTotalPayoutRequestAmount = $getPendingAmount + $getApproveAmount + $getPaidAmount;
+        $finalRemainingAmount = $allowedAmount['seller_amount'] - $getSellerTotalPayoutRequestAmount;
+        $finalRemainingAmount = $finalRemainingAmount - $getOrderRefundAmount;
+        /*-------------------------------------------------*/
+    
+}
+?>
+<?php
+
+
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+
+
+$from_display = $to_display = $data = $status = $select_filter = '';
+$data = $this->getRequest()->getPost();
+if (isset($data['status']) || isset($data['select_filter']) || isset($data['date_from']) || isset($data['date_to'])) {
+    $status = $data['status'];
+    $select_filter = $data['select_filter'];
+    $from_date = $data['date_from'];
+    $to_date = $data['date_to'];
+}
+switch ($select_filter) {
+    case "today":
+        // today interval
+        $start_day = strtotime("-1 today midnight");
+        $from_display = date("Y-m-d", $start_day);
+        $to_display = date("Y-m-d", $start_day);
+        break;
+    case "yesterday":
+        // yesterday interval
+        $start_day = strtotime("-1 yesterday midnight");
+        $from_display = date("Y-m-d", $start_day);
+        $to_display = date("Y-m-d", $start_day);
+        break;
+    case "lastweek":
+        // last week interval
+        $to = date('d-m-Y');
+        $to_day = date('l', strtotime($t));
+        // if today is monday, take last monday
+        if ($to_day == 'Monday') {
+            $start_day = strtotime("-1 monday midnight");
+            $end_day = strtotime("yesterday");
+        } else {
+            $start_day = strtotime("-2 monday midnight");
+            $end_day = strtotime("-1 sunday midnight");
+        }
+        $from = date("Y-m-d", $start_day);
+        $to = date("Y-m-d", $end_day);
+        $to = date('Y-m-d', strtotime($to . ' + 1 day'));
+        $from_display = $from;
+        $to_display = date("Y-m-d", $end_day);
+        break;
+    case "lastmonth":
+        // last month interval
+        $from = date('Y-m-01', strtotime('last month'));
+        $to = date('Y-m-t', strtotime('last month'));
+        $to = date('Y-m-d', strtotime($to . ' + 1 day'));
+        $from_display = $from;
+        $to_display = date('Y-m-t', strtotime('last month'));
+        break;
+    case "custom":
+        // last custom interval
+        $from = date('Y-m-d', strtotime($data['date_from']));
+        $to = date('Y-m-d', strtotime($data['date_to'] . ' + 1 day'));
+        $from_display = $from;
+        $to_display = date('Y-m-d', strtotime($data['date_to']));
+        break;
+}
+?>
+<div class="account-login" id="market_place_manage_products_order">
+    <div class="page-title sellers_store">
+        <h1><?php echo $this->__('Orders') ?></h1>
+        <div class="top_amount">
+            <!-- <span class="right_space">
+                <?php echo $this->__('Total Amount Received') ?> : <b><?php echo Mage::helper('marketplace/transaction')->getAmountReceived(); ?></b>
+            </span>
+            <span>
+                <?php echo $this->__('Amount Pending') ?> :  <b><?php echo Mage::helper('marketplace/transaction')->getAmountRemaining(); ?></b>
+            </span> -->
+             <?php if($getPaidAmount):?>
+            <span class="right_space">
+                <?php echo $this->__('Total Lifetime Amount Received') ?> : <b><?php //echo $totalPaid; ?>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php echo Mage::helper ( 'core' )->currency ( $getPaidAmount, true, false ); ?>
+                </b>
+            </span>
+            <br>
+        <?php endif;?>
+         <br>
+        <?php if($getApproveAmount):?>
+            <span class="right_space">
+                <?php echo $this->__('Approved by Admin') ?> : <b>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php
+                    echo Mage::helper ( 'core' )->currency ( $getApproveAmount, true, false ); ?></b>
+            </span>
+        <?php endif;?>
+        <br>
+        <?php if($getPendingAmount):?>
+            <span class="right_space">
+                <?php echo $this->__('Waiting for Admin Approval') ?> : <b>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+                <?php
+                    echo Mage::helper ( 'core' )->currency ( $getPendingAmount, true, false ); ?></b>
+            </span>
+        <?php endif;?>
+        <br>
+         <span>
+            <?php echo $this->__('Remaining Amount') ?> :  <b>
+                <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+
+                <?php echo Mage::helper ( 'core' )->currency ( $finalRemainingAmount, true, false ); ?></b>
+        </span> 
+        </div> 
+    </div>    
+    <div class="clear"></div>
+<?php 
+
+$status = array("pending","partialapproved", "approved", "rejected", "processing" , "shipped" , "completed", "canceled" , "all"); 
+       foreach($status as $sat):
+             //$col = $this->getPendingOrders($sat);
+             $col = $this->getPendingOrders($sat);
+             $count_pro = $col->count();
+             $count[] = $count_pro;
+       endforeach;?>
+    <div class="order-tabs">
+        <ul id="orderTab" class="nav nav-tabs">
+
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=pending" id="pending"><?php echo $this->__('New') ?> &nbsp;(<?php echo $count[0]; ?>)</a></li>
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=partialapproved" id="partialapproved"><?php echo $this->__('Partial Approved') ?> &nbsp;(<?php echo $count[1];?>)</a></li>
+             <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=approved" id="approved"><?php echo $this->__('Approved') ?> &nbsp;(<?php echo $count[2];?>)</a></li>
+              <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=rejected" id="rejected"><?php echo $this->__('Rejected') ?> &nbsp;(<?php echo $count[3];?>)</a></li>
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=processing" id="processing"><?php echo $this->__('Processing') ?> &nbsp;(<?php echo $count[4];?>)</a></li>
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=shipped" id="shipped" ><?php echo $this->__('Shipped') ?> &nbsp;(<?php echo $count[5];?>)</a></li>
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=completed" id="complete" ><?php echo $this->__('Delivered') ?> &nbsp;(<?php echo $count[6];?>)</a></li>
+
+            <li><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage?status=canceled" id="canceled" ><?php echo $this->__('Canceled') ?> &nbsp;(<?php echo $count[7];?>)</a></li>
+            <li class="active" ><a href="<?php echo $this->getBaseUrl()?>marketplace/order/manage/" id="all"><?php echo $this->__('ALL') ?> &nbsp;(<?php echo $count[8];?>)</a></li>
+        </ul>
+    </div>
+
+    <?php if(isset($_GET["status"]) && $_GET["status"] != "" ): 
+           $status = $_GET["status"];?>
+    <script>
+              if( jQuery("#orderTab li a#<?php echo $status ?>").parent().hasClass('active') ) {
+                
+             } else {
+                  jQuery('#orderTab li').removeClass('active');
+                  jQuery("#orderTab li a#<?php echo $status ?>").parent().addClass('active');
+        
+              }
+    </script>
+    <?php 
+       else:
+    ?>
+            <script>
+                if( jQuery("#orderTab li a#processing").parent().hasClass('active') ) {
+                
+             } else {
+                  jQuery('#orderTab li').removeClass('active');
+                  jQuery("#orderTab li a#processing").parent().addClass('active');
+        
+              }
+            </script>
+<?php endif ?>
+    <form name="orders" method="post" action="">
+        <div class="mp_sellers_order" style="display: none;">
+            <select name="select_filter" id="select_filter" onchange="selectFilter();">
+                <option name="" value=""><?php echo $this->__('Select a Range'); ?></option>
+                <option name="custom" value="custom" <?php if ($select_filter == 'custom') { ?> selected="selected" <?php } ?>><?php echo $this->__('Custom'); ?></option>
+                <option name="today" value="today"  <?php if ($select_filter == 'today') { ?> selected="selected" <?php } ?>><?php echo $this->__('Today'); ?></option>
+                <option name="yesterday" value="yesterday"  <?php if ($select_filter == 'yesterday') { ?> selected="selected" <?php } ?>><?php echo $this->__('Yesterday'); ?></option>
+                <option name="lastweek" value="lastweek"  <?php if ($select_filter == 'lastweek') { ?> selected="selected" <?php } ?>><?php echo $this->__('Last Week'); ?></option>
+                <option name="lastmonth" value="lastmonth"  <?php if ($select_filter == 'lastmonth') { ?> selected="selected" <?php } ?>><?php echo $this->__('Last Month'); ?></option>
+            </select>
+            <input type="text" placeholder="mm/dd/yyyy" class="input-text required-entry" name="date_from" id="date_from" value="<?php if ($select_filter == 'custom') {
+                    echo $from_date;
+                } ?>" />
+            <input type="text" placeholder="mm/dd/yyyy" class="input-text required-entry" name="date_to" id="date_to" value="<?php if ($select_filter == 'custom') {
+                    echo $to_date;
+                } ?>" />
+            <button type="submit" class="button"  title="<?php echo $this->__('Submit') ?>" name="filter_submit" id="multi_submit" ><span><span><?php echo $this->__('Submit') ?></span></span></button>
+<?php if ($from_display != '' && $to_display != '' && $select_filter != 'custom') { ?>
+                <p> <b><?php echo $this->__('Start date:'); ?></b>&nbsp; <?php echo $from_display; ?>
+                    <b><?php echo $this->__('End date:'); ?></b>&nbsp; <?php echo $to_display; ?> </p>
+        <?php } ?>
+        </div>
+        <div class="clear"></div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php $_orders = $this->getCollection(); ?>
+        <?php if(isset($_GET["status"]) && $_GET["status"] != "" ): 
+
+        ?>
+        <div class="orderTitlstbs clearfix">
+        <b class="heading"><?php 
+           $status = $_GET["status"];
+           $status = ucfirst($status);
+           echo $this->__($status);
+           echo $this->__(" Orders");
+		   ?></b>
+           </div>
+        <?php else: ?>
+        <div class="orderTitlstbs clearfix">
+        <b class="heading"><?php echo $this->__("Orders"); ?></b>
+        </div>
+        <?php endif; ?>
+        <table class="data-table" id="my-product-table" width="100%">
+            <thead>
+                <tr>
+                    <th class="text_left"><?php echo $this->__('Order #') ?></th>
+                    <th><?php echo $this->__('Order Date') ?></th>
+                    <th><?php echo $this->__('SHIP TO') ?></th>
+                    <th><?php echo $this->__('PRODUCT DETAILS') ?></th>
+                    <th><?php echo $this->__('ORDER TOTAL') ?></th>
+                    <th><?php echo $this->__('STATUS') ?></th>
+                    <th class="no-border-right"><?php echo $this->__('ACTION') ?></th>
+                </tr>
+                <tr class="mp_filter_function">
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($_orders->getSize()):
+                    foreach ($_orders as $order):
+                        $getOrderId = $order->getOrderId();
+                        $getSellerId = $order->getSellerId();
+                        $orderDetails = Mage::getModel('sales/order')->load($getOrderId);
+                        $getProductDetails = $this->getProductDetails($getOrderId,$getSellerId);
+                        $orderPrdouctIds = Mage::helper('marketplace/vieworder')->getOrderProductIds(Mage::getSingleton('customer/session')->getId(),$getOrderId);
+
+                        /**
+                         * Getting canceled product ids
+                         */
+                        $cancelOrderItemProductIds = Mage::helper('marketplace/vieworder')->cancelOrderItemProductIds(Mage::getSingleton('customer/session')->getId(),$getOrderId);
+                        $orderAndCancelDiff = array_diff($orderPrdouctIds,$cancelOrderItemProductIds);
+                        $orderAndCancelDiffCount = count($orderAndCancelDiff);
+
+                        $checkOrderStatusArr = array();
+                        foreach($orderDetails->getAllItems() as $item){
+                            $itemProductId = $item->getProductId();
+                            $orderItem = $item;
+
+                            if(in_array($itemProductId,$orderPrdouctIds) && !in_array($itemProductId,$cancelOrderItemProductIds)){
+                            $checkOrderStatusArr[] = Mage::helper('marketplace/vieworder')->checkOrderStatusForSeller($orderItem);
+                            }
+                            ?>
+                            <?php 
+                            }
+                        ?>
+                        <tr>
+                        <td class="text_left"><?php echo $order->getIncrementId(); ?></td>
+                        <td><?php $date = $orderDetails->getCreatedAtDate();
+                        echo $new_date = date('m/j/Y', strtotime($date)); ?></td>
+                       <td><?php
+                        if($orderDetails->getShippingAddress()){
+                        echo $orderDetails->getShippingAddress()->getName();
+                        }
+                        ?></td>
+                        <td>
+                        <?php
+                        echo $getProductDetails;
+                        ?>
+                        </td>
+                        <td>
+                        <?php 
+                         if($locale == "ar_SA"){
+                            echo $this->__($currency_symbol); 
+                            } ?>
+                        <?php echo Mage::helper('core')->currency($order->getSellerAmount(), true, false); ?></td>
+                        <td><span><?php
+                        if($orderAndCancelDiffCount > 0){
+                            $status = Mage::helper('marketplace/vieworder')->getOrderStatusForSeller($orderDetails,$checkOrderStatusArr);
+                            if($status == "Pending"):
+                                echo "Pending Confirmation";
+                            else:
+                                echo $status;
+                            endif;
+                        }else{
+                            echo ' '.$this->__('Canceled');
+                        }
+
+                        ?></span></td>
+                        <td><a href="<?php echo Mage::getUrl('marketplace/order/vieworder', array('orderid' => $getOrderId)); ?>"><?php echo $this->__('View'); ?></a></td>
+                        </tr>
+        <?php endforeach; ?>
+                </tbody>
+<?php else: ?>
+                <tfoot><tr><td colspan="9" class="a-center no_product_content"><?php echo $this->__('You have no Order.'); ?></td></tr></tfoot>
+<?php endif ?>
+        </table>
+    </form>
+<?php echo $this->getPagerHtml(); ?>
+    <script type="text/javascript">
+        var dataForm = new VarienForm('orders');
+    </script>
+    <script type="text/javascript">
+        decorateTable('my-product-table');
+        // <![CDATA[
+        Calendar.setup({
+            inputField: 'date_from',
+            ifFormat: '%m/%e/%y',
+            button: 'date_from',
+            align: 'Bl',
+            singleClick: true
+        });
+
+        Calendar.setup({
+            inputField: 'date_to',
+            ifFormat: '%m/%e/%y',
+            button: 'date_to',
+            align: 'Bl',
+            singleClick: true
+        });
+// ]]>
+        function selectFilter() {
+            var filter = $('select_filter')[$('select_filter').selectedIndex].value;
+            if (filter === 'custom') {
+                $$('#date_from').invoke('show');
+                $$('#date_to').invoke('show');
+            }
+            else {
+                $$('#date_from').invoke('hide');
+                $$('#date_to').invoke('hide');
+            }
+        }
+    </script>
+</div>

@@ -1,0 +1,57 @@
+<?php
+$request = Mage::app()->getRequest();
+$pathinfo = $request->getPathInfo();
+$brand_page = false;
+if (strpos($pathinfo, "brand/index/view/") !== false || strpos($pathinfo, "brand") !== false ) {
+    $brand_id = $request->getParam("id");
+    $brand = Mage::getModel('shopbybrand/brand')->load($brand_id);
+    $brand_name = $brand->getName();
+    $brand_page = true;
+}
+?>
+<span><?php echo $this->__("Sort by" ) ?></span>
+<?php if($this->category_default_sortby == "created_at"){
+    $created_at_default = true;
+}?>
+<select onchange="setLocation(this.value)" title="<?php echo $this->__('Sort By') ?>">
+    <!--- Elablez-1217 (15/03/2017) Code for sort by options written by kashif naddem and humera batool-->
+    <?php foreach ($this->getAvailableOrders() as $_key => $_order): ?>
+        <?php if ($_order != 'Price'):
+            $option_text = $this->__($_order);
+            if($option_text == "New"){
+                $option_text = __("Newest First");
+            }
+            elseif($option_text == "Position"){
+                $option_text = __("Recommended");
+            }
+            elseif($option_text == "الموصى بع"){
+                $option_text = __("الموصى به");
+            }
+            elseif($option_text == "السعراقل"){
+                $option_text = __("السعر الأقل");
+            }
+            elseif($option_text == "السعراعلى"){
+                $option_text = __("السعر الأكثر");
+            }
+            ?>
+            <?php if($brand_page == true || $created_at_default == true ):?>
+                <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if ($this->isOrderCurrentBrand($_key)): ?> selected="selected"<?php endif; ?>>
+                    <?php echo $this->__($option_text); ?>
+                </option>
+        <?php else:?>
+            <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>>
+                <?php echo $this->__($option_text); ?>
+            </option>
+        <?php endif; ?>
+        <?php else: ?>
+            <option value="<?php echo $this->getOrderUrlSorting($_key, 'asc') ?>"<?php if($this->isOrderCurrent($_key) && $this->getCurrentDirection() == 'asc'): ?> selected="selected"<?php endif; ?>>
+                <?php echo $this->__($_order). $this->__(' Low to High') ?>
+            </option>
+            <option value="<?php echo $this->getOrderUrlSorting($_key, 'desc') ?>"<?php if($this->isOrderCurrent($_key) && $this->getCurrentDirection() == 'desc'): ?> selected="selected"<?php endif; ?>>
+                <?php echo $this->__($_order) . $this->__(' High to Low'); ?>
+            </option>
+        <?php endif; ?>
+
+        <!--- Elablez-1217 (15/03/2017) Code for sort by options written by kashif naddem and humera batool-->
+    <?php endforeach; ?>
+</select>

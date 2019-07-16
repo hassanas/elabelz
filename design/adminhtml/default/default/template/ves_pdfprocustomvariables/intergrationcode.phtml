@@ -1,0 +1,42 @@
+<?php if($this->getPdfProCustomVariables()->getId()):?>
+<ul class="messages">
+	<li class="notice-msg">
+		<ul>
+			<li><?php echo $this->__("Now you can add this below code to your PDF template to display your custom variable.")?></li>
+		</ul>
+	</li>
+</ul>
+<?php $variableType = $this->getPdfProCustomVariables()->getVariableType();?>
+<?php if($variableType == 'attribute'):?>
+	<?php if(Mage::getModel('pdfprocustomvariables/pdfprocustomvariables')->checkAttributeFrontendType($this->getPdfProCustomVariables(), 'date')):?>
+		<pre>{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>.full}}</pre><br />
+		<pre>{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>.long}}</pre><br />
+		<pre>{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>.medium}}</pre><br />
+		<pre>{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>.short}}</pre>
+	<?php elseif(Mage::getModel('pdfprocustomvariables/pdfprocustomvariables')->checkAttributeFrontendType($this->getPdfProCustomVariables(), 'media_image')):?>
+		<pre>&lt;img src="{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>}}" width="50" height="50"/&gt;</pre>
+	<?php else:?>
+		<pre>{{var item.product.<?php echo $this->getPdfProCustomVariables()->getName()?>}}</pre>
+	<?php endif;?>
+<?php elseif($this->getPdfProCustomVariables()->getVariableType() == 'static'):?>
+	<pre>{{var item.<?php echo $this->getPdfProCustomVariables()->getName()?>}}</pre>
+<?php elseif($variableType == 'customer'):?>
+	<?php if(Mage::getModel('pdfprocustomvariables/pdfprocustomvariables')->checkAttributeFrontendType($this->getPdfProCustomVariables(), 'date')):?>
+		<pre>{{var customer.<?php echo $this->getPdfProCustomVariables()->getName()?>.full}}</pre><br />
+		<pre>{{var customer.<?php echo $this->getPdfProCustomVariables()->getName()?>.long}}</pre><br />
+		<pre>{{var customer.<?php echo $this->getPdfProCustomVariables()->getName()?>.medium}}</pre><br />
+		<pre>{{var customer.<?php echo $this->getPdfProCustomVariables()->getName()?>.short}}</pre>
+	<?php else:?>
+		<pre>{{var customer.<?php echo $this->getPdfProCustomVariables()->getName()?>}}</pre>
+	<?php endif;?>
+<?php endif;?>
+<br />
+<?php else:?>
+<ul class="messages">
+	<li class="notice-msg">
+		<ul>
+			<li><?php echo $this->__("You need to save this variable before you can see the implementation code.")?></li>
+		</ul>
+	</li>
+</ul>
+<?php endif;?>

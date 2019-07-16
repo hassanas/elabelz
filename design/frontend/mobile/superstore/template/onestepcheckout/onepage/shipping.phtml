@@ -1,0 +1,562 @@
+<?php
+$logged = $this->isCustomerLoggedIn();
+$has_addr = $this->customerHasAddresses();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+
+if (!$this->getQuote()->isVirtual() && Mage::helper('onestepcheckout')->isShippingAddressAllowed()) {
+    ?>
+    <ul class="isShippingAllowed">
+        <li class="options">
+            <input type="checkbox" class="checkbox" name="shipping[same_as_billing]" id="shipping:same_as_billing"
+                   value="1"<?php if ($this->getShipAddress()->getSameAsBilling()) {
+                echo ' checked="checked" ';
+            } ?> title="<?php echo $this->__('Ship to this address') ?>"
+                   onclick="shipping.setSameAsBilling(this.checked)"/>
+            <label for="shipping:same_as_billing">
+                <span></span>
+                <?php echo $this->__('use billing as shipping address') ?>
+            </label>
+        </li>
+    </ul>
+    <div id="ship_address_block" class="onestepcheckout_block"<?php if ($this->getShipAddress()->getSameAsBilling()) {
+        echo 'style="display: none;"';
+    } ?>>
+        <!--<div class="op_block_title">
+    	<?php echo $this->__('New Shipping Address') ?>
+    </div>-->
+        <div class="form_fields">
+            <?php if ($has_addr) { ?>
+                <div class="full">
+                    <label>
+                        <?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?>
+                    </label>
+                    <div class="data_area">
+                        <?php echo $this->getCustomerShipAddr() ?>
+                    </div>
+                </div>
+            <?php } ?>
+            <div id="ship_form"<?php if ($has_addr) {
+                echo ' style="display:none;" ';
+            } ?>>
+                <input type="hidden" name="shipping[address_id]" id="shipping:address_id"
+                       value="<?php echo $this->getShipAddress()->getId() ?>"/>
+                <div class="two_fields">
+                    <?php echo $this->getLayout()->createBlock('onestepcheckout/widget_name')->setObject($this->getShipAddress())->setFieldIdFormat('shipping:%s')->setFieldNameFormat('shipping[%s]')->setFieldParams('onchange="shipping.setSameAsBilling(false)"')->toHtml() ?>
+                </div>
+                <div class='clr'></div>
+                <?php
+                $cr = Mage::getStoreConfig('onestepcheckout/address_form/company');
+                if ($cr !== 'hidden') : ?>
+                    <div class="full">
+                        <label <?php if ($cr === 'required') {
+                            echo ' class="required" ';
+                        } ?>>
+                            <?php echo $this->__('Company') ?>
+                        </label>
+                        <?php if ($cr === 'required') {
+                            echo ' <sup>*<sup> ';
+                        } ?>
+                        <div class="data_area">
+                            <input type="text" id="shipping:company" name="shipping[company]"
+                                   value="<?php echo $this->htmlEscape($this->getShipAddress()->getCompany()) ?>"
+                                   title="<?php echo $this->__('Company') ?>" class="t1<?php if ($cr === 'required') {
+                                echo ' required-entry ';
+                            } ?>" onchange="shipping.setSameAsBilling(false);"/>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class='clr'></div>
+                <?php
+                    $country_r = Mage::getStoreConfig('onestepcheckout/address_form/country');
+                    $zip_r = Mage::getStoreConfig('onestepcheckout/address_form/zip');
+                    $city_r = Mage::getStoreConfig('onestepcheckout/address_form/city');
+                    $state_r = Mage::getStoreConfig('onestepcheckout/address_form/state');
+                ?>
+                <?php if (($country_r !== 'hidden' && $city_r !== 'hidden')) { ?>
+                <div class="osc_b_country_city two_fields">
+                    <?php if ($country_r !== 'hidden') { ?>
+                    <div class="short osc_b_country">
+                        <div>
+                            <label
+                                for="shipping:country_id"
+                                <?php if ($country_r === 'required') { echo 'class="required"'; } ?>
+                            >
+                                <?php echo $this->__('Country') ?>
+                            </label>
+                            <?php if ($country_r === 'required') { echo '<sup>*</sup>'; } ?>
+                            <div class="data_area">
+                                <div id="currentCountry1"></div>
+                                <ul id="countryUl1"></ul>
+                                <?php echo $this->getShippingCountriesSelectBox() ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <?php if ($city_r !== 'hidden') { ?>
+                    <div class="short osc_b_city">
+                        <label
+                            for="shipping:city"
+                            <?php if ($city_r === 'required') { echo 'class="required"'; } ?>
+                        >
+                            <?php echo $this->__('City') ?>
+                        </label>
+                        <?php if ($city_r === 'required') { echo '<sup>*</sup>'; } ?>
+                        <div class="data_area">
+                            <?php
+                                $class = array();
+                                $class[] = "t1";
+                                if ($locale != "ar_SA") {
+                                    $class[] = "validate-alpha-with-spaces";
+                                } elseif ($locale == "ar_SA") {
+                                    $class[] = "validate-alpha-with-spaces-arabic";
+                                }
+                                if ($city_r === 'required') {
+                                    $class[] = 'required-entry';
+                                }
+                                $class = implode(' ', $class);
+                            ?>
+                            <input
+                                type="text"
+                                name="shipping[city]"
+                                id="shipping:city"
+                                title="<?php echo $this->__('City') ?>"
+                                value="<?php echo $this->htmlEscape($this->getShipAddress()->getCity()) ?>"
+                                class="<?php echo $class; ?>"
+                                onchange="shipping.setSameAsBilling(false);"
+                                maxlength="20"
+                            />
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+                <div class='clr'></div>
+                <?php } ?>
+
+                <?php if ($zip_r !== 'hidden' && $state_r !== 'hidden') { ?>
+                <div class="osc_b_zip_state two_fields">
+                    <?php if ($zip_r !== 'hidden') { ?>
+                    <div class="short osc_b_zip">
+                        <label
+                            for="shipping:postcode"
+                            <?php if ($zip_r === 'required') { echo 'class="required"'; } ?>
+                        >
+                            <?php echo $this->__('Zip Code') ?>
+                        </label>
+                        <?php if ($zip_r === 'required') { echo '<sup>*</sup>'; } ?>
+                        <?php
+                            $class = array();
+                            $class[] = "t1";
+                            if ($locale != "ar_SA") {
+                                $class[] = "validate-alphanum";
+                            } elseif ($locale == "ar_SA") {
+                                $class[] = "validate-alphanum-arabic";
+                            }
+                            if ($zip_r === 'required') {
+                                $class[] = 'required-entry';
+                            }
+                            $class = implode(' ', $class);
+                        ?>
+                        <div class="data_area">
+                            <input
+                                type="text"
+                                name="shipping[postcode]"
+                                id="shipping:postcode"
+                                title="<?php echo $this->__('Zip/Postal Code') ?>"
+                                value="<?php echo $this->htmlEscape($this->getShipAddress()->getPostcode()) ?>"
+                                class="<?php echo $class; ?>"
+                                maxlength="20"
+                                onchange="shipping.setSameAsBilling(false);"
+                            />
+                        </div>
+                    </div>
+                    <?php } ?>
+
+                    <?php if ($state_r !== 'hidden') { ?>
+                    <div class="short osc_b_state">
+                        <label
+                            for="shipping:region_id"
+                            <?php if ($state_r === 'required') { echo 'class="required"'; } ?>
+                        >
+                            <?php echo $this->__('State / Province') ?>
+                        </label>
+                        <?php if ($state_r === 'required') { echo '<sup>*</sup>'; } ?>
+                        <div class="data_area">
+                            <select
+                                id="shipping:region_id"
+                                name="shipping[region_id]"
+                                title="<?php echo $this->__('State/Province') ?>"
+                                class="t1_select <?php if ($state_r === 'required') { echo 'required-entry'; } ?>"
+                                style="display:none;"
+                            >
+                                <option value=""><?php echo $this->__('Select One') ?></option>
+                            </select>
+                            <script type="text/javascript">
+                                //<![CDATA[
+                                $('shipping:region_id').setAttribute('defaultValue', "<?php echo $this->getShipAddress()->getRegionId() ?>");
+                                //]]>
+                            </script>
+                            <?php
+                                $class = array();
+                                $class[] = "t1";
+                                if ($locale != "ar_SA") {
+                                    $class[] = "validate-alpha-with-spaces";
+                                } elseif ($locale == "ar_SA") {
+                                    $class[] = "validate-alpha-with-spaces-arabic";
+                                }
+                                if ($state_r === 'required') {
+                                    $class[] = 'required-entry';
+                                }
+                                $class = implode(' ', $class);
+                            ?>
+                            <input
+                                type="text"
+                                id="shipping:region"
+                                name="shipping[region]"
+                                value="<?php echo $this->htmlEscape($this->getShipAddress()->getRegion()) ?>"
+                                title="<?php echo $this->__('State/Province') ?>"
+                                class="<?php echo $class; ?>"
+                                style="display:none;"
+                                maxlength="20"
+                            />
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+                <?php } ?>
+
+                <?php
+                $ar = Mage::getStoreConfig('onestepcheckout/address_form/address');
+                if ($ar !== 'hidden') :
+                    ?>
+                    <div class="osc_s_address full">
+                        <label <?php if ($ar === 'required') {
+                            echo ' class="required" ';
+                        } ?>>
+                            <?php echo $this->__('Address') ?>
+                        </label>
+                        <?php if ($ar === 'required') {
+                            echo '<sup>*</sup>';
+                        } ?>
+                        <div class="data_area">
+                            <input type="text" title="<?php echo $this->__('Street Address') ?>"
+                                   name="shipping[street][]" id="shipping:street1"
+                                   value="<?php echo $this->htmlEscape($this->getShipAddress()->getStreet(1)) ?>"
+                                   class="t1<?php if ($ar === 'required') {
+                                       echo ' required-entry';
+                                   } ?>" onchange="shipping.setSameAsBilling(false);"/>
+                        </div>
+                    </div>
+                    <?php
+
+
+                endif;
+                ?>
+
+
+                <?php
+                $phone_r = Mage::getStoreConfig('onestepcheckout/address_form/phone');
+                if ($phone_r !== 'hidden') :
+                    ?>
+                    <div class="clr"></div>
+                    <div class="osc_s_cityandzip two_fields">
+                        <?php if ($phone_r !== 'hidden') : ?>
+                            <div class="short country_code_with_phone clearfix">
+                                <label <?php if ($phone_r === 'required') {
+                                    echo ' class="required" ';
+                                } ?>>
+                                    <?php echo $this->__('Phone number') ?>
+                                </label>
+                                <?php if ($phone_r === 'required') {
+                                    echo ' <sup>*</sup> ';
+                                } ?>
+                                <div class="data_area">
+                                    <?php
+                                    $tel_no = $this->htmlEscape($this->getShipAddress()->getTelephone());
+                                    $slices = substr($tel_no, 0, 3);
+                                    $slices2 = substr($tel_no, 0, 2);
+                                    $slices3 = substr($tel_no, 0, 1);
+                                    if ($slices == "971" || $slices == "966" || $slices == "973" || $slices == "974" || $slices == "964" || $slices == "965" || $slices == "968") {
+                                        $tel_no_change = substr($tel_no, 3);
+                                    } else if ($slices2 == "20" || $slices2 == "44" || $slices2 == "00") {
+                                        $tel_no_change = substr($tel_no, 2);
+                                    } else if ($slices3 == "1") {
+                                        $tel_no_change = substr($tel_no, 1);
+                                    } else {
+                                        $tel_no_change = str_replace("+", "", $tel_no);
+                                    }
+                                    $skip = false;
+                                    ?>
+                                    <input type="hidden" value="<?php echo $tel_no; ?>" id="full_Ship_no">
+                                    <select id="country_code_ship" name="country_code_ship"
+                                            class="width30 required-entry">
+                                        <option><?php echo $this->__('Select Country Code'); ?></option>
+                                        <option value="971" <?php if ($slices == "971") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UAE'); ?>
+                                            <?php if ($locale == "ar_SA") {
+                                                echo "971+";
+                                            } else {
+                                                echo "+971";
+                                            } ?></option>
+                                        <option value="966" <?php if ($slices == "966") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Saudi Arabia'); ?><?php if ($locale == "ar_SA") {
+                                                echo "966+";
+                                            } else {
+                                                echo "+966";
+                                            } ?></option>
+                                        <option value="973" <?php if ($slices == "973") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Bahrain'); ?><?php if ($locale == "ar_SA") {
+                                                echo "973+";
+                                            } else {
+                                                echo "+973";
+                                            } ?></option>
+                                        <option value="20" <?php if ($slices2 == "20") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Egypt'); ?><?php if ($locale == "ar_SA") {
+                                                echo "20+";
+                                            } else {
+                                                echo "+20";
+                                            } ?></option>
+                                        <option value="964" <?php if ($slices == "964") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Iraq'); ?><?php if ($locale == "ar_SA") {
+                                                echo "964+";
+                                            } else {
+                                                echo "+964";
+                                            } ?></option>
+                                        <option value="965" <?php if ($slices == "965") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Kuwait'); ?><?php if ($locale == "ar_SA") {
+                                                echo "965+";
+                                            } else {
+                                                echo "+965";
+                                            } ?></option>
+                                        <option value="968" <?php if ($slices == "968") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('Oman'); ?><?php if ($locale == "ar_SA") {
+                                                echo "968+";
+                                            } else {
+                                                echo "+968";
+                                            } ?></option>
+                                        <option value="44" <?php if ($slices2 == "44") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('UK'); ?><?php if ($locale == "ar_SA") {
+                                                echo "44+";
+                                            } else {
+                                                echo "+44";
+                                            } ?></option>
+                                        <option value="1" <?php if ($slices3 == "1") {
+                                            $skip = true; ?> selected="selected" <?php } ?>><?php echo $this->__('US'); ?><?php if ($locale == "ar_SA") {
+                                                echo "1+";
+                                            } else {
+                                                echo "+1";
+                                            } ?></option>
+                                        <option value="00" <?php if (!$skip) {
+                                            if ($slices2 == "00") { ?> selected="selected" <?php } else { ?> selected="selected" <?php }
+                                        } ?>><?php echo $this->__('Other Countries'); ?><?php if ($locale == "ar_SA") {
+                                                echo "00+";
+                                            } else {
+                                                echo "+00";
+                                            } ?></option>
+                                    </select>
+                                    <input type="text" name="shipping[dummy_telephone]" id="country_code_tel_ship" class="required-entry"
+                                           value="<?php echo $tel_no_change; ?>" autocomplete="off"
+                                           placeholder="<?php echo $this->__('Enter Phone no without country code'); ?>">
+                                    <script type="text/javascript">
+                                        jQuery(document).ready(function ($) {
+                                            var country_code_ship = jQuery("#country_code_ship").val();
+                                            var changed_country_code = country_code_ship,
+                                                key_country_code = "<?php echo $tel_no_change; ?>";
+
+                                            jQuery("#country_code_ship").change(function () {
+                                                changed_country_code = jQuery(this).val();
+                                                changed_country_code = changed_country_code.replace(/^0+/, '');
+                                                key_country_code = jQuery("#country_code_tel_ship").val();
+                                                setTimeout(function(){jQuery('.org_phone_no_ship').val(changed_country_code + key_country_code);},1000);
+                                            });
+
+                                            jQuery("#country_code_tel_ship").on('keyup blur',function () {
+                                                key_country_code = jQuery(this).val();
+                                                key_country_code = key_country_code.replace(/^0+/, '');
+                                                jQuery(this).val(key_country_code);
+                                                changed_country_code = jQuery("#country_code_ship").val();
+                                                changed_country_code = changed_country_code.replace(/^0+/, '');
+                                                jQuery('.org_phone_no_ship').val(changed_country_code + key_country_code);
+                                            });
+                                        });
+                                    </script>
+                                    <input type="hidden" name="shipping[telephone]" id="shipping:telephone"
+                                           value="<?php echo $tel_no; ?>" title="<?php echo $this->__('Phone No') ?>"
+                                           class="org_phone_no_ship width70 t1 <?php if ($phone_r === 'required') {
+                                               if ($locale == "ar_SA") {
+                                                   echo 'validate-phone-allow-arabic';
+                                               } else {
+                                                   echo ' validate-number2  validate-number';
+                                               }
+                                           } ?>" maxlength="20" onchange="shipping.setSameAsBilling(false);"/>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class='clr'></div>
+                <?php endif ?>
+
+
+
+                <?php
+                $fax_r = Mage::getStoreConfig('onestepcheckout/address_form/fax');
+                if ($fax_r !== 'hidden') :
+                    ?>
+                    <div lang="two_fields">
+                        <div class="short">
+                            <label <?php if ($fax_r === 'required') {
+                                echo ' class="required" ';
+                            } ?>>
+                                <?php echo $this->__('Fax') ?>
+                            </label>
+                            <?php if ($fax_r === 'required') {
+                                echo ' <sup>*</sup> ';
+                            } ?>
+                            <div class="data_area">
+                                <input type="text" name="shipping[fax]" id="shipping:fax"
+                                       value="<?php echo $this->htmlEscape($this->getShipAddress()->getFax()) ?>"
+                                       title="<?php echo $this->__('Fax') ?>"
+                                       class="t1<?php if ($fax_r === 'required') {
+                                           echo ' required-entry ';
+                                       } ?>" onchange="shipping.setSameAsBilling(false);"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='clr'></div>
+                    <?php
+                endif;
+
+                ?>
+                <ul>
+                    <?php
+                    if ($logged && $has_addr) {
+                        ?>
+                        <li class="options">
+                            <input type="checkbox" class="checkbox" name="shipping[save_in_address_book]"
+                                   id="shipping:save_in_address_book" value="1"
+                                   title="<?php echo $this->__('Save in address book') ?>" <?php if ($this->getShipAddress()->getSaveInAddressBook()) {
+                                echo ' checked="checked" ';
+                            } ?> />
+                            <label for="shipping:save_in_address_book">
+                                <?php echo $this->__('Save in address book') ?>
+                            </label>
+                        </li>
+                        <?php
+                    } else {
+                        ?>
+                        <li class="no-display">
+                            <input type="hidden" name="shipping[save_in_address_book]" value="1"/>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        var shipping = new ShippingAddress('onestepcheckout_orderform');
+        var shippingRegionUpdater = new RegionUpdater('shipping:country_id', 'shipping:region', 'shipping:region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'shipping:postcode');
+        //]]>
+        var country_selected1 = jQuery("#shipping\\:country_id option:selected");
+
+        jQuery("#currentCountry1").text(country_selected1.text());
+        var classname = 'flags ' + country_selected.val();
+        var fl1 = country_selected1.val();
+        var style1 = 'background-image:url(' + theme_path + 'css/images/flags/' + fl1.toLowerCase() + '.svg)';
+        jQuery("#currentCountry1").attr('style', style1);
+        jQuery("#currentCountry1").attr('class', classname);
+        jQuery("#countryUl1").hide();
+
+        var html1 = '',
+            flags_path1 = theme_path + 'css/images/flags/';
+        jQuery("#shipping\\:country_id option").each(function (index, el) {
+            var classname = jQuery(this).val();
+            classname = classname.replace(/\s/g, '');
+            var f_img = '';
+            if (classname != '') {
+                f_img = 'style="background-image:url(' + flags_path1 + classname.toLowerCase() + '.svg)"';
+            }
+            html1 += '<li class="flags ' + classname + '" ' + f_img + '>' + jQuery(this).text() + '</li>';
+        });
+        jQuery("#countryUl1").html(html);
+
+        jQuery(document).ready(function () {
+            triggerSelectedCountryonLoadShipping(country_selected1);
+        });
+        jQuery(document).on("tap", "#currentCountry1", showCountryFlagsBox1);
+        jQuery(document).on("click", "#currentCountry1", showCountryFlagsBox1);
+
+
+        function showCountryFlagsBox1() {
+            jQuery("#countryUl1").show();
+        }
+
+        jQuery("body").not(jQuery("#countryUl1")).click(function () {
+            jQuery("#countryUl1").hide();
+        })
+
+
+        window.countryCodeArr1 = {
+            "AE": "971",
+            "SA": "966",
+            "BH": "973",
+            "EG": "20",
+            "IQ": "964",
+            "KW": "965",
+            "OM": "968",
+            "GB": "44",
+            "US": "1"
+        };
+
+        function triggerSelectedCountryShipping() {
+            var v = jQuery(this).attr('class');
+            v = jQuery.trim(v.replace("flags", "", v));
+            jQuery("#shipping\\:country_id option[value=" + v + "]").prop('selected', 'selected');
+            if (v in countryCodeArr1) {
+                jQuery("#country_code_ship").val(countryCodeArr1[v]).change();
+            } else {
+                jQuery("#country_code_ship").val("00").change();
+            }
+
+            jQuery("#shipping\\:country_id").prop("selectedIndex", jQuery(this).index()).change();
+
+            jQuery("#currentCountry1").text(jQuery(this)[0].innerHTML);
+            var classname1 = jQuery(this).attr("class");
+            var style1 = jQuery(this).attr("style");
+            jQuery("#currentCountry1").attr("class", classname1).attr('style', style1);
+            jQuery("#countryUl1").hide();
+            updateReviewOnChange();
+            shippingRegionUpdater.update();
+        }
+
+        function triggerSelectedCountryonLoadShipping(ele) {
+            var countryCodeArr1 = {
+                "AE": "971",
+                "SA": "966",
+                "BH": "973",
+                "EG": "20",
+                "IQ": "964",
+                "KW": "965",
+                "OM": "968",
+                "GB": "44",
+                "US": "1"
+            };
+            var v = ele.val();
+
+            v = jQuery.trim(v.replace("flags", "", v));
+            jQuery("#shipping\\:country_id option[value=" + v + "]").prop('selected', 'selected');
+            shippingRegionUpdater.update();
+            if (v in countryCodeArr1) {
+                jQuery("#country_code_ship").val(countryCodeArr1[v]).change();
+            } else {
+                jQuery("#country_code_ship").val("00").change();
+            }
+
+
+        }
+    </script>
+    <?php
+}
+?>

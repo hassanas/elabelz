@@ -1,0 +1,66 @@
+<config>
+    <api2>
+        <resource_groups>
+            <api-list translate="title" module="Progos_Api_List">
+                <title>Product Listing Api</title>
+                <sort_order>10</sort_order>
+            </api-list>
+        </resource_groups>
+        <resources>
+            <productfilters translate="title" module="Progos_Api_List">
+                <group>api-list</group>
+                <model>api-list/api2_filters</model>
+                <title>Layered Navigation Filters</title>
+                <sort_order>20</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                    <customer>
+                        <retrieve>1</retrieve>
+                    </customer>
+                    <guest>
+                        <retrieve>1</retrieve>
+                    </guest>
+                </privileges>
+                <attributes>
+                    <id>Id</id>
+                </attributes>
+                <routes>
+                    <route>
+                        <route>/product/filters</route>
+                        <action_type>collection</action_type>
+                    </route>
+                </routes>
+                <versions>1</versions>
+            </productfilters>
+            <list translate="title" module="Progos_Api_List">
+                <group>api-list</group>
+                <model>api-list/api2_list</model>
+                <title>Product List Collection</title>
+                <sort_order>10</sort_order>
+                <privileges>
+                    <admin>
+                        <retrieve>1</retrieve>
+                    </admin>
+                    <customer>
+                        <retrieve>1</retrieve>
+                    </customer>
+                    <guest>
+                        <retrieve>1</retrieve>
+                    </guest>
+                </privileges>
+                <attributes>
+                    <products>Category Product List</products>
+                </attributes>
+                <routes>
+                    <route>
+                        <route>/product/list</route>
+                        <action_type>collection</action_type>
+                    </route>
+                </routes>
+                <versions>1</versions>
+            </list>
+        </resources>
+    </api2>
+</config>

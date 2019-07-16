@@ -1,0 +1,130 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.4
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2014 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+$current_body_class = $this->getLayout()->getBlock('root')->getData('body_class');
+// var_dump($current_body_class);
+$no_menu_id = ["customer-account", "checkout-cart-index"];
+
+$locale = Mage::app()->getLocale()->getLocaleCode();
+// var_dump($locale);
+$allLanguages = Mage::app()->getLocale()->getOptionLocales();
+// var_dump($allLanguages);
+?>
+
+<div class="visually_hidden" id="overlay"></div>
+
+<div dir="ltr" id="wrapper">
+
+    <header id="site_header" class="customer-section">
+        <div class="black clearfix">
+            <div class="site--logo pull-left">
+                <a href="<?php echo Mage::getBaseUrl(); ?>" id="site_logo" title="<?php echo Mage::app()->getStore()->getFrontendName(); ?>"><?php echo Mage::app()->getStore()->getFrontendName(); ?></a>
+            </div>
+            <?php if (Mage::helper('customer')->isLoggedIn() ): ?>
+            <div class="site--logout pull-right">
+                <a href="<?php echo Mage::helper('customer')->getLogoutUrl(); ?>"><?php echo $this->__('Log Out') ?></a>
+            </div>
+            <?php else: ?>
+            <div class="site--phone pull-right">
+                <?php $phone = Mage::getStoreConfig('general/store_information/phone'); ?>
+                <strong><?php echo $this->__('Need help?') ?></strong> <a href="tel:00<?php echo $str = str_replace(' ','',$phone); ?>"><span class="numher"><?php echo $phone; ?></span></a>
+            </div>
+            <?php endif; ?>
+        </div>
+    </header>
+<div class="smallMobile_banner">
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header-section-block')->toHtml();?>
+</div>
+    <?php echo $this->getChildHtml('topContainer'); ?>
+
+    <script type="text/javascript">
+        document.observe("dom:loaded", function () {
+    // Sticky header scroll function
+            var facebookVar = 0;
+            Event.observe(window, 'scroll', function () {
+                var scrollOffsets = document.viewport.getScrollOffsets();
+                var scrollTop = scrollOffsets.top;
+                if (scrollTop) {
+                    if (scrollTop > 50) {
+                        //$('header').addClassName('f-header');
+                    } else {
+                        //$('header').removeClassName('f-header');
+                    }
+                }
+
+            });
+            window.onscroll = appthascroll;
+            var reviewScroll = 0;
+            function appthascroll() {
+                var scrollOffsets = document.viewport.getScrollOffsets();
+                var scrollTop = scrollOffsets.top;
+                if (scrollTop == 0) {
+                    jQuery('header').removeClass('f-header');
+                }
+
+            }
+
+        });
+
+        jQuery(document).ready(function () {
+
+            var isWindowsPhone = /windows phone/i.test(navigator.userAgent.toLowerCase());
+            var ll = jQuery(window).width();
+            if (isWindowsPhone) {
+                jQuery("#mp_top_nav li.mp_engage_tab").click(function () {
+                    jQuery("#mp_top_nav li.mp_engage_tab ul").toggle();
+                    jQuery("#mp_top_nav li.mp_sellers ul").hide();
+                    jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+                });
+                jQuery("#mp_top_nav li.mp_sellers").click(function () {
+                    jQuery("#mp_top_nav li.mp_sellers ul").toggle();
+                    jQuery("#mp_top_nav li.mp_engage_tab ul").hide();
+                    jQuery("#mp_top_nav li.mp_sellers_tab ul").hide();
+                });
+                jQuery("#mp_top_nav li.mp_sellers_tab").click(function () {
+                    jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle();
+                    jQuery("#mp_top_nav li.mp_sellers ul").hide();
+                    jQuery("#mp_top_nav li.mp_engage_tab ul").hide();
+                });
+            } else {
+                if (ll == 320 || ll == 1000)
+                {
+                    jQuery("#mp_top_nav li.mp_engage_tab").click(function () {
+                        jQuery("#mp_top_nav li.mp_engage_tab ul").toggle()
+                    });
+                    jQuery("#mp_top_nav li.mp_sellers").click(function () {
+                        jQuery("#mp_top_nav li.mp_sellers ul").toggle()
+                    });
+                    jQuery("#mp_top_nav li.mp_sellers_tab").click(function () {
+                        jQuery("#mp_top_nav li.mp_sellers_tab ul").toggle()
+                    });
+                }
+            }
+        });
+    </script>

@@ -1,0 +1,48 @@
+<?php
+if(Mage::getSingleton('checkout/session')->getQuote()->getCouponCode()) {
+    $totals = Mage::getSingleton('checkout/session')->getQuote()->getTotals();
+        if($totals["discount"]) {
+           $totalDiscount = $totals["discount"]->getValue();
+    }
+}
+?>
+<?php if (!$methods = $this->getMethods()) : ?>
+<p><?php echo $this->helper('checkout')->__('Sorry, no quotes are available for this order at this time.') ?></p>
+<?php elseif((Mage::getSingleton('checkout/session')->getQuote()->getSubtotal() + $totalDiscount) < 0.001):?>
+    <dl class="sp-methods">
+        <dt>
+            <span class="no-display"><input id="p_method_free" value="free" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+            <label for="p_method_free"><span></span>No payment information required</label>
+        </dt>
+    </dl>
+<?php else : ?>
+<dl class="sp-methods">
+<?php foreach ($this->getMethods() as $_method): $_code = $_method->getCode() ?>
+   <?php if($_code != "telrpayments_cc" && $_code != "cashondelivery"): ?>
+    <dt>
+    <?php if( sizeof($this->getMethods()) > 1 ): ?>
+        <input onclick="paymentmethodchange('<?php echo $this->htmlEscape($_method->getTitle()) ?>')" id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->htmlEscape($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+    <?php else: ?>
+        <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" />
+    <?php endif; ?>
+        <label for="p_method_<?php echo $_code ?>"><span></span><?php echo $this->__($this->htmlEscape($_method->getTitle())) ?> <?php echo $this->getMethodLabelAfterHtml($_method); ?></label>
+    </dt>
+    <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
+    <!--<dd>
+        <?php //echo $html; ?>
+    </dd>-->
+	<dd id="container_payment_method_<?php echo $_code; ?>" class="payment-method">
+		<?php echo $html; ?>
+	</dd>
+    <?php endif; ?>
+<?php endif ; ?>
+<?php endforeach; ?>
+</dl>
+<script type="text/javascript">
+//<![CDATA[
+<?php echo $this->getChildChildHtml('scripts'); ?>
+payment.init();
+//]]>
+</script>
+<?php endif; ?>
+<?php echo $this->getChildHtml('infotrust-method');?>

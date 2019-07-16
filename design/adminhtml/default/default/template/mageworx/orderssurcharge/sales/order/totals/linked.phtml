@@ -1,0 +1,51 @@
+<?php
+/**
+ * MageWorx
+ * Order Surcharge extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersSurcharge
+ * @copyright  Copyright (c) 2016 MageWorx (http://www.mageworx.com/)
+ */
+?>
+<?php
+$_source = $this->getSource();
+/** @var Mage_Sales_Model_Order $_order */
+$_order = $this->getOrder();
+/** @var MageWorx_OrdersSurcharge_Model_Resource_Surcharge_Collection $surcharges */
+$surcharges = Mage::getModel('mageworx_orderssurcharge/surcharge')->loadByParentOrder($_order);
+/** @var MageWorx_OrdersSurcharge_Helper_Data $helper */
+$helper = Mage::helper('mageworx_orderssurcharge');
+?>
+<tr class="mageworx-linked-total" onclick="expandDetails(this, '.summary-details')">
+    <td class="label">
+        <div class="summary-collapse" >
+            <?php echo Mage::helper('mageworx_orderssurcharge')->__('Linked Order Surcharge') ?>
+            <div class="mageworx-tooltip-container" data-tooltip="<?php echo $this->getTooltipMessage()?>"></div>
+        </div>
+    </td>
+    <td>
+        <?php echo $this->displayAmount($_source->getLinkedAmount(), $_source->getBaseLinkedAmount()); ?>
+    </td>
+</tr>
+<?php
+$isTop = true;
+/** @var MageWorx_OrdersSurcharge_Model_Surcharge $surcharge */
+foreach ($surcharges as $surcharge):
+    ?>
+    <tr class="summary-details-surcharge summary-details<?php if ($isTop):
+        echo ' summary-details-first';
+        $isTop = false;
+    endif; ?>"
+        style="display:none;">
+        <td class="a-right" colspan="1">
+            <?php echo $helper->__('Surcharge #%d', $surcharge->getId()) . ' (<b>' . $helper->__($surcharge->getStatusLabel()) . '</b>)'; ?>
+            <br/>
+        </td>
+        <td class="a-right" rowspan="1">
+            <?php echo Mage::helper('adminhtml/sales')->displayPrices($_order, $surcharge->getBaseTotal(), $helper->convertBaseToOrderRate($surcharge->getBaseTotal(), $_order)); ?>
+        </td>
+    </tr>
+<?php
+endforeach;
+?>

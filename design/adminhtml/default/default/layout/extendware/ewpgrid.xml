@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout>
+	<adminhtml_catalog_product_index>
+		<update handle="ewcore_chooser"/>
+        <reference name="head">
+            <action method="addJs"><file>extendware/ewpgrid/grid.js</file></action>
+            <action method="addJs"><file>extendware/ewpgrid/config.js</file></action>
+            <action method="addJs"><file>extendware/ewpgrid/dragtable.js</file></action>
+            <action method="addJs"><file>extendware/ewpgrid/orderer.js</file></action>
+            <action method="addJs"><stylesheet>extendware/ewpgrid/lightbox/js/lightbox.js</stylesheet></action>
+            
+            <action method="addItem"><type>js_css</type><name>extendware/ewpgrid/lightbox/css/lightbox.css</name><params/></action>
+            <action method="addCss"><name>extendware/ewpgrid/css/general.css</name></action>
+            <action method="addCss"><name>extendware/ewpgrid/css/prototype/windows/magento.css</name></action>
+        </reference>
+        <reference name="content">
+            <block type="ewpgrid/adminhtml_catalog_product_grid_js" name="ewpgrid_js"></block>
+        </reference>
+    </adminhtml_catalog_product_index>
+</layout>

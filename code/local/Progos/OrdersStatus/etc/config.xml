@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Progos_OrdersStatus
+ *
+ * @category    Progos
+ * @package     Progos_OrdersStatus
+ * @author      Sergejs Plisko <sergejs.plisko@redboxdigital.com>
+ * @copyright   Copyright (c) 2017 Progos, Ltd (http://progostech.com)
+ */
+-->
+<config>
+    <modules>
+        <Progos_OrdersStatus>
+            <version>0.1.0</version>
+        </Progos_OrdersStatus>
+    </modules>
+    <global>
+        <helpers>
+            <progos_ordersstatus>
+                <class>Progos_OrdersStatus_Helper</class>
+            </progos_ordersstatus>
+        </helpers>
+        <resources>
+            <progos_ordersstatus_setup>
+                <setup>
+                    <module>Progos_OrdersStatus</module>
+                </setup>
+            </progos_ordersstatus_setup>
+        </resources>
+    </global>
+</config>

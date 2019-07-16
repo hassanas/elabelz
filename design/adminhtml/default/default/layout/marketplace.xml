@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  
+  <marketplaceadmin_adminhtml_ordercount_index>
+	<reference name="content">
+	  <block type="marketplace/adminhtml_ordercount" name="ordercount" template="marketplace/ordercount.phtml"/>
+	</reference>
+  </marketplaceadmin_adminhtml_ordercount_index>
+<marketplaceadmin_adminhtml_ordercount_search>
+	<reference name="content">
+	  <block type="marketplace/adminhtml_ordercount" name="ordercount" template="marketplace/ordercount.phtml"/>
+	</reference>
+  </marketplaceadmin_adminhtml_ordercount_search>
+	<marketplaceadmin_adminhtml_manageroverview_index>
+		<reference name="head">
+			<action method="addJs">
+				<script>marketplace/manager_overview_script.js</script>
+			</action>
+			<reference name="content">
+				<block type="core/template" name="color-definition" before="-" template="marketplace/color-definition.phtml"></block>
+			</reference>
+		</reference>
+	</marketplaceadmin_adminhtml_manageroverview_index>
+
+	<marketplaceadmin_adminhtml_supplier_sales_general_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>General Sales</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<!-- <block type="core/template" template="marketplace/calllog.phtml" /> -->
+			<block type="marketplace/adminhtml_supplier_sales_general" name="supplier.general.sales" />
+		</reference>
+	</marketplaceadmin_adminhtml_supplier_sales_general_index>
+
+	<marketplaceadmin_adminhtml_supplier_sales_date_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Date Range Supplier Sales</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_supplier_sales_date" name="supplier.date.sales" />
+		</reference>
+	</marketplaceadmin_adminhtml_supplier_sales_date_index>
+
+	
+	<marketplaceadmin_adminhtml_callcenter_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Call Center</title>
+			</action>
+			<!-- <block type="core/text">
+				<action method="setText">
+					<text>
+						<![CDATA[<script type="text/javascript" src="https://use.fontawesome.com/9a887619f1.js"></script>]]>
+					</text>
+				</action>
+		   	</block> -->
+	        <!-- <action method="addJs"><script>folder/file.js</script></action> -->
+		</reference>
+		<reference name="content">
+			<block type="core/template" template="marketplace/calllog.phtml" />
+			<!-- <block type="marketplace/adminhtml_callcenter" name="callcenter" /> -->
+		</reference>
+	</marketplaceadmin_adminhtml_callcenter_index>
+
+	<marketplaceadmin_adminhtml_callcenter_morning>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="marketplace/adminhtml_callcenter_edit_tab_morning" name="callcenter.morning"/>
+        </block>
+	</marketplaceadmin_adminhtml_callcenter_morning>
+
+	<marketplaceadmin_adminhtml_callcenter_afternoon>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="marketplace/adminhtml_callcenter_edit_tab_afternoon" name="callcenter.afternoon"/>
+        </block>
+	</marketplaceadmin_adminhtml_callcenter_afternoon>
+
+	<marketplaceadmin_adminhtml_callcenter_evening>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="marketplace/adminhtml_callcenter_edit_tab_evening" name="callcenter.evening"/>
+        </block>
+	</marketplaceadmin_adminhtml_callcenter_evening>
+
+	<marketplaceadmin_adminhtml_callcenter_plus>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="marketplace/adminhtml_callcenter_edit_tab_plus" name="callcenter.plus"/>
+        </block>
+	</marketplaceadmin_adminhtml_callcenter_plus>
+
+	<marketplaceadmin_adminhtml_callcenter_onhold>
+		<block type="core/text_list" name="root" output="toHtml">
+            <block type="marketplace/adminhtml_callcenter_edit_tab_holded" name="callcenter.holded"/>
+        </block>
+	</marketplaceadmin_adminhtml_callcenter_onhold>
+
+	<marketplaceadmin_adminhtml_callcenter_comments>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Comments</title>
+			</action>
+		</reference>
+		<remove name="menu" />
+	    <remove name="header" />
+	    <remove name="footer" />
+	    <remove name="notifications" />
+		<reference name="content">
+			<block type="marketplace/adminhtml_callcenter_comments" name="callcenter.comments" template="marketplace/comments.phtml" />
+		</reference>
+	</marketplaceadmin_adminhtml_callcenter_comments>
+
+
+	<marketplaceadmin_adminhtml_manageseller_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Seller</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_manageseller" name="manageseller" />
+		</reference>
+	</marketplaceadmin_adminhtml_manageseller_index>
+	<marketplaceadmin_adminhtml_manageroverview_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Overview</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_manageroverview" name="manageroverview" />
+		</reference>
+	</marketplaceadmin_adminhtml_manageroverview_index>
+	<!-- <marketplaceadmin_adminhtml_ordercount_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>ordercount</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_ordercount" name="ordercount" />
+		</reference>
+	</marketplaceadmin_adminhtml_ordercount_index> -->
+	<marketplaceadmin_adminhtml_order_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Orders</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_order" name="order" />
+		</reference>
+	</marketplaceadmin_adminhtml_order_index>
+
+	<marketplaceadmin_adminhtml_allpayout_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>All Seller Payout Requests</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_allpayout" name="allpayout" />
+		</reference>
+	</marketplaceadmin_adminhtml_allpayout_index>
+
+	<marketplaceadmin_adminhtml_orderitemscancel_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Cancelled Order Items</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_orderitemscancel" name="orderitemscancel" />
+		</reference>
+	</marketplaceadmin_adminhtml_orderitemscancel_index>
+
+	<marketplaceadmin_adminhtml_orderitemsall_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>All Order Items</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_orderitemsall" name="orderitemsall" />
+		</reference>
+	</marketplaceadmin_adminhtml_orderitemsall_index>
+
+	<marketplaceadmin_adminhtml_logistics_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Master Screen</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="core/template" template="marketplace/inline-edit.phtml" />
+			<block type="marketplace/adminhtml_logistics" name="logistics" />
+		</reference>
+         
+	</marketplaceadmin_adminhtml_logistics_index>
+
+	<marketplaceadmin_adminhtml_manageselleramount_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Seller Amount</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_manageselleramount" name="manageselleramount" />
+		</reference>
+	</marketplaceadmin_adminhtml_manageselleramount_index>
+
+	<marketplaceadmin_adminhtml_supplierscreen_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Supplier Screen</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="core/template" template="marketplace/inline-edit.phtml" />
+			<block type="marketplace/adminhtml_supplierscreen" name="logistics" />
+		</reference>
+         
+	</marketplaceadmin_adminhtml_supplierscreen_index>
+
+	<marketplaceadmin_adminhtml_notes_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Comments</title>
+			</action>
+
+		</reference>
+		<remove name="menu" />
+		    <remove name="header" />
+		    <remove name="footer" />
+		    <remove name="notifications" />
+		<reference name="content">
+			<block type="marketplace/adminhtml_notes" name="notes" template="marketplace/notes_form.phtml" />
+		</reference>
+         
+	</marketplaceadmin_adminhtml_notes_index>
+
+	<marketplaceadmin_adminhtml_orderitemsprocessing_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Ready for Processing Items</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_orderitemsprocessing" name="orderitemsprocessing" />
+		</reference>
+	</marketplaceadmin_adminhtml_orderitemsprocessing_index>
+
+	<marketplaceadmin_adminhtml_unconfirmedfromseller_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Unconfirmed from Seller</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_unconfirmedfromseller" name="unconfirmedfromseller" />
+		</reference>
+	</marketplaceadmin_adminhtml_unconfirmedfromseller_index>
+
+	<marketplaceadmin_adminhtml_unconfirmedfrombuyer_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Unconfirmed from Buyer</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_unconfirmedfrombuyer" name="unconfirmedfrombuyer" />
+		</reference>
+	</marketplaceadmin_adminhtml_unconfirmedfrombuyer_index>
+
+
+	<marketplaceadmin_adminhtml_orderitems_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Order Items</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_orderitems" name="orderitems" />
+		</reference>
+	</marketplaceadmin_adminhtml_orderitems_index>
+	
+	<marketplaceadmin_adminhtml_ordersrefundhistory_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Refunded Orders</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_ordersrefundhistory" name="orderitems" />
+		</reference>
+	</marketplaceadmin_adminhtml_ordersrefundhistory_index>
+
+	<marketplaceadmin_adminhtml_requestordercancel_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Order Cancel Requests</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_requestordercancel" name="requestordercancel" />
+		</reference>
+	</marketplaceadmin_adminhtml_requestordercancel_index>
+
+
+		<marketplaceadmin_adminhtml_order_payout>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Payout</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_payout" name="payout" />
+		</reference>
+	</marketplaceadmin_adminhtml_order_payout>
+	<marketplaceadmin_adminhtml_orderview_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>View Order Details</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_orderview" name="orderview" />
+		</reference>
+	</marketplaceadmin_adminhtml_orderview_index>
+
+	<marketplaceadmin_adminhtml_paymentinfo_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Payment Details</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_Paymentinfo" name="paymentinfo" />
+		</reference>
+	</marketplaceadmin_adminhtml_paymentinfo_index>
+	<marketplaceadmin_adminhtml_products_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Products</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_products" name="products" />
+		</reference>
+	</marketplaceadmin_adminhtml_products_index>
+	<marketplaceadmin_adminhtml_sellerreview_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Reviews and Ratings</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_sellerreview" name="sellerreview" />
+		</reference>
+	</marketplaceadmin_adminhtml_sellerreview_index>
+	<marketplaceadmin_adminhtml_commission_index>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Commission</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_commission" name="order" />
+		</reference>
+	</marketplaceadmin_adminhtml_commission_index>
+	<marketplaceadmin_adminhtml_commission_addcomment>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Seller</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_commission_edit" name="add_comments" />
+		</reference>
+	</marketplaceadmin_adminhtml_commission_addcomment>
+
+	<marketplaceadmin_adminhtml_manageseller_setcommission>
+		<reference name="head">
+			<action method="setTitle" translate="title">
+				<title>Manage Seller</title>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="marketplace/adminhtml_manageseller_edit" name="set_commission" />
+		</reference>
+	</marketplaceadmin_adminhtml_manageseller_setcommission>
+</layout>

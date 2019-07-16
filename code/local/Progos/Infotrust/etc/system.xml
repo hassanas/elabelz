@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <Infotrust translate="label" module="progos_infotrust">
+            <label>Infotrust</label>
+            <sort_order>100</sort_order>
+        </Infotrust>
+    </tabs>
+    <sections>
+        <infotrust translate="label" module="progos_infotrust">
+            <label>Infotrust</label>
+            <sort_order>130</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>Infotrust</tab>
+            <groups>
+                <infotrust translate="label">
+                    <label>Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <script translate="label">
+                            <label>GTM Script</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </script>
+                        <specialprice translate="label">
+                            <label>Show Special Price</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </specialprice>
+                        <kustomer_email_enable>
+                            <label>Kustomer new order email enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to kustomer with new order data</comment>
+                        </kustomer_email_enable>
+                        <kustomer_shipment_email_enable>
+                            <label>Kustomer shipment email enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to kustomer when shipment is created for the order</comment>
+                        </kustomer_shipment_email_enable>
+                        <kustomer_creditmemo_email_enable>
+                            <label>Kustomer credit memo email enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </kustomer_creditmemo_email_enable>
+                        <kustomer_seller_cancel_email_enable>
+                            <label>Kustomer seller cancel email</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Enabledisable</source_model>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to kustomer when order is canceled due to seller reject</comment>
+                        </kustomer_seller_cancel_email_enable>
+                        <kustomer_seller_accept_email_enable>
+                            <label>Kustomer seller accept email</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Enabledisable</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to kustomer when order is confirmed due to seller accept</comment>
+                        </kustomer_seller_accept_email_enable>
+                        <kustomer_seller_item_reject_email_enable_storefront>
+                            <label>Kustomer seller item reject email storefront</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Enabledisable</source_model>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to Kustomer when an order item is rejected</comment>
+                        </kustomer_seller_item_reject_email_enable_storefront>
+                        <kustomer_seller_item_reject_email_enable_admin>
+                            <label>Kustomer seller item reject email admin</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Enabledisable</source_model>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Send email to Kustomer when an order item is rejected</comment>
+                        </kustomer_seller_item_reject_email_enable_admin>
+                        <kustomer_email_hook>
+                            <label>Kustomer email hook</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>32</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-email</validate>
+                            <comment>Kustomer hook email addr for sending email to</comment>
+                        </kustomer_email_hook>
+                        <kustomer_data_key>
+                            <label>Data kustomer key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>33</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Data key for kustomer email hook</comment>
+                        </kustomer_data_key>
+                        <kustomer_enable_log>
+                            <label>Kustomer enable log</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Enabledisable</source_model>
+                            <sort_order>333</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable log to see data getting through email</comment>
+                        </kustomer_enable_log>
+                        <kustomer_bcc_email>
+                            <label>Kustomer bcc email</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>334</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-email</validate>
+                            <comment>Bcc email addr to see how emails are being recieved by Kustomer hook</comment>
+                        </kustomer_bcc_email>
+                    </fields>
+                </infotrust>
+            </groups>
+        </infotrust>
+    </sections>
+</config>

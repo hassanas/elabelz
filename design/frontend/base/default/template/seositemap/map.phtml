@@ -1,0 +1,107 @@
+<div class="page-title"><h1><?php echo $this->getH1Title()?></h1></div>
+<?php echo $this->getChildHtml('map.pager') ?>
+<div class="seositemap-map">
+    <?php $config = $this->getConfig(); ?>
+
+    <table>
+        <tr>
+            <td width="50%">
+                <h3><?php echo $this->__('Catalog')?></h3>
+            <?php if ($this->getLimitPerPage()): ?>
+            <?php
+            $categories = $this->getCategoryLimitedSortedTree();
+            $products = $this->getProductLimitedCollection();
+            ?>
+                <?php if ($this->getMode() == 'show_categories'): ?>
+                    <h4><?php echo $this->__('Categories')?></h4>
+                    <ul>
+                    <?php foreach ($categories as $category):?>
+                        <?php if (!$this->excludeCategory($category)): ?>
+                        <li class="level-<?php echo $category->getLevel() ?>"><a href="<?php echo $this->getCategoryUrl($category) ?>"><?php echo $category->getName() ?></a></li>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                    </ul>
+                <?php endif;?>
+                <?php if ($this->getMode() == 'show_products'): ?>
+                    <h4><?php echo $this->__('Products')?></h4>
+                    <ul>
+                    <?php foreach ($products as $product):?>
+                        <?php if (!$this->excludeProduct($product)): ?>
+                        <li><a href="<?php echo $product->getProductUrl() ?>"><?php echo $product->getName() ?></a></li>
+                        <?php endif; ?>
+                    <?php endforeach ?>
+                    </ul>
+                <?php endif;?>
+            <?php else: ?>
+                <ul>
+                <?php foreach ($this->getCategoriesTree() as $key => $category):?>
+                    <?php if (!$this->getIsHidden($key)): ?>
+                        <li class="level-<?php echo $category->getLevel() ?>"><a href="<?php echo $this->getCategoryUrl($category) ?>"><?php echo $category->getName() ?></a></li>
+                    <?php endif; ?>
+                    <?php if ($config->getIsShowProducts()):?>
+                        <?php foreach ($this->getSitemapProductCollection($category) as $product):?>
+                            <?php if (!$this->excludeProduct($product)): ?>
+                                <li class="level-<?php echo $category->getLevel() + 1 ?>">
+                                    <a href="<?php echo $product->getProductUrl() ?>"><?php echo $product->getName() ?></a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endforeach ?>
+                    <?php endif ?>
+                <?php endforeach ?>
+                </ul>
+            <?php endif; ?>
+            </td>
+            <td width="50%">
+                <?php if ($this->getIsFirstPage()): ?>
+                    <?php if ($config->getIsShowStores()):?>
+                        <h3><?php echo $this->__('Stores')?></h3>
+                        <ul class="stores">
+                        <?php foreach ($this->getStores() as $store): ?>
+                            <li><a href="<?php echo $store->getBaseUrl() ?>"><?php echo $store->getName() ?></a></li>
+                        <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                    <?php if ($config->getIsShowCmsPages()):?>
+                        <h3><?php echo $this->__('Pages')?></h3>
+                        <ul>
+                        <?php foreach ($this->getCmsPages() as $page):?>
+                            <li><a href="<?php echo $this->getCmsPageUrl($page) ?>"><?php echo $page->getTitle() ?></a></li>
+                        <?php endforeach ?>
+                        <?php
+                        $links = $config->getAdditionalLinks();
+                        if (count($links) > 0): ?>
+                            <?php foreach ($links as $link):?>
+                            <li><a href="<?php echo $link->getUrl() ?>"><?php echo $link->getTitle() ?></a></li>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                        </ul>
+                    <?php endif ?>
+                    <?php if ($this->getIsShowAWblog()):?>
+                        <h3><?php echo $this->__('Blog')?></h3>
+                        <ul>
+                        <?php foreach ($this->getAWblog() as $blogItem): ?>
+                            <li><a href="<?php echo $this->getAWblogUrl($blogItem) ?>"><?php echo $blogItem->getTitle() ?></a></li>
+                        <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                    <?php if ($this->getIsAmastyXlanding()):?>
+                        <h3><?php echo $this->__('Xlanding pages')?></h3>
+                        <ul>
+                            <?php foreach ($this->getAmastyXlanding() as $xlandingItem): ?>
+                                <li><a href="<?php echo $xlandingItem['url'] ?>"><?php echo $xlandingItem['name'] ?></a></li>
+                            <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                    <?php if ($this->getIsMagpleasureBlog()):?>
+                        <h3><?php echo $this->__('Blog')?></h3>
+                        <ul>
+                        <?php foreach ($this->getMagpleasureBlog() as $blogItem): ?>
+                            <li><a href="<?php echo $blogItem['url'] ?>"><?php echo $blogItem['name'] ?></a></li>
+                        <?php endforeach ?>
+                        </ul>
+                    <?php endif ?>
+                <?php endif ?>
+            </td>
+        </tr>
+    </table>
+</div>

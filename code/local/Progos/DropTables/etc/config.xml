@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_DropTables>
+            <version>0.1.0</version>
+        </Progos_DropTables>
+    </modules>
+    <global>
+        <resources>
+            <droptables_setup>
+                <setup>
+                    <module>Progos_DropTables</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </droptables_setup>
+            <droptables_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </droptables_write>
+            <droptables_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </droptables_read>
+        </resources>
+    </global>
+</config>

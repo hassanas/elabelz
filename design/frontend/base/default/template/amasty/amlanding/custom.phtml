@@ -1,0 +1,28 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2017 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php if ($this->getHeading()) {?>
+<div class="page-title category-title">
+    <h1><?php echo $this->htmlEscape($this->getHeading()) ?></h1>
+</div>
+<?php }?>
+<!--
+<?php
+    $file = $this->_getPage()->getLayoutFile();
+?>
+<?php if ($file) {?>
+<p class="category-image">
+    <img src="<?php echo $this->getFile();?>" alt="<?php echo $this->escapeHtml($this->getFileAlt()) ?>" title="<?php echo $this->escapeHtml($this->getFileAlt()) ?>" />
+</p>
+<?php }?>
+
+<?php if ($this->getDescription()) {?>
+<div class="category-description std">
+    <?php echo Mage::helper('cms')->getPageTemplateProcessor()->filter($this->getDescription()); ?>
+</div>
+<?php }?>-->

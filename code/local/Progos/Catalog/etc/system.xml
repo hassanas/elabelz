@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <progos translate="label">
+            <label>Progos</label>
+            <sort_order>300</sort_order>
+        </progos>
+    </tabs>
+    <sections>
+        <progos_catalog translate="label" module="progos_catalog">
+            <label>Catalog Category</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>301</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label comment">
+                    <label>General</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                       <fields>
+                        <boolean translate="label comment">
+                            <label>Use Product Page Template</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </boolean>
+                    </fields>
+                </general>
+            </groups>
+        </progos_catalog>
+    </sections>
+</config>

@@ -1,0 +1,173 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Marketplace
+ * @version     1.6
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="row">
+	<div class="col-lg-12">
+		<div id="tabs-container">
+			
+			<ul class="tabs-menu">
+				<li class="current"><a href="#tab-1">Login</a></li>
+				<li><a href="#tab-2">Create new seller account</a></li>
+			</ul>
+			
+			<div class="tab">
+				<div id="tab-1" class="tab-content">
+					<div class="row">
+						<div class="col-xs-9">
+						
+							<div class="account-login">
+								
+								<?php /* Extensions placeholder */ ?>
+								<?php echo $this->getChildHtml('customer.form.login.extra')?>
+								<form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form">
+									<?php echo $this->getBlockHtml('formkey'); ?>
+									<div class="col2-set">
+										<div class="registered-users">
+											<div class="content">
+												<h2><?php echo $this->__('Registered Sellers') ?></h2>
+												<ul class="form-list">
+													<li>
+														<div class="input-box">
+															<input placeholder="Email Address" type="text" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" id="email" class="input-text required-entry validate-email" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" />
+														</div>
+													</li>
+													<li>
+														<div class="input-box">
+															<input placeholder="Password" type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Password')) ?>" />
+														</div>
+													</li>
+													<?php echo $this->getChildHtml('form.additional.info'); ?>
+												</ul>
+												<!--<p class="required"><?php echo $this->__('* Required Fields') ?></p>-->
+												<div class="buttons-set">
+													<button type="submit" class="button btn-login" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Login')) ?>" name="send" id="send2"><span><span><?php echo $this->__('Login') ?></span></span></button>
+													<a href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left"><?php echo $this->__('Forgot Your Password?') ?></a>
+												</div>
+												<div class="new-reg">
+													<a href="javascript:;"><?php echo $this->__('Create new account') ?></a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col2-set">
+										<div class="registered-users">
+											
+										</div>
+									</div>
+								</form>
+								<script type="text/javascript">
+								//<![CDATA[
+									var dataForm = new VarienForm('login-form', true);
+								//]]>
+								</script>
+							</div>
+
+						</div>
+						<div class="col-xs-3 social_signin">
+							<a href="javascript:;">
+								<div class="fb_login_btn">
+									Login with Facebook
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+<!--<div class="row">
+	<div class="col-gl-12">
+		<h2 class="customer-login-heading">Sign in</h2>
+	</div>
+</div>
+
+<div class="row">
+
+<div class="col-xs-6 seller_login_block">
+		<div class="row form-heading">
+			<div class="col-xs-9">
+				<h2>Returning Customer</h2>
+			</div>
+			<div class="col-xs-3 seller_social_signin">
+				<img src="<?php echo Mage::getBaseUrl('media'); ?>siteimages/fb-login.png" />
+			</div>
+		</div>
+		<form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form" name="login">
+			
+			<div class="registered-users">
+				<div class="content">
+					
+					<ul class="form-list">
+						<li>
+							<label for="email" class="required"><em>*</em><?php echo $this->__('Email Address') ?></label>
+							<div class="input-box">
+								<input type="text" name="login[username]"  id="email" class="input-text required-entry validate-email" title="<?php echo $this->__('Email Address') ?>" />
+							</div>
+						</li>
+						<li>
+							<label for="pass" class="required"><em>*</em><?php echo $this->__('Password') ?> </label>
+							<div class="input-box">
+								<input type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" />
+							</div>
+						</li>
+						<li class="forget-pass-row">
+							<div class="row">
+								<div class="col-xs-6">
+									<a href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left"><?php 
+	echo $this->__('Forgot Your Password?') ?></a>
+								</div>
+								<div class="col-xs-6" align="right">
+									<div class="input-box">
+										<input type="checkbox" name="is_subscribed" title="Sign Up for Newsletter" value="1" id="is_subscribed" class="checkbox">
+										<label for="is_subscribed" class="is_remember_label">Remember me</label>
+									</div>
+								</div>
+							</div>
+						</li>
+						<?php //echo $this->getChildHtml('form.additional.info'); ?>
+					</ul>
+					
+					<div class="buttons-set">
+						<button type="submit" class="button" title="<?php echo $this->__('Login') ?>" name="send" id="send2"><?php echo $this->__('Login') ?></button>
+					</div>
+				</div>
+			</div>
+			
+		</form>
+
+<div class="account-login">
+    
+    <script type="text/javascript">
+		//<![CDATA[
+		var dataForm = new VarienForm('login-form', true);
+		//]]>
+    </script>
+</div>
+
+</div>-->

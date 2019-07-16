@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Core>
+            <version>0.1.0</version>
+        </Progos_Core>
+    </modules>
+    <global>
+        <models>
+            <progos_core>
+                <class>Progos_Core_Model</class>
+                <resourceModel>core_mysql4</resourceModel>
+            </progos_core>
+            <core>
+                <rewrite>
+                    <email_template_mailer>Progos_Core_Model_Email_Template_Mailer</email_template_mailer>
+                </rewrite>
+            </core>
+        </models>
+    </global>
+</config> 

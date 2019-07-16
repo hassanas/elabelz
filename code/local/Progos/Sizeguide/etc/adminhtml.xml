@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<progossizeguide translate="title" module="sizeguide">
+			<title>Size Guide</title>
+			<sort_order>101</sort_order>               
+			<children>
+				<sizeguide module="sizeguide">
+				<!-- This is how the menu text will be displayed -->
+					<title>Size Guide Manager</title>
+					<sort_order>0</sort_order>
+					<!-- This is the URL of what we want the menu item to link to -->
+					<action>sizeguide/adminhtml_sizeguide</action> <!-- module name/adminhtml/index controller -->
+				</sizeguide>
+			</children>
+		</progossizeguide>
+	</menu>
+	<acl>
+		<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+				<!-- Keep the same naming convention as above -->
+					<Progos_Sizeguide>
+		<!-- This is how the ACL text will be displayed on System > Permissions > Roles > Role > Role Resources -->
+						<title>Size Guide Module</title>
+						<sort_order>11</sort_order>
+					</Progos_Sizeguide>
+					<system>
+						<children>
+							<config>
+								<children>
+									<sizeguide translate="title" module="sizeguide"> 
+										<title>Size Guide Settings</title>
+										<sort_order>101</sort_order>
+									</sizeguide>
+								</children>							
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

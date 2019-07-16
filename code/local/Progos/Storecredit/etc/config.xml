@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--commig-->
+<config>
+    <modules>
+        <Progos_Storecredit>
+            <version>0.1.0</version>
+        </Progos_Storecredit>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <progos_storecredit before="AW_Storecredit">Progos_Storecredit_Adminhtml</progos_storecredit>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <models>
+            <progos_storecredit>
+                <class>Progos_Storecredit_Model</class>
+            </progos_storecredit>
+            <aw_storecredit>
+                <rewrite>
+                    <observer_storecredit>Progos_Storecredit_Model_Observer_Storecredit</observer_storecredit>
+                    <observer_totals>Progos_Storecredit_Model_Observer_Totals</observer_totals>
+                    <sales_order_totals_quote>Progos_Storecredit_Model_Sales_Order_Totals_Quote</sales_order_totals_quote>
+                </rewrite>
+            </aw_storecredit>
+        </models>
+        <blocks>
+            <progos_storecredit>
+                <class>Progos_Storecredit_Block</class>
+            </progos_storecredit>
+            <aw_storecredit>
+                <rewrite>
+                    <frontend_checkout_total>Progos_Storecredit_Block_Frontend_Checkout_Total</frontend_checkout_total>
+                </rewrite>
+            </aw_storecredit>
+        </blocks>
+        <!--Added by Naveed Abbas to rewrite helper 'aw_storecredit/totals' to add a check for mobile api-->
+
+        <helpers>
+            <progos_storecredit>
+                <class>Progos_Storecredit_Helper</class>
+            </progos_storecredit>
+            <aw_storecredit>
+                <rewrite>
+                    <totals>Progos_Storecredit_Helper_Totals</totals>
+                </rewrite>
+            </aw_storecredit>
+        </helpers>
+    </global>
+    <adminhtml>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <progos_add_storecredit_block>
+                        <type>singleton</type>
+                        <class>progos_storecredit/observer_totals</class>
+                        <method>insertStoreCreditBlock</method>
+                    </progos_add_storecredit_block>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
+    </adminhtml>
+    <frontend>
+        <layout>
+            <updates>
+                <progos_storecredit module="Progos_Storecredit">
+                    <file>progos_storecredit.xml</file>
+                </progos_storecredit>
+            </updates>
+        </layout>
+        <!-- <routers>
+            <onestepcheckout>
+                <args>
+                    <modules>
+                        <progos_storecredit before="FacileCheckout_OnestepCheckout">Progos_Storecredit</progos_storecredit>
+                    </modules>
+                </args>
+            </onestepcheckout>
+        </routers> -->
+        <!-- adding event to get final quote @RT -->
+        <events>
+            <sales_quote_collect_totals_after>
+                <observers>
+                    <progos_get_totals_after>
+                        <type>singleton</type>
+                        <class>progos_storecredit/observer_totals</class>
+                        <method>getTotalsAfter</method>
+                    </progos_get_totals_after>
+                </observers>
+            </sales_quote_collect_totals_after>
+        </events>
+    </frontend>
+</config> 

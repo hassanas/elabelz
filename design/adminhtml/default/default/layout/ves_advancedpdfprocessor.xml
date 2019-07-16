@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<default>
+		<reference name="head">
+			<action method="addItem"><type>skin_css</type><name>ves_advancedpdfprocessor/css/styles.css</name></action>
+		</reference>
+	</default>
+    <advancedpdfprocessor_adminhtml_template_index>
+        <reference name="content">
+            <block type="advancedpdfprocessor/adminhtml_template" name="advancedpdfprocessor" />
+        </reference>
+    </advancedpdfprocessor_adminhtml_template_index>
+
+    <pdfpro_cp_adminhtml_key_edit>
+    	<update handle="editor"/>
+        <reference name="head">
+        	<action method="setCanLoadTinyMce"><can_load_tiny_mce>1</can_load_tiny_mce></action>
+        	<action method="addItem"><script>skin_js</script><name>ves_advancedpdfprocessor/js/script.js</name></action>
+        </reference>
+        <reference name="left">
+        	<block type="advancedpdfprocessor/javascript" template="ves_advancedpdfprocessor/javascript.phtml" name="ves_advancedpdfprocessor.javascript" before="-" />
+        </reference>
+	</pdfpro_cp_adminhtml_key_edit>
+	
+	<advancedpdfprocessor_adminhtml_widget_index>
+        <block name="easypdf_wysiwyg_widget" type="advancedpdfprocessor/adminhtml_widget" output="toHtml" />
+    </advancedpdfprocessor_adminhtml_widget_index>
+
+    <advancedpdfprocessor_adminhtml_widget_loadoptions>
+        <block name="easypdf_wysiwyg_widget.options" type="advancedpdfprocessor/adminhtml_widget_options" output="toHtml" />
+    </advancedpdfprocessor_adminhtml_widget_loadoptions>
+</layout>

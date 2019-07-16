@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <modules>
+<Confirmation_Adminhtml>
+     <version>1.0</version>
+</Confirmation_Adminhtml>
+</modules>
+   <global>
+      <blocks>
+        <adminhtml>
+           <rewrite>
+              <sales_order_grid>Confirmation_Adminhtml_Block_Sales_Order_Grid</sales_order_grid>
+           </rewrite>
+        </adminhtml>
+      </blocks>
+    </global>
+</config>

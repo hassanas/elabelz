@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_MirasvitSeo>
+            <version>0.1.0</version>
+        </Progos_MirasvitSeo>
+    </modules>
+    <global>
+        <helpers>
+            <mirasvitseo>
+                <class>Progos_MirasvitSeo_Helper</class>
+            </mirasvitseo>
+            <seo>
+                <rewrite>
+                    <parse>Progos_MirasvitSeo_Helper_Seo_Parse</parse>
+                </rewrite>
+            </seo>
+        </helpers>
+        <models>
+            <mirasvitseo>
+                <class>Progos_MirasvitSeo_Model</class>
+            </mirasvitseo>
+            <seo>
+                <rewrite>
+                    <observer>Progos_MirasvitSeo_Model_Observer</observer>
+                </rewrite>
+            </seo>
+        </models>
+    </global>
+</config> 

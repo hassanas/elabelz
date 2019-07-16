@@ -1,0 +1,113 @@
+<?php
+
+// echo Mage::helper("messaging")->getSession($this->_sessionNamespace)->getCustomerId();
+// var_dump(Mage::helper("messaging")->getSession($this->_sessionNamespace)->getCustomerId());
+// var_dump(Mage::helper("messaging")->isSeller());
+$session = Mage::helper("messaging")->getSession();
+$is_seller = Mage::helper("messaging")->isSeller();
+
+$customer = Mage::helper("messaging")->getCustomer($session->getCustomerId());
+
+// var_dump($customer->getId());
+
+
+?>
+<div class="account-login market_place_managethreads" id="market_place_managethreads">
+    <div class="page-title">
+        <h1 class="managethreads_head"><?php echo $this->__('Message History') ?></h1>
+    </div>
+    <div class="my-account-wrapper">
+        <div class="top_actions">
+
+            <span class="right">
+                
+                <div class="mp_action"><b><?php echo $this->__('Action'); ?> </b>
+                    <select name="multi">
+                        <option name="" value="Select an option"><?php echo $this->__('Select an option'); ?></option>
+                        <option name="delete" value="delete"><?php echo $this->__('Delete'); ?></option>      
+                    </select>
+                    <button type="submit" class="button multi_submit" onclick="document.getElementById('multi_submit').value='1'; " title="<?php echo $this->__('Submit') ?>" name="multi_submit" id="multi_submit" >
+                    <span><span><?php echo $this->__('Submit') ?></span></span></button> 
+                </div>
+
+            </span>   
+            
+        </div>
+    <div class="clear"></div>
+    <form name="multiple_select" id="multiple_select" class="multiple_select" method="post" action="<?php echo $this->getmultiselectUrl(); ?>">
+
+    <div style="clear: both;"></div>       
+<?php
+
+echo $this->getMessagesBlock()->getGroupedHtml(); 
+$threads = $this->getCollection(); 
+$sNo = 1;
+$current_page = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+$getPageSize = $threads->getPageSize();
+if ($current_page >= 2) {
+    $cal_page = ceil($threads->getSize() / $getPageSize); 
+    if ($current_page <= $cal_page) {
+        $sNo = abs(($current_page * $getPageSize) - $getPageSize) + 1;
+    } else {
+        $sNo = abs(($cal_page * $getPageSize) - $getPageSize) + 1;
+    }
+} else {
+    $sNo = 1;
+}
+ ?>
+   <table class="data-table">
+    <col width="50%" />
+    <col width="30%" />
+    <col width="20%" />
+    <col width="0%" />
+    <thead>
+        <tr>
+            <th class="mtext_left"><?php echo $this->__('Conversation subject') ?></th>
+            <th><?php echo $this->__('With') ?></th>
+            <th><?php echo $this->__('Last Message') ?></th>
+            <th class="no-border-right">&nbsp</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <?php if($threads->getSize()): 
+        foreach ($threads as $thread):
+
+            if (Mage::helper("messaging")->isSeller()) {
+                if ($thread->getReadFor()) {
+                    $read_class = "read";
+                } else {
+                    $read_class = "unread";
+                }
+            } else {
+                if ($thread->getReadFrom()) {
+                    $read_class = "read";
+                } else {
+                    $read_class = "unread";
+                }
+            }
+        ?>
+        <tr class="<?php echo $read_class?>">
+            <td><a href="<?php echo Mage::getUrl('messaging/history/show/', array('id' => $thread->getId())); ?>"><?php echo $thread->getName(); ?></a></td>
+            <td><?php 
+                if ($is_seller) {
+                    echo Mage::helper("messaging")->getCustomer($thread->getFrom())->getName();
+                } else {
+                    echo Mage::helper("messaging")->getCustomer($thread->getFor())->getName();
+                }
+            ?></td> 
+            <td><?php echo Mage::helper('messaging')->gtime($thread->getLastActivity()); ?></td> 
+            <td class="last"></td>
+        </tr>
+        <?php $sNo++; 
+        endforeach; ?>
+    </tbody>
+    <?php else: ?>
+    <p><tr class="mtext_center"><td colspan="10" class="no_product_content"><?php echo $this->__('You don\'t have any conversations.'); ?></td></tr></p>
+ <?php endif ?>
+</table>   
+<script type="text/javascript">decorateTable('my-product-table');
+</script>
+   <?php echo $this->getPagerHtml(); ?>
+</div></form></div>
+

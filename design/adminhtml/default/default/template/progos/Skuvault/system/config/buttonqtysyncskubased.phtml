@@ -1,0 +1,24 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function syncQtySkuBased() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrlSkuBased() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                console.log( transport );
+                alert( transport.responseText );
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        This will Run and sync quantity in magento.
+        <br>
+    </span>
+</p>
+

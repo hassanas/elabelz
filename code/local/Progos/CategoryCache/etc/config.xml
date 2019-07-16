@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Progos_CategoryCache>
+            <version>1.0.0</version>
+        </Progos_CategoryCache>
+    </modules>
+    <global>
+        <blocks>
+            <categorycache>
+                <class>Progos_CategoryCache_Block</class>
+            </categorycache>
+            <cms>
+                <rewrite>
+                    <block>Progos_CategoryCache_Block_Cms_Block</block>
+                </rewrite>
+            </cms>
+        </blocks>
+    </global>
+</config>

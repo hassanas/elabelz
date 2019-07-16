@@ -1,0 +1,24 @@
+<?php
+/**
+ * MageWorx
+ * Admin Order Editor extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersEdit
+ * @copyright  Copyright (c) 2016 MageWorx (http://www.mageworx.com/)
+ */
+?>
+<div class="box-left mw_coupons">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-storecredits"><?php echo $this->__('Store Credit Applied') ?></h4>
+        </div>
+        <fieldset class="">
+            <div class="content">
+                <?php if($this->getStoreCredit()): ?>
+                    <p><strong><?php echo $this->escapeHtml($this->getStoreCredit()) ?></strong></p>
+                <?php endif; ?>
+            </div>
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+        <Extendware_EWPGrid>
+        	<extendware>
+	        	<settings>
+	        		<scopes>
+		        		<main>
+							<tabs>
+						        <main translate="label comment ewhelp" module="ewpgrid">
+						            <label>Product Grid</label>
+						            <sort_order>100</sort_order>
+						        </main>
+						    </tabs>
+							<sections>
+								<ewpgrid translate="label comment ewhelp" module="ewpgrid">
+									<class>separator-top</class>
+									<label>General</label>
+									<tab>main</tab>
+									<frontend_type>text</frontend_type>
+									<sort_order>100</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+									<groups>
+										<general translate="label comment ewhelp" module="ewpgrid">
+						                    <label>General</label>
+						                    <frontend_type>text</frontend_type>
+						                    <sort_order>10</sort_order>
+						                    <show_in_default>1</show_in_default>
+						                    <show_in_website>1</show_in_website>
+						                    <show_in_store>1</show_in_store>
+						                    <fields>
+						                        <allowed_edit_modes translate="label comment ewhelp">
+						                            <label>Allowed Edit Modes</label>
+						                            <frontend_type>multiselect</frontend_type>
+						                            <source_model>ewpgrid/adminhtml_config_data_option_editmode</source_model>
+						                            <sort_order>20</sort_order>
+						                            <show_in_default>1</show_in_default>
+						                            <show_in_website>0</show_in_website>
+						                            <show_in_store>0</show_in_store>
+						                            <can_be_empty>1</can_be_empty>
+						                            <comment><![CDATA[Admins may only edit using one of the selected modes. If both are unselected then the grid will be read-only.]]></comment>
+						                        </allowed_edit_modes>
+						                        <validation translate="label comment ewhelp">
+						                            <label>Validation</label>
+						                            <frontend_type>select</frontend_type>
+						                            <source_model>ewcore/adminhtml_config_data_option_enabledisable</source_model>
+						                            <sort_order>30</sort_order>
+						                            <show_in_default>1</show_in_default>
+								                    <show_in_website>1</show_in_website>
+								                    <show_in_store>1</show_in_store>
+								                    <comment>If disabled, then validation will not be called on the product when saved.</comment>
+						                        </validation>
+											</fields>
+						                </general>
+						                <column translate="label comment ewhelp" module="ewpgrid">
+						                    <label>Columns</label>
+						                    <frontend_type>text</frontend_type>
+						                    <sort_order>100</sort_order>
+						                    <show_in_default>1</show_in_default>
+						                    <show_in_website>1</show_in_website>
+						                    <show_in_store>1</show_in_store>
+						                    <fields>
+						                        <read_only_columns translate="label comment ewhelp">
+						                            <label>Read-only Columns</label>
+						                            <frontend_type>multiselect</frontend_type>
+						                            <source_model>ewpgrid/adminhtml_config_data_option_readonlycolumns</source_model>
+						                            <sort_order>1</sort_order>
+						                            <show_in_default>1</show_in_default>
+						                            <show_in_website>0</show_in_website>
+						                            <show_in_store>0</show_in_store>
+						                            <can_be_empty>1</can_be_empty>
+						                            <comment><![CDATA[Any selected columns will not be editable in the grid. Admins will not be able to mark these columns as editable either. Press CTRL + Click to select multiple items.]]></comment>
+						                        </read_only_columns>
+						                        <hidden_columns translate="label comment ewhelp">
+						                            <label>Hidden Columns</label>
+						                            <frontend_type>multiselect</frontend_type>
+						                            <source_model>ewpgrid/adminhtml_config_data_option_hiddencolumns</source_model>
+						                            <sort_order>10</sort_order>
+						                            <show_in_default>1</show_in_default>
+						                            <show_in_website>0</show_in_website>
+						                            <show_in_store>0</show_in_store>
+						                            <can_be_empty>1</can_be_empty>
+						                            <comment><![CDATA[Any selected columns will not be available for display in the grid and admins will not be able to choose them to be displayed. Press CTRL + Click to select multiple items.]]></comment>
+						                        </hidden_columns>
+											</fields>
+						                </column>
+									</groups>
+								</ewpgrid>
+							</sections>
+						</main>
+					</scopes>
+				</settings>
+			</extendware>
+		</Extendware_EWPGrid>
+	</modules>
+</config>

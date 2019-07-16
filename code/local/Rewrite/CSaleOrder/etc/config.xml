@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Rewrite_CSaleOrder>
+            <version>1.0</version>
+        </Rewrite_CSaleOrder>
+    </modules>
+    <global>
+        <!-- <blocks>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view>Rewrite_CSaleOrder_Block_Adminhtml_Sales_Order_View</sales_order_view>
+                </rewrite>
+            </adminhtml>
+        </blocks> -->
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <rewrite_csaleorder before="Aramex_Adminhtml">Rewrite_CSaleOrder_Adminhtml</rewrite_csaleorder>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

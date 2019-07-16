@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_VendorQtyUpdate>
+            <version>0.1.0</version>
+        </Progos_VendorQtyUpdate>
+    </modules>
+    <global>
+        <helpers>
+            <vendorqtyupdate>
+                <class>Progos_VendorQtyUpdate_Helper</class>
+            </vendorqtyupdate>
+        </helpers>
+    </global>
+</config> 

@@ -1,0 +1,96 @@
+<style>
+    .table th {width: 70px;}
+    .txt {padding:5px; width: 97%;}
+</style>
+<div class="entry-edit">
+    <!-- Order Start-->
+    <div class="" style="width: 50%">
+        <div><input name="form_key" value="LS9O0uYbI3bRCocb" type="hidden"></div>
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Order Automate</h4>
+        </div>
+        <fieldset>
+            <table class="table" width="100%" cellpadding="10">
+                <tr>
+                    <th><label for="ec_config_code_head"> Orders#</label></th>
+                    <td><textarea id="orders_number" class="textarea txt" name="orders_number"  ></textarea><span style="color:red">Note: Use incremented Id with ',' separated if want to process multipe orders.</span>  </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right"><input type="button" name="orders_button" value="Process" id="orders_button" /></td>
+                </tr>
+            </table>
+            <table class="table" width="100%" cellpadding="10" id="orders-detail">
+                <thead>
+                <tr>
+                    <th>Order#</th>
+                    <th>Order status</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+    <!-- orders End-->
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery('#orders_button').click(function(){
+            var orders = jQuery('#orders_number').val();
+            var ordersArrayMix = orders.split(",");
+            ordersArray = ordersArrayMix.filter(
+                function(a){if (!this[a]) {this[a] = 1; return a;}},
+                {}
+            );
+            createOrders( ordersArray , orders );
+        });
+
+        jQuery("#orders_number").keypress(function (e) {
+            if(e.which == 13) {
+                var orders = jQuery('#orders_number').val();
+                var ordersArrayMix = orders.split(",");
+                ordersArray = ordersArrayMix.filter(
+                    function(a){if (!this[a]) {this[a] = 1; return a;}},
+                    {}
+                );
+                createOrders( ordersArray , orders );
+            }
+        });
+
+        function createOrders( ordersArray , orders ){
+            if( ordersArray.length > 50 ){
+                alert( "Please add 50 order number Max." );
+                return false;
+            }else if( ordersArray.length < 1 || orders == "" ){
+                alert( "Please add order number. Min 1 order and Max 50 orders." );
+                return false;
+            }else{
+                var i = 0;
+                jQuery('#orders-detail > tbody:last-child').html('');
+                jQuery("#loading-mask").show();
+                processOrder( ordersArray , i );
+            }
+        }
+
+        function processOrder( ordersArray , i ){
+            var ordernumber = ordersArray[i].trim();
+            jQuery('#orders-detail > tbody:last-child').append('<tr class="tr_'+ordernumber+'"><td id="number_'+ordernumber+'">'+ordernumber+'</td><td id="state_'+ordernumber+'">Processing. Please wait.</td></tr>');
+
+            jQuery.ajax({
+                dataType: 'json',
+                data: {order_id:ordernumber},
+                url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/automateorderbackend/processOrders"); ?>",
+                success: function(result){
+                    jQuery('#state_'+ordernumber).html(result.msg);
+                    i++;
+                    if( typeof(ordersArray[i]) !== 'undefined' ){
+                        processOrder( ordersArray , i );
+                    }else{
+                        jQuery("#loading-mask").hide();
+                    }
+                }
+            });
+        }
+    });
+
+</script>

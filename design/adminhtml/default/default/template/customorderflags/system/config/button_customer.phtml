@@ -1,0 +1,32 @@
+<?php
+/**
+* Progos_CustomOrderFlags
+*
+* @category    Progos
+* @package     Progos_CustomOrderFlags
+* @author      Saroop Chand <saroop.chand@progos.org> 22-02-2018
+* @copyright   Copyright (c) 2018 Progos, Ltd (http://progos.org)
+*/
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    function customerSyncButton() {
+        new Ajax.Request('<?php echo $this->getAjaxCheckUrl() ?>', {
+            method:     'get',
+            dataType:   'json',
+            onComplete: function(transport){
+                alert( transport.responseText );
+            }
+        });
+    }
+    //]]>
+</script>
+
+<?php echo $this->getButtonHtml() ?>
+
+<p class="note">
+    <span>
+        Sync Customer Flag from Core Order table to Mageworx Grid Table
+    </span>
+</p>
+

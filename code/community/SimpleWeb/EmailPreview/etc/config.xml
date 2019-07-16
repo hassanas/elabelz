@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * SimpleWeb
+ *
+ * @category    Community
+ * @package     SimpleWeb_EmailPreview
+ * @author		SimpleWeb <support@simpleweb.lv>
+ */
+ -->
+<config>
+	<modules>
+		<SimpleWeb_EmailPreview>
+			<version>0.1.4</version>
+		</SimpleWeb_EmailPreview>
+	</modules>
+	<global>
+		<helpers>
+			<simpleweb_emailpreview>
+				<class>SimpleWeb_EmailPreview_Helper</class>
+			</simpleweb_emailpreview>
+		</helpers>
+		<blocks>
+			<simpleweb_emailpreview>
+				<class>SimpleWeb_EmailPreview_Block</class>
+			</simpleweb_emailpreview>
+		</blocks>
+		<models>
+			<simpleweb_emailpreview>
+				<class>SimpleWeb_EmailPreview_Model</class>
+			</simpleweb_emailpreview>
+		</models>
+		<events>
+			<simpleweb_emailpreview_set_variables>
+				<observers>
+					<simpleweb_emailpreview>
+						<type>singleton</type>
+						<class>simpleweb_emailpreview/observer</class>
+						<method>setVariables</method>
+					</simpleweb_emailpreview>
+				</observers>
+			</simpleweb_emailpreview_set_variables>
+		</events>
+	</global>
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<simpleweb_emailpreview before="Mage_Adminhtml">SimpleWeb_EmailPreview_Adminhtml</simpleweb_emailpreview>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
+	<adminhtml>
+		<layout>
+			<updates>
+				<simpleweb_emailpreview>
+					<file>simpleweb/emailpreview.xml</file>
+				</simpleweb_emailpreview>
+			</updates>
+		</layout>
+	</adminhtml>
+</config>

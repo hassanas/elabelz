@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <monologger_adminhtml_monologger_index>
+	<reference name="content">
+	  <block type="monologger/adminhtml_monologger" name="monologger" />
+	</reference>
+  </monologger_adminhtml_monologger_index>
+</layout>

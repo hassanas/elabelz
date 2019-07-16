@@ -1,0 +1,118 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * @var MageWorx_OrdersSurcharge_Block_Sales_Order_Details $this
+ * @var MageWorx_OrdersSurcharge_Model_Surcharge $surcharge
+ * @var MageWorx_OrdersSurcharge_Helper_Data $helper
+ */
+$order = $this->getOrder();
+$surcharges = $this->getSurcharges();
+$helper = Mage::helper('mageworx_orderssurcharge');
+if ($surcharges->getSize()) {
+?>
+    <div class="order-surcharges">
+        <h2><?php echo $this->__('Surcharges') ?></h2>
+        <table class="data-table" id="orders-surcharge-table">
+            <col width="1" />
+            <col width="500"/>
+            <col width="1" />
+            <col width="1"/>
+            <col width="100" />
+            <thead>
+                <tr class="first last">
+                    <th class="a-center"><span class="nobr"><?php echo $helper->__('#');?></span></th>
+                    <th><span class="nobr"><?php echo $helper->__('Surcharged in order');?></span></th>
+                    <th class="a-right"><?php echo $helper->__('Total');?></th>
+                    <th class="a-center"><?php echo $helper->__('Status');?></th>
+                    <th class="a-center"><?php echo $helper->__('Actions');?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach($surcharges as $surcharge):?>
+                <tr>
+                    <td><?php echo $surcharge->getId();?></td>
+                    <td>
+                        <?php if ($surcharge->getOrderId()) {?>
+                            <a href="<?php echo $this->getUrl('sales/order/view', array('order_id' => $surcharge->getOrderId()));?>">
+                                <?php echo $helper->__('View order #%s', $this->getOrderIncrementId($surcharge->getOrderId()));?>
+                            </a>
+                        <?php } else { ?>
+                            <?php echo $helper->__("The surcharge order doesn't exist yet");?>
+                        <?php } ?>
+                    </td>
+                    <td><?php echo $order->formatPrice($helper->convertBaseToOrderRate($surcharge->getBaseTotal(), $order)); ?></span></td>
+                    <td><?php echo $helper->__($surcharge->getStatusLabel());?></td>
+                    <td class="a-center">
+                        <?php if ($surcharge->canPay()): ?>
+                            <a href="<?php echo $this->getUrl('surcharge/view/process', array('surcharge_id' => $surcharge->getId())); ?>"
+                               class="link-pay"><?php echo $helper->__('Pay') ?></a>
+                        <?php endif; ?>
+                        <?php if ($surcharge->canDelete()): ?>
+                            <?php if ($surcharge->canPay()): ?>
+                                <span class="separator">|</span>
+                            <?php endif; ?>
+                            <a href="<?php echo $this->getUrl('surcharge/view/delete', array('surcharge_id' => $surcharge->getId())); ?>"
+                               class="link-pay"><?php echo $helper->__('Delete') ?></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+<?php } elseif ($order->getSurchargeId()) { ?>
+<div class="order-surcharges">
+    <?php
+    $surcharge = Mage::getModel('mageworx_orderssurcharge/surcharge')->load($order->getSurchargeId());
+    $parentOrder = Mage::getModel('sales/order')->load($surcharge->getParentOrderId());
+    ?>
+    <p><?php
+        $parentOrderLink = '<a href="' . $this->getUrl('sales/order/view', array('order_id' => $parentOrder->getId())) . '">#' . $parentOrder->getIncrementId() . '</a>';
+        echo $this->__('This order is the surcharge for the order %s. See the order for more details.', $parentOrderLink);
+        ?>
+    </p>
+</div>
+<?php } else { ?>
+<div class="order-surcharges">
+    <p><?php echo $this->__('You have no surcharges for this order.'); ?></p>
+</div>
+<?php } ?>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function(){
+        var surchargesBlock = document.getElementsByClassName('order-surcharges');
+        var ordersBlock = document.getElementById('my-orders-table');
+        if (ordersBlock && surchargesBlock && typeof surchargesBlock[0] != 'undefined') {
+            try {
+                ordersBlock.parentNode.insertBefore(surchargesBlock[0], ordersBlock.nextSibling);
+                decorateTable('orders-surcharge-table', {'tbody' : ['odd', 'even'], 'tbody tr' : ['first', 'last']});
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    });
+</script>

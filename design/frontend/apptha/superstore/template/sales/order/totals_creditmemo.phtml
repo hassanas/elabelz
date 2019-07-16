@@ -1,0 +1,61 @@
+<?php $credit_available = $this->getTotalCreditAvailble();
+$credit_return = $this->_creditmemo->getGrandTotal();
+$storeID = $this->getOrder()->getStoreId();
+$store = Mage::app()->getStore($storeID)->getCode();
+$store_code = explode("_",$store);
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+?>
+<?php if ($store_code[0] == "ar"): ?>
+    <tr class="credit_amount">
+        <td <?php echo $this->getLabelProperties();?>>
+            <strong>
+                <?php
+                $credit_return = $this->getOrder()->getStore()->roundPrice($credit_return);
+                echo $this->__($currency_symbol);
+                echo " ".$credit_return ?></strong>
+        </td>
+        <td <?php echo $this->getValueProperties(); ?>>
+            <strong><?php echo $this->__('CREDIT AMOUNT')?></strong>
+        </td>
+    </tr>
+    <tr class="total_credit_amount">
+        <td <?php echo $this->getLabelProperties(); ?>>
+            <strong>
+                <?php
+                $credit_available = $this->getOrder()->getStore()->convertPrice($credit_available);
+                $credit_available = $this->getOrder()->getStore()->roundPrice($credit_available);
+                echo $this->__($currency_symbol);
+                echo " ".$credit_available?> </strong>
+        </td>
+        <td <?php echo $this->getValueProperties(); ?>>
+            <strong><?php echo $this->__('TOTAL CREDIT Available')?></strong>
+        </td>
+    </tr>
+<?php else:?>
+    <tr class="credit_amount">
+        <td <?php echo $this->getLabelProperties(); ?>>
+            <strong><?php echo $this->__('CREDIT AMOUNT')?></strong>
+        </td>
+        <td <?php echo $this->getValueProperties(); ?>>
+            <strong>
+                <?php
+                $credit_return = $this->getOrder()->getStore()->roundPrice($credit_return);
+                echo $this->__($currency_symbol);
+                echo " ".$credit_return ?></strong>
+        </td>
+    </tr>
+    <tr class="total_credit_amount">
+        <td <?php echo $this->getLabelProperties(); ?>>
+            <strong><?php echo $this->__('TOTAL CREDIT Available')?></strong>
+        </td>
+        <td <?php echo $this->getValueProperties(); ?>>
+            <strong>
+                <?php
+                $credit_available = $this->getOrder()->getStore()->convertPrice($credit_available);
+                $credit_available = $this->getOrder()->getStore()->roundPrice($credit_available);
+                echo $this->__($currency_symbol);
+                echo " ".$credit_available?> </strong>
+        </td>
+    </tr>
+<?php endif; ?>
+

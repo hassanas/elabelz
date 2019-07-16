@@ -1,0 +1,15 @@
+<ul class="customer_options header_minicart_wrrapger">
+    <li class="closed" data-nm-hover-toggle="data-nm-hover-toggle">
+        <a href="javascript:void(0)" id="cart_link" title=
+        "<?php echo $this->__('Go to Bag')?>"><i id="cart_count">
+        <?php
+        $_cartQty = Mage::getSingleton('checkout/cart')->getItemsCount();
+        echo $_cartQty;
+        ?>
+        </i><?php echo $this->__('Shopping bag'); ?></a>
+        <div class="hoverToggled" id="cart_review_container">
+        <?php echo $this->getChildHtml('minicart_head');?>
+        </div>
+
+    </li>
+</ul>

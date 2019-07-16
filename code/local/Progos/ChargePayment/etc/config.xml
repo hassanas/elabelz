@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_ChargePayment>
+            <version>0.1.0</version>
+        </Progos_ChargePayment>
+    </modules>
+    <global>
+        <models>
+            <progos_chargepayment>
+                <class>Progos_ChargePayment_Model</class>
+                <resourceModel>progos_chargepayment_resource</resourceModel>
+            </progos_chargepayment>
+            <progos_chargepayment_resource>
+                <class>Progos_ChargePayment_Model_Resource</class>
+            </progos_chargepayment_resource>
+        </models>
+        <blocks>
+            <progos_chargepayment>
+                <class>Progos_ChargePayment_Block</class>
+            </progos_chargepayment>
+        </blocks>
+        <helpers>
+            <progos_chargepayment>
+                <class>Progos_ChargePayment_Helper</class>
+            </progos_chargepayment>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <chargepayment>
+                <args>
+                    <modules>
+                        <progos_chargepayment before="CheckoutApi_ChargePayment">Progos_ChargePayment</progos_chargepayment>
+                    </modules>
+                </args>
+            </chargepayment>
+        </routers>
+    </frontend>
+</config>

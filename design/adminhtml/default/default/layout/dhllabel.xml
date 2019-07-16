@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_dhllabel_dhllabel_index>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_dhllabel" name="dhllabel" />
+        </reference>
+    </adminhtml_dhllabel_dhllabel_index>
+    <adminhtml_dhllabel_dhllabel_intermediate>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_dhllabel" name="intermediate" template="dhllabel/intermediate.phtml" />
+        </reference>
+    </adminhtml_dhllabel_dhllabel_intermediate>
+    <adminhtml_dhllabel_dhllabel_showlabel>
+        <reference name="head">
+            <action method="addJs"><script>rsvp-3.1.0.min.js</script></action>
+            <action method="addJs"><script>sha-256.min.js</script></action>
+            <action method="addJs"><script>qz-tray.js</script></action>
+            <action method="addJs"><script>printer.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_dhllabel" name="showlabel" template="dhllabel/showlabel.phtml"/>
+        </reference>
+    </adminhtml_dhllabel_dhllabel_showlabel>
+    <adminhtml_dhllabel_dhllabel_deletelabel>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_dhllabel" name="deletelabel" template="dhllabel/deletelabel.phtml" />
+        </reference>
+    </adminhtml_dhllabel_dhllabel_deletelabel>
+    <adminhtml_sales_order_shipment_new>
+        <reference name="head">
+            <action method="addJs"><script>infomodus/dhl-add-checkbox.js</script></action>
+        </reference>
+        <reference name="content">
+            <reference name="sales_shipment_create">
+                <reference name="form">
+                    <reference name="order_items">
+                        <update handle="order_items"/>
+                        <action method="setTemplate"><template>dhllabel/sales/order/shipment/create/items.phtml</template></action>
+                    </reference>
+                </reference>
+            </reference>
+        </reference>
+    </adminhtml_sales_order_shipment_new>
+    <adminhtml_sales_order_creditmemo_new>
+        <reference name="content">
+            <reference name="sales_creditmemo_create">
+                <reference name="form">
+                    <reference name="order_items">
+                        <update handle="order_items"/>
+                        <action method="setTemplate"><template>dhllabel/sales/order/creditmemo/create/items.phtml</template></action>
+                    </reference>
+                </reference>
+            </reference>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="order_items">
+            <update handle="order_items"/>
+            <action method="setTemplate"><template>dhllabel/sales/order/creditmemo/create/items.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
+    <adminhtml_dhllabel_account_index>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_account" name="account" />
+        </reference>
+    </adminhtml_dhllabel_account_index>
+    <adminhtml_dhllabel_account_new>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_account_new" name="account_new" />
+        </reference>
+    </adminhtml_dhllabel_account_new>
+    <adminhtml_dhllabel_lists_index>
+        <reference name="head">
+            <action method="addJs"><script>infomodus/rsvp-3.1.0.min.js</script></action>
+            <action method="addJs"><script>infomodus/sha-256.min.js</script></action>
+            <action method="addJs"><script>infomodus/qz-tray.js</script></action>
+            <action method="addJs"><script>infomodus/printer.js</script></action>
+        </reference>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_lists" name="lists"/>
+        </reference>
+    </adminhtml_dhllabel_lists_index>
+    <adminhtml_dhllabel_conformity_index>
+        <reference name="content">
+            <!--multistore-->
+            <block type="adminhtml/store_switcher" name="store_switcher" template="store/switcher.phtml">
+                <action method="setUseConfirm">
+                    <params>0</params>
+                </action>
+            </block>
+            <!--multistore-->
+            <block type="dhllabel/adminhtml_conformity" name="conformity"/>
+        </reference>
+    </adminhtml_dhllabel_conformity_index>
+    <adminhtml_dhllabel_conformity_new>
+        <reference name="content">
+            <block type="dhllabel/adminhtml_conformity_new" name="conformity_new"/>
+        </reference>
+    </adminhtml_dhllabel_conformity_new>
+</layout>

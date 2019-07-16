@@ -1,0 +1,73 @@
+<style>
+    .table th {
+        width: 70px;
+    }
+
+    .txt {
+        padding: 2px;
+        width: 100%;
+    }
+</style>
+<div class="entry-edit">
+
+    <div class="" style="width: 50%">
+        <div><input name="form_key" value="LS9O0uYbI3bRCocb" type="hidden"></div>
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Quick Order Opener</h4>
+        </div>
+        <fieldset>
+            <p><strong>Note: </strong>If pop ups are enabled in current browser then order edit page will open automatically, else you will see a link <strong>View Order</strong> and you have to click it to open order edit page.</p>
+            <table class="table" width="100%" cellpadding="5" cellspacing="5">
+                <tr>
+                    <td valign="top" align="center"><label for="ec_config_code_head"> Order Increment Id: </label></td>
+                    <td valign="top" align="center"><input type="order_increment_id" id="order_increment_id" class="txt"
+                               placeholder="Add order increment id" value="" onkeypress="submitForm(event)"></td>
+                    <td valign="top" align="center"><input type="button" name="open_order" value="View Order" id="open_order"/><br></td>
+                </tr>
+            </table>
+            <a href="" id="newWinLink" style="display: none;" target="_blank">View Order</a>
+        </fieldset>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery('#open_order').click(function () {
+                    var order_increment_id = jQuery('#order_increment_id').val();
+                    if(order_increment_id.trim() != "") {
+                        verifyOrder(order_increment_id);
+                    }else{
+                        jQuery('#order_increment_id').val('');
+                    }
+                });
+                function verifyOrder(order_increment_id) {
+                    jQuery('#open_order').attr('disabled','disabled');
+                    jQuery("#loading-mask").show();
+                    jQuery.ajax({
+                        dataType: 'json',
+                        data: {order_increment_id: order_increment_id},
+                        url: "<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/quickorderbackend/verifyOrder"); ?>",
+                        success: function (result) {
+                            jQuery("#loading-mask").hide();
+                            jQuery('#open_order').removeAttr('disabled');
+                            if (result.status == true) {
+                                var _open = window.open(result.redirectUrl, '_blank');
+                                if (_open == null || typeof(_open)=='undefined') {
+                                    jQuery('#newWinLink').attr('href',result.redirectUrl).show();
+                                }else{
+                                    jQuery('#newWinLink').hide();
+                                }
+                                jQuery('#order_increment_id').val('');
+                            } else {
+                                alert("Incorrect order increment id provided.");
+                                jQuery('#order_increment_id').val('');
+                            }
+                        }
+                    });
+                }
+            });
+            function submitForm(e) {
+                if (e.keyCode == 13) {
+                    jQuery('#open_order').trigger('click');
+                }
+            }
+        </script>
+    </div>
+</div>

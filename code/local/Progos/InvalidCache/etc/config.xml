@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_InvalidCache>
+            <version>1.0</version>
+        </Progos_InvalidCache>
+    </modules>
+    <global>
+        <models>
+            <icache>
+                <class>Progos_InvalidCache_Model</class>
+            </icache>
+        </models>
+    </global>
+    <crontab>
+        <jobs>
+            <invalidcache_autoclear>
+                <schedule><cron_expr>*/2 * * * * </cron_expr></schedule>
+                <run>
+                    <model>icache/observer::clearAllInvalidateCache</model>
+                </run>
+            </invalidcache_autoclear>
+        </jobs>
+    </crontab>
+</config>

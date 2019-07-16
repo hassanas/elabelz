@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Apptha_Catalog>
+            <version>0.1.0</version>
+        </Apptha_Catalog>
+    </modules>
+    <global>
+        <helpers>
+            <apptha_catalog>
+                <class>Apptha_Catalog_Helper</class>
+            </apptha_catalog>
+        </helpers>
+    </global>
+</config>

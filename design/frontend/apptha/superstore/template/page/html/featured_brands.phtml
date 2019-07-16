@@ -1,0 +1,38 @@
+<?php 
+$store = Mage::app()->getStore()->getId();
+$categoryId = $this->getRequest()->getParam('category');
+$show_brands_featured = Mage::getStoreConfig('shopbybrand/brand_list/display_featured_brand', $store);
+
+$logo_width = Mage::getStoreConfig('shopbybrand/brand_list/brand_logo_width',$store);
+$logo_height = Mage::getStoreConfig('shopbybrand/brand_list/brand_logo_height',$store);
+$getBrands = Mage::getResourceModel('shopbybrand/brand_collection')
+        ->setStoreId($store,array('name'))
+        ->setOrder('position_brand','DESC')
+        // ->setOrder('name','ASC')
+        ->addFieldToFilter('is_featured', array('eq' => 1))
+        ->addFieldToFilter('status', array('eq' => 1))
+        ->setPageSize(8);
+$getBrands->getSelect()->order(new Zend_Db_Expr('RAND()'));
+
+$brands = [];
+$temp = [];
+foreach ($getBrands as $row) {
+    $temp["id"] = $row->getId();
+    $temp["name"] = $row->getName();
+    $temp["url"] = $row->getUrlKey();
+    $brands[] = $temp;
+}
+?>
+<p class="title"><?php echo $this->__("Our Top Brands"); ?></p>
+<ul>
+<?php
+if ($show_brands_featured):
+    foreach ($brands as $brand):
+        $brandName = $brand["name"];
+?>
+<li><a onclick="footerMenuTrigger('<?php echo $this->__($brandName)?>')" title="<?php echo $this->__($brand["name"]) ?>" href="<?php echo Mage::getUrl($brand['url']) ?>"><?php echo $this->__($brand["name"]); ?></a></li>
+<?php
+    endforeach;
+endif;
+?>
+</ul>

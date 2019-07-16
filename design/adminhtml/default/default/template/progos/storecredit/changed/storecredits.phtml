@@ -1,0 +1,15 @@
+<?php
+/**
+ * MageWorx
+ * Admin Order Editor extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_OrdersEdit
+ * @copyright  Copyright (c) 2016 MageWorx (http://www.mageworx.com/)
+ */
+?>
+<div class="content store-has-changes">
+    <?php if($this->getStoreCredit()): ?>
+        <p><strong><?php print_r($this->getStoreCredit()) ?></strong></p>
+    <?php endif; ?>
+</div>

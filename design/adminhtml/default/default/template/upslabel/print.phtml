@@ -1,0 +1,9 @@
+<?php
+$imname = $this->getRequest()->getParam('imname');
+$path_url = Mage::getBaseUrl('media'). 'upslabel/label/';
+?>
+
+            <img src="<?php echo $path_url . $imname; ?>" />
+            <script>
+            window.onload = function(){window.print();}
+            </script>

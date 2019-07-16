@@ -1,0 +1,30 @@
+<?php 
+if(Mage::app()->getStore()->getCode() == "ar_ae"):
+echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_uae')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_sa"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_sar')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_qa"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_qat')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_kw"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_kuw')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_us"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_oman')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_bh"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_bhr')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "ar_iq"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_iraq')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_ae"):
+echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_uae')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_sa"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_sar')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_qa"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_qar')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_kw"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_kuw')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_us"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_arabic_oman')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_bh"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_bhr')->toHtml();
+elseif(Mage::app()->getStore()->getCode() == "en_iq"):
+	echo $this->getLayout()->createBlock('cms/block')->setBlockId('system_mobilemenu_english_iraq')->toHtml();
+endif;?>

@@ -1,0 +1,36 @@
+<div id="nw-pro-container" class="product-view" style="display: none;">
+	<div class="product-img-box"><div id="product-gallery-container"><ul class="slides"><li class=" product-image-thumbs" ><a href="javascript:;" title=""><img src="" alt="" /></a></li></ul></div></div>
+	<div class="product-shop">
+		<div class="clear"></div>
+		<div class="product-info-wr">
+			<div class="product-name"><span class="h1"></span></div>
+			<div class="social_block right"><a class="social_block_item" id="social_block_popup"></a><div class="social_share_block" id="social_share_block_popup" style="display: none;"><a target="_blank" class="facebook-btn fa fa-facebook" href="#"></a><a target="_blank" class="pinterest-btn fa fa-pinterest" href="#"></a><a target="_blank" class="twitter-btn fa fa-twitter" href="#"></a><a target="_blank" class="whatsapp-btn fa fa-whatsapp" href="#"></a><a target="_blank" class="email-btn fa fa-envelope" href="#"></a></div></div>
+			<div class="cat-block-full"></div>
+			<div class="detailpage_top_section_price"><div class="topsectionleft"><div class="price-info"><div class="price-box"></div></div></div><div class="extra-info "></div></div>
+			<div class="product-options-block"><!-- Here will be product options and addtocart button --></div>
+			<div class="detailpage_attribute_bottom hide"><div class="ele"><h3><?php echo $this->__('Description'); ?></h3><div class="std"><div class="attribute_description_text"></div></div><h3><?php echo $this->__('Composition & Care') ?></h3><table class="data-table" id="product-attribute-specs-table"><colgroup><col width="25%"><col></colgroup><tbody></tbody></table>
+			</div><a class="showmore-btn-desc" href="javascript:;"><?php echo $this->__('Show More') ?></a>
+		</div>
+	</div>
+</div>
+<!-- NeoWize related and similar products slider -->
+<div class="related-tabs"></div>
+</div>
+<script>
+var _bUrl = '<?php echo $this->getBaseUrl()?>',
+neowizeTitle = '<?php echo $this->__("You might also like"); ?>',
+visenzeTitle = '<?php echo $this->__("Similar Products"); ?>',
+compoShowMoreBtn = '<?php echo $this->__("Show More") ?>',
+compoShowLessBtn = '<?php echo $this->__("Show Less") ?>',
+spsTitle = '<?php echo $this->__("Shop the look") ?>',
+atcart = '<?php echo $this->__("Add to Cart") ?>',
+pMaterial = '<?php echo $this->__("Product Material") ?>',
+sizeOnModel = '<?php echo $this->__("Size On Model") ?>',
+size = '<?php echo $this->__("Size") ?>',
+color = '<?php echo $this->__("Color") ?>',
+sku = '<?php echo $this->__("Sku") ?>',
+manufacturer = '<?php echo $this->__("Manufacturer") ?>',
+careAndInstr = '<?php echo $this->__("Care Instructions") ?>',
+_sUrl = '<?php echo $this->getSkinUrl("/"); ?>',
+outOfStockLabel = '<?php echo $this->__("We regret the requested product is out of stock."); ?>';
+</script>

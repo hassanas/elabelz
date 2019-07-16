@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Retailops>
+            <version>1.0.0</version>
+        </Progos_Retailops>
+    </modules>
+    <global>
+        <models>
+            <retailops_api>
+                <rewrite>
+                    <inventory_api>Progos_Retailops_Model_Inventory_Api</inventory_api>
+                </rewrite>
+            </retailops_api>
+        </models>
+    </global>
+</config>

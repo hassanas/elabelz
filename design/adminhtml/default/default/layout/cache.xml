@@ -1,0 +1,17 @@
+<layout version="0.1.0">
+    <adminhtml_catalog_category_edit>
+        <reference name="content">
+            <block name="category.cache"  type="adminhtml/catalog_category_edit" template="cache/js.phtml" />
+        </reference>
+    </adminhtml_catalog_category_edit>
+    <adminhtml_catalog_product_index>
+        <reference name="content">
+            <block name="category.cache"  type="adminhtml/catalog_product" template="cache/js.phtml" />
+        </reference>
+    </adminhtml_catalog_product_index>
+    <adminhtml_shopbybrand_brand_index>
+        <reference name="content">
+            <block name="brand.cache"  type="shopbybrand/adminhtml_brand" template="cache/js.phtml" />
+        </reference>
+    </adminhtml_shopbybrand_brand_index>
+</layout>

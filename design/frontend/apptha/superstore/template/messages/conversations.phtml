@@ -1,0 +1,20 @@
+<?php 
+
+$messagesbuyer = $this->showunreadbuyerMessages();
+$messagesseller = $this->showunreadsellerMessages();
+echo $messagesbuyer->count() + $messagesseller->count();
+
+$threads = $this->loadbuyerThreadnew();     
+foreach($threads as $thread):
+	$threadid = $thread['thread_id'];?>
+	  <a href="<?php echo $this->getnewUrl($threadid); ?>"><?php echo $thread['name']; ?></a>
+	   <a href="<?php echo $this->getdelbuyer($threadid);?>">Delete</a><br/> 
+	<?php endforeach; ?>
+
+<?php 
+$threadseller = $this->loadsellerThreadnew();
+foreach($threadseller as $threads):
+	$threadid = $threads['thread_id'];?>
+       <a href="<?php echo $this->getnewUrl($threadid); ?>"><?php echo $threads['name']; ?></a>
+	   <a href="<?php echo $this->getdelseller($threadid);?>">Delete</a><br/>
+	<?php endforeach; ?>

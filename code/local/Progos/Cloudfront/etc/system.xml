@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <progos_cloudfront_settings  translate="label" module="progos_cloudfront">
+            <label>CloudFront Url Head</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>0</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <progos_cloudfront translate="label">
+                    <label>Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <url translate="label">
+                            <label>CloudFront URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>CloudFront URL change in Head file.</comment>
+                        </url>
+                    </fields>
+                </progos_cloudfront>
+            </groups>
+        </progos_cloudfront_settings>
+    </sections>
+</config>

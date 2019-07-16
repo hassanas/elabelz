@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_AjaxAddToCart>
+            <version>0.1.0</version>
+        </Progos_AjaxAddToCart>
+    </modules>
+    <global>
+        <helpers>
+            <progos_ajaxaddtocart>
+                <class>Progos_AjaxAddToCart_Helper</class>
+            </progos_ajaxaddtocart>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <checkout>
+                <args>
+                    <modules>
+                        <apptha_checkout before="Mage_Checkout">Progos_AjaxAddToCart</apptha_checkout>
+                    </modules>
+                </args>
+            </checkout>
+        </routers>
+    </frontend>
+</config>

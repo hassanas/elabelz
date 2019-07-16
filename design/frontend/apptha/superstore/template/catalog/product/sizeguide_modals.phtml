@@ -1,0 +1,1025 @@
+<?php
+/**
+*	Size guide Modals start
+*
+* 	british knights	- 1123
+*	havaianas	- 1135
+*	skechers	- 1420
+*	adidas		- 1869
+*	puma		- 1839
+*	nike		- 1316
+*	reebok		- 1654
+*	under armour- 1816
+*	BRANDBLACK	- 2220
+*	LACOSTE		- 2098
+*	Anta 		- 2129
+*	PALLADIUM	- 2066
+*
+*/
+$_session = Mage::getSingleton("core/session",  array("name"=>"frontend"));
+$_size = $_session->getData("sizeGuideModal");
+
+$_product = Mage::registry("current_product");
+$manufacturer = strtolower($_product->getAttributeText('manufacturer'));
+$_manufacturerId = $_product->getManufacturer();
+?>
+<?php if ($_size=='#women_clothing') {  ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel" data-brand="<?php echo $manufacturer; ?>">
+						<?php
+							if ($_manufacturerId=='1316') {
+								echo $this->__('Nike') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1816') {
+								echo $this->__('Under Armour') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1654') {
+								echo $this->__('Reebok') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1839') {
+							 	echo $this->__('Puma') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1869') {
+							 	echo $this->__('Adidas') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1420') {
+							 	echo $this->__('Skechers') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1123') {
+						 		echo $this->__('British Knights') . ' ' . $this->__('Size Guide');
+						 	} else if ($_manufacturerId=='1135') {
+						 		echo $this->__('Havaianas') . ' ' . $this->__('Size Guide');
+							} else {
+								echo $this->__('Women Clothing');
+							}
+							?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info women_clothing" style="display: block;">
+							<div class="row">
+								<div class="column full_width" id="women_size_guide_tabs">
+									<div class="myTabs Htabs">
+										<ul>
+											<li class="one_half">
+												<a title="women-clothing" class="active" data-target="women-clothing" href=""> <?php echo $this->__('Clothing'); ?></a>
+											</li>
+											<li class="one_half">
+												<a class="" title="abaya" data-target="abaya" href=""> <?php echo $this->__('Abaya'); ?>  </a>
+											</li>
+
+										</ul>
+									</div>
+									<div class="myTab_container Htab_container">
+										<div class="tab_info women-clothing " style="display: block">
+
+										<?php if ($_manufacturerId=='1316') { ?>
+										<table class="table table-hover table-striped"><thead>
+											<tr>
+											<th scope="row"><?php echo $this->__('International'); ?></th>
+											<th class="fs_12px">XS</th>
+											<th class="fs_12px">S</th>
+											<th class="fs_12px">M</th>
+											<th class="fs_12px">L</th>
+											<th class="fs_12px">XL</th>
+											<th class="fs_12px">2XL</th>
+											</tr>
+											</thead>
+											<tbody>
+											<tr class="odd">
+											<th scope="row"><?php echo $this->__('UK'); ?></th>
+											<td>4-6</td>
+											<td>8-10</td>
+											<td>12-14</td>
+											<td>16-18</td>
+											<td>20-22</td>
+											<td>24-26</td>
+											</tr>
+											</tbody>
+											</table>
+											<?php } else { ?>
+												<table class="table table-hover table-striped">
+												<thead>
+													<tr><th rowspan="2"><?php echo $this->__('Size'); ?></th><th rowspan="2"><?php echo $this->__('UK'); ?></th><th colspan="2"><?php echo $this->__('Bust'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th><th colspan="2"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead>
+
+													<tbody><tr class="odd"><td><?php echo $this->__('XS'); ?></td><td>6</td><td>31</td><td>78.5</td><td>23.75</td><td>60.5</td><td>33.75</td><td>86</td></tr><tr><td>S</td><td>8</td><td>32</td><td>81</td><td>24.75</td><td>63</td><td>34.75</td><td>88.5</td></tr><tr class="odd"><td>M</td><td>10</td><td>34</td><td>86</td><td>26.75</td><td>68</td><td>36.75</td><td>93.5</td></tr><tr><td>L</td><td>12</td><td>36</td><td>91</td><td>28.75</td><td>73</td><td>38.75</td><td>98.5</td></tr><tr class="odd"><td>XL</td><td>14</td><td>38</td><td>96</td><td>30.75</td><td>78</td><td>40.75</td><td>103.5</td></tr><tr><td>2XL</td><td>16</td><td>40</td><td>101</td><td>32.75</td><td>83</td><td>42.75</td><td>108.5</td></tr></tbody>
+												</table>
+												<?php } ?>
+											</div>
+
+											<div class="tab_info abaya abaya_size_guide_table display_none" style="display:none">
+												<table class="table table-hover table-striped"><thead><tr><th> <?php echo $this->__('Size'); ?></th><th><?php echo $this->__('Length'); ?></th><th><?php echo $this->__('Bust'); ?></th><th><?php echo $this->__('Hips'); ?></th></tr></thead><tbody><tr class="odd"><td><?php echo $this->__('XS'); ?></td><td>54</td><td>40</td><td>44</td></tr><tr><td><?php echo $this->__('S'); ?></td><td>56</td><td>42</td><td>46</td></tr><tr class="odd"><td> <?php echo $this->__('M'); ?></td><td>58</td><td>44</td><td>48</td></tr><tr><td> <?php echo $this->__('L'); ?></td><td>60</td><td>48</td><td>52</td></tr><tr class="odd"><td> <?php echo $this->__('XL'); ?></td><td>62</td><td>48</td><td>52</td></tr><tr><td> <?php echo $this->__('XXL'); ?></td><td>64</td><td>50</td><td>54</td></tr></tbody></table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#women_shoes' || $_size=='#women_kids') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_shoes">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4
+							class="modal-title"
+							id="myModalLabel"
+							data-brand="<?php echo $manufacturer; ?>"
+						>
+							<?php
+								$bIDs = array('3145', '2778', '3124', '3175', '2140', '1316', '1816', '1654', '1839', '1869', '1420', '1123', '1135', '2066', '2098', '2066', '2129', '3034', '3027', '3024', '3023', '3022', '2981', '2977', '2978', '2980', '2849');
+								if (in_array($_manufacturerId, $bIDs)) {
+									echo $_product->getAttributeText('manufacturer') . ' ' . $this->__('Size Guide');
+								} else {
+									echo $this->__('Women Shoes');
+								}
+							?>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info">
+							<?php if ($_manufacturerId=='1316') { ?>
+
+							<table class="table"><thead><tr><th style="width:33.33%"> <?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"> <td class="txt_in_center">34.5</td><td class="txt_in_center">4</td><td class="txt_in_center">1.5</td></tr><tr><td class="txt_in_center">35</td><td class="txt_in_center">4.5</td><td class="txt_in_center">2</td></tr><tr class="odd"><td class="txt_in_center">35.5</td><td class="txt_in_center">5</td><td class="txt_in_center">2.5</td></tr><tr><td class="txt_in_center">36</td><td class="txt_in_center">5.5</td><td class="txt_in_center">3</td></tr><tr class="odd"><td class="txt_in_center">36.5</td><td class="txt_in_center">6</td><td class="txt_in_center">3.5</td></tr><tr><td class="txt_in_center">37.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">4</td></tr><tr class="odd"><td class="txt_in_center">38</td><td class="txt_in_center">7</td><td class="txt_in_center">4.5</td></tr><tr><td class="txt_in_center">38.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5</td></tr><tr class="odd"><td class="txt_in_center">39</td><td class="txt_in_center">8</td><td class="txt_in_center">5.5</td></tr><tr><td class="txt_in_center">40</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6</td></tr><tr class="odd"> <td class="txt_in_center">40.5</td><td class="txt_in_center">9</td><td class="txt_in_center">6.5</td></tr><tr><td class="txt_in_center">41</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7</td></tr><tr class="odd"><td class="txt_in_center">42</td><td class="txt_in_center">10</td><td class="txt_in_center">7.5</td></tr><tr><td class="txt_in_center">42.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">8</td></tr><tr class="odd"><td class="txt_in_center">43</td><td class="txt_in_center">11</td><td class="txt_in_center">8.5</td></tr><tr><td class="txt_in_center">44</td><td class="txt_in_center">11.5</td><td class="txt_in_center">9</td></tr><tr class="odd"><td class="txt_in_center">45</td><td class="txt_in_center">12.5</td><td class="txt_in_center">10</td></tr><tr><td class="txt_in_center">46</td><td class="txt_in_center">13.5</td><td class="txt_in_center">11</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1816') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">35.5</td></tr><tr> <td class="txt_in_center">5.5</td><td class="txt_in_center">3</td><td class="txt_in_center">36</td></tr><tr class="odd"> <td class="txt_in_center">6</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36.5</td></tr><tr> <td class="txt_in_center">6.5</td><td class="txt_in_center">4</td><td class="txt_in_center">37.5</td></tr><tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">4.5</td><td class="txt_in_center">38</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">5</td><td class="txt_in_center">38.5</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">5.5</td><td class="txt_in_center">39</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">6</td><td class="txt_in_center">40</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40.5</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">7</td><td class="txt_in_center">41</td></tr><tr class="odd"> <td class="txt_in_center">10</td><td class="txt_in_center">7.5</td><td class="txt_in_center">42</td></tr><tr> <td class="txt_in_center">10.5</td><td class="txt_in_center">8</td><td class="txt_in_center">42.5</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1654') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">35</td></tr><tr> <td class="txt_in_center">5.5</td><td class="txt_in_center">3</td><td class="txt_in_center">35.5</td></tr><tr class="odd"> <td class="txt_in_center">6</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36</td></tr><tr> <td class="txt_in_center">6.5</td><td class="txt_in_center">4</td><td class="txt_in_center">37</td></tr><tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">4.5</td><td class="txt_in_center">37.5</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">5</td><td class="txt_in_center">38</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">5.5</td><td class="txt_in_center">38.5</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">6</td><td class="txt_in_center">39</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">7</td><td class="txt_in_center">40.5</td></tr><tr class="odd"> <td class="txt_in_center">10</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41</td></tr><tr> <td class="txt_in_center">10.5</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1839') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">4</td><td class="txt_in_center">37</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">4.5</td><td class="txt_in_center">37.5</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">5</td><td class="txt_in_center">38</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">5.5</td><td class="txt_in_center">38.5</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">6</td><td class="txt_in_center">39</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">7</td><td class="txt_in_center">40.5</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1869') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">5</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36</td></tr><tr> <td class="txt_in_center">5.5</td><td class="txt_in_center">4</td><td class="txt_in_center">36 2/3</td></tr><tr class="odd"> <td class="txt_in_center">6</td><td class="txt_in_center">4.5</td><td class="txt_in_center">37 1/3</td></tr><tr> <td class="txt_in_center">6.5</td><td class="txt_in_center">5</td><td class="txt_in_center">38</td></tr><tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">5.5</td><td class="txt_in_center">38 2/3</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">6</td><td class="txt_in_center">39 1/3</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">7</td><td class="txt_in_center">40 2/3</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41 1/3</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1420') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">5</td><td class="txt_in_center">2</td><td class="txt_in_center">35</td></tr><tr> <td class="txt_in_center">5.5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">35.5</td></tr><tr class="odd"> <td class="txt_in_center">6</td><td class="txt_in_center">3</td><td class="txt_in_center">36</td></tr><tr> <td class="txt_in_center">6.5</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36.5</td></tr><tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">4</td><td class="txt_in_center">37</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">4.5</td><td class="txt_in_center">37.5</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">5</td><td class="txt_in_center">38</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">38.5</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">6</td><td class="txt_in_center">39</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">39.5</td></tr><tr class="odd"> <td class="txt_in_center">10</td><td class="txt_in_center">7</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">10.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">40.5</td></tr><tr class="odd"> <td class="txt_in_center">11</td><td class="txt_in_center">8</td><td class="txt_in_center">41</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1123') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">36</td><td class="txt_in_center"> 3  </td><td class="txt_in_center">4</td></tr><tr> <td class="txt_in_center">37</td><td class="txt_in_center">4</td><td class="txt_in_center">5</td></tr><tr class="odd"> <td class="txt_in_center">38</td><td class="txt_in_center"> 5  </td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">39</td><td class="txt_in_center">5.5</td><td class="txt_in_center">6.5</td></tr><tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">6</td><td class="txt_in_center"> 7 </td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">6.5</td><td class="txt_in_center">7.5</td></tr><tr class="odd"> <td class="txt_in_center">41</td><td class="txt_in_center">7</td><td class="txt_in_center">  8 </td></tr><tr> <td class="txt_in_center">42</td><td class="txt_in_center">8</td><td class="txt_in_center"> 9 </td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center"> 9 </td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10</td><td class="txt_in_center">11</td></tr><tr class="odd"> <td class="txt_in_center">45</td><td class="txt_in_center">11</td><td class="txt_in_center">12 </td></tr><tr> <td class="txt_in_center">46</td><td class="txt_in_center">12</td><td class="txt_in_center">13 </td></tr><tr> <td class="txt_in_center">47</td><td class="txt_in_center">13</td><td class="txt_in_center">14</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='1135') { ?>
+
+								<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EUR'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('Brazil'); ?></th><th><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">37-38</td><td class="txt_in_center">4-5</td><td class="txt_in_center">35-36</td><td class="txt_in_center">22.5</td></tr><tr><td class="txt_in_center">39-40</td><td class="txt_in_center">6</td><td class="txt_in_center">37-38</td><td class="txt_in_center">24.5</td></tr><tr class="odd"><td class="txt_in_center">41-42</td><td class="txt_in_center">7-8</td><td class="txt_in_center">39-40</td><td class="txt_in_center">26</td></tr><tr><td class="txt_in_center">43-44</td><td class="txt_in_center">9</td><td class="txt_in_center">41-42</td><td class="txt_in_center">27.5</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='2098') { ?>
+
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">35.1-2</td><td class="txt_in_center">5</td><td class="txt_in_center">3</td></tr><tr> <td class="txt_in_center">36</td><td class="txt_in_center">5.1-2</td><td class="txt_in_center">3.1-2</td></tr><tr class="odd"> <td class="txt_in_center">37</td><td class="txt_in_center">6</td><td class="txt_in_center">4</td></tr><tr> <td class="txt_in_center">37.1-2</td><td class="txt_in_center">6.1-2</td><td class="txt_in_center">4.1-2</td></tr><tr class="odd"> <td class="txt_in_center">38</td><td class="txt_in_center">7</td><td class="txt_in_center">5</td></tr><tr> <td class="txt_in_center">39</td><td class="txt_in_center">7.1-2</td><td class="txt_in_center">5.1-2</td></tr><tr class="odd"> <td class="txt_in_center">39.1-2</td><td class="txt_in_center">8</td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">8.1-2</td><td class="txt_in_center">6.1-2</td></tr><tr class="odd"> <td class="txt_in_center">40.1-2</td><td class="txt_in_center">9</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">41</td><td class="txt_in_center">9.1-2</td><td class="txt_in_center">7.1-2</td></tr><tr class="odd"> <td class="txt_in_center">42</td><td class="txt_in_center">10</td><td class="txt_in_center">8</td></tr><tr> <td class="txt_in_center">42.1-2</td><td class="txt_in_center">10.1-2</td><td class="txt_in_center">8.1-2</td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center">11</td><td class="txt_in_center">9</td></tr></tbody></table>
+							<?php } else if ($_manufacturerId=='2066') { ?>
+
+								<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('USA'); ?></th><th><?php echo $this->__('CM'); ?></th><th><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('EUR'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">4.5</td><td class="txt_in_center">21.5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">35</td></tr><tr><td class="txt_in_center">5</td><td class="txt_in_center">22</td><td class="txt_in_center">3</td><td class="txt_in_center">35.5</td></tr><tr class="odd"><td class="txt_in_center">5.5</td><td class="txt_in_center">22.5</td><td class="txt_in_center">3.5</td><td class="txt_in_center">36</td></tr><tr><td class="txt_in_center">6</td><td class="txt_in_center">23</td><td class="txt_in_center">4</td><td class="txt_in_center">37</td></tr><tr class="odd"><td class="txt_in_center">6.5</td><td class="txt_in_center">23.5</td><td class="txt_in_center">4.5</td><td class="txt_in_center">37.5</td></tr><tr><td class="txt_in_center">7</td><td class="txt_in_center">24</td><td class="txt_in_center">5</td><td class="txt_in_center">38</td></tr><tr class="odd"><td class="txt_in_center">7.5</td><td class="txt_in_center">24.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">39</td></tr><tr><td class="txt_in_center">8</td><td class="txt_in_center">25</td><td class="txt_in_center">6</td><td class="txt_in_center">39.5</td></tr><tr class="odd"><td class="txt_in_center">8.5</td><td class="txt_in_center">25.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr><td class="txt_in_center">9</td><td class="txt_in_center">26</td><td class="txt_in_center">7</td><td class="txt_in_center">41</td></tr><tr class="odd"><td class="txt_in_center">9.5</td><td class="txt_in_center">26.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41.5</td></tr><tr><td class="txt_in_center">10</td><td class="txt_in_center">27</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr class="odd"><td class="txt_in_center">11</td><td class="txt_in_center">28</td><td class="txt_in_center">9</td><td class="txt_in_center">43</td></tr><tr><td class="txt_in_center">12</td><td class="txt_in_center">29</td><td class="txt_in_center">10</td><td class="txt_in_center">44.5</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='2129') { ?>
+
+								<table width="359" class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('Foot Length Ã¯Â¼Ë†mm)'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">35.5</td><td class="txt_in_center">5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">220.31</td></tr><tr> <td class="txt_in_center">36</td><td class="txt_in_center">5.5</td><td class="txt_in_center">3</td><td class="txt_in_center">224.54</td></tr><tr class="odd"> <td class="txt_in_center">36.5</td><td class="txt_in_center">6</td><td class="txt_in_center">3.5</td><td class="txt_in_center">228.77</td></tr><tr> <td class="txt_in_center">37.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">4</td><td class="txt_in_center">233</td></tr><tr class="odd"> <td class="txt_in_center">38</td><td class="txt_in_center">7</td><td class="txt_in_center">4.5</td><td class="txt_in_center">237.23</td></tr><tr> <td class="txt_in_center">38.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5</td><td class="txt_in_center">241.46</td></tr><tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">8</td><td class="txt_in_center">5.5</td><td class="txt_in_center">245.69</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6</td><td class="txt_in_center">249.92</td></tr><tr class="odd"> <td class="txt_in_center">41</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7</td><td class="txt_in_center">254.15</td></tr></tbody></table>
+							<?php } else if ($_manufacturerId=='3034' || $_manufacturerId=='3027' || $_manufacturerId=='3024' || $_manufacturerId=='3023' || $_manufacturerId=='3022' || $_manufacturerId=='2981' || $_manufacturerId=='2977' || $_manufacturerId=='2978'  || $_manufacturerId=='2980') { ?>
+								<table class="table">
+									<thead>
+										<tr>
+											<th style="width:33.33%"><?php echo $this->__('UK'); ?></th>
+											<th><?php echo $this->__('US'); ?></th>
+											<th><?php echo $this->__('EU'); ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="odd">
+											<td class="txt_in_center">3</td>
+											<td class="txt_in_center">5</td>
+											<td class="txt_in_center">36</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">4</td>
+											<td class="txt_in_center">6</td>
+											<td class="txt_in_center">37</td>
+										</tr>
+										<tr class="odd">
+											<td class="txt_in_center">5</td>
+											<td class="txt_in_center">7</td>
+											<td class="txt_in_center">38</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">6</td>
+											<td class="txt_in_center">8</td>
+											<td class="txt_in_center">39</td>
+										</tr>
+										<tr class="odd">
+											<td class="txt_in_center">7</td>
+											<td class="txt_in_center">9</td>
+											<td class="txt_in_center">40</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">8</td>
+											<td class="txt_in_center">10</td>
+											<td class="txt_in_center">41</td>
+										</tr>
+									</tbody>
+								</table>
+							<?php } else if ($_manufacturerId=='3145' || $_manufacturerId=='2778' || $_manufacturerId=='2849') { ?>
+								<!-- Miss AJ - Adda - FOREVER 21 -->
+								<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('EU'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">3</td><td class="txt_in_center">5</td><td class="txt_in_center">36</td></tr><tr><td class="txt_in_center">3.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">36.5</td></tr><tr class="odd"><td class="txt_in_center">4</td><td class="txt_in_center">6</td><td class="txt_in_center">37</td></tr><tr><td class="txt_in_center">4.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">37.5</td></tr><tr class="odd"><td class="txt_in_center">5</td><td class="txt_in_center">7</td><td class="txt_in_center">38</td></tr><tr><td class="txt_in_center">5.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">38.5</td></tr><tr><td class="txt_in_center">6</td><td class="txt_in_center">8</td><td class="txt_in_center">39</td></tr><tr><td class="txt_in_center">6.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">39.5</td></tr><tr><td class="txt_in_center">7</td><td class="txt_in_center">9</td><td class="txt_in_center">40</td></tr><tr><td class="txt_in_center">7.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">40.5</td></tr><tr><td class="txt_in_center">8</td><td class="txt_in_center">10</td><td class="txt_in_center">41</td></tr></tbody></table>
+							<?php } else if ($_manufacturerId=='2140' || $_manufacturerId=='3175' || $_manufacturerId=='3124') { ?>
+								<!-- Ramarim - Petite Jolie - Piccadilly -->
+								<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('EU'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">3</td><td class="txt_in_center">5</td><td class="txt_in_center">36</td></tr><tr class="odd"><td class="txt_in_center">4</td><td class="txt_in_center">6</td><td class="txt_in_center">37</td></tr><tr class="odd"><td class="txt_in_center">5</td><td class="txt_in_center">7</td><td class="txt_in_center">38</td></tr><tr><td class="txt_in_center">6</td><td class="txt_in_center">8</td><td class="txt_in_center">39</td></tr><tr><td class="txt_in_center">7</td><td class="txt_in_center">9</td><td class="txt_in_center">40</td></tr><tr><td class="txt_in_center">8</td><td class="txt_in_center">10</td><td class="txt_in_center">41</td></tr></tbody></table>
+							<?php } else { ?>
+								<table class="table table-hover table-striped"><thead> <tr> <th style="width:33.33%"><?php echo $this->__('EU'); ?></th> <th><?php echo $this->__('US'); ?></th> <th><?php echo $this->__('UK'); ?></th> </tr></thead><tbody> <tr class="odd"> <td class="txt_in_center">35</td><td class="txt_in_center">5</td><td class="txt_in_center">2.5</td></tr><tr> <td class="txt_in_center">35.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">2.5</td></tr><tr class="odd"> <td class="txt_in_center">36</td><td class="txt_in_center">6</td><td class="txt_in_center">3.5</td></tr><tr> <td class="txt_in_center">37</td><td class="txt_in_center">6.5</td><td class="txt_in_center">4</td></tr><tr class="odd"> <td class="txt_in_center">37.5</td><td class="txt_in_center">7</td><td class="txt_in_center">4.5</td></tr><tr> <td class="txt_in_center">38</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5</td></tr><tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">8</td><td class="txt_in_center">5.5</td></tr><tr> <td class="txt_in_center">39.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6</td></tr><tr class="odd"> <td class="txt_in_center">40</td><td class="txt_in_center">9</td><td class="txt_in_center">6.5</td></tr><tr> <td class="txt_in_center">40.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7</td></tr><tr class="odd"> <td class="txt_in_center">41</td><td class="txt_in_center">10</td><td class="txt_in_center">7.5</td></tr><tr> <td class="txt_in_center">42</td><td class="txt_in_center">10.5</td><td class="txt_in_center">8</td></tr></tbody></table>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#men_shoes') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper men_shoes">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel" data-brand="<?php echo $manufacturer; ?>">
+							<?php
+							if(isset($manufacturer)) {
+									if ($_manufacturerId=='1316') {
+										echo $this->__('Nike') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='1816') {
+									 	echo $this->__('Under Armour') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='1654') {
+									 	echo $this->__('Reebok') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='1839') {
+									 	echo $this->__('Puma') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='1869') {
+									 	echo $this->__('Adidas') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='1420') {
+									 	echo $this->__('Skechers') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='1123') {
+								 		echo $this->__('British Knights') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='1135') {
+								 		echo $this->__('Havaianas') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='2066') {
+										echo $this->__('Palladium') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2220') {
+								 		echo $this->__('BRANDBLACK') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2098') {
+						 				echo $this->__('LACOSTE') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='2066') {
+										echo $this->__('Palladium') . ' ' . $this->__('Size Guide');
+									} else if ($_manufacturerId=='2129') {
+										echo $this->__('Anta') . ' ' . $this->__('Size Guide');
+
+								 	} else if ($_manufacturerId=='3034') {
+								 		echo $this->__('NO DOUBT') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='3027') {
+								 		echo $this->__('Glossy') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='3024') {
+								 		echo $this->__('Krush') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='3023') {
+								 		echo $this->__('Vintage') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='3022') {
+								 		echo $this->__('Milli') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2981') {
+								 		echo $this->__('Chic') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2977') {
+								 		echo $this->__('TRUFFLE COLLECTION') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2978') {
+								 		echo $this->__('Style') . ' ' . $this->__('Size Guide');
+								 	} else if ($_manufacturerId=='2980') {
+								 		echo $this->__('KOI') . ' ' . $this->__('Size Guide');
+
+									} else {
+										echo $this->__('Men Shoes');
+									}
+								}
+							?>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info">
+
+					<?php
+
+					if(isset($manufacturer)) {
+						if ($_manufacturerId=='1316') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">38.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">4.5</td></tr><tr> <td class="txt_in_center">39</td><td class="txt_in_center">6</td><td class="txt_in_center">5</td></tr><tr class="odd"> <td class="txt_in_center">39.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">5.5</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">7</td><td class="txt_in_center">6</td></tr><tr class="odd"> <td class="txt_in_center">40.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td></tr><tr> <td class="txt_in_center">41</td><td class="txt_in_center">8</td><td class="txt_in_center">7</td></tr><tr class="odd"> <td class="txt_in_center">41.5</td><td class="txt_in_center">8</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">42</td><td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td></tr><tr class="odd"> <td class="txt_in_center">42.5</td><td class="txt_in_center">9</td><td class="txt_in_center">8</td></tr><tr> <td class="txt_in_center">43</td><td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td></tr><tr class="odd"> <td class="txt_in_center">43.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10</td><td class="txt_in_center">9</td></tr><tr> <td class="txt_in_center">44.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td></tr><tr> <td class="txt_in_center">45</td><td class="txt_in_center">11</td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">45.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">10.5</td></tr><tr> <td class="txt_in_center">46</td><td class="txt_in_center">12</td><td class="txt_in_center">11</td></tr><tr> <td class="txt_in_center">47</td><td class="txt_in_center">12.5</td><td class="txt_in_center">11.5</td></tr><tr> <td class="txt_in_center">47.5</td><td class="txt_in_center">13</td><td class="txt_in_center">12</td></tr><tr> <td class="txt_in_center">48</td><td class="txt_in_center">13.5</td><td class="txt_in_center">12.5</td></tr><tr> <td class="txt_in_center">48.5</td><td class="txt_in_center">14</td><td class="txt_in_center">13</td></tr><tr> <td class="txt_in_center">49</td><td class="txt_in_center">14.5</td><td class="txt_in_center">13.5</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1816') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">6</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40.5</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">7</td><td class="txt_in_center">41</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">42</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">8</td><td class="txt_in_center">42.5</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">43</td></tr><tr class="odd"> <td class="txt_in_center">10</td><td class="txt_in_center">9</td><td class="txt_in_center">44</td></tr><tr> <td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44.5</td></tr><tr class="odd"> <td class="txt_in_center">11</td><td class="txt_in_center">10</td><td class="txt_in_center">45</td></tr><tr> <td class="txt_in_center">11.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45.5</td></tr><tr class="odd"> <td class="txt_in_center">12</td><td class="txt_in_center">11</td><td class="txt_in_center">46</td></tr><tr> <td class="txt_in_center">12.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">47</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1654') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">7</td><td class="txt_in_center">6</td><td class="txt_in_center">39</td></tr><tr> <td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr class="odd"> <td class="txt_in_center">8</td><td class="txt_in_center">7</td><td class="txt_in_center">40.5</td></tr><tr> <td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41</td></tr><tr class="odd"> <td class="txt_in_center">9</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr> <td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">42.5</td></tr><tr class="odd"> <td class="txt_in_center">10</td><td class="txt_in_center">9</td><td class="txt_in_center">43</td></tr><tr> <td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44</td></tr><tr class="odd"> <td class="txt_in_center">11</td><td class="txt_in_center">10</td><td class="txt_in_center">44.5</td></tr><tr> <td class="txt_in_center">11.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45</td></tr><tr class="odd"> <td class="txt_in_center">12</td><td class="txt_in_center">11</td><td class="txt_in_center">45.5</td></tr><tr> <td class="txt_in_center">12.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">46</td></tr><tr class="odd"> <td class="txt_in_center">13</td><td class="txt_in_center">12</td><td class="txt_in_center">47</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1839') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">6</td><td class="txt_in_center">39</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">7</td><td class="txt_in_center">40.5</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">8.5</td><td class="txt_in_center">42.5</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">9</td><td class="txt_in_center">43</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">10</td><td class="txt_in_center">44.5</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45</td></tr><tr> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">11</td><td class="txt_in_center">46</td></tr><tr class="odd"> <td class="txt_in_center">&nbsp;</td><td class="txt_in_center">12</td><td class="txt_in_center">47</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1869') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">6.5</td><td class="txt_in_center">6</td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">7</td><td class="txt_in_center">6.5</td><td class="txt_in_center">6.5</td></tr><tr class="odd"> <td class="txt_in_center">7.5</td><td class="txt_in_center">7</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">8</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41 1/3</td></tr><tr class="odd"> <td class="txt_in_center">8.5</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr> <td class="txt_in_center">9</td><td class="txt_in_center">8.5</td><td class="txt_in_center">42 2/3</td></tr><tr class="odd"> <td class="txt_in_center">9.5</td><td class="txt_in_center">9</td><td class="txt_in_center">43 1/3</td></tr><tr> <td class="txt_in_center">10</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44</td></tr><tr class="odd"> <td class="txt_in_center">10.5</td><td class="txt_in_center">10</td><td class="txt_in_center">44 2/3</td></tr><tr> <td class="txt_in_center">11</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45 1/3</td></tr><tr class="odd"> <td class="txt_in_center">11.5</td><td class="txt_in_center">11</td><td class="txt_in_center">46</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1420') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('EUR'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">6.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">39</td></tr><tr> <td class="txt_in_center">7</td><td class="txt_in_center">6</td><td class="txt_in_center">39.5</td></tr><tr class="odd"> <td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr> <td class="txt_in_center">8</td><td class="txt_in_center">7</td><td class="txt_in_center">41</td></tr><tr class="odd"> <td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41.5</td></tr><tr> <td class="txt_in_center">9</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr class="odd"> <td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">42.5</td></tr><tr> <td class="txt_in_center">10</td><td class="txt_in_center">9</td><td class="txt_in_center">43</td></tr><tr class="odd"> <td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44</td></tr><tr> <td class="txt_in_center">11</td><td class="txt_in_center">10</td><td class="txt_in_center">45</td></tr><tr class="odd"> <td class="txt_in_center">11.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45.5</td></tr><tr> <td class="txt_in_center">12</td><td class="txt_in_center">11</td><td class="txt_in_center">46</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1123') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">36</td><td class="txt_in_center"> 3  </td><td class="txt_in_center">4</td></tr><tr> <td class="txt_in_center">37</td><td class="txt_in_center">4</td><td class="txt_in_center">5</td></tr><tr class="odd"> <td class="txt_in_center">38</td><td class="txt_in_center"> 5  </td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">39</td><td class="txt_in_center">5.5</td><td class="txt_in_center">6.5</td></tr><tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">6</td><td class="txt_in_center"> 7 </td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">6.5</td><td class="txt_in_center">7.5</td></tr><tr class="odd"> <td class="txt_in_center">41</td><td class="txt_in_center">7</td><td class="txt_in_center">  8 </td></tr><tr> <td class="txt_in_center">42</td><td class="txt_in_center">8</td><td class="txt_in_center"> 9 </td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center"> 9 </td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10</td><td class="txt_in_center">11</td></tr><tr class="odd"> <td class="txt_in_center">45</td><td class="txt_in_center">11</td><td class="txt_in_center">12 </td></tr><tr> <td class="txt_in_center">46</td><td class="txt_in_center">12</td><td class="txt_in_center">13 </td></tr><tr> <td class="txt_in_center">47</td><td class="txt_in_center">13</td><td class="txt_in_center">14</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1135') { ?>
+
+							<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EUR'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('Brazil'); ?></th><th><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">41-42</td><td class="txt_in_center">7-8</td><td class="txt_in_center">39-40</td><td class="txt_in_center">26</td></tr><tr><td class="txt_in_center">43-44</td><td class="txt_in_center">9</td><td class="txt_in_center">41-42</td><td class="txt_in_center">27.5</td></tr><tr class="odd"><td class="txt_in_center">45-46</td><td class="txt_in_center">10-11</td><td class="txt_in_center">43-44</td><td class="txt_in_center">28.5</td></tr><tr><td class="txt_in_center">47-48</td><td class="txt_in_center">12</td><td class="txt_in_center">45-46</td><td class="txt_in_center">29.5</td></tr><tr><td class="txt_in_center">49-50</td><td class="txt_in_center">13</td><td class="txt_in_center">47-48</td><td class="txt_in_center">31</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='2220') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">6.5</td></tr><tr> <td class="txt_in_center">39H</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">7.5</td></tr><tr> <td class="txt_in_center">41</td><td class="txt_in_center">8</td></tr><tr> <td class="txt_in_center">41H</td><td class="txt_in_center">8.5</td></tr><tr> <td class="txt_in_center">42</td><td class="txt_in_center">9</td></tr><tr> <td class="txt_in_center">42H</td><td class="txt_in_center">9.5</td></tr><tr> <td class="txt_in_center">43</td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10.5</td></tr><tr> <td class="txt_in_center">45</td><td class="txt_in_center">11</td></tr><tr> <td class="txt_in_center">45H</td><td class="txt_in_center">11.5</td></tr><tr> <td class="txt_in_center">46</td><td class="txt_in_center">12</td></tr><tr> <td class="txt_in_center">47</td><td class="txt_in_center">12.5</td></tr><tr> <td class="txt_in_center">47.5</td><td class="txt_in_center">13</td></tr><tr> <td class="txt_in_center">48</td><td class="txt_in_center">13.5</td></tr><tr> <td class="txt_in_center">48.5</td><td class="txt_in_center">14</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='2098') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">39.1-2</td><td class="txt_in_center">7</td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">7.1-2</td><td class="txt_in_center">6.1-2</td></tr><tr class="odd"> <td class="txt_in_center">40.1-2</td><td class="txt_in_center">8</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">41</td><td class="txt_in_center">8.1-2</td><td class="txt_in_center">7.1-2</td></tr><tr class="odd"> <td class="txt_in_center">42</td><td class="txt_in_center">9</td><td class="txt_in_center">8</td></tr><tr> <td class="txt_in_center">42.1-2</td><td class="txt_in_center">9.1-2</td><td class="txt_in_center">8.1-2</td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center">10</td><td class="txt_in_center">9</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10.1-2</td><td class="txt_in_center">9.1-2</td></tr><tr class="odd"> <td class="txt_in_center">44.1-2</td><td class="txt_in_center">11</td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">45</td><td class="txt_in_center">11.1-2</td><td class="txt_in_center">10.1-2</td></tr><tr class="odd"> <td class="txt_in_center">46</td><td class="txt_in_center">12</td><td class="txt_in_center">11</td></tr><tr> <td class="txt_in_center">46.1-2</td><td class="txt_in_center">12.1-2</td><td class="txt_in_center">11.1-2</td></tr><tr> <td class="txt_in_center">47</td><td class="txt_in_center">13</td><td class="txt_in_center">12</td></tr><tr> <td class="txt_in_center">48</td><td class="txt_in_center">14</td><td class="txt_in_center">13</td></tr><tr> <td class="txt_in_center">49</td><td class="txt_in_center">15</td><td class="txt_in_center">14</td></tr><tr> <td class="txt_in_center">50</td><td class="txt_in_center">16</td><td class="txt_in_center">15</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='2066') { ?>
+
+							<table width="359" class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('USA'); ?></th><th><?php echo $this->__('CM'); ?></th><th><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('EUR'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">6.5</td><td class="txt_in_center">24.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">39</td></tr><tr><td class="txt_in_center">7</td><td class="txt_in_center">25</td><td class="txt_in_center">6</td><td class="txt_in_center">39.5</td></tr><tr class="odd"><td class="txt_in_center">7.5</td><td class="txt_in_center">25.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">40</td></tr><tr><td class="txt_in_center">8</td><td class="txt_in_center">26</td><td class="txt_in_center">7</td><td class="txt_in_center">41</td></tr><tr class="odd"><td class="txt_in_center">8.5</td><td class="txt_in_center">26.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">41.5</td></tr><tr><td class="txt_in_center">9</td><td class="txt_in_center">27</td><td class="txt_in_center">8</td><td class="txt_in_center">42</td></tr><tr class="odd"><td class="txt_in_center">9.5</td><td class="txt_in_center">27.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">42.5</td></tr><tr><td class="txt_in_center">10</td><td class="txt_in_center">28</td><td class="txt_in_center">9</td><td class="txt_in_center">43</td></tr><tr class="odd"><td class="txt_in_center">10.5</td><td class="txt_in_center">28.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">44</td></tr><tr><td class="txt_in_center">11</td><td class="txt_in_center">29</td><td class="txt_in_center">10</td><td class="txt_in_center">44.5</td></tr><tr class="odd"><td class="txt_in_center">11.5</td><td class="txt_in_center">29.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">45</td></tr><tr><td class="txt_in_center">12</td><td class="txt_in_center">30</td><td class="txt_in_center">11</td><td class="txt_in_center">46</td></tr><tr class="odd"><td class="txt_in_center">12.5</td><td class="txt_in_center">30.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">46.5</td></tr><tr><td class="txt_in_center">13</td><td class="txt_in_center">31</td><td class="txt_in_center">12</td><td class="txt_in_center">47</td></tr><tr class="odd"><td class="txt_in_center">14</td><td class="txt_in_center">32</td><td class="txt_in_center">13</td><td class="txt_in_center">49</td></tr><tr><td class="txt_in_center">15</td><td class="txt_in_center">32.5</td><td class="txt_in_center">14</td><td class="txt_in_center">50</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='2129') { ?>
+
+							<table width="359" class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> <th> <?php echo $this->__('Foot Length Ã¯Â¼Ë†mm)'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">6.5</td><td class="txt_in_center">6</td><td class="txt_in_center">242.31</td></tr><tr> <td class="txt_in_center">40</td><td class="txt_in_center">7</td><td class="txt_in_center">6.5</td><td class="txt_in_center">246.54</td></tr><tr class="odd"> <td class="txt_in_center">40.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">250.77</td></tr><tr> <td class="txt_in_center">41</td><td class="txt_in_center">8</td><td class="txt_in_center">7 </td><td class="txt_in_center">255</td></tr><tr class="odd"> <td class="txt_in_center">42</td><td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">259.23</td></tr><tr> <td class="txt_in_center">42.5</td><td class="txt_in_center">9</td><td class="txt_in_center">8</td><td class="txt_in_center">263.46</td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">267.69</td></tr><tr> <td class="txt_in_center">44</td><td class="txt_in_center">10</td><td class="txt_in_center">9</td><td class="txt_in_center">276.15</td></tr><tr class="odd"> <td class="txt_in_center">45</td><td class="txt_in_center">11</td><td class="txt_in_center">10</td><td class="txt_in_center">280.38</td></tr><tr> <td class="txt_in_center">46</td><td class="txt_in_center">12</td><td class="txt_in_center">11</td><td class="txt_in_center">288.84</td></tr></tbody></table>
+						<?php } else if ($_manufacturerId=='3034' || $_manufacturerId=='3027' || $_manufacturerId=='3024' || $_manufacturerId=='3023' || $_manufacturerId=='3022' || $_manufacturerId=='2981' || $_manufacturerId=='2977' || $_manufacturerId=='2978'  || $_manufacturerId=='2980') { ?>
+								<table class="table">
+									<thead>
+										<tr>
+											<th style="width:33.33%"><?php echo $this->__('UK'); ?></th>
+											<th><?php echo $this->__('US'); ?></th>
+											<th><?php echo $this->__('EU'); ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="odd">
+											<td class="txt_in_center">3</td>
+											<td class="txt_in_center">5</td>
+											<td class="txt_in_center">36</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">4</td>
+											<td class="txt_in_center">6</td>
+											<td class="txt_in_center">37</td>
+										</tr>
+										<tr class="odd">
+											<td class="txt_in_center">5</td>
+											<td class="txt_in_center">7</td>
+											<td class="txt_in_center">38</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">6</td>
+											<td class="txt_in_center">8</td>
+											<td class="txt_in_center">39</td>
+										</tr>
+										<tr class="odd">
+											<td class="txt_in_center">7</td>
+											<td class="txt_in_center">9</td>
+											<td class="txt_in_center">40</td>
+										</tr>
+										<tr>
+											<td class="txt_in_center">8</td>
+											<td class="txt_in_center">10</td>
+											<td class="txt_in_center">41</td>
+										</tr>
+									</tbody>
+								</table>
+						<?php } else { ?>
+
+							<table class="table">
+								<thead> <tr> <th style="width:33.33%"><?php echo $this->__('EU'); ?></th> <th><?php echo $this->__('US'); ?></th> <th><?php echo $this->__('UK'); ?></th> </tr></thead>
+								<tbody> <tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">7</td><td class="txt_in_center">5</td></tr><tr> <td class="txt_in_center">39.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5.5</td></tr><tr class="odd"> <td class="txt_in_center">40</td><td class="txt_in_center">8</td><td class="txt_in_center">6</td></tr><tr> <td class="txt_in_center">40.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6.5</td></tr><tr class="odd"> <td class="txt_in_center">41</td><td class="txt_in_center">9</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">41.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7.5</td></tr><tr class="odd"> <td class="txt_in_center">42</td><td class="txt_in_center">10</td><td class="txt_in_center">8</td></tr><tr> <td class="txt_in_center">42.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">8.5</td></tr><tr class="odd"> <td class="txt_in_center">43</td><td class="txt_in_center">11</td><td class="txt_in_center">9</td></tr><tr> <td class="txt_in_center">43.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">9.5</td></tr><tr class="odd"> <td class="txt_in_center">44</td><td class="txt_in_center">12</td><td class="txt_in_center">10</td></tr><tr> <td class="txt_in_center">44.5</td><td class="txt_in_center">12.5</td><td class="txt_in_center">10.5</td></tr><tr class="odd"> <td class="txt_in_center">45</td><td class="txt_in_center">13</td><td class="txt_in_center">11</td></tr><tr> <td class="txt_in_center">45.5</td><td class="txt_in_center">13.5</td><td class="txt_in_center">11.5</td></tr><tr class="odd"> <td class="txt_in_center">46</td><td class="txt_in_center">14</td><td class="txt_in_center">12</td></tr> </tbody>
+							</table>
+
+						<?php } }?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#men_clothing') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper">
+			<div class="modal-dialog vertical-align-center men_clothing">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Men Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<!-- tab start -->
+						<div class="row">
+							<div id="men_size_guide_tabs" class="column full_width">
+								<div class="myTabs Htabs">
+									<ul>
+										<li class="one_forth_half">
+											<a href="" data-target="men_tops" class="active" title="Tops"> <?php echo $this->__('Tops'); ?> </a>
+										</li>
+										<li class="one_forth_half">
+											<a href="" data-target="men_trousers" title="Trousers" class=""> <?php echo $this->__('Trousers'); ?> </a>
+										</li>
+										<li class="one_forth_half">
+											<a href="" data-target="men_jackets" title="Jackets" class=""> <?php echo $this->__('Jackets'); ?> </a>
+										</li>
+										<li class="one_forth_half">
+											<a href="" data-target="men_shorts" title="Shorts" class=""> <?php echo $this->__('Shorts'); ?> </a>
+										</li>
+									</ul>
+								</div>
+								<div class="myTab_container Htab_container">
+									<div class="tab_info men_tops" style="display: block;">
+										<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Chest'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>32-34</td><td>81-86</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>34-36</td><td>86-91</td></tr><tr class="odd"><td>S</td><td>36-38</td><td>91-96</td></tr><tr><td>M</td><td>38-40</td><td>96-101</td></tr><tr class="odd"><td>L</td><td>40-42</td><td>101-106</td></tr><tr><td>XL</td><td>42-44</td><td>106-111</td></tr><tr class="odd"><td>2XL</td><td>44-46</td><td>111-116</td></tr></tbody></table>
+									</div>
+									<div class="tab_info men_trousers display_none" style="display: none;">
+										<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>26"</td><td>26</td><td>66</td></tr><tr><td>28"</td><td>28</td><td>71</td></tr><tr class="odd"><td>30"</td><td>30</td><td>76</td></tr><tr><td>31"</td><td>31</td><td>78.5</td></tr><tr class="odd"><td>32"</td><td>32</td><td>81</td></tr><tr><td>33"</td><td>33</td><td>83.5</td></tr><tr class="odd"><td>34"</td><td>34</td><td>86</td></tr><tr><td>36"</td><td>36</td><td>91</td></tr><tr class="odd"><td>38"</td><td>38</td><td>96</td></tr></tbody></table>
+									</div>
+									<div class="tab_info men_jackets display_none" style="display: none;">
+										<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Chest'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>32-34</td><td>81-86</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>34-36</td><td>86-91</td></tr><tr class="odd"><td>S</td><td>36-38</td><td>91-96</td></tr><tr><td>M</td><td>38-40</td><td>96-101</td></tr><tr class="odd"><td>L</td><td>40-42</td><td>101-106</td></tr><tr><td>XL</td><td>42-44</td><td>106-111</td></tr><tr class="odd"><td>2XL</td><td>44-46</td><td>111-116</td></tr></tbody></table>
+									</div>
+									<div class="tab_info men_shorts display_none" style="display: none;">
+										<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>26-28</td><td>66-71</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>28-30</td><td>71-76</td></tr><tr class="odd"><td>S</td><td>30-32</td><td>76-81</td></tr><tr><td>M</td><td>32-34</td><td>81-86</td></tr><tr class="odd"><td>L</td><td>34-36</td><td>86-91</td></tr><tr><td>XL</td><td>36-38</td><td>91-96</td></tr><tr class="odd"><td>2XL</td><td>38-40</td><td>96-101</td></tr></tbody></table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- tab end -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php } else if ($_size=='#kids_clothing') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Kids Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+
+						<div id="kids_clothing_size_guide_tabs" class="tab_info kids_clothing" style="display: block;">
+							<div class="myTabs Htabs hide_border">
+								<ul>
+									<li class="one_forth_half">
+										<a href="" data-target="kids_clothing_babies" class="" title="Babies"> <?php echo $this->__('Babies'); ?> </a>
+									</li>
+									<li class="one_forth_half">
+										<a href="" data-target="kids_clothing_children" title="Children" class="active"> <?php echo $this->__('Children'); ?> </a>
+									</li>
+									<li class="one_forth_half">
+										<a href="" data-target="kids_clothing_teen_boys" title="Teen Boys" class=""> <?php echo $this->__('Teen Boys'); ?> </a>
+									</li>
+									<li class="one_forth_half">
+										<a href="" data-target="kids_clothing_teen_girls" title="Teen Girls" class=""> <?php echo $this->__('Teen Girls'); ?> </a>
+									</li>
+								</ul>
+							</div>
+							<div class="myTab_container Htab_container">
+								<div class="tab_info kids_clothing_babies hide_border" style="display: none;">
+									<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">Tiny Baby</td><td>16-17</td><td>16-17</td><td>16-17</td></tr><tr><td>Newborn</td><td>17-17.7</td><td>17-17.7</td><td>17-17.7</td></tr><tr class="odd"><td>0-3m</td><td>17.7-18.5</td><td>17.7-18.5</td><td>17.7-18.5</td></tr><tr><td>3m-6m</td><td>18.5-19.3</td><td>18-19</td><td>18.5-19.3</td></tr><tr class="odd"><td>6m-9m</td><td>19.3-20</td><td>18.5-19.3</td><td>19.3-20</td></tr><tr><td>9m-12m</td><td>20-21</td><td>19-19.17</td><td>20-21</td></tr><tr class="odd"><td>12m-18m</td><td>20.5-21.3</td><td>19.3-20</td><td>21-22</td></tr><tr><td>18m-24m</td><td>21-21.7</td><td>19.7-20.5</td><td>21-22</td></tr></tbody></table>
+								</div>
+								<div class="tab_info kids_clothing_children display_none hide_border" style="display: block;">
+									<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>2-3y</td><td>21.3-22</td><td>20-21</td><td>21.7-22.8</td></tr><tr><td>3-4y</td><td>21.7-22.4</td><td>20.5-21.3</td><td>22.5-23.6</td></tr><tr class="odd"><td>4-5y</td><td>22-22.8</td><td>21-21.7</td><td>23.2-24.5</td></tr><tr><td>5-6y</td><td>22.4-23.2</td><td>21.3-22</td><td>24-25.2</td></tr><tr class="odd"><td>6-7y</td><td>22.8-24.4</td><td>21.7-22.8</td><td>24.8-26.4</td></tr><tr><td>7-8y</td><td>24-25.6</td><td>22.5-23.2</td><td>26-27.6</td></tr><tr class="odd"><td>8-9y</td><td>25.2-26.8</td><td>22.8-24</td><td>27.2-28.7</td></tr><tr><td>9-10y</td><td>26.4-28</td><td>23.6-24.5</td><td>28.3-30</td></tr><tr class="odd"><td>10-11y</td><td>27.6-29</td><td>24-25.2</td><td>29.5-31</td></tr></tbody></table>
+								</div>
+								<div class="tab_info kids_clothing_teen_boys display_none hide_border" style="display: none;">
+									<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>11-12y</td><td>28.7-30.3</td><td>24.8-25.6</td><td>31-32.7</td></tr><tr><td><span>12-13y</span></td><td>30-31.5</td><td>25.2-26.4</td><td>32.3-34.3</td></tr><tr class="odd"><td><span>13-14y</span></td><td>31-32.7</td><td>26-26.8</td><td>33.9-35.4</td></tr><tr><td><span>14-15y</span></td><td>32.3-34</td><td>26.4-27.6</td><td>35-37</td></tr><tr class="odd"><td><span>15-16y</span></td><td>33.5-35</td><td>27.2-28</td><td>36.6-38.2</td></tr><tr><td><span>From 16y</span></td><td>34.6-36.2</td><td>27.6-28.7</td><td>37.8-39.8</td></tr><tr class="odd"><td><span>From 16y</span></td><td>35.8-37.4</td><td>28.3-29.5</td><td>39.4-41.3</td></tr></tbody></table>
+								</div>
+								<div class="tab_info kids_clothing_teen_girls display_none hide_border" style="display: none;">
+									<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>11-12y</td><td>28.7-30.3</td><td>24.8-25.4</td><td>30.7-32.3</td></tr><tr><td><span>12-13y</span></td><td>30-31.5</td><td>26-27.2</td><td>31.9-33.5</td></tr><tr class="odd"><td><span>13-14y</span></td><td>31-32.7</td><td>26.8-28</td><td>33.1-34.6</td></tr><tr><td><span>14-15y</span></td><td>32.3-34</td><td>27.6-28.7</td><td>34.3-35.8</td></tr><tr class="odd"><td><span>15-16y</span></td><td>33.5-35</td><td>29.5-29.1</td><td>35.4-37</td></tr><tr><td><span>From 16y</span></td><td>34.6-36.2</td><td>29.1-30.7</td><td>36.6-38.2</td></tr><tr class="odd"><td><span>From 16y</span></td><td>35.8-37.4</td><td>30.3-31.9</td><td>37.8-39.4</td></tr></tbody></table>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php } else if ($_size=='#kids_clothing_boys_teenboys') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Teen Boys Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_clothing_teen_boys hide_border">
+							<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>11-12y</td><td>28.7-30.3</td><td>24.8-25.6</td><td>31-32.7</td></tr><tr><td><span>12-13y</span></td><td>30-31.5</td><td>25.2-26.4</td><td>32.3-34.3</td></tr><tr class="odd"><td><span>13-14y</span></td><td>31-32.7</td><td>26-26.8</td><td>33.9-35.4</td></tr><tr><td><span>14-15y</span></td><td>32.3-34</td><td>26.4-27.6</td><td>35-37</td></tr><tr class="odd"><td><span>15-16y</span></td><td>33.5-35</td><td>27.2-28</td><td>36.6-38.2</td></tr><tr><td><span>From 16y</span></td><td>34.6-36.2</td><td>27.6-28.7</td><td>37.8-39.8</td></tr><tr class="odd"><td><span>From 16y</span></td><td>35.8-37.4</td><td>28.3-29.5</td><td>39.4-41.3</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#kids_clothing_girls_teengirls') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Teen Girls Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_clothing_teen_girls display_none hide_border">
+							<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td  class="txt_in_center">11-12y</td><td  class="txt_in_center">28.7-30.3</td><td  class="txt_in_center">24.8-25.4</td><td  class="txt_in_center">30.7-32.3</td></tr><tr><td  class="txt_in_center"><span>12-13y</span></td><td  class="txt_in_center">30-31.5</td><td  class="txt_in_center">26-27.2</td><td  class="txt_in_center">31.9-33.5</td></tr><tr class="odd"><td  class="txt_in_center"><span>13-14y</span></td><td  class="txt_in_center">31-32.7</td><td  class="txt_in_center">26.8-28</td><td  class="txt_in_center">33.1-34.6</td></tr><tr><td  class="txt_in_center"><span>14-15y</span></td><td  class="txt_in_center">32.3-34</td><td  class="txt_in_center">27.6-28.7</td><td  class="txt_in_center">34.3-35.8</td></tr><tr class="odd"><td  class="txt_in_center"><span>15-16y</span></td><td  class="txt_in_center">33.5-35</td><td  class="txt_in_center">29.5-29.1</td><td  class="txt_in_center">35.4-37</td></tr><tr><td  class="txt_in_center"><span>From 16y</span></td><td  class="txt_in_center">34.6-36.2</td><td  class="txt_in_center">29.1-30.7</td><td  class="txt_in_center">36.6-38.2</td></tr><tr class="odd"><td  class="txt_in_center"><span>From 16y</span></td><td  class="txt_in_center">35.8-37.4</td><td  class="txt_in_center">30.3-31.9</td><td  class="txt_in_center">37.8-39.4</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#kids_clothing_children') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Children Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_clothing_children hide_border">
+							<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td  class="txt_in_center">2-3y</td><td  class="txt_in_center">21.3-22</td><td  class="txt_in_center">20-21</td><td  class="txt_in_center">21.7-22.8</td></tr><tr><td  class="txt_in_center">3-4y</td><td  class="txt_in_center">21.7-22.4</td><td  class="txt_in_center">20.5-21.3</td><td  class="txt_in_center">22.5-23.6</td></tr><tr class="odd"><td  class="txt_in_center">4-5y</td><td  class="txt_in_center">22-22.8</td><td  class="txt_in_center">21-21.7</td><td  class="txt_in_center">23.2-24.5</td></tr><tr><td  class="txt_in_center">5-6y</td><td  class="txt_in_center">22.4-23.2</td><td  class="txt_in_center">21.3-22</td><td  class="txt_in_center">24-25.2</td></tr><tr class="odd"><td  class="txt_in_center">6-7y</td><td  class="txt_in_center">22.8-24.4</td><td  class="txt_in_center">21.7-22.8</td><td  class="txt_in_center">24.8-26.4</td></tr><tr><td  class="txt_in_center">7-8y</td><td  class="txt_in_center">24-25.6</td><td  class="txt_in_center">22.5-23.2</td><td  class="txt_in_center">26-27.6</td></tr><tr class="odd"><td  class="txt_in_center">8-9y</td><td  class="txt_in_center">25.2-26.8</td><td  class="txt_in_center">22.8-24</td><td  class="txt_in_center">27.2-28.7</td></tr><tr><td  class="txt_in_center">9-10y</td><td  class="txt_in_center">26.4-28</td><td  class="txt_in_center">23.6-24.5</td><td  class="txt_in_center">28.3-30</td></tr><tr class="odd"><td  class="txt_in_center">10-11y</td><td  class="txt_in_center">27.6-29</td><td  class="txt_in_center">24-25.2</td><td  class="txt_in_center">29.5-31</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#kids_clothing_babies') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Babies Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_clothing_babies hide_border">
+							<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">Tiny Baby</td><td  class="txt_in_center">16-17</td><td  class="txt_in_center">16-17</td><td  class="txt_in_center">16-17</td></tr><tr><td  class="txt_in_center">Newborn</td><td  class="txt_in_center">17-17.7</td><td  class="txt_in_center">17-17.7</td><td  class="txt_in_center">17-17.7</td></tr><tr class="odd"><td  class="txt_in_center">0-3m</td><td  class="txt_in_center">17.7-18.5</td><td  class="txt_in_center">17.7-18.5</td><td  class="txt_in_center">17.7-18.5</td></tr><tr><td  class="txt_in_center">3m-6m</td><td  class="txt_in_center">18.5-19.3</td><td  class="txt_in_center">18-19</td><td  class="txt_in_center">18.5-19.3</td></tr><tr class="odd"><td  class="txt_in_center">6m-9m</td><td  class="txt_in_center">19.3-20</td><td  class="txt_in_center">18.5-19.3</td><td  class="txt_in_center">19.3-20</td></tr><tr><td  class="txt_in_center">9m-12m</td><td  class="txt_in_center">20-21</td><td  class="txt_in_center">19-19.17</td><td  class="txt_in_center">20-21</td></tr><tr class="odd"><td  class="txt_in_center">12m-18m</td><td  class="txt_in_center">20.5-21.3</td><td  class="txt_in_center">19.3-20</td><td  class="txt_in_center">21-22</td></tr><tr><td  class="txt_in_center">18m-24m</td><td  class="txt_in_center">21-21.7</td><td  class="txt_in_center">19.7-20.5</td><td  class="txt_in_center">21-22</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#kids_shoes') { ?>
+
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper men_shoes">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel">
+							<?php
+							if ($_manufacturerId=='1316') {
+								echo $this->__('Nike') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1135') {
+								echo $this->__('Havaianas') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='2066') {
+								echo $this->__('Palladium') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='2129') {
+						 		echo $this->__('Anta') . ' ' . $this->__('Size Guide');
+							} else {
+								echo $this->__('Kids Shoes');
+							}
+							?>
+						</h4>
+					</div>
+					<div class="modal-body">
+						<!-- shoes container -->
+						<div id="kids_shoes_size_guide_tabs" class="tab_info kids_shoes">
+
+							<?php if ($_manufacturerId=='1316') { ?>
+
+								<div class="tab_info kids_shoes_nike"><table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">16</td><td class="txt_in_center">1C</td><td class="txt_in_center">0.5C</td></tr><tr><td class="txt_in_center">16.5</td><td class="txt_in_center">1.5C</td><td class="txt_in_center">1C</td></tr><tr class="odd"><td class="txt_in_center">17</td><td class="txt_in_center">2C</td><td class="txt_in_center">1.5C</td></tr><tr><td class="txt_in_center">18</td><td class="txt_in_center">2.5C</td><td class="txt_in_center">2C</td></tr><tr class="odd"><td class="txt_in_center">18.5</td><td class="txt_in_center">3C</td><td class="txt_in_center">2.5C</td></tr><tr><td class="txt_in_center">19</td><td class="txt_in_center">3.5C</td><td class="txt_in_center">3C</td></tr><tr><td class="txt_in_center">19.5</td><td class="txt_in_center">4C</td><td class="txt_in_center">3.5C</td></tr><tr><td class="txt_in_center">20</td><td class="txt_in_center">4.5C</td><td class="txt_in_center">4C</td></tr><tr><td class="txt_in_center">21</td><td class="txt_in_center">5C</td><td class="txt_in_center">4.5C</td></tr><tr><td class="txt_in_center">21.5</td><td class="txt_in_center">5.5C</td><td class="txt_in_center">5C</td></tr><tr><td class="txt_in_center">22</td><td class="txt_in_center">6C</td><td class="txt_in_center">5.5C</td></tr><tr><td class="txt_in_center">22.5</td><td class="txt_in_center">6.5C</td><td class="txt_in_center">6C</td></tr><tr><td class="txt_in_center">23.5</td><td class="txt_in_center">7C</td><td class="txt_in_center">6.5C</td></tr><tr><td class="txt_in_center">24</td><td class="txt_in_center">7.5C</td><td class="txt_in_center">7C</td></tr><tr><td class="txt_in_center">25</td><td class="txt_in_center">8C</td><td class="txt_in_center">7.5C</td></tr><tr><td class="txt_in_center">25.5</td><td class="txt_in_center">8.5C</td><td class="txt_in_center">8C</td></tr><tr><td class="txt_in_center">26</td><td class="txt_in_center">9C</td><td class="txt_in_center">8.5C</td></tr><tr><td class="txt_in_center">26.5</td><td class="txt_in_center">9.5C</td><td class="txt_in_center">9C</td></tr><tr><td class="txt_in_center">27</td><td class="txt_in_center">10C</td><td class="txt_in_center">9.5C</td></tr><tr><td class="txt_in_center">27.5</td><td class="txt_in_center">10.5C</td><td class="txt_in_center">10C</td></tr><tr><td class="txt_in_center">28</td><td class="txt_in_center">11C</td><td class="txt_in_center">10.5C</td></tr><tr><td class="txt_in_center">28.5</td><td class="txt_in_center">11.5C</td><td class="txt_in_center">11C</td></tr><tr><td class="txt_in_center">29.5</td><td class="txt_in_center">12C</td><td class="txt_in_center">11.5C</td></tr><tr><td class="txt_in_center">30</td><td class="txt_in_center">12.5C</td><td class="txt_in_center">12C</td></tr><tr><td class="txt_in_center">31</td><td class="txt_in_center">13C</td><td class="txt_in_center">12.5C</td></tr><tr><td class="txt_in_center">31.5</td><td class="txt_in_center">13.5C</td><td class="txt_in_center">13C</td></tr><tr><td class="txt_in_center">32</td><td class="txt_in_center">1Y</td><td class="txt_in_center">13.5Y</td></tr><tr><td class="txt_in_center">33</td><td class="txt_in_center">1.5Y</td><td class="txt_in_center">1Y</td></tr><tr><td class="txt_in_center">33.5</td><td class="txt_in_center">2Y</td><td class="txt_in_center">1.5Y</td></tr><tr><td class="txt_in_center">34</td><td class="txt_in_center">2.5Y</td><td class="txt_in_center">2Y</td></tr><tr><td class="txt_in_center">35</td><td class="txt_in_center">3Y</td><td class="txt_in_center">2.5Y</td></tr><tr><td class="txt_in_center">35.5</td><td class="txt_in_center">3.5Y</td><td class="txt_in_center">3Y</td></tr><tr><td class="txt_in_center">36</td><td class="txt_in_center">4Y</td><td class="txt_in_center">3.5Y</td></tr><tr><td class="txt_in_center">36.5</td><td class="txt_in_center">4.5Y</td><td class="txt_in_center">4Y</td></tr><tr><td class="txt_in_center">37.5</td><td class="txt_in_center">5Y</td><td class="txt_in_center">4.5Y</td></tr><tr><td class="txt_in_center">38</td><td class="txt_in_center">5.5Y</td><td class="txt_in_center">5Y</td></tr><tr><td class="txt_in_center">38.5</td><td class="txt_in_center">6Y</td><td class="txt_in_center">5.5Y</td></tr><tr><td class="txt_in_center">39</td><td class="txt_in_center">6.5Y</td><td class="txt_in_center">6Y</td></tr><tr><td class="txt_in_center">40</td><td class="txt_in_center">7Y</td><td class="txt_in_center">6.5Y</td></tr></tbody></table></div>
+
+							<?php } else if ($_manufacturerId=='1135') { ?>
+
+								<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EUR'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('Brazil'); ?></th><th><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">25-26</td><td class="txt_in_center">7-8c</td><td class="txt_in_center">23-24</td><td class="txt_in_center">15.5</td></tr><tr><td class="txt_in_center">27-28</td><td class="txt_in_center">9-10c</td><td class="txt_in_center">25-26</td><td class="txt_in_center">16.5</td></tr><tr class="odd"><td class="txt_in_center">29-30</td><td class="txt_in_center">11-12c</td><td class="txt_in_center">27-28</td><td class="txt_in_center">18</td></tr><tr><td class="txt_in_center">31-32</td><td class="txt_in_center">13c</td><td class="txt_in_center">29-30</td><td class="txt_in_center">19</td></tr><tr><td class="txt_in_center">33-34</td><td class="txt_in_center">1-2c</td><td class="txt_in_center">31-32</td><td class="txt_in_center">20.5</td></tr><tr><td class="txt_in_center">35-36</td><td class="txt_in_center">3</td><td class="txt_in_center">33-34</td><td class="txt_in_center">22</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='2066') { ?>
+
+								<table width="26%" class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('USA'); ?></th><th><?php echo $this->__('CM'); ?></th><th><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('EUR'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">10.5</td><td class="txt_in_center">17</td><td class="txt_in_center">10</td><td class="txt_in_center">28</td></tr><tr><td class="txt_in_center">11</td><td class="txt_in_center">17.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">28.5</td></tr><tr class="odd"><td class="txt_in_center">11.5</td><td class="txt_in_center">17.75</td><td class="txt_in_center">11</td><td class="txt_in_center">29</td></tr><tr><td class="txt_in_center">12</td><td class="txt_in_center">18</td><td class="txt_in_center">11.5</td><td class="txt_in_center">29.5</td></tr><tr class="odd"><td class="txt_in_center">12.5</td><td class="txt_in_center">18.5</td><td class="txt_in_center">12</td><td class="txt_in_center">30</td></tr><tr><td class="txt_in_center">13</td><td class="txt_in_center">19</td><td class="txt_in_center">12.5</td><td class="txt_in_center">31</td></tr><tr class="odd"><td class="txt_in_center">13.5</td><td class="txt_in_center">19.5</td><td class="txt_in_center">13</td><td class="txt_in_center">32</td></tr><tr><td class="txt_in_center">1</td><td class="txt_in_center">20</td><td class="txt_in_center">13.5</td><td class="txt_in_center">32.5</td></tr><tr class="odd"><td class="txt_in_center">1.5</td><td class="txt_in_center">20.25</td><td class="txt_in_center">1</td><td class="txt_in_center">33</td></tr><tr><td class="txt_in_center">2</td><td class="txt_in_center">20.5</td><td class="txt_in_center">1.5</td><td class="txt_in_center">33.5</td></tr><tr class="odd"><td class="txt_in_center">2.5</td><td class="txt_in_center">21</td><td class="txt_in_center">2</td><td class="txt_in_center">34</td></tr><tr><td class="txt_in_center">3</td><td class="txt_in_center">21.5</td><td class="txt_in_center">2.5</td><td class="txt_in_center">35</td></tr></tbody></table>
+
+							<?php } else if ($_manufacturerId=='2129') { ?>
+
+								<div class="myTabs Htabs">
+									<ul>
+										<li class="one_forth_half"><a href="" data-target="kids_shoes_boys" class="active" title="Boys"><?php echo $this->__('Boys'); ?></a></li>
+										<li class="one_forth_half"><a href="" data-target="kids_shoes_girls" title="Girls"><?php echo $this->__('Girls'); ?></a></li>
+									</ul>
+								</div>
+
+								<div class="myTab_container Htab_container">
+									<div class="tab_info kids_shoes_boys">
+										<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">33</td><td class="txt_in_center">1.5Y</td><td class="txt_in_center">1</td></tr><tr> <td class="txt_in_center">34</td><td class="txt_in_center">2.5Y</td><td class="txt_in_center">2</td></tr><tr class="odd"> <td class="txt_in_center">35</td><td class="txt_in_center">3Y</td><td class="txt_in_center">2.5</td></tr><tr> <td class="txt_in_center">36</td><td class="txt_in_center">4Y</td><td class="txt_in_center">3.5</td></tr><tr class="odd"> <td class="txt_in_center">37</td><td class="txt_in_center">5Y</td><td class="txt_in_center">4.5</td></tr><tr> <td class="txt_in_center">38</td><td class="txt_in_center">5.5Y</td><td class="txt_in_center">5</td></tr><tr class="odd"> <td class="txt_in_center">39</td><td class="txt_in_center">6.5Y</td><td class="txt_in_center">6</td></tr></tbody></table>
+									</div>
+									<div class="tab_info kids_shoes_girls" style="display:none;">
+										<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">33</td><td class="txt_in_center">1.5Y</td><td class="txt_in_center">1</td></tr><tr> <td class="txt_in_center">34</td><td class="txt_in_center">2.5Y</td><td class="txt_in_center">2</td></tr><tr class="odd"> <td class="txt_in_center">35</td><td class="txt_in_center">3Y</td><td class="txt_in_center">2.5</td></tr><tr> <td class="txt_in_center">36</td><td class="txt_in_center">4Y</td><td class="txt_in_center">3.5</td></tr><tr class="odd"> <td class="txt_in_center">37</td><td class="txt_in_center">5Y</td><td class="txt_in_center">4.5</td></tr><tr> <td class="txt_in_center">38</td><td class="txt_in_center">5.5Y</td><td class="txt_in_center">5</td></tr></tbody></table>
+									</div>
+								</div>
+
+							<?php } else { ?>
+
+								<div class="myTabs Htabs">
+
+									<ul>
+										<li class="one_forth_half">
+											<a href="" data-target="kids_shoes_infant" class="active" title="Infant">
+												<?php echo $this->__('Infant'); ?>
+											</a>
+										</li>
+
+										<li class="one_forth_half">
+											<a href="" data-target="kids_shoes_toddler" title="Toddler">
+												<?php echo $this->__('Toddler'); ?>
+											</a>
+										</li>
+
+										<li class="one_forth_half">
+											<a href="" data-target="kids_shoes_junior" title="Junior">
+												<?php echo $this->__('Junior'); ?>
+											</a>
+										</li>
+									</ul>
+
+								</div>
+
+								<div class="myTab_container Htab_container">
+
+									<div class="tab_info kids_shoes_infant">
+										<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">16</td><td class="txt_in_center">0.5</td><td class="txt_in_center">0.5</td></tr><tr><td class="txt_in_center">16.5</td><td class="txt_in_center">1</td><td class="txt_in_center">0.5</td></tr><tr class="odd"><td class="txt_in_center">17</td><td class="txt_in_center">1.5</td><td class="txt_in_center">1</td></tr><tr><td class="txt_in_center">17.5</td><td class="txt_in_center">2</td><td class="txt_in_center">1</td></tr><tr class="odd"><td class="txt_in_center">18</td><td class="txt_in_center">2.5</td><td class="txt_in_center">1.5</td></tr><tr><td class="txt_in_center">18.5</td><td class="txt_in_center">3</td><td class="txt_in_center">2</td></tr></tbody></table>
+									</div>
+
+									<div class="tab_info kids_shoes_toddler" style="display:none">
+										<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">19</td><td class="txt_in_center">3.5</td><td class="txt_in_center">2.5</td></tr><tr><td class="txt_in_center">19.5</td><td class="txt_in_center">4</td><td class="txt_in_center">3</td></tr><tr class="odd"><td class="txt_in_center">20</td><td class="txt_in_center">4.5</td><td class="txt_in_center">3.5</td></tr><tr><td class="txt_in_center">20.5</td><td class="txt_in_center">5</td><td class="txt_in_center">4</td></tr><tr class="odd"><td class="txt_in_center">21</td><td class="txt_in_center">5.5</td><td class="txt_in_center">4.5</td></tr><tr><td class="txt_in_center">22</td><td class="txt_in_center">6</td><td class="txt_in_center">5</td></tr><tr class="odd"><td class="txt_in_center">22.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">5.5</td></tr><tr><td class="txt_in_center">23</td><td class="txt_in_center">7</td><td class="txt_in_center">6</td></tr><tr class="odd"><td class="txt_in_center">23.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td></tr><tr><td class="txt_in_center">24</td><td class="txt_in_center">8</td><td class="txt_in_center">7</td></tr><tr class="odd"><td class="txt_in_center">25</td><td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td></tr><tr><td class="txt_in_center">25.5</td><td class="txt_in_center">9</td><td class="txt_in_center">8</td></tr><tr class="odd"><td class="txt_in_center">26</td><td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td></tr><tr><td class="txt_in_center">27</td><td class="txt_in_center">10</td><td class="txt_in_center">9</td></tr><tr class="odd"><td class="txt_in_center">27.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td></tr></tbody></table>
+									</div>
+
+									<div class="tab_info kids_shoes_junior" style="display:none">
+										<table class="table"><thead><tr><th style="width:50%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">27.5</td><td class="txt_in_center">9.5</td></tr><tr><td class="txt_in_center">28</td><td class="txt_in_center">10</td></tr><tr class="odd"><td class="txt_in_center">29</td><td class="txt_in_center">10.5</td></tr><tr><td class="txt_in_center">30</td><td class="txt_in_center">11</td></tr><tr class="odd"><td class="txt_in_center">30.5</td><td class="txt_in_center">11.5</td></tr><tr><td class="txt_in_center">31</td><td class="txt_in_center">12</td></tr><tr class="odd"><td class="txt_in_center">31.5</td><td class="txt_in_center">12.5</td></tr><tr><td class="txt_in_center">32</td><td class="txt_in_center">13</td></tr><tr class="odd"><td class="txt_in_center">33</td><td class="txt_in_center">13.5</td></tr></tbody></table>
+									</div>
+
+								</div>
+
+							<?php } ?>
+
+						</div>
+						<!-- shoes container -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php } else if ($_size=='#kids_shoes_girls_infant' || $_size=='#kids_shoes_boys_infant') { ?>
+
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php
+							if ($_manufacturerId=='1316') {
+								echo $this->__('Nike') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='1135') {
+								echo $this->__('Havaianas') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='2066') {
+								echo $this->__('Palladium') . ' ' . $this->__('Size Guide');
+							} else if ($_manufacturerId=='2129') {
+						 		echo $this->__('Anta') . ' ' . $this->__('Size Guide');
+							} else {
+								echo $this->__('Infant Shoess');
+							}
+							?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_shoes_infant">
+
+						<?php if ($_manufacturerId=='2066') { ?>
+
+							<table class="table"><thead><tr><th><?php echo $this->__('USA'); ?></th><th><?php echo $this->__('CM'); ?></th><th><?php echo $this->__('UK'); ?></th><th><?php echo $this->__('EUR'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">4</td><td class="txt_in_center">11.5</td><td class="txt_in_center">3.5</td><td class="txt_in_center">19.5</td></tr><tr><td class="txt_in_center">4.5</td><td class="txt_in_center">12</td><td class="txt_in_center">4</td><td class="txt_in_center">20</td></tr><tr class="odd"><td class="txt_in_center">5</td><td class="txt_in_center">12.5</td><td class="txt_in_center">4.5</td><td class="txt_in_center">21</td></tr><tr><td class="txt_in_center">5.5</td><td class="txt_in_center">12.75</td><td class="txt_in_center">5</td><td class="txt_in_center">21.5</td></tr><tr class="odd"><td class="txt_in_center">6</td><td class="txt_in_center">13</td><td class="txt_in_center">5.5</td><td class="txt_in_center">22</td></tr><tr><td class="txt_in_center">6.5</td><td class="txt_in_center">13.5</td><td class="txt_in_center">6</td><td class="txt_in_center">23</td></tr><tr class="odd"><td class="txt_in_center">7</td><td class="txt_in_center">14</td><td class="txt_in_center">6.5</td><td class="txt_in_center">23.5</td></tr><tr><td class="txt_in_center">7.5</td><td class="txt_in_center">14.5</td><td class="txt_in_center">7</td><td class="txt_in_center">24</td></tr><tr class="odd"><td class="txt_in_center">8</td><td class="txt_in_center">15</td><td class="txt_in_center">7.5</td><td class="txt_in_center">25</td></tr><tr><td class="txt_in_center">8.5</td><td class="txt_in_center">15.25</td><td class="txt_in_center">8</td><td class="txt_in_center">25.5</td></tr><tr class="odd"><td class="txt_in_center">9</td><td class="txt_in_center">15.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">26</td></tr><tr><td class="txt_in_center">9.5</td><td class="txt_in_center">16</td><td class="txt_in_center">9</td><td class="txt_in_center">27</td></tr><tr class="odd"><td class="txt_in_center">10</td><td class="txt_in_center">16.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">27.5</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='1135') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('Brazil'); ?> </th> <th> <?php echo $this->__('CM'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">19-20</td><td class="txt_in_center">4-4.5C</td><td class="txt_in_center">17-18</td><td class="txt_in_center">12</td></tr><tr> <td class="txt_in_center">21</td><td class="txt_in_center">5C</td><td class="txt_in_center">19</td><td class="txt_in_center">12.5</td></tr><tr class="odd"> <td class="txt_in_center">22</td><td class="txt_in_center">6C</td><td class="txt_in_center">20</td><td class="txt_in_center">13</td></tr><tr> <td class="txt_in_center">23</td><td class="txt_in_center">6.5C</td><td class="txt_in_center">21</td><td class="txt_in_center">14</td></tr><tr> <td class="txt_in_center">24</td><td class="txt_in_center">7C</td><td class="txt_in_center">22</td><td class="txt_in_center">14.5</td></tr><tr> <td class="txt_in_center">25-26</td><td class="txt_in_center">8C</td><td class="txt_in_center">23-24</td><td class="txt_in_center">15.5</td></tr></tbody></table>
+
+						<?php } else if ($_manufacturerId=='2129') { ?>
+
+							<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">22</td><td class="txt_in_center">6C</td><td class="txt_in_center">5.5</td></tr><tr> <td class="txt_in_center">23</td><td class="txt_in_center">7C</td><td class="txt_in_center">6.5</td></tr><tr class="odd"> <td class="txt_in_center">24</td><td class="txt_in_center">7.5C</td><td class="txt_in_center">7</td></tr><tr> <td class="txt_in_center">25</td><td class="txt_in_center">8C</td><td class="txt_in_center">7.5</td></tr><tr class="odd"> <td class="txt_in_center">26</td><td class="txt_in_center">9C</td><td class="txt_in_center">8.5</td></tr><tr> <td class="txt_in_center">27</td><td class="txt_in_center">10C</td><td class="txt_in_center">9.5</td></tr></tbody></table>
+
+						<?php } else { ?>
+
+							<table class="table"><thead><tr><th><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td  class="txt_in_center">16</td><td  class="txt_in_center">0.5</td><td  class="txt_in_center">0.5</td></tr><tr><td  class="txt_in_center">16.5</td><td  class="txt_in_center">1</td><td  class="txt_in_center">0.5</td></tr><tr class="odd"><td  class="txt_in_center">17</td><td  class="txt_in_center">1.5</td><td  class="txt_in_center">1</td></tr><tr><td  class="txt_in_center">17.5</td><td  class="txt_in_center">2</td><td  class="txt_in_center">1</td></tr><tr class="odd"><td  class="txt_in_center">18</td><td  class="txt_in_center">2.5</td><td  class="txt_in_center">1.5</td></tr><tr><td  class="txt_in_center">18.5</td><td  class="txt_in_center">3</td><td  class="txt_in_center">2</td></tr></tbody></table>
+
+						<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php } else if ($_size=='#kids_shoes_girls_kids' || $_size=='#kids_shoes_boys_kids') { // these are toddlers ?>
+
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper kids_shoes_kids">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel">
+							<?php
+							if ($_manufacturerId=='2129') {
+						 		echo $this->__('Anta') . ' ' . $this->__('Size Guide');
+							} else {
+								echo $this->__('Kids') . ' ' . $this->__('Size Guide');
+							}
+							?>
+
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_shoes_kids">
+							<?php if ($_manufacturerId=='2129') { ?>
+								<table class="table"> <thead> <tr> <th style="width:33.33%"> <?php echo $this->__('EUR'); ?> </th> <th> <?php echo $this->__('US'); ?> </th> <th> <?php echo $this->__('UK'); ?> </th> </tr></thead> <tbody> <tr class="odd"> <td class="txt_in_center">28</td><td class="txt_in_center">11C</td><td class="txt_in_center">10.5</td></tr><tr> <td class="txt_in_center">29</td><td class="txt_in_center">12C</td><td class="txt_in_center">11.5</td></tr><tr class="odd"> <td class="txt_in_center">30</td><td class="txt_in_center">12.5C</td><td class="txt_in_center">12</td></tr><tr> <td class="txt_in_center">31</td><td class="txt_in_center">13C</td><td class="txt_in_center">12.5</td></tr><tr class="odd"> <td class="txt_in_center">32</td><td class="txt_in_center">1Y</td><td class="txt_in_center">13.5</td></tr></tbody></table>
+							<?php } else { ?>
+								<table class="table"><thead><tr><th><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th></tr></thead><tbody><tr class="odd"><td  class="txt_in_center">27.5</td><td  class="txt_in_center">9.5</td></tr><tr><td  class="txt_in_center">28</td><td  class="txt_in_center">10</td></tr><tr class="odd"><td  class="txt_in_center">29</td><td  class="txt_in_center">10.5</td></tr><tr><td  class="txt_in_center">30</td><td  class="txt_in_center">11</td></tr><tr class="odd"><td  class="txt_in_center">30.5</td><td  class="txt_in_center">11.5</td></tr><tr><td  class="txt_in_center">31</td><td  class="txt_in_center">12</td></tr><tr class="odd"><td  class="txt_in_center">31.5</td><td  class="txt_in_center">12.5</td></tr><tr><td  class="txt_in_center">32</td><td  class="txt_in_center">13</td></tr><tr class="odd"><td  class="txt_in_center">33</td><td  class="txt_in_center">13.5</td></tr></tbody></table>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<?php } else if ($_size=='#kids_shoes_girls_junior' || $_size=='#kids_shoes_boys_junior') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Junior Shoes'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_shoes_junior">
+							<table class="table"><thead><tr><th><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th></tr></thead><tbody><tr class="odd"><td  class="txt_in_center">27.5</td><td  class="txt_in_center">9.5</td></tr><tr><td  class="txt_in_center">28</td><td  class="txt_in_center">10</td></tr><tr class="odd"><td  class="txt_in_center">29</td><td  class="txt_in_center">10.5</td></tr><tr><td  class="txt_in_center">30</td><td  class="txt_in_center">11</td></tr><tr class="odd"><td  class="txt_in_center">30.5</td><td  class="txt_in_center">11.5</td></tr><tr><td  class="txt_in_center">31</td><td  class="txt_in_center">12</td></tr><tr class="odd"><td  class="txt_in_center">31.5</td><td  class="txt_in_center">12.5</td></tr><tr><td  class="txt_in_center">32</td><td  class="txt_in_center">13</td></tr><tr class="odd"><td  class="txt_in_center">33</td><td  class="txt_in_center">13.5</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else if ($_size=='#kids_shoes_girls_toddler' || $_size=='#kids_shoes_boys_toddler') { ?>
+	<div class="modal fade" id="<?php echo str_replace("#", "", $_size); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper women_clothing">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Teen Boys Clothing'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div class="tab_info kids_shoes_toddler">
+							<table class="table"><thead><tr><th><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td >19</td><td  class="txt_in_center">3.5</td><td  class="txt_in_center">2.5</td></tr><tr><td  class="txt_in_center">19.5</td><td  class="txt_in_center">4</td><td  class="txt_in_center">3</td></tr><tr class="odd"><td  class="txt_in_center">20</td><td  class="txt_in_center">4.5</td><td  class="txt_in_center">3.5</td></tr><tr><td  class="txt_in_center">20.5</td><td  class="txt_in_center">5</td><td  class="txt_in_center">4</td></tr><tr class="odd"><td  class="txt_in_center">21</td><td  class="txt_in_center">5.5</td><td  class="txt_in_center">4.5</td></tr><tr><td  class="txt_in_center">22</td><td  class="txt_in_center">6</td><td  class="txt_in_center">5</td></tr><tr class="odd"><td  class="txt_in_center">22.5</td><td  class="txt_in_center">6.5</td><td  class="txt_in_center">5.5</td></tr><tr><td  class="txt_in_center">23</td><td  class="txt_in_center">7</td><td  class="txt_in_center">6</td></tr><tr class="odd"><td  class="txt_in_center">23.5</td><td  class="txt_in_center">7.5</td><td  class="txt_in_center">6.5</td></tr><tr><td  class="txt_in_center">24</td><td  class="txt_in_center">8</td><td  class="txt_in_center">7</td></tr><tr class="odd"><td  class="txt_in_center">25</td><td  class="txt_in_center">8.5</td><td  class="txt_in_center">7.5</td></tr><tr><td  class="txt_in_center">25.5</td><td  class="txt_in_center">9</td><td  class="txt_in_center">8</td></tr><tr class="odd"><td  class="txt_in_center">26</td><td  class="txt_in_center">9.5</td><td  class="txt_in_center">8.5</td></tr><tr><td  class="txt_in_center">27</td><td  class="txt_in_center">10</td><td  class="txt_in_center">9</td></tr><tr class="odd"><td  class="txt_in_center">27.5</td><td  class="txt_in_center">10.5</td><td  class="txt_in_center">9.5</td></tr></tbody></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } else { ?>
+	<div class="modal fade" id="myModalSize" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="vertical-alignment-helper" style="width:95%;">
+			<div class="modal-dialog vertical-align-center">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="" class="closebtnsizeguid btn btn-default" data-dismiss="modal">X</a>
+						<h4 class="modal-title" id="myModalLabel"><?php echo $this->__('Size Guide'); ?></h4>
+					</div>
+					<div class="modal-body">
+						<div id="template_size_guide">
+							<div class="row">
+								<!-- TABS START -->
+								<div id="size_guide_tabs" class="column full_width">
+									<!-- SIDE TABS START -->
+									<div class="myTabs size_guide_tabs two_thirds tag_center hide_border">
+										<ul>
+											<li class="one_third">
+												<a href="" data-target="women_size_guide" class="women_icon active" title="Women"> <?php echo $this->__('Women'); ?> </a>
+											</li>
+											<li class="one_third">
+												<a href="" data-target="men_size_guide" class="men_icon" title="Men"> <?php echo $this->__('Men'); ?> </a>
+											</li>
+											<li class="one_third">
+												<a href="" data-target="kids_size_guide" class="kids_icon" title="Kids"> <?php echo $this->__('Kids'); ?> </a>
+											</li>
+										</ul>
+									</div>
+									<!-- SIDE TABS END -->
+									<!-- INFO TABS START -->
+									<div class="myTab_container tb_spacing_5 clearfix">
+										<!-- women tab -->
+										<div class="tab_info women_size_guide" style="display: block;">
+											<!-- tab start -->
+											<div class="row">
+												<div id="women_size_guide_tabs" class="column full_width">
+													<div class="myTabs Htabs">
+														<ul>
+															<li class="one_half">
+																<a href="" data-target="women_clothing" class="active" title="Clothing"> <?php echo $this->__('Clothing'); ?> </a>
+															</li>
+															<li class="one_half">
+																<a href="" data-target="women_shoes" title="Shoes" class=""> <?php echo $this->__('Shoes'); ?> </a>
+															</li>
+														</ul>
+													</div>
+													<div class="myTab_container Htab_container">
+														<div class="tab_info women_clothing" style="display: block;">
+															<table class="table"><thead><tr><th rowspan="2"><?php echo $this->__('Size'); ?></th><th rowspan="2"><?php echo $this->__('UK'); ?></th><th colspan="2"><?php echo $this->__('Bust'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th><th colspan="2"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td><?php echo $this->__('XS'); ?></td><td>6</td><td>31</td><td>78.5</td><td>23.75</td><td>60.5</td><td>33.75</td><td>86</td></tr><tr><td>S</td><td>8</td><td>32</td><td>81</td><td>24.75</td><td>63</td><td>34.75</td><td>88.5</td></tr><tr class="odd"><td>M</td><td>10</td><td>34</td><td>86</td><td>26.75</td><td>68</td><td>36.75</td><td>93.5</td></tr><tr><td>L</td><td>12</td><td>36</td><td>91</td><td>28.75</td><td>73</td><td>38.75</td><td>98.5</td></tr><tr class="odd"><td>XL</td><td>14</td><td>38</td><td>96</td><td>30.75</td><td>78</td><td>40.75</td><td>103.5</td></tr><tr><td>2XL</td><td>16</td><td>40</td><td>101</td><td>32.75</td><td>83</td><td>42.75</td><td>108.5</td></tr></tbody></table>
+														</div>
+														<div class="tab_info women_shoes display_none" style="display: none;">
+															<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">35</td><td class="txt_in_center">5</td><td class="txt_in_center">2.5</td></tr><tr><td class="txt_in_center">35.5</td><td class="txt_in_center">5.5</td><td class="txt_in_center">2.5</td></tr><tr class="odd"><td class="txt_in_center">36</td><td class="txt_in_center">6</td><td class="txt_in_center">3.5</td></tr><tr><td class="txt_in_center">37</td><td class="txt_in_center">6.5</td><td class="txt_in_center">4</td></tr><tr class="odd"><td class="txt_in_center">37.5</td><td class="txt_in_center">7</td><td class="txt_in_center">4.5</td></tr><tr><td class="txt_in_center">38</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5</td></tr><tr class="odd"><td class="txt_in_center">39</td><td class="txt_in_center">8</td><td class="txt_in_center">5.5</td></tr><tr><td class="txt_in_center">39.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6</td></tr><tr class="odd"><td class="txt_in_center">40</td><td class="txt_in_center">9</td><td class="txt_in_center">6.5</td></tr><tr><td class="txt_in_center">40.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7</td></tr><tr class="odd"><td class="txt_in_center">41</td><td class="txt_in_center">10</td><td class="txt_in_center">7.5</td></tr><tr><td class="txt_in_center">42</td><td class="txt_in_center">10.5</td><td class="txt_in_center">8</td></tr></tbody></table>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- tab end -->
+										</div>
+										<!-- women tab -->
+										<!-- men tab -->
+										<div class="tab_info men_size_guide display_none" style="display: none;">
+											<!-- tab start -->
+											<div class="row">
+												<div id="men_size_guide_tabs" class="column full_width">
+													<div class="myTabs Htabs">
+														<ul>
+															<li class="one_fifth">
+																<a href="" data-target="men_tops" class="active" title="Tops"> <?php echo $this->__('Tops'); ?> </a>
+															</li>
+															<li class="one_fifth">
+																<a href="" data-target="men_trousers" title="Trousers" class=""> <?php echo $this->__('Trousers'); ?> </a>
+															</li>
+															<li class="one_fifth">
+																<a href="" data-target="men_jackets" title="Jackets" class=""> <?php echo $this->__('Jackets'); ?> </a>
+															</li>
+															<li class="one_fifth">
+																<a href="" data-target="men_shorts" title="Shorts" class=""> <?php echo $this->__('Shorts'); ?> </a>
+															</li>
+															<li class="one_fifth">
+																<a href="" data-target="men_shoes" title="Shoes" class=""> <?php echo $this->__('Shoes'); ?> </a>
+															</li>
+														</ul>
+													</div>
+													<div class="myTab_container Htab_container">
+														<div class="tab_info men_tops" style="display: block;">
+															<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Chest'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>32-34</td><td>81-86</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>34-36</td><td>86-91</td></tr><tr class="odd"><td>S</td><td>36-38</td><td>91-96</td></tr><tr><td>M</td><td>38-40</td><td>96-101</td></tr><tr class="odd"><td>L</td><td>40-42</td><td>101-106</td></tr><tr><td>XL</td><td>42-44</td><td>106-111</td></tr><tr class="odd"><td>2XL</td><td>44-46</td><td>111-116</td></tr></tbody></table>
+														</div>
+														<div class="tab_info men_trousers display_none" style="display: none;">
+															<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>26"</td><td>26</td><td>66</td></tr><tr><td>28"</td><td>28</td><td>71</td></tr><tr class="odd"><td>30"</td><td>30</td><td>76</td></tr><tr><td>31"</td><td>31</td><td>78.5</td></tr><tr class="odd"><td>32"</td><td>32</td><td>81</td></tr><tr><td>33"</td><td>33</td><td>83.5</td></tr><tr class="odd"><td>34"</td><td>34</td><td>86</td></tr><tr><td>36"</td><td>36</td><td>91</td></tr><tr class="odd"><td>38"</td><td>38</td><td>96</td></tr></tbody></table>
+														</div>
+														<div class="tab_info men_jackets display_none" style="display: none;">
+															<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Chest'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>32-34</td><td>81-86</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>34-36</td><td>86-91</td></tr><tr class="odd"><td>S</td><td>36-38</td><td>91-96</td></tr><tr><td>M</td><td>38-40</td><td>96-101</td></tr><tr class="odd"><td>L</td><td>40-42</td><td>101-106</td></tr><tr><td>XL</td><td>42-44</td><td>106-111</td></tr><tr class="odd"><td>2XL</td><td>44-46</td><td>111-116</td></tr></tbody></table>
+														</div>
+														<div class="tab_info men_shorts display_none" style="display: none;">
+															<table class="table"><thead><tr><th rowspan="2" style="width:33.33%"><?php echo $this->__('Size'); ?></th><th colspan="2"><?php echo $this->__('Waist'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('CM'); ?></th></tr></thead><tbody><tr class="odd"><td>XXS</td><td>26-28</td><td>66-71</td></tr><tr><td><?php echo $this->__('XS'); ?></td><td>28-30</td><td>71-76</td></tr><tr class="odd"><td>S</td><td>30-32</td><td>76-81</td></tr><tr><td>M</td><td>32-34</td><td>81-86</td></tr><tr class="odd"><td>L</td><td>34-36</td><td>86-91</td></tr><tr><td>XL</td><td>36-38</td><td>91-96</td></tr><tr class="odd"><td>2XL</td><td>38-40</td><td>96-101</td></tr></tbody></table>
+														</div>
+														<div class="tab_info men_shoes display_none" style="display: none;">
+															<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">39</td><td class="txt_in_center">7</td><td class="txt_in_center">5</td></tr><tr><td class="txt_in_center">39.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">5.5</td></tr><tr class="odd"><td class="txt_in_center">40</td><td class="txt_in_center">8</td><td class="txt_in_center">6</td></tr><tr><td class="txt_in_center">40.5</td><td class="txt_in_center">8.5</td><td class="txt_in_center">6.5</td></tr><tr class="odd"><td class="txt_in_center">41</td><td class="txt_in_center">9</td><td class="txt_in_center">7</td></tr><tr><td class="txt_in_center">41.5</td><td class="txt_in_center">9.5</td><td class="txt_in_center">7.5</td></tr><tr class="odd"><td class="txt_in_center">42</td><td class="txt_in_center">10</td><td class="txt_in_center">8</td></tr><tr><td class="txt_in_center">42.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">8.5</td></tr><tr class="odd"><td class="txt_in_center">43</td><td class="txt_in_center">11</td><td class="txt_in_center">9</td></tr><tr><td class="txt_in_center">43.5</td><td class="txt_in_center">11.5</td><td class="txt_in_center">9.5</td></tr><tr class="odd"><td class="txt_in_center">44</td><td class="txt_in_center">12</td><td class="txt_in_center">10</td></tr><tr><td class="txt_in_center">44.5</td><td class="txt_in_center">12.5</td><td class="txt_in_center">10.5</td></tr><tr class="odd"><td class="txt_in_center">45</td><td class="txt_in_center">13</td><td class="txt_in_center">11</td></tr><tr><td class="txt_in_center">45.5</td><td class="txt_in_center">13.5</td><td class="txt_in_center">11.5</td></tr><tr class="odd"><td class="txt_in_center">46</td><td class="txt_in_center">14</td><td class="txt_in_center">12</td></tr></tbody></table>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- tab end -->
+										</div>
+										<!-- men tab -->
+										<!-- kids tab -->
+										<div class="tab_info kids_size_guide display_none" style="display: none;">
+											<!-- tab start -->
+											<div class="row">
+												<div id="kids_size_guide_tabs" class="column full_width">
+													<div class="myTabs Htabs">
+														<ul>
+															<li class="one_half">
+																<a href="" data-target="kids_clothing" class="active" title="Clothing"> <?php echo $this->__('Clothing'); ?> </a>
+															</li>
+															<li class="one_half">
+																<a href="" data-target="kids_shoes" title="Shoes"> <?php echo $this->__('Shoes'); ?> </a>
+															</li>
+														</ul>
+													</div>
+													<div class="myTab_container Htab_container">
+														<!-- clothing container -->
+														<div id="kids_clothing_size_guide_tabs" class="tab_info kids_clothing" style="display: block;">
+															<div class="myTabs Htabs hide_border">
+																<ul>
+																	<li class="one_third">
+																		<a href="" data-target="kids_clothing_babies" class="" title="Babies"> <?php echo $this->__('Babies'); ?> </a>
+																	</li>
+																	<li class="one_third">
+																		<a href="" data-target="kids_clothing_children" title="Children" class="active"> <?php echo $this->__('Children'); ?> </a>
+																	</li>
+																	<li class="one_third">
+																		<a href="" data-target="kids_clothing_teen_boys" title="Teen Boys" class=""> <?php echo $this->__('Teen Boys'); ?> </a>
+																	</li>
+																	<li class="one_third">
+																		<a href="" data-target="kids_clothing_teen_girls" title="Teen Girls" class=""> <?php echo $this->__('Teen Girls'); ?> </a>
+
+																	</li>
+																</ul>
+															</div>
+															<div class="myTab_container Htab_container">
+																<div class="tab_info kids_clothing_babies hide_border" style="display: none;">
+																	<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">Tiny Baby</td><td>16-17</td><td>16-17</td><td>16-17</td></tr><tr><td>Newborn</td><td>17-17.7</td><td>17-17.7</td><td>17-17.7</td></tr><tr class="odd"><td>0-3m</td><td>17.7-18.5</td><td>17.7-18.5</td><td>17.7-18.5</td></tr><tr><td>3m-6m</td><td>18.5-19.3</td><td>18-19</td><td>18.5-19.3</td></tr><tr class="odd"><td>6m-9m</td><td>19.3-20</td><td>18.5-19.3</td><td>19.3-20</td></tr><tr><td>9m-12m</td><td>20-21</td><td>19-19.17</td><td>20-21</td></tr><tr class="odd"><td>12m-18m</td><td>20.5-21.3</td><td>19.3-20</td><td>21-22</td></tr><tr><td>18m-24m</td><td>21-21.7</td><td>19.7-20.5</td><td>21-22</td></tr></tbody></table>
+																</div>
+																<div class="tab_info kids_clothing_children display_none hide_border" style="display: block;">
+																	<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>2-3y</td><td>21.3-22</td><td>20-21</td><td>21.7-22.8</td></tr><tr><td>3-4y</td><td>21.7-22.4</td><td>20.5-21.3</td><td>22.5-23.6</td></tr><tr class="odd"><td>4-5y</td><td>22-22.8</td><td>21-21.7</td><td>23.2-24.5</td></tr><tr><td>5-6y</td><td>22.4-23.2</td><td>21.3-22</td><td>24-25.2</td></tr><tr class="odd"><td>6-7y</td><td>22.8-24.4</td><td>21.7-22.8</td><td>24.8-26.4</td></tr><tr><td>7-8y</td><td>24-25.6</td><td>22.5-23.2</td><td>26-27.6</td></tr><tr class="odd"><td>8-9y</td><td>25.2-26.8</td><td>22.8-24</td><td>27.2-28.7</td></tr><tr><td>9-10y</td><td>26.4-28</td><td>23.6-24.5</td><td>28.3-30</td></tr><tr class="odd"><td>10-11y</td><td>27.6-29</td><td>24-25.2</td><td>29.5-31</td></tr></tbody></table>
+																</div>
+																<div class="tab_info kids_clothing_teen_boys display_none hide_border" style="display: none;">
+																	<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>11-12y</td><td>28.7-30.3</td><td>24.8-25.6</td><td>31-32.7</td></tr><tr><td><span>12-13y</span></td><td>30-31.5</td><td>25.2-26.4</td><td>32.3-34.3</td></tr><tr class="odd"><td><span>13-14y</span></td><td>31-32.7</td><td>26-26.8</td><td>33.9-35.4</td></tr><tr><td><span>14-15y</span></td><td>32.3-34</td><td>26.4-27.6</td><td>35-37</td></tr><tr class="odd"><td><span>15-16y</span></td><td>33.5-35</td><td>27.2-28</td><td>36.6-38.2</td></tr><tr><td><span>From 16y</span></td><td>34.6-36.2</td><td>27.6-28.7</td><td>37.8-39.8</td></tr><tr class="odd"><td><span>From 16y</span></td><td>35.8-37.4</td><td>28.3-29.5</td><td>39.4-41.3</td></tr></tbody></table>
+																</div>
+																<div class="tab_info kids_clothing_teen_girls display_none hide_border" style="display: none;">
+																	<table class="table"><thead><tr><th rowspan="2" style="width:25%"><?php echo $this->__('Age'); ?></th><th colspan="1"><?php echo $this->__('Chest'); ?></th><th colspan="1"><?php echo $this->__('Waist'); ?></th><th colspan="1"><?php echo $this->__('Hips'); ?></th></tr><tr><th class="fs_12px"><?php echo $this->__('Inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th><th class="fs_12px"><?php echo $this->__('inches') ?></th></tr></thead><tbody><tr class="odd"><td>11-12y</td><td>28.7-30.3</td><td>24.8-25.4</td><td>30.7-32.3</td></tr><tr><td><span>12-13y</span></td><td>30-31.5</td><td>26-27.2</td><td>31.9-33.5</td></tr><tr class="odd"><td><span>13-14y</span></td><td>31-32.7</td><td>26.8-28</td><td>33.1-34.6</td></tr><tr><td><span>14-15y</span></td><td>32.3-34</td><td>27.6-28.7</td><td>34.3-35.8</td></tr><tr class="odd"><td><span>15-16y</span></td><td>33.5-35</td><td>29.5-29.1</td><td>35.4-37</td></tr><tr><td><span>From 16y</span></td><td>34.6-36.2</td><td>29.1-30.7</td><td>36.6-38.2</td></tr><tr class="odd"><td><span>From 16y</span></td><td>35.8-37.4</td><td>30.3-31.9</td><td>37.8-39.4</td></tr></tbody></table>
+																</div>
+															</div>
+														</div>
+														<!-- clothing container end -->
+														<!-- shoes container -->
+														<div id="kids_shoes_size_guide_tabs" class="tab_info kids_shoes display_none" style="display: none;">
+															<div class="myTabs Htabs">
+																<ul>
+																	<li class="one_third">
+																		<a href="" data-target="kids_shoes_infant" class="active" title="Infant"> <?php echo $this->__('Infant'); ?> </a>
+																	</li>
+																	<li class="one_third">
+																		<a href="" data-target="kids_shoes_toddler" title="Toddler"> <?php echo $this->__('Toddler'); ?> </a>
+																	</li>
+																	<li class="one_third">
+																		<a href="" data-target="kids_shoes_junior" title="Junior"> <?php echo $this->__('Junior'); ?> </a>
+																	</li>
+																</ul>
+															</div>
+															<div class="myTab_container Htab_container">
+																<div class="tab_info kids_shoes_infant">
+																	<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">16</td><td class="txt_in_center">0.5</td><td class="txt_in_center">0.5</td></tr><tr><td class="txt_in_center">16.5</td><td class="txt_in_center">1</td><td class="txt_in_center">0.5</td></tr><tr class="odd"><td class="txt_in_center">17</td><td class="txt_in_center">1.5</td><td class="txt_in_center">1</td></tr><tr><td class="txt_in_center">17.5</td><td class="txt_in_center">2</td><td class="txt_in_center">1</td></tr><tr class="odd"><td class="txt_in_center">18</td><td class="txt_in_center">2.5</td><td class="txt_in_center">1.5</td></tr><tr><td class="txt_in_center">18.5</td><td class="txt_in_center">3</td><td class="txt_in_center">2</td></tr></tbody></table>
+																</div>
+																<div class="tab_info kids_shoes_toddler display_none">
+																	<table class="table"><thead><tr><th style="width:33.33%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th><th><?php echo $this->__('UK'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">19</td><td class="txt_in_center">3.5</td><td class="txt_in_center">2.5</td></tr><tr><td class="txt_in_center">19.5</td><td class="txt_in_center">4</td><td class="txt_in_center">3</td></tr><tr class="odd"><td class="txt_in_center">20</td><td class="txt_in_center">4.5</td><td class="txt_in_center">3.5</td></tr><tr><td class="txt_in_center">20.5</td><td class="txt_in_center">5</td><td class="txt_in_center">4</td></tr><tr class="odd"><td class="txt_in_center">21</td><td class="txt_in_center">5.5</td><td class="txt_in_center">4.5</td></tr><tr><td class="txt_in_center">22</td><td class="txt_in_center">6</td><td class="txt_in_center">5</td></tr><tr class="odd"><td class="txt_in_center">22.5</td><td class="txt_in_center">6.5</td><td class="txt_in_center">5.5</td></tr><tr><td class="txt_in_center">23</td><td class="txt_in_center">7</td><td class="txt_in_center">6</td></tr><tr class="odd"><td class="txt_in_center">23.5</td><td class="txt_in_center">7.5</td><td class="txt_in_center">6.5</td></tr><tr><td class="txt_in_center">24</td><td class="txt_in_center">8</td><td class="txt_in_center">7</td></tr><tr class="odd"><td class="txt_in_center">25</td><td class="txt_in_center">8.5</td><td class="txt_in_center">7.5</td></tr><tr><td class="txt_in_center">25.5</td><td class="txt_in_center">9</td><td class="txt_in_center">8</td></tr><tr class="odd"><td class="txt_in_center">26</td><td class="txt_in_center">9.5</td><td class="txt_in_center">8.5</td></tr><tr><td class="txt_in_center">27</td><td class="txt_in_center">10</td><td class="txt_in_center">9</td></tr><tr class="odd"><td class="txt_in_center">27.5</td><td class="txt_in_center">10.5</td><td class="txt_in_center">9.5</td></tr></tbody></table>
+																</div>
+																<div class="tab_info kids_shoes_junior display_none">
+																	<table class="table"><thead><tr><th style="width:50%"><?php echo $this->__('EU'); ?></th><th><?php echo $this->__('US'); ?></th></tr></thead><tbody><tr class="odd"><td class="txt_in_center">27.5</td><td class="txt_in_center">9.5</td></tr><tr><td class="txt_in_center">28</td><td class="txt_in_center">10</td></tr><tr class="odd"><td class="txt_in_center">29</td><td class="txt_in_center">10.5</td></tr><tr><td class="txt_in_center">30</td><td class="txt_in_center">11</td></tr><tr class="odd"><td class="txt_in_center">30.5</td><td class="txt_in_center">11.5</td></tr><tr><td class="txt_in_center">31</td><td class="txt_in_center">12</td></tr><tr class="odd"><td class="txt_in_center">31.5</td><td class="txt_in_center">12.5</td></tr><tr><td class="txt_in_center">32</td><td class="txt_in_center">13</td></tr><tr class="odd"><td class="txt_in_center">33</td><td class="txt_in_center">13.5</td></tr></tbody></table>
+																</div>
+															</div>
+														</div>
+														<!-- shoes container -->
+													</div>
+												</div>
+											</div>
+											<!-- tab end -->
+										</div>
+										<!-- kids tab -->
+									</div>
+									<!-- INFO TABS END -->
+								</div>
+								<!-- TABS END -->
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php }
+
+/**
+*	Size guide Modals end
+*/
+?>

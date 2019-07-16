@@ -1,0 +1,526 @@
+<?php
+$store = Mage::app()->getStore();
+$storeID = Mage::app()->getStore()->getStoreId();
+$currency_symbol = Mage::app()->getStore($storeID)->getCurrentCurrencyCode();
+$locale = Mage::app()->getLocale()->getLocaleCode();
+?>
+<?php $_item = $this->getItem()?>
+<?php
+$simpleProduct = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+if( $simpleProduct )
+    $productImage = $simpleProduct;
+else
+    $productImage = $_item->getProduct();
+?>
+<div class="checkout_review_item">
+	<div class="review_item_img">
+		<img class="img-responsive" src="<?php echo (string)Mage::helper('catalog/image')->init($productImage, 'small_image')->keepFrame(false)->constrainOnly(true)->resize(400); ?>" alt="<?php echo $this->htmlEscape($this->getProductName()) ?>">
+	</div>
+	<div class="review_item_details">
+		<h3 class="product-name"><?php echo $this->escapeHtml($this->getProductName()) ?></h3>
+		<?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+			<div class="a-left item_review_price" data-rwd-label="<?php echo $this->__('Price') ?>">
+			<?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+				<span class="cart-tax-total" onclick="taxToggle('eunit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+			<?php else: ?>
+				<span class="cart-price">
+				<strong><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></strong>
+			<?php endif; ?>
+
+				<?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<?php echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice()+$_item->getWeeeTaxAppliedAmount()+$_item->getWeeeTaxDisposition()); ?>
+
+				<?php else:
+				 ?>
+					<?php
+					 echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice()) ?>
+				<?php
+				 endif;
+				  ?>
+	  </span>
+
+	  <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+	 <div class="cart-tax-info"
+	 id="eunit-item-tax-details<?php
+	  echo $_item->getId(); ?>" style="display:none;">
+					<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<small>
+						<?php
+						 foreach (Mage::helper('weee')->getApplied($_item) as $taxpriceData):
+						 ?>
+							<span class="nobr">
+							<?php
+							echo $taxpriceData['title'];
+							?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($taxpriceData['amount'],true,true); ?></span><br />
+						<?php
+						endforeach;
+						?>
+						</small>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<?php
+						 foreach (Mage::helper('weee')->getApplied($_item) as $taxpriceInfo): ?>
+							<span class="nobr">
+							<small><?php echo $taxpriceInfo['title']; ?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($taxpriceInfo['amount'],true,true); ?></small></span><br />
+						<?php
+						endforeach; ?>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<small>
+						<?php
+						foreach (Mage::helper('weee')->getApplied($_item) as $taxpriceList): ?>
+							<span class="nobr">
+							<?php
+							echo $taxpriceList['title']; ?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($taxpriceList['amount'],true,true); ?></span><br />
+						<?php
+						endforeach; ?>
+						</small>
+					<?php
+	 }
+	  ?></div>
+	 <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<div class="cart-tax-total"
+					onclick="taxToggle('eunit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+						<span class="nobr">
+						<?php
+						echo Mage::helper('weee')->__('Total');
+						 ?>:
+						<br />
+						<?php
+						 echo $this->helper('checkout')->formatPrice($_item->getCalculationPrice()+$_item->getWeeeTaxAppliedAmount()+$_item->getWeeeTaxDisposition());
+						 ?>
+						 </span>
+					</div>
+				<?php endif;
+				 ?>
+			<?php endif;
+			 ?>
+		</div>
+		<?php endif; ?>
+		<?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+			<div class="item_review_price" data-rwd-label="<?php echo $this->__('Price') ?>">
+			<?php $_incl = $this->helper('checkout')->getPriceInclTax($_item); ?>
+			<?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+				<span class="cart-tax-total"
+				 onclick="taxToggle('unit-item-tax-details<?php
+				 echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+			<?php else: ?>
+				<span class="cart-price">
+				<?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?>
+			<?php endif; ?>
+
+				<?php
+				if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?>
+				<?php
+				else: ?>
+					<?php echo $this->helper('checkout')->formatPrice($_incl-$_item->getWeeeTaxDisposition()) ?>
+
+				<?php
+				endif; ?>
+
+			</span>
+
+			<?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+				<div class="cart-tax-info"
+				 style="display:none;"
+				 id="unit-item-tax-details<?php echo $_item->getId(); ?>">
+					<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<small>
+						<?php
+						 foreach (Mage::helper('weee')->getApplied($_item) as $taxamtList):
+						  ?>
+							<span class="nobr">
+							<?php
+							echo $taxamtList['title'];
+							?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($taxamtList['amount_incl_tax'],true,true); ?></span><br />
+						<?php
+						endforeach;
+						 ?>
+						</small>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<?php
+						foreach (Mage::helper('weee')->getApplied($_item) as $taxAmtData):
+						 ?>
+							<span class="nobr">
+							<small>
+							<?php
+							 echo $taxAmtData['title']; ?>:
+							<?php
+							 echo Mage::helper('checkout')->formatPrice($taxAmtData['amount_incl_tax'],true,true); ?>
+							 </small>
+							 </span>
+							 <br />
+						<?php
+						 endforeach; ?>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<small>
+						<?php
+						foreach (Mage::helper('weee')->getApplied($_item) as $taxData):
+						 ?>
+							<span class="nobr">
+							<?php
+							echo $taxData['title'];
+							 ?>:
+							<?php
+							 echo Mage::helper('checkout')->formatPrice($taxData['amount_incl_tax'],true,true); ?>
+							 </span>
+							 <br />
+						<?php
+						endforeach; ?>
+						</small>
+					<?php } ?>
+				</div>
+
+				<?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<div class="cart-tax-total"
+					onclick="taxToggle('unit-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+						<span class="nobr">
+						<?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:
+						<br />
+						<?php echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getWeeeTaxInclTax($_item)); ?></span>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
+		</div>
+		<?php endif; ?>
+		<?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+			<?php if ($_item->getQty() > 1) { ?>
+				<div class="item_review_subtotal"
+			data-rwd-label="<?php echo $this->__('Subtotal') ?>">
+				<?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<span class="cart-tax-total"
+					onclick="taxToggle('esubtotal-item-tax-details<?php
+					echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+				<?php else: ?>
+					<span class="cart-price">
+					<span class="subtotal"><?php echo $this->__('Subtotal') ?>: </span>
+					<div><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?>
+				<?php endif; ?>
+			 <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+						<?php
+						echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?>
+					<?php else: ?>
+						<?php
+						echo $this->helper('checkout')->formatPrice($_item->getRowTotal()) ?>
+					<?php endif; ?></div>
+		   </span>
+
+				<?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+					<div class="cart-tax-info"
+					id="esubtotal-item-tax-details<?php echo $_item->getId(); ?>"
+					style="display:none;">
+						<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+							<small>
+							<?php
+							 foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+								<span class="nobr">
+								<?php echo $tax['title']; ?>:
+								<?php
+								 echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span><br />
+							<?php
+							 endforeach; ?>
+							</small>
+						<?php }
+						if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+							<?php
+							foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+								<span class="nobr">
+								<small>
+								<?php echo $tax['title']; ?>:
+								<?php
+								echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></small></span><br />
+							<?php endforeach; ?>
+						<?php }
+						if (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+							<small>
+							<?php
+							foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+								<span class="nobr">
+								<?php echo $tax['title'];
+								 ?>:
+								<?php
+								echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span><br />
+							<?php endforeach; ?></small>
+						<?php } ?></div>
+		<?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+						<div class="cart-tax-total"
+						onclick="taxToggle('esubtotal-item-tax-details<?php
+						echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+							<span class="nobr">
+							<?php echo Mage::helper('weee')->__('Total'); ?>:
+							<br />
+							<?php
+							 echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?></span>
+						</div>
+					<?php endif; ?>
+				<?php endif; ?>
+			</div>
+			<?php } ?>
+		<?php endif; ?>
+
+		<!-- sub total starts here -->
+
+		<?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+		<div data-rwd-label="<?php
+		echo $this->__('Subtotal') ?>">
+			<?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
+			<?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+				<span class="cart-tax-total"
+				onclick="taxToggle('subtotal-item-tax-details<?php
+				echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+			<?php else: ?>
+				<span class="cart-price">
+				<?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?>
+			<?php endif; ?>
+	  <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+					<?php
+					echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?>
+
+
+				<?php
+				else: ?>
+					<?php
+					echo $this->helper('checkout')->formatPrice($_incl-$_item->getWeeeTaxRowDisposition()) ?>
+				<?php
+				endif; ?>
+	  </span>
+
+	  <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+		<div class="cart-tax-info"
+		id="subtotal-item-tax-details<?php
+		echo $_item->getId(); ?>" style="display:none;">
+					<?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<small>
+						<?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+							<span class="nobr">
+							<?php
+							 echo $tax['title']; ?>:
+							<?php
+							 echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
+						<?php endforeach; ?>
+						</small>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()){ ?>
+						<?php
+						 foreach (Mage::helper('weee')->getApplied($_item) as $tax):
+						 ?>
+							<span class="nobr">
+							<small>
+							<?php
+							 echo $tax['title']; ?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?>
+							</small>
+							</span>
+							<br/>
+						<?php endforeach; ?>
+					<?php }
+					if (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()){
+	?>
+						<small>
+						<?php foreach (Mage::helper('weee')->getApplied($_item) as $taxDetail):
+						?>
+							<span class="nobr">
+
+
+							<?php
+							 echo $taxDetail['title']; ?>:
+							<?php
+							echo Mage::helper('checkout')->formatPrice($taxDetail['row_amount_incl_tax'],true,true); ?>
+							</span>
+							<br />
+						<?php
+						 endforeach; ?>
+						</small>
+					<?php } ?>
+				</div>
+
+				<?php
+				if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()):
+				?>
+					<div
+					 onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');"
+					 class="cart-tax-total">
+						<span class="nobr">
+						<?php
+						echo Mage::helper('weee')->__('Total incl. tax'); ?>:
+						<br />
+						<?php
+						echo $this->helper('checkout')->formatPrice($_incl + Mage::helper('weee')->getRowWeeeTaxInclTax($_item)); ?></span>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
+		</div>
+		<?php endif; ?>
+
+		<div class="a-left review_itemID" data-rwd-label="<?php echo $this->__('ItemID') ?>">
+			<span class="qty_label"><?php echo $this->__('Item ID') ?>: </span><?php echo $_item->getProductId(); ?>
+		</div>
+		<?php if ($_optionsDetails = $this->getOptionList()):?>
+		<dl class="item-options">
+			<?php foreach ($_optionsDetails as $_option) : ?>
+			<?php $_formatedOptionValueList = $this->getFormatedOptionValue($_option) ?>
+			<dt><?php echo $this->__($this->escapeHtml($_option['label'])) ?></dt>
+			<dd<?php if (isset($_formatedOptionValueList['full_view'])): ?> class="truncated"<?php endif; ?>>
+			<?php echo $this->__($_formatedOptionValueList['value'])?>
+				<?php if (isset($_formatedOptionValueList['full_view'])): ?>
+				<div class="truncated_full_value">
+					<dl class="item-options">
+						<dt><?php echo $this->__($this->escapeHtml($_option['label'])) ?></dt>
+						<dd><?php echo $this->__($_formatedOptionValueList['full_view']) ?></dd>
+					</dl>
+				</div>
+				<?php endif; ?>
+			</dd>
+			<?php endforeach; ?>
+		</dl>
+
+		<div class="a-left" data-rwd-label="<?php echo $this->__('Qty') ?>">
+			<span class="qty_label"><?php echo $this->__('Qty') ?>: </span><?php echo $_item->getQty(); ?>
+		</div>
+		<?php endif;?>
+		<?php if ($addtInfoBlock = $this->getProductAdditionalInformationBlock()):?>
+			<?php echo $addtInfoBlock->setItem($_item)->toHtml() ?>
+		<?php endif;?>
+	</div>
+</div>
+<?php /*?><tr>
+    <td><img src="<?php echo $this->getProductThumbnail()->resize(75); ?>" width="55" height="55" alt="<?php echo $this->htmlEscape($this->getProductName()) ?>" /></td>
+    <td><h3 class="product-name"><?php echo $this->htmlEscape($this->getProductName()) ?></h3>
+          <?php if ($_options = $this->getOptionList()):?>
+        <dl class="item-options">
+            <?php foreach ($_options as $_option) : ?>
+            <?php $_formatedOptionValue = $this->getFormatedOptionValue($_option) ?>
+            <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+            <dd<?php if (isset($_formatedOptionValue['full_view'])): ?> class="truncated"<?php endif; ?>><?php echo $_formatedOptionValue['value'] ?>
+                <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                <div class="truncated_full_value">
+                    <dl class="item-options">
+                        <dt><?php echo $this->htmlEscape($_option['label']) ?></dt>
+                        <dd><?php echo $_formatedOptionValue['full_view'] ?></dd>
+                    </dl>
+                </div>
+                <?php endif; ?>
+            </dd>
+            <?php endforeach; ?>
+        </dl>
+        <?php endif;?>
+    </td>
+    <td class="a-center"><?php echo $_item->getQty() ?></td>
+
+
+
+
+    <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+    <td class="a-right">
+        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+            <span class="cart-tax-total" onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+        <?php else: ?>
+            <span class="cart-price">
+            <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol); } ?></span>
+        <?php endif; ?>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?>
+            <?php else: ?>
+                <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()) ?>
+            <?php endif; ?>
+
+        </span>
+        <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+            <div class="cart-tax-info" id="esubtotal-item-tax-details<?php echo $_item->getId(); ?>" style="display:none;">
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span><br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></small></span><br />
+                    <?php endforeach; ?>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <div class="cart-tax-total" onclick="taxToggle('esubtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+                    <span class="nobr"><?php echo Mage::helper('weee')->__('Total'); ?>:<br /> <?php echo $this->helper('checkout')->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition()); ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </td>
+    <?php endif; ?>
+
+
+
+
+    <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+    <td class="a-right">
+        <?php $_incl = $this->helper('checkout')->getSubtotalInclTax($_item); ?>
+        <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+            <span class="cart-tax-total" onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+        <?php else: ?>
+            <span class="cart-price">
+            <span><?php if($locale == "ar_SA"){echo $this->__($currency_symbol);} ?></span>
+        <?php endif; ?>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <?php echo $this->helper('checkout')->formatPrice($_incl+$_item->getWeeeTaxAppliedRowAmount()); ?>
+            <?php else: ?>
+                <?php echo $this->helper('checkout')->formatPrice($_incl-$_item->getWeeeTaxRowDisposition()) ?>
+            <?php endif; ?>
+
+        </span>
+
+
+        <?php if (Mage::helper('weee')->getApplied($_item)): ?>
+
+            <div class="cart-tax-info" id="subtotal-item-tax-details<?php echo $_item->getId(); ?>" style="display:none;">
+                <?php if (Mage::helper('weee')->typeOfDisplay($_item, 1, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount'],true,true); ?></span><br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><small><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></small></span><br />
+                    <?php endforeach; ?>
+                <?php elseif (Mage::helper('weee')->typeOfDisplay($_item, 4, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                    <small>
+                    <?php foreach (Mage::helper('weee')->getApplied($_item) as $tax): ?>
+                        <span class="nobr"><?php echo $tax['title']; ?>: <?php echo Mage::helper('checkout')->formatPrice($tax['row_amount_incl_tax'],true,true); ?></span><br />
+                    <?php endforeach; ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+
+            <?php if (Mage::helper('weee')->typeOfDisplay($_item, 2, 'sales') && $_item->getWeeeTaxAppliedAmount()): ?>
+                <div class="cart-tax-total" onclick="taxToggle('subtotal-item-tax-details<?php echo $_item->getId(); ?>', this, 'cart-tax-total-expanded');">
+                    <span class="nobr"><?php echo Mage::helper('weee')->__('Total incl. tax'); ?>:<br /> <?php echo $this->helper('checkout')->formatPrice($_incl+$_item->getWeeeTaxAppliedRowAmount()); ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </td>
+    <?php endif; ?>
+</tr><?php */?>

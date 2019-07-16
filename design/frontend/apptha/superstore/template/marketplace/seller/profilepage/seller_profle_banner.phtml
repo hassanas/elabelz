@@ -1,0 +1,17 @@
+<?php 
+$id 			= $this->getRequest()->getParam('id'); 
+$sellerPage 	= Mage::getModel('marketplace/sellerprofile')->collectprofile($id);
+$currentDate 	= Mage::getModel('core/date')->date('Y-m-d');
+$currentUrl 	= Mage::helper('core/url')->getCurrentUrl();
+?>
+<?php if (strpos($sellerPage->getStoreBanner(), '.')) { ?>
+
+	<div class="category_banner">
+		<div class="catalog_banner_top tb_one three_line">        
+			<img src="<?php echo Mage::getBaseUrl('media') . "marketplace/resized/" . $sellerPage->getStoreBanner(); ?>" alt="store banner" class="cat_banner_img" />
+			<h2 class="tb_title"><?php echo $sellerPage->getStoreTitle();?></h2>
+			<div class="seller_desc"><?php echo $sellerPage->getDescription(); ?></div>	
+		</div>
+	</div>
+
+<?php  } ?>

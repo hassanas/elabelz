@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <progos traslate="label" module="fpccache">
+            <label>Progos</label>
+            <sort_order>200</sort_order>
+        </progos>
+    </tabs>
+    <sections>
+        <fpccache translate="label">
+            <label>Mobile Cache Api</label>
+            <tab>progos</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <api translate="label">
+                    <label>General Settings</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enable Cache</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>    
+                        <controllers translate="label">
+                            <label>Controllers Name For Cache(mobile-app)</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>All cachable controllers, separated with Comma</comment>
+                        </controllers>
+                        <actions translate="label">
+                            <label>Controllers Action Name For Cache(mobile-app)</label>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>All cachable controllers actions, separated with Comma</comment>
+                        </actions>
+                        <log translate="label">
+                            <label>Enable Log</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </log> 
+                    </fields>
+                </api>
+            </groups>
+        </fpccache>
+        <bubble_queryfier translate="label" module="bubble_queryfier">
+            <groups>
+                <suffix_js_css translate="label comment">
+                    <fields>
+                        <dynamic translate="label">
+                            <label>Enable Dynamic Change Qualifier</label>
+                            <comment><![CDATA[Enable Dynamic Change for Qualifer, make sure Auto Generate Suffix settings should be set as No]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dynamic>
+                        <oldsuffix translate="label">
+                            <label>Old Qualifier Value</label>
+                            <comment><![CDATA[The Old Value Of Qualifer, whcih need to replace with suffix value]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>52</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </oldsuffix>
+                    </fields>
+                </suffix_js_css>
+            </groups>
+        </bubble_queryfier>
+    </sections>
+</config>

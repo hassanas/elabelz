@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_AfterShipmentUpdates>
+            <version>0.1.0</version>
+        </Progos_AfterShipmentUpdates>
+    </modules>
+    <global>
+        <helpers>
+            <aftershipmentupdates>
+                <class>Progos_AfterShipmentUpdates_Helper</class>
+            </aftershipmentupdates>
+        </helpers>
+        <models>
+            <aftershipmentupdates>
+                <class>Progos_AfterShipmentUpdates_Model</class>
+                <resourceModel>aftershipmentupdates_mysql4</resourceModel>
+            </aftershipmentupdates>
+        </models>
+        <events>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <sales_order_shipment_save_after_handler>
+                        <type>singleton</type>
+                        <class>aftershipmentupdates/observer</class>
+                        <method>updateMarketPlaceAfterShipment</method>
+                        <args></args>
+                    </sales_order_shipment_save_after_handler>
+                </observers>
+            </sales_order_shipment_save_after>
+        </events>
+    </global>
+</config> 

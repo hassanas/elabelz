@@ -1,0 +1,314 @@
+<?php
+
+$_order = Mage::getModel('sales/order')->load($this->getRequest()->getParam('order_id'));
+$shipping = $_order->getShippingAddress();
+$customerId = $_order->getCustomerId();
+$customer = Mage::getModel('customer/customer')->load($customerId);
+$countryCollection = Mage::getModel('directory/country_api')->items();
+$payment = $_order->getPayment();
+
+//calculating total weight of current order
+$totalWeight = 0;
+$itemscount = 0;
+$isShipped = false;
+$itemsv = $_order->getAllVisibleItems();
+foreach ($itemsv as $itemvv) {
+    if ($itemvv->getWeight() != 0) {
+        $weight = $itemvv->getWeight() * $itemvv->getQtyOrdered();
+    } else {
+        $weight = 0.5 * $itemvv->getQtyOrdered();
+    }
+    $totalWeight += $weight;
+    if ($itemvv->getQtyOrdered() > $itemvv->getQtyShipped()) {
+        $itemscount += $itemvv->getQtyOrdered() - $itemvv->getQtyShipped();
+    } else if ($itemvv->getQtyOrdered() == $itemvv->getQtyShipped()) {
+        $isShipped = true;
+        $itemscount += $itemvv->getQtyOrdered();
+    }
+}
+$state = "";
+if (($shipping->getData('region_id')) && ($shipping->getCountry() == 'US')) {
+    $region = Mage::getModel('directory/region')->load($shipping->getData('region_id'));
+    $state = $region->getName();
+} else {
+    $state = $shipping->getData('region');
+}
+
+$billing_state = "";
+if ($shipping->getData('region_id')) {
+    $region = Mage::getModel('directory/region')->load($shipping->getData('region_id'));
+    $billing_state = $region->getName();
+} else {
+    $billing_state = $shipping->getData('region');
+}
+$formSession = Mage::getSingleton('adminhtml/session');
+$formData = $formSession->getData('form_data');
+$session = false;
+Mage::getSingleton('core/session')->setPreviousUrl($this->helper('core/url')->getCurrentUrl());
+if (count($formData) > 0) {
+    $session = true;
+}
+?>
+    <!-- smsaexpress popup starts -->
+
+    <div id="smsaexpress_overlay">
+        <div id="smsaexpress_shipment_creation">
+
+            <form id="smsaexpress_shipment" method="post"
+                  action="<?php echo $this->getUrl('smsaexpress/shipment/post'); ?>" enctype="multipart/form-data">
+                <input type="hidden" name="smsaexpress_shipment_referer"
+                       value="<?php echo $this->helper('core/url')->getCurrentUrl(); ?>"/>
+                <input name="form_key" type="hidden"
+                       value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                <input type="hidden" name="weight" value="<?php echo $totalWeight; ?>"/>
+                <input name="smsaexpress_shipment_original_reference" type="hidden"
+                       value="<?php echo $_order->getIncrementId() ?>"/>
+                <?php
+                $description = "";
+                foreach ($itemsv as $item) {
+                    $_qty = abs($item->getQtyOrdered() - $item->getQtyShipped());
+                    if ($_qty == 0 and $isShipped) {
+                        $_qty = intval($item->getQtyShipped());
+                    }
+                    if ($item->getQtyOrdered() > $item->getQtyShipped() or $isShipped) {
+                        $description .= $item->getSku() . "(" . $_qty . ") \n ";
+                        ?>
+                        <input type="hidden" id="smsaexpress_items_<?php echo $item->getId(); ?>"
+                               name="smsaexpress_items[<?php echo $item->getId(); ?>]" value="<?php echo $_qty; ?>"/>
+
+                        <?php
+                    }
+                }
+                if (strlen($description) > 49)
+                    $description = substr($description, 0, 45) . '...';
+                ?>
+                <input type="hidden" name="smsaexpress_description" value="<?php echo $description; ?>"/>
+                <FIELDSET class="smsaexpress_shipment_creation_fieldset">
+                    <legend>Receiver Details</legend>
+                    <div id="smsaexpress_shipment_creation_logo">
+                        <img src="<?php echo $this->getSkinUrl('images/smsa-express-better.png', array('_secure' => true)); ?>"/>
+                    </div>
+                    <div id="receiver_details" class="smsaexpress_shipment_creation_part">
+                        <div class="text_short">
+                            <label>Reference</label><input class="number" type="text"
+                                                           id="smsaexpress_shipment_receiver_reference"
+                                                           name="smsaexpress_shipment_receiver_reference"
+                                                           value="<?php echo $_order->getIncrementId() ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_name = ($shipping) ? $shipping->getName() : ''; ?>
+                            <?php $_name = ($session) ? $formData['cName'] : $_name; ?>
+                            <label>Name</label><input class="required" type="text" id="cName" name="cName"
+                                                      value="<?php echo $_name; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_email = ($customer->getEmail()) ? $customer->getEmail() : $_order->getData('customer_email'); ?>
+                            <?php $_email = ($session) ? $formData['cEmail'] : $_email; ?>
+                            <label>Email</label><input class="email required" type="text" id="cEmail" name="cEmail"
+                                                       value="<?php echo $_email; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $company_name = ($company_name) ? $company_name : ''; ?>
+                            <?php $company_name = (empty($company_name) and $shipping) ? $shipping->getName() : $company_name; ?>
+                            <?php $company_name = ($shipping) ? $shipping->getData('company') : ''; ?>
+                            <?php $company_name = ($session) ? $formData['smsaexpress_shipment_receiver_company'] : $company_name; ?>
+                            <label>Company</label><input type="text" id="smsaexpress_shipment_receiver_company"
+                                                         name="smsaexpress_shipment_receiver_company"
+                                                         value="<?php echo $company_name ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $street = ($shipping) ? $shipping->getData('street') : ''; ?>
+                            <?php $street = ($session) ? $formData['cAddr1'] : $street; ?>
+                            <label>Address</label><textarea class="required" rows="4" cols="26" type="text" id="cAddr1"
+                                                            name="cAddr1"><?php echo $street; ?></textarea>
+                        </div>
+                        <div class="text_short">
+                            <label>Country</label>
+                            <?php $_country = ($shipping) ? $shipping->getCountry() : ''; ?>
+                            <?php $_country = ($session) ? $formData['cntry'] : $_country; ?>
+                            <select class="smsaexpress_countries" id="cntry" name="cntry">
+                                <?php
+                                foreach ($countryCollection as $country) {
+                                    ?>
+                                    <option value="<?php echo $country['country_id'] ?>" <?php echo ($_country == $country['country_id']) ? 'selected="selected"' : ''; ?> ><?php echo $country['name'] ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="text_short">
+                            <?php $_city = ($shipping) ? $shipping->getData('city') : ''; ?>
+                            <?php $_city = ($session) ? $formData['cCity'] : $_city; ?>
+                            <label>City</label><input class="" type="text" id="cCity" name="cCity"
+                                                      value="<?php echo $_city; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_postcode = ($shipping) ? $shipping->getData('postcode') : ''; ?>
+                            <?php $_postcode = ($session) ? $formData['cZip'] : $_postcode; ?>
+                            <label>Postal Code</label><input type="text" class="" id="cZip" name="cZip"
+                                                             value="<?php echo $_postcode; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_state = ($shipping) ? $state : ''; ?>
+                            <?php $_state = ($session) ? $formData['smsaexpress_shipment_receiver_state'] : $_state; ?>
+                            <label>State</label><input type="text" id="smsaexpress_shipment_receiver_state"
+                                                       name="smsaexpress_shipment_receiver_state"
+                                                       value="<?php echo $_state; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $_phone = ($shipping) ? $shipping->getData('telephone') : ''; ?>
+                            <?php $_phone = ($session) ? $formData['cMobile'] : $_phone; ?>
+                            <label>Phone</label><input class="required" type="text" id="cMobile" name="cMobile"
+                                                       value="<?php echo $_phone; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $shipping_value = ($session) ? $formData['shipping_value'] : 0; ?>
+                            <label>Shippment Charges</label><input class="required" type="text" id="shipping_value"
+                                                                   name="shipping_value"
+                                                                   value="<?php echo $shipping_value; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php
+                            $customs_value = $_order->getSubtotal();
+                            $baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+                            // Current Currency ('USD')
+                            $currentCurrencyCode = $_order->getOrderCurrencyCode();
+                            // Allowed currencies
+                            $allowedCurrencies = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
+                            $rates = Mage::getModel('directory/currency')->getCurrencyRates($baseCurrencyCode, array_values($allowedCurrencies));
+
+                            if ($currentCurrencyCode != 'AED') {
+                                // the price converted
+                                $customs_value = $customs_value / $rates[$currentCurrencyCode];
+                            }
+                            if ((int)$customs_value >= 1000) {
+                                $randomValue = mt_rand(800, 1000);
+                                $randomValue = ($randomValue / $rates['AED']) * $rates['SAR'];
+                            } else {
+                                $randomValue = $customs_value;
+                                if ($currentCurrencyCode != "SAR")
+                                    $randomValue = ($randomValue / $rates['AED']) * $rates['SAR'];
+
+                            }
+                            ?>
+                            <label>Customs
+                                value:<?php echo (int)$_order->getSubtotal() . " " . $_order->getOrderCurrencyCode(); ?>
+                                - <?php echo $customs_value ?> AED</label><input class="required" type="text"
+                                                                                 id="customs_value" name="customs_value"
+                                                                                 value="<?php echo $randomValue; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $total_due = ($_order) ? $_order->getTotalDue() : ''; ?>
+                            <?php $total_due = ($session) ? $formData['total_due'] : $total_due; ?>
+                            <label>Total Due</label><input class="required" type="text" id="total_due" name="total_due"
+                                                           value="<?php echo $total_due; ?>"/>
+                        </div>
+
+                        <div class="text_short">
+                            <?php $order_currency_code = ($_order) ? $_order->getOrderCurrencyCode() : ''; ?>
+                            <?php $order_currency_code = ($session) ? $formData['order_currency_code'] : $order_currency_code; ?>
+                            <label>Currency</label><input class="required" type="text" id="order_currency_code"
+                                                          name="order_currency_code"
+                                                          value="<?php echo $order_currency_code; ?>"/>
+                        </div>
+                        <div class="text_short">
+                            <?php $PCs = ($itemscount) ? $itemscount : ''; ?>
+                            <?php $PCs = ($session) ? $formData['PCs'] : $PCs; ?>
+                            <label>Total Pcs</label><input class="required" type="text" name="PCs"
+                                                           value="<?php echo $PCs; ?>"/>
+                        </div>
+
+                    </div>
+                </FIELDSET>
+                <div class="smsaexpress_clearer"></div>
+                <!--div style="float: right; width: 100%; width: 30px;"><div style="float: right;font-size: 11px;height: 30px;margin-bottom: 6px;width: 184px;"><input  style="float: left; width: 30px;" type="checkbox" name="smsaexpress_email_customer" value="yes" /> <span style="float: left; margin-top: -2px;">Notify customer by email</span></div></div -->
+                <div class="smsaexpress_clearer"></div>
+                <div style="float: right;margin-bottom: 20px;margin-top: -11px;">
+                    <?php if ($_order->canShip()): ?>
+                        <button id="smsaexpress_shipment_creation_submit_id" type="submit"
+                                name="smsaexpress_shipment_creation_submit">Create Shipment
+                        </button>
+                    <?php endif; ?>
+
+                    <?php
+
+                    $shipments = Mage::getResourceModel('sales/order_shipment_collection')
+                        ->addAttributeToSelect('*')
+                        ->addFieldToFilter("order_id", $_order->getId())->join("sales/shipment_comment", 'main_table.entity_id=parent_id', 'comment')->addFieldToFilter('comment', array('like' => "%{$_order->getIncrementId()}%"))->load();
+
+                    $smsaexpress_return_button = false;
+
+                    if ($shipments->count()) {
+                        foreach ($shipments as $key => $comment) {
+                            if (version_compare(PHP_VERSION, '5.3.0') <= 0) {
+                                $awbno = substr($comment->getComment(), 0, strpos($comment->getComment(), "- Order No"));
+                            } else {
+                                $awbno = strstr($comment->getComment(), "- Order No", true);
+                            }
+                            $awbno = trim($awbno, "AWB No.");
+                            break;
+                        }
+                        if ((int)$awbno)
+                            $smsaexpress_return_button = true;
+                    }
+
+                    if (!$_order->canShip() && $smsaexpress_return_button) {
+
+                        ?>
+                        <button id="smsaexpress_return_shipment_creation_submit_id" type="submit"
+                                name="smsaexpress_return_shipment_creation_submit_id">Return Order
+                        </button>
+                        <script>
+                            var jccc = jQuery.noConflict();
+                            jccc(function () {
+                                jccc("#smsaexpress_shipment_info_billing_account_id").val(2);
+                                jccc("#smsaexpress_shipment_info_billing_account_id").trigger('change');
+                            });
+                        </script>
+                    <?php } ?>
+
+                    <button onclick="smsaexpressclose()" type="button">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        var jccc = jQuery.noConflict();
+        function smsaexpresspop(itemscount) {
+            if (itemscount >= 0) {
+                jccc("#smsaexpress_overlay").css("display", "block");
+                jccc("#smsaexpress_shipment_creation").fadeIn(1000);
+            }
+            else {
+                alert('Cannot create a shipment, all items have been shipped');
+            }
+        }
+
+        function smsaexpressreturnpop() {
+            jccc("#smsaexpress_overlay").css("display", "block");
+            jccc("#smsaexpress_return_shipment_creation_submit_id").css("display", "in-block");
+            jccc("#smsaexpress_shipment_info_billing_account_id").val(2);
+            jccc("#smsaexpress_shipment_info_billing_account_id").trigger('change');
+            jccc("#smsaexpress_shipment_creation").fadeIn(1000);
+        }
+
+        function smsaexpressclose() {
+            jccc("#smsaexpress_overlay").css("display", "none");
+            jccc("#smsaexpress_shipment_creation").fadeOut(500);
+        }
+
+        <?php if(Mage::app()->getRequest()->getParam('smsaexpresspopup') == 'show'){ ?>
+        smsaexpresspop(1);
+        <?php } ?>
+
+        jccc(document).ready(function () {
+            jccc("#smsaexpress_overlay").css("display", "none");
+            jccc("#smsaexpress_shipment_creation").fadeIn(1000);
+            jccc("#smsaexpress_shipment").validate();
+        });
+
+    </script>
+<?php $formSession->unsetData('form_data') ?>

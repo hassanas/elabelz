@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <amlanding translate="label" module="xlanding">
+            <groups>
+                <xlanding translate="label">
+                    <label>Landing Page Merchandising</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <merchandising translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </merchandising>
+                        <onsave translate="label">
+                            <label>Enable on Page Save Sorting</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </onsave>
+                        <sort_direction translate="label">
+                            <label>Sort Direction</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>magidev_sort/system_config_source_direction</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_direction>
+                        <show_new_frontend translate="label">
+                            <label>Products Positioning</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>progos_magidev/sort_system_config_source_new</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_new_frontend>
+                    </fields>
+                </xlanding>
+            </groups>
+        </amlanding>
+    </sections>
+</config>

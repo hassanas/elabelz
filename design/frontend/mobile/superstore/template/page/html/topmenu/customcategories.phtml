@@ -1,0 +1,123 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/** @var Mage_Page_Block_Html_Topmenu_Renderer $this */
+/** @var Varien_Data_Tree_Node $menuTree */
+/** @var string $childrenWrapClass */
+?>
+<nav id="nav">
+<ol class="nav-primary metismenu">
+<?php
+$_helper = Mage::helper('custommenu');
+$_categories = $_helper->categoryTree();
+$store_code = Mage::app()->getStore()->getCode();
+foreach($_categories as $_category){
+
+
+$subcats = $_category->children;
+
+?>
+<li class="level0 first level-top parent">
+<?php
+// Level 0 Navigation
+if($_category->include_in_menu) {
+    $url_category = str_replace("en_ae",$store_code,$_category->url);
+echo '<a class="level-top" href="'.$url_category.'" title="'.$this->__($_category->name).'" category">'.$this->__($_category->name).'</a>';
+}
+?>
+<ul class="level0 collapse">
+<?php
+// Level 1 Navigation
+foreach($subcats as $subCatid)
+{
+
+
+  if($subCatid->include_in_menu) {
+    $sub_subcats = $subCatid->children; ?>
+<li class="level1 first parent">
+<?php
+    if($subCatid->include_in_menu) {
+        $url_category = str_replace("en_ae",$store_code,$subCatid->url);
+              echo '<a class="ar" href="'.$url_category.'" title="'.$this->__($subCatid->name).'"><span class="ar">'.$this->__($subCatid->name).'</span></a>';
+
+if($sub_subcats == true){
+              echo '<ul>';
+            }
+            else{
+              echo '';
+            } ?>
+</li>
+<li class="level1"><a href="<?php echo $url_category ?>"><?php echo $this->__('View All'); ?></a></li>
+<?php foreach($sub_subcats as $sub_subCatid)
+  {
+    // Level 2 Navigation
+          $sub_subCatid_sub = $sub_subCatid->children;
+          if($sub_subCatid->include_in_menu) {
+
+            if($sub_subCatid_sub == true){
+              echo '<li class="level1 first ">';
+            }
+            else{
+              echo '<li class="level1">';
+            }
+            $url_category = str_replace("en_ae",$store_code,$sub_subCatid->url);
+            echo '<a href="'.$url_category.'" title="'.$this->__($sub_subCatid->name).'"><span class="ar">'.$this->__($sub_subCatid->name).'</span></a>';
+
+            if($sub_subCatid_sub == true){
+
+            }
+            else{
+              echo '';
+            }
+          // Level 3 Navigation
+
+
+          if($sub_subCatid_sub == true){
+
+            }
+            else{
+              echo '';
+            } ?>
+          </li>
+<?php  }
+}
+if($sub_subcats == true){
+              echo '</ul>';
+            }
+            else{
+              echo '';
+            }
+} ?>
+
+ <?php }
+} ?>
+</ul>
+</li>
+
+<?php }
+?>
+</ol>
+</nav>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_Reorder>
+            <version>1.0.0</version>
+        </Progos_Reorder>
+    </modules>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Progos_Reorder before="Mage_Adminhtml">Progos_Reorder_Adminhtml</Progos_Reorder>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <global>
+        <models>
+            <adminhtml>
+                <rewrite>
+                        <sales_order_create>Progos_Reorder_Model_Adminhtml_Sales_Order_Create</sales_order_create>
+                </rewrite>
+            </adminhtml>
+        </models>
+    </global>
+</config>

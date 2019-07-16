@@ -1,0 +1,77 @@
+<?php
+    $zipcountryList = Mage::getStoreConfig('dhllabel/statezipsetting/zipmandatory') ;
+    $zipcountryList = explode(',',$zipcountryList);
+
+    $statecountryList = Mage::getStoreConfig('dhllabel/statezipsetting/statemandatory') ;
+    $statecountryList = explode(',',$statecountryList);
+?>
+<script>
+    /* Zipcode Validateion */
+    var zipcountries = <?php echo json_encode($zipcountryList); ?> ;
+    var zipcountryList = {};
+    for (i = 0; zipcountries.length > i; i += 1) {
+        zipcountryList[zipcountries[i]] = zipcountries[i];
+    }
+
+    var selectCont = jQuery('#shiptocountrycode').val();
+    if( zipcountryList[selectCont] !== undefined ){
+        if( ! jQuery( "#shiptopostalcode" ).hasClass( "required-entry" ) ) {
+            jQuery('#shiptopostalcode').addClass('required-entry');
+            jQuery('.post-code-required').html('*');
+        }
+    }
+
+    jQuery('#shiptocountrycode').on('change',function(){
+        var selectedCountry = jQuery(this).val();
+
+        if( zipcountryList[selectedCountry] ){
+            if( ! jQuery( "#shiptopostalcode" ).hasClass( "required-entry" ) ) {
+                jQuery('#shiptopostalcode').addClass('required-entry');
+                jQuery('.post-code-required').html('*');
+            }
+        }else{
+            if( jQuery( "#shiptopostalcode" ).hasClass( "required-entry" ) ) {
+                jQuery('#shiptopostalcode').removeClass('required-entry');
+                jQuery('.post-code-required').html('');
+
+                if( jQuery('#advice-required-entry-shiptopostalcode').length )
+                    jQuery('#advice-required-entry-shiptopostalcode').remove();
+
+            }
+        }
+    });
+
+    /* State Validateion */
+
+    var statecountries = <?php echo json_encode($statecountryList); ?> ;
+    var statecountryList = {};
+    for (i = 0; statecountries.length > i; i += 1) {
+        statecountryList[statecountries[i]] = statecountries[i];
+    }
+
+    if( statecountryList[selectCont] !== undefined ){
+        if( ! jQuery( "#shiptostateprovincecode" ).hasClass( "required-entry" ) ) {
+            jQuery('#shiptostateprovincecode').addClass('required-entry');
+            jQuery('.state-code-required').html('*');
+        }
+    }
+
+    jQuery('#shiptocountrycode').on('change',function(){
+        var selectedCountry = jQuery(this).val();
+
+        if( statecountryList[selectedCountry] ){
+            if( ! jQuery( "#shiptostateprovincecode" ).hasClass( "required-entry" ) ) {
+                jQuery('#shiptostateprovincecode').addClass('required-entry');
+                jQuery('.state-code-required').html('*');
+            }
+        }else{
+            if( jQuery( "#shiptostateprovincecode" ).hasClass( "required-entry" ) ) {
+                jQuery('#shiptostateprovincecode').removeClass('required-entry');
+                jQuery('.state-code-required').html('');
+
+                if( jQuery('#advice-required-entry-shiptostateprovincecode').length )
+                    jQuery('#advice-required-entry-shiptostateprovincecode').remove();
+            }
+        }
+    });
+</script>

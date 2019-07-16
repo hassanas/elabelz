@@ -1,0 +1,13 @@
+<?php $config = Mage::helper('addtocart'); ?>
+<?php if ($config->isAddtocartEnabled()) {?>
+<script type="text/javascript">
+function klevu_addtocart(id,url,qty) {
+    var form_key = '<?php echo Mage::getSingleton('core/session')->getFormKey()?>';
+    var url = '<?php echo Mage::getUrl('checkout/cart/add');?>'+'product/'+id+'/qty/'+qty+'/form_key/'+form_key;
+    window.location.assign(url);
+}
+
+//var klevu_addtocartLbl = "More Info";
+</script>
+
+<?php } ?>

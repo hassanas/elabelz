@@ -1,0 +1,147 @@
+<?php
+
+
+$send_message = true;
+
+$err_msg = "";
+$existing = false;
+$url = Mage::getUrl('messaging/send');
+
+$product_id = Mage::registry('current_product')->getEntityId();
+$customer_id = null;
+$seller_id = Mage::registry('current_product')->getSellerId();
+
+// Check the admin approval seller registration is equal to 1
+$active_seller = Mage::getStoreConfig('marketplace/admin_approval_seller_registration/displayproductpage');
+
+// Is seller enabled buyer messages
+$message_to_seller   = $this->isMessageToSellerEnabled($seller_id);
+
+
+$session = Mage::helper("messaging")->getSession();
+if ($session->isLoggedIn()) {
+    $customer_id = $session->getCustomerId();
+    $is_seller = Mage::helper("messaging")->isSeller();
+    
+    if ($is_seller) {
+        $send_message = false;
+        $err_msg = "<span class='err'>".$this->__('Seller is not allowed to contact buyer directly.') ."</span>";
+        $err_msg = "<span class='err'>&nbsp;</span>";
+    } elseif (!$seller_id) {
+        $send_message = false;
+        $err_msg = "<span class='err'>".$this->__('Contact support to know about this product.'). "</span>";
+        $err_msg = "<span class='err'>&nbsp;</span>";
+    } elseif ($customer_id == $seller_id) {
+        $send_message = false;
+        $err_msg = "<span class='err'>".$this->__('You cannot send message to you!')."</span>";
+        $err_msg = "<span class='err'>&nbsp;</span>";
+    } elseif ($seller_id && $is_seller) {
+        $send_message = false;
+        $err_msg = "<span class='err'>".$this->__('Seller cannot contact to seller.')."</span>";
+    } else {
+        $model = Mage::getModel("messaging/thread")->getCollection();
+        $thread = $model->addFieldToFilter('for', $seller_id)
+                ->addFieldToFilter('from', $customer_id)
+                ->getFirstItem();
+        if($model->count()) {
+            $existing = true;
+            $thread_subject = $thread->getName();
+            $thread_id = $thread->getId();
+            $url = Mage::getUrl('messaging/send', ['id' => $thread_id]);
+        }
+    }
+} else {
+
+    // if ($message_to_seller && $active_seller) {
+    //     $send_message = false;
+    //     $err_msg = "<span class='err'>Please <a href='{Mage::getUrl('customer/account/login')}'>login</a> to send message to seller of this product.</span>";
+    // } else {
+    //     $send_message = false;
+    //     $err_msg = "<span class='err'>Please <a href='{Mage::getUrl('customer/account/login')}'>login</a> to send message to seller of this product.</span>";        
+    // }
+
+    $send_message = false;
+    //$err_msg ="<span class='err'> ".$this->__('Please')." <a href='" . Mage::getUrl('customer/account/login') . "'> ".$this->__('login') ." </a>  ".$this->__('to send message to seller of this product.') ." </span>";
+
+}
+
+// if (!$send_message) {
+//     echo $err_msg;
+// }
+
+if($active_seller && $message_to_seller) {
+    if ($send_message):
+?>
+<div class="block"> 
+<form action="<?php echo $url; ?>" id="send-message" name="form" method="post">
+        <input type="hidden" name="for" value="<?php echo $seller_id; ?>">
+        <input type="hidden" name="from" value="<?php echo $customer_id; ?>">
+        <input type="hidden" name="message_from" value="<?php echo $customer_id; ?>">
+        <input type="hidden" name="ref" value="<?php echo Mage::helper('core/url')->getCurrentUrl(); ?>">
+
+        <div class="block-title"><strong><span>Send Message</span></strong></div>
+          <div class="block-content"><ul class="form-list">
+            <li class="fields">
+                <div class="field">
+                    <?php
+                    if ($existing):
+                    ?>
+                    <div class="input-box">
+                        Good to know that! You already has conversation with this seller, you may access conversation history from your account or simply use following form to send message to seller!
+                    </div>
+                    <div class="input-box" style="display: none;">
+                        <input 
+                        name="subject" 
+                        id="subject" <?php
+                        if ($existing) {
+                            echo "readonly='readonly'";
+                        }
+                        ?> title="Conversation subject" value="<?php 
+                        if ($existing) {
+                            echo $thread_subject; 
+                        }
+                        ?>" 
+                        class="input-text required-entry" 
+                        type="text" placeholder="Enter subject here" />
+                    </div>
+                <?php else: ?>
+                    <div class="input-box">
+                        <input 
+                        name="subject" 
+                        id="subject" title="Conversation subject" class="input-text required-entry" 
+                        type="text" placeholder="Enter subject here" />
+                    </div>
+                <?php endif; ?>
+                </div>
+            </li> 
+            <li class="wide">    
+                       
+                <div class="input-box">
+                    <textarea 
+                    name="message" id="message" title="Title" 
+                    class="required-entry input-text" cols="5" rows="3"  
+                    placeholder="Type your message here ..."></textarea>
+                </div>
+
+            </li>
+        </ul>
+        <div class="buttons-set">        
+            <button type="submit" class="button">
+            <span><span>Send</span></span></button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var marketplaceContactForm = new VarienForm('send-message', true);
+    //]]>
+</script>
+
+</div>
+<?php
+    else:
+        echo $err_msg;
+    endif;
+}
+?> 

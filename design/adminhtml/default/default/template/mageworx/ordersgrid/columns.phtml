@@ -1,0 +1,25 @@
+<?php
+$columns = $this->getColumns();
+$type = $this->getGridType();
+?>
+<div class="entity-edit">
+    <div class="box">
+        <div class="hor-scroll">
+            <table class="dynamic-grid" cellspacing="0"  cellpadding="0">
+                <tr id="fee-options-table">
+                    <th></th>
+                    <th><?php echo Mage::helper('catalog')->__('Column Name') ?></th>
+                    <th><?php echo Mage::helper('catalog')->__('Order') ?></th>
+                </tr>
+                <?php foreach($columns as $column): ?>
+                <tr class="option-row">
+                    <td><input class="input-radio-checkbox" type="checkbox" name="<?php echo $type ?>[<?php echo $column['key'] ?>][enabled]" <?php if ($column['enabled']) echo 'checked'; ?> /></td>
+                    <td style="width: 180px"><?php echo $column['label'] ?></td>
+                    <td><input style="width: 40px" class="input-text required-option validate-zero-or-greater" type="text" name="<?php echo $type ?>[<?php echo $column['key'] ?>][sortOrder]" value="<?php echo $column['sortOrder'] ?>" /></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+        <input type="hidden" id="option-count-check" value="" />
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Progos_OrdersGrid>
+            <version>0.2.0</version>
+        </Progos_OrdersGrid>
+    </modules>
+    <global>
+        <helpers>
+            <progos_ordersgrid>
+                <class>Progos_OrdersGrid_Helper</class>
+            </progos_ordersgrid>
+        </helpers>
+        <models>
+            <progos_ordersgrid>
+                <class>Progos_OrdersGrid_Model</class>
+            </progos_ordersgrid>
+            <mageworx_ordersgrid>
+               <rewrite>
+                  <observer>Progos_OrdersGrid_Model_Observer</observer>
+               </rewrite>
+            </mageworx_ordersgrid>
+            <!-- For Query Optimizaion need to rewrite community/MageWorx/OrdersGrid/Model/Resource/Order/Grid.php -->
+            <mageworx_ordersgrid_resource>
+                <rewrite>
+                    <order_grid>Progos_OrdersGrid_Model_Resource_Order_Grid</order_grid>
+                </rewrite>
+            </mageworx_ordersgrid_resource>
+            <mageworx_ordersgrid>
+                <rewrite>
+                    <order_grid>Progos_OrdersGrid_Model_Order_Grid</order_grid>
+                </rewrite>
+            </mageworx_ordersgrid>
+        </models>
+        <blocks>
+            <progos_ordersgrid>
+                <class>Progos_OrdersGrid_Block</class>
+            </progos_ordersgrid>
+        </blocks>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <progos_ordersgrid before="MageWorx_OrdersGrid_Adminhtml">Progos_OrdersGrid_Adminhtml</progos_ordersgrid>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>
