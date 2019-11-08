@@ -1,0 +1,113 @@
+# For more information on configuration, see:
+
+#   * Official English Documentation: http://nginx.org/en/docs/
+
+#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+
+user nginx;
+
+worker_processes auto;
+
+error_log /var/log/nginx/error.log;
+
+pid /var/run/nginx.pid;
+
+
+events {
+
+    use epoll;
+
+    multi_accept on;
+
+    worker_connections 36864;
+
+}
+
+
+http {
+
+
+
+    #Basic Settings
+
+    sendfile            on;
+
+    tcp_nopush          on;
+
+    tcp_nodelay         on;
+
+    keepalive_timeout   65;
+
+    types_hash_max_size 2048;   
+
+    
+
+    include             /etc/nginx/mime.types;
+
+    default_type        application/octet-stream;
+
+
+    fastcgi_read_timeout 1000;
+
+    #proxy_connect_timeout       600;
+
+    #proxy_send_timeout          600;
+
+    #proxy_read_timeout          600;
+
+    #send_timeout                600;
+
+
+    open_file_cache max=1000 inactive=20s;
+
+    open_file_cache_valid 30s;
+
+    open_file_cache_min_uses 5;
+
+    open_file_cache_errors off;
+
+
+    ##
+
+    # SSL Settings
+
+    ##
+
+
+
+    ##
+
+    # Loggin Setttings
+
+    ##
+
+    access_log  /var/log/nginx/access.log;
+
+    error_log  /var/log/nginx/error.log;
+
+  	 
+
+    ##
+
+    #Gzip Settings
+
+    ##
+
+    gzip on;
+
+    gzip_disable "msie6"
+
+
+    ##
+
+    # Virtual Host Configs
+
+    ##
+
+
+    include /etc/nginx/conf.d/*.conf;
+
+    include /etc/nginx/sites-enabled/*;
+
+}

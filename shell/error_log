@@ -1,0 +1,6 @@
+[27-Jun-2016 08:59:25 UTC] PHP Fatal error:  Uncaught exception 'Zend_Http_Client_Exception' with message 'Unable to read response, or response is empty' in /home2/betazlabelz/public_html/lib/Zend/Http/Client.php:1093
+Stack trace:
+#0 /home2/betazlabelz/public_html/lib/Varien/Http/Client.php(61): Zend_Http_Client->request('POST')
+#1 /home2/betazlabelz/public_html/shell/update_skuvault_products.php(36): Varien_Http_Client->request('POST')
+#2 {main}
+  thrown in /home2/betazlabelz/public_html/lib/Zend/Http/Client.php on line 1093
